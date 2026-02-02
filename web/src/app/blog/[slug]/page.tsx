@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import styles from "./page.module.css";
 import { posts } from "../posts";
+import PostNav from "./post-nav";
 
 export const dynamicParams = false;
 
@@ -23,6 +24,36 @@ export default async function BlogPostPage({ params }: Params) {
     notFound();
   }
 
+  const sortedPosts = [...posts].sort((a, b) => {
+    const aTime = Date.parse(a.date);
+    const bTime = Date.parse(b.date);
+    return bTime - aTime;
+  });
+
+  const currentIndex = sortedPosts.findIndex((entry) => entry.slug === slug);
+  const previousPost =
+    currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+  const nextPost =
+    currentIndex < sortedPosts.length - 1
+      ? sortedPosts[currentIndex + 1]
+      : null;
+
+  return (
+    <PostLayout
+      post={post}
+      previousPost={previousPost}
+      nextPost={nextPost}
+    />
+  );
+}
+
+type PostLayoutProps = {
+  post: typeof posts[number];
+  previousPost: typeof posts[number] | null;
+  nextPost: typeof posts[number] | null;
+};
+
+function PostLayout({ post, previousPost, nextPost }: PostLayoutProps) {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -54,6 +85,8 @@ export default async function BlogPostPage({ params }: Params) {
             <li key={learning}>{learning}</li>
           ))}
         </ul>
+
+        <PostNav previousPost={previousPost} nextPost={nextPost} />
       </section>
     </div>
   );

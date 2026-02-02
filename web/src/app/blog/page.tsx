@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import { posts } from "./posts";
+import KeyboardCardGrid from "../components/keyboard-card-grid";
 
 export default function BlogIndexPage() {
   return (
@@ -19,19 +20,19 @@ export default function BlogIndexPage() {
         </Link>
       </header>
 
-      <section className={styles.cards}>
-        {[...posts].reverse().map((post) => (
-          <Link key={post.title} className={styles.card} href={`/blog/${post.slug}`}>
-            <p className={styles.cardMeta}>
-              <span>{post.category}</span>
-              <span>{post.date}</span>
-            </p>
-            <h3>{post.title}</h3>
-            <p className={styles.cardExcerpt}>{post.summary}</p>
-            <span className={styles.cardLink}>Read the note</span>
-          </Link>
-        ))}
-      </section>
+      <KeyboardCardGrid
+        items={[...posts].reverse()}
+        classNames={{
+          grid: styles.cards,
+          card: styles.card,
+          meta: styles.cardMeta,
+          excerpt: styles.cardExcerpt,
+          link: styles.cardLink,
+          focused: styles.cardFocused,
+        }}
+        linkLabel="Read the note"
+        backspaceHref="/"
+      />
 
       <div className={styles.pagination}>
         <a href="#" aria-disabled="true">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { posts } from "./blog/posts";
 import BuildLoop from "./components/build-loop";
+import KeyboardCardGrid from "./components/keyboard-card-grid";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -59,19 +60,18 @@ export default function Home() {
               View all notes
             </Link>
           </div>
-          <div className={styles.cards}>
-            {posts.slice(-3).reverse().map((post) => (
-              <Link key={post.title} className={styles.card} href={`/blog/${post.slug}`}>
-                <p className={styles.cardMeta}>
-                  <span>{post.category}</span>
-                  <span>{post.date}</span>
-                </p>
-                <h3>{post.title}</h3>
-                <p className={styles.cardExcerpt}>{post.summary}</p>
-                <span className={styles.cardLink}>Read the note</span>
-              </Link>
-            ))}
-          </div>
+          <KeyboardCardGrid
+            items={posts.slice(-3).reverse()}
+            classNames={{
+              grid: styles.cards,
+              card: styles.card,
+              meta: styles.cardMeta,
+              excerpt: styles.cardExcerpt,
+              link: styles.cardLink,
+              focused: styles.cardFocused,
+            }}
+            linkLabel="Read the note"
+          />
         </section>
 
         {/* say-hi block intentionally hidden for now */}

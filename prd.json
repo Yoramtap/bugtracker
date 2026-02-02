@@ -1,18 +1,24 @@
 {
-  "project": "Night Vision Mode",
-  "branchName": "ralph/night-vision-mode",
-  "description": "Add a hidden \"Night Vision\" mode that toggles a green-tinted, night-vision theme when the user types \"night\" anywhere on the site, with a subtle effect that keeps the calm aesthetic and persists across reloads.",
+  "project": "Quiet Navigation",
+  "branchName": "ralph/quiet-navigation",
+  "description": "Add lightweight navigation to the blog: keyboard navigation on the blog index and the “Fresh from the build log” cards on the landing page (j/k and arrow keys), plus previous/next links at the bottom of each post page, keeping the UI calm and minimal.",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Secret Trigger",
-      "description": "As a visitor, I want a hidden trigger so that I can unlock a special mode without UI clutter.",
+      "title": "Keyboard Navigation on Index",
+      "description": "As a reader, I want to move through blog cards with the keyboard so I can scan posts quickly.",
       "acceptanceCriteria": [
-        "Typing \"night\" anywhere toggles Night Vision mode on/off.",
-        "Typing \"day\" anywhere toggles Night Vision mode off.",
-        "A subtle toast or text cue confirms the toggle every time.",
-        "Typecheck passes",
-        "Verify in browser using agent-browser skill"
+        "j or ArrowDown moves focus to the next card",
+        "k or ArrowUp moves focus to the previous card",
+        "ArrowRight moves focus to the next card; ArrowLeft to the previous",
+        "Enter opens the focused card",
+        "Focus wraps at the ends (last to first, first to last)",
+        "Keyboard navigation does not trigger when typing in inputs, textareas, or contenteditable elements",
+        "Clicking a card keeps the focused state in sync",
+        "A subtle visual focus state appears on the active card",
+        "Works on the blog index and the “Fresh from the build log” cards on the landing page",
+        "Verify in browser using agent-browser skill",
+        "Typecheck passes"
       ],
       "priority": 1,
       "passes": true,
@@ -20,28 +26,18 @@
     },
     {
       "id": "US-002",
-      "title": "Night Vision Theme",
-      "description": "As a visitor, I want the theme to change so that the mode feels distinct.",
+      "title": "Previous/Next on Post Page",
+      "description": "As a reader, I want links to the previous/next post so I can continue reading in order.",
       "acceptanceCriteria": [
-        "Night Vision updates background, text, and accent colors to a green-tinted palette.",
-        "The theme remains readable and calm.",
-        "Typecheck passes",
-        "Verify in browser using agent-browser skill"
-      ],
-      "priority": 2,
-      "passes": true,
-      "notes": "Verified in browser on Feb 2, 2026."
-    },
-    {
-      "id": "US-003",
-      "title": "Persistence",
-      "description": "As a visitor, I want the mode to persist so that I don’t have to re-enter the trigger on reload.",
-      "acceptanceCriteria": [
-        "Mode state is stored in localStorage.",
-        "On page load, the mode restores if previously enabled.",
+        "Post pages show previous/next links near the bottom",
+        "Ordering is based on post date (newest to oldest) using posts from web/src/app/blog/posts.ts",
+        "Links include post titles and clear labels",
+        "Previous/next links do not render when there is no adjacent post",
+        "Links match existing card/link styling",
+        "Verify in browser using agent-browser skill",
         "Typecheck passes"
       ],
-      "priority": 3,
+      "priority": 2,
       "passes": true,
       "notes": "Verified in browser on Feb 2, 2026."
     }

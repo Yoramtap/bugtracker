@@ -421,4 +421,62 @@ export const posts: BlogPost[] = [
       "Keep storage keys scoped and explicit for easy migration later.",
     ],
   },
+  {
+    slug: "quiet-navigation-keyboard",
+    title: "Quiet navigation: keyboard focus",
+    summary:
+      "Added keyboard navigation for build notes cards on the landing page and blog index.",
+    excerpt:
+      "Added keyboard navigation for build notes cards on the landing page and blog index.",
+    date: "Feb 2, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-6.svg",
+    whatShipped:
+      "Implemented j/k and arrow key navigation with a subtle focus state across build-note card grids.",
+    implemented:
+      "Introduced a reusable card grid that tracks focused index, wraps at ends, and ignores keypresses in inputs.",
+    files: [
+      "web/src/app/components/keyboard-card-grid.tsx",
+      "web/src/app/page.tsx",
+      "web/src/app/blog/page.tsx",
+      "web/src/app/page.module.css",
+      "web/src/app/blog/page.module.css",
+      "prd.json",
+    ],
+    learnings: [
+      "Shared components keep keyboard behavior consistent across pages.",
+      "Focus styles should be subtle but unmistakable in low-contrast themes.",
+      "Card grids should own focus state so clicks and keys stay in sync.",
+    ],
+  },
+  {
+    slug: "quiet-navigation-post-links",
+    title: "Quiet navigation: post links",
+    summary:
+      "Added previous/next links on post pages with matching keyboard navigation.",
+    excerpt:
+      "Added previous/next links on post pages with matching keyboard navigation.",
+    date: "Feb 2, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-4.svg",
+    whatShipped:
+      "Implemented previous/next post links plus j/k, arrow, and backspace shortcuts on post pages.",
+    implemented:
+      "Sorted posts by date and wired a client-side navigator that routes smoothly without odd focus highlights.",
+    files: [
+      "web/src/app/blog/[slug]/page.tsx",
+      "web/src/app/blog/[slug]/post-nav.tsx",
+      "web/src/app/blog/[slug]/page.module.css",
+      "web/src/app/components/keyboard-card-grid.tsx",
+      "web/src/app/blog/page.tsx",
+      "prd.json",
+    ],
+    learnings: [
+      "Keyboard navigation should share the same key vocabulary across views.",
+      "Client-side routing avoids the odd highlight flashes on fast navigation.",
+      "Backspace is a natural “go back” action when inputs aren’t active.",
+    ],
+  },
 ];
