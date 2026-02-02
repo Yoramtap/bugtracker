@@ -16,17 +16,13 @@ export default function Home() {
             <p className={styles.kicker}>the build notes kitchen</p>
             <h1>Ship, note, repeat.</h1>
             <p className={styles.tagline}>
-              We&apos;re writing about the craft behind this space — the small decisions,
-              the quiet iterations, and the gentle rhythm of building the blog in
-              public.
+              We document each feature end-to-end: PRD, stories, build, checks,
+              notes, and the final ship.
             </p>
             <div className={styles.heroCtas}>
               <Link className={styles.primaryCta} href="/blog">
                 Explore the blog
               </Link>
-            </div>
-            <div className={styles.heroMeta}>
-              <span>new posts every build</span>
             </div>
           </div>
           <div className={styles.heroImageWrap}>

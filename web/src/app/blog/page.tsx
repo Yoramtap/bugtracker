@@ -11,8 +11,8 @@ export default function BlogIndexPage() {
           <p className={styles.kicker}>build notes</p>
           <h1>All notes, gentle and steady.</h1>
           <p className={styles.subtitle}>
-            Recent build logs to warm the week, each with a small change and a calm,
-            considered rhythm.
+            Each entry tracks a real change from PRD to merge, with the checks and
+            notes in between.
           </p>
         </div>
         <Link className={styles.backLink} href="/">
