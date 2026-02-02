@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./build-loop.module.css";
 
 const steps = [
-  { title: "Code", detail: "shape the work" },
-  { title: "Commit", detail: "lock it in" },
-  { title: "Test", detail: "prove it" },
-  { title: "Write note", detail: "capture the change" },
-  { title: "Ship", detail: "share the loop" },
+  { title: "Plan", detail: "draft PRD + split stories" },
+  { title: "Build", detail: "code the change" },
+  { title: "Verify", detail: "prove it" },
+  { title: "Note", detail: "log the build" },
+  { title: "Ship", detail: "share the work" },
 ];
 
 export default function BuildLoop() {
@@ -41,7 +41,7 @@ export default function BuildLoop() {
     >
       <div className={styles.header}>
         <p className={styles.kicker}>build loop</p>
-        <h2>Code. Commit. Test. Note. Ship.</h2>
+        <h2>Plan. Build. Verify. Note. Ship.</h2>
       </div>
       <div className={styles.loop} aria-label="Build loop steps">
         {steps.map((step, index) => (

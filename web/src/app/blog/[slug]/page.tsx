@@ -24,11 +24,15 @@ export default async function BlogPostPage({ params }: Params) {
     notFound();
   }
 
-  const sortedPosts = [...posts].sort((a, b) => {
-    const aTime = Date.parse(a.date);
-    const bTime = Date.parse(b.date);
-    return bTime - aTime;
-  });
+  const sortedPosts = posts
+    .map((entry, index) => ({ entry, index }))
+    .sort((a, b) => {
+      const aTime = Date.parse(a.entry.date);
+      const bTime = Date.parse(b.entry.date);
+      if (aTime !== bTime) return bTime - aTime;
+      return b.index - a.index;
+    })
+    .map(({ entry }) => entry);
 
   const currentIndex = sortedPosts.findIndex((entry) => entry.slug === slug);
   const previousPost =
