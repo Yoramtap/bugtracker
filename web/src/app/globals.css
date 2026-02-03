@@ -4,6 +4,25 @@
   margin: 0;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -140%);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  z-index: 50;
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 18px);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
 :root {
   --background: #f6f0e7;
   --surface: #fbf7f2;

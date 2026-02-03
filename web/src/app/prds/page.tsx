@@ -1,4 +1,3 @@
-import Link from "next/link";
 import styles from "./page.module.css";
 import KeyboardCardGrid from "../components/keyboard-card-grid";
 import { getPrdCards } from "./data";
@@ -17,9 +16,6 @@ export default function PrdsPage() {
             got it shipped.
           </p>
         </div>
-        <Link className={styles.backLink} href="/">
-          back to home
-        </Link>
       </header>
 
       <KeyboardCardGrid

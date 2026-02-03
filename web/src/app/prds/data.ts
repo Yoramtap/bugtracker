@@ -69,13 +69,17 @@ export const getPrdEntries = (): PrdEntry[] => {
       const content = fs.readFileSync(filePath, "utf-8");
       const stat = fs.statSync(filePath);
       return {
-        slug: file.replace(/^prd-/, "").replace(/\.md$/, ""),
-        title: getTitleFromMarkdown(content),
-        summary: getSummaryFromMarkdown(content),
-        date: formatDate(stat.mtime),
+        sortTime: stat.mtimeMs,
+        entry: {
+          slug: file.replace(/^prd-/, "").replace(/\.md$/, ""),
+          title: getTitleFromMarkdown(content),
+          summary: getSummaryFromMarkdown(content),
+          date: formatDate(stat.mtime),
+        },
       };
     })
-    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+    .sort((a, b) => b.sortTime - a.sortTime)
+    .map(({ entry }) => entry);
 };
 
 export const getPrdEntry = (slug: string): PrdEntry | null => {

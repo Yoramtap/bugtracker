@@ -27,9 +27,6 @@ export default async function PrdPage({ params }: Params) {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <Link className={styles.backLink} href="/prds">
-          back to PRDs
-        </Link>
         <p className={styles.meta}>
           <span>PRD</span>
           <span>{prd.date}</span>

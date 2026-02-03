@@ -105,6 +105,7 @@ export default function KeyboardCardGrid({
             key={post.slug}
             className={`${classNames.card} ${isFocused ? classNames.focused : ""}`}
             href={`${hrefBase}/${post.slug}`}
+            data-kind={post.category.toLowerCase()}
             ref={(el) => {
               refs.current[index] = el;
             }}

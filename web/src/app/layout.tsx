@@ -29,8 +29,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${display.variable} ${body.variable}`}>
         <NightVisionTrigger>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
           <PrimaryNav />
-          {children}
+          <main id="main-content">{children}</main>
         </NightVisionTrigger>
       </body>
     </html>

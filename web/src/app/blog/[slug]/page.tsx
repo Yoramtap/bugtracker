@@ -61,9 +61,6 @@ function PostLayout({ post, previousPost, nextPost }: PostLayoutProps) {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <Link className={styles.backLink} href="/blog">
-          back to blog
-        </Link>
         <p className={styles.meta}>
           <span>story</span>
           <span>{post.author}</span>
