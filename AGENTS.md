@@ -125,7 +125,7 @@ Ralph is an autonomous AI agent loop that runs Codex repeatedly until all PRD it
 - Memory persists via git history, `progress.txt`, and `prd.json`
 - Stories should be small enough to complete in one context window
 - Always update AGENTS.md with discovered patterns for future iterations
-- Skills are installed globally in `~/.codex/skills`; PRDs are generated via `scripts/prd.sh`
+- Skills are installed globally in `~/.codex/skills`; PRDs are generated via the `prd` skill
 - To remove a PRD from the homepage PRD card list, move `tasks/prd-*.md` into `archive/`
 - Lint forbids `require()` imports in `web/src/app/prds/data.ts`; use static ES imports
 - Avoid synchronous `setState` inside effects; initialize state outside the effect or update in event handlers

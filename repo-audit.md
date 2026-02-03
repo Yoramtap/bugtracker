@@ -4,13 +4,13 @@ Date: 2026-02-03
 
 ## Snapshot
 - Top level is a Ralph/Codex automation repo plus a Next.js app in `web/`.
-- Core workflow files: `prd.json`, `progress.txt`, `tasks/`, `archive/`, `scripts/`, `workflows/`, `AGENTS.md`.
+- Core workflow files: `prd.json`, `progress.txt`, `tasks/`, `archive/`, `workflows/`, `AGENTS.md`.
 - App code is small: 19 files under `web/src/`, using the App Router.
 
 ## Build/Run Pipeline
 - `web/` uses Next.js `16.1.6`, React `19.2.3`, TypeScript `^5`.
 - Dev/build/lint are in `web/package.json` (`dev`, `build`, `start`, `lint`).
-- Typecheck is centralized at root: `scripts/typecheck.sh` runs `web/node_modules/.bin/tsc --noEmit`.
+- Typecheck was previously centralized at root via `scripts/typecheck.sh` (now removed).
 - No tests configured at repo level.
 
 ## Structure Observations
@@ -33,4 +33,4 @@ Date: 2026-02-03
 4. Data/content organization
    - Move `posts.ts` and PRD parsing utilities into a `web/src/data/` or `web/src/content/` folder for clearer separation from route components.
 5. Repo boundaries
-   - Optionally move Ralph tooling (`scripts/`, `workflows/`, `tasks/`, `archive/`) into a `ralph/` subdir if you want the app to stand alone.
+   - Optionally move Ralph tooling (`workflows/`, `tasks/`, `archive/`) into a `ralph/` subdir if you want the app to stand alone.
