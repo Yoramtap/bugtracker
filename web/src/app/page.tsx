@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { posts } from "./blog/posts";
-import BuildLoop from "./components/build-loop";
 import KeyboardCardGrid from "./components/keyboard-card-grid";
 import { getPrdCards } from "./prds/data";
 
@@ -47,7 +46,6 @@ export default function Home() {
           </div>
         </section>
 
-        <BuildLoop />
         <section className={styles.featured} id="prds">
           <div className={styles.sectionHeader}>
             <div>

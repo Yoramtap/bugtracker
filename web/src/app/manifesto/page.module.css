@@ -31,19 +31,13 @@
   font-size: clamp(2.4rem, 4vw, 3.4rem);
   line-height: 1.1;
   margin-bottom: 12px;
+  text-wrap: balance;
 }
 
 .subtitle {
   color: var(--ink-soft);
   max-width: 560px;
   line-height: 1.7;
-}
-
-.backLink {
-  align-self: flex-start;
-  text-transform: lowercase;
-  font-size: 0.95rem;
-  border-bottom: 1px solid var(--ink);
 }
 
 .section {
@@ -54,6 +48,7 @@
 .section h2 {
   font-size: 1.6rem;
   margin-bottom: 16px;
+  text-wrap: balance;
 }
 
 .section p {
@@ -61,35 +56,46 @@
   line-height: 1.8;
 }
 
-.steps {
+.buildSteps {
   list-style: none;
   display: grid;
-  gap: 16px;
+  gap: 12px;
   padding: 0;
   margin: 0;
 }
 
-.steps li {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
+.buildSteps li {
+  padding-left: 18px;
+  position: relative;
+  display: grid;
   gap: 6px;
+  color: var(--ink-soft);
+  line-height: 1.7;
 }
 
-.stepTitle {
+.buildSteps li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.stepLabel {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 0.75rem;
   color: var(--ink-soft);
 }
 
-.stepBody {
+.stepText {
   font-size: 1rem;
-  color: var(--ink);
-  line-height: 1.6;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.buildLoopWrap {
+  max-width: 880px;
+  margin: 0 auto 48px;
 }
 
 .principles {

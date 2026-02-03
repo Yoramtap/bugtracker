@@ -1,4 +1,3 @@
-import Link from "next/link";
 import BuildLoop from "../components/build-loop";
 import styles from "./page.module.css";
 
@@ -8,15 +7,12 @@ export default function ManifestoPage() {
       <header className={styles.header}>
         <div>
           <p className={styles.kicker}>manifesto</p>
-          <h1>A home for the builder + agent.</h1>
+          <h1>A Home for the Builder + Agent.</h1>
           <p className={styles.subtitle}>
             We document the work as it happens: the plan, the stories, the build
             notes, and the learnings that keep the craft honest.
           </p>
         </div>
-        <Link className={styles.backLink} href="/">
-          Back home
-        </Link>
       </header>
 
       <section className={styles.section}>
@@ -29,30 +25,32 @@ export default function ManifestoPage() {
       </section>
 
       <section className={styles.section}>
-        <h2>How we build</h2>
-        <ol className={styles.steps}>
+        <h2>How We Build</h2>
+        <ul className={styles.buildSteps}>
           <li>
-            <span className={styles.stepTitle}>PRD</span>
-            <span className={styles.stepBody}>
+            <span className={styles.stepLabel}>PRD</span>
+            <span className={styles.stepText}>
               Start with the intent, constraints, and success criteria.
             </span>
           </li>
           <li>
-            <span className={styles.stepTitle}>Stories</span>
-            <span className={styles.stepBody}>
+            <span className={styles.stepLabel}>Stories</span>
+            <span className={styles.stepText}>
               Break the plan into focused, shippable slices.
             </span>
           </li>
           <li>
-            <span className={styles.stepTitle}>Build notes</span>
-            <span className={styles.stepBody}>
+            <span className={styles.stepLabel}>Build Notes</span>
+            <span className={styles.stepText}>
               Log what shipped, what changed, and what we learned.
             </span>
           </li>
-        </ol>
+        </ul>
       </section>
 
-      <BuildLoop />
+      <section className={styles.buildLoopWrap}>
+        <BuildLoop />
+      </section>
 
       <section className={styles.section}>
         <h2>Principles</h2>
