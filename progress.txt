@@ -1,4 +1,7 @@
 # Ralph Progress Log
+## Codebase Patterns
+- Primary navigation lives in `web/src/app/components/primary-nav.tsx` and is mounted in `web/src/app/layout.tsx`.
+
 Started: Tue Feb  3 20:07:43 CET 2026
 ---
 ## 2026-02-03 20:15 CET - US-001
@@ -15,4 +18,12 @@ Started: Tue Feb  3 20:07:43 CET 2026
 - **Learnings for future iterations:**
   - The build loop component starts hidden until it intersects the viewport; it appears after scrolling into view.
   - agent-browser opened the page and captured a screenshot, but some commands failed with daemon startup errors; manual scroll verification may be needed if this persists.
+---
+## 2026-02-03 20:27 CET - US-003
+- Added a site-wide primary navigation header with a Manifesto link.
+- Verified the Manifesto link via agent-browser; captured /tmp/manifesto-nav.png.
+- Files changed: web/src/app/components/primary-nav.tsx, web/src/app/components/primary-nav.module.css, web/src/app/layout.tsx, prd.json, progress.txt
+- **Learnings for future iterations:**
+  - The primary nav is now global via `web/src/app/layout.tsx`; update `web/src/app/components/primary-nav.tsx` for nav changes.
+  - agent-browser can open the page, but `agent-browser close` may fail with a daemon startup error.
 ---

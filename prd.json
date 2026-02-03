@@ -48,8 +48,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added a PrimaryNav component with a Manifesto link in the site-wide header. Lint and typecheck passed on Feb 3, 2026. Verified in browser with agent-browser; screenshot saved to /tmp/manifesto-nav.png (daemon close command still failing)."
     }
   ]
 }

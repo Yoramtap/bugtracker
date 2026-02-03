@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, Work_Sans } from "next/font/google";
 import "./globals.css";
 import NightVisionTrigger from "./components/night-vision-trigger";
+import PrimaryNav from "./components/primary-nav";
 
 const display = DM_Serif_Display({
   variable: "--font-display",
@@ -27,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable}`}>
-        <NightVisionTrigger>{children}</NightVisionTrigger>
+        <NightVisionTrigger>
+          <PrimaryNav />
+          {children}
+        </NightVisionTrigger>
       </body>
     </html>
   );

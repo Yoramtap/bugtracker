@@ -1,0 +1,60 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg-gradient-start);
+  border-bottom: 1px solid var(--line);
+}
+
+.inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px 6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-family: var(--font-display), "DM Serif Display", serif;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  font-size: 0.95rem;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.link {
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  border-bottom-color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .inner {
+    padding: 16px 6vw;
+  }
+
+  .brand {
+    width: 100%;
+  }
+
+  .links {
+    width: 100%;
+    gap: 16px;
+  }
+}
