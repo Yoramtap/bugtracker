@@ -4,7 +4,7 @@ Date: 2026-02-03
 
 ## Snapshot
 - Top level is a Ralph/Codex automation repo plus a Next.js app in `web/`.
-- Core workflow files: `prd.json`, `progress.txt`, `tasks/`, `archive/`, `workflows/`, `AGENTS.md`.
+- Core workflow files: `prd.json`, `progress.txt`, `tasks/`, `archive/`, `AGENTS.md`.
 - App code is small: 19 files under `web/src/`, using the App Router.
 
 ## Build/Run Pipeline
@@ -33,4 +33,4 @@ Date: 2026-02-03
 4. Data/content organization
    - Move `posts.ts` and PRD parsing utilities into a `web/src/data/` or `web/src/content/` folder for clearer separation from route components.
 5. Repo boundaries
-   - Optionally move Ralph tooling (`workflows/`, `tasks/`, `archive/`) into a `ralph/` subdir if you want the app to stand alone.
+   - Optionally move Ralph tooling (`tasks/`, `archive/`) into a `ralph/` subdir if you want the app to stand alone.

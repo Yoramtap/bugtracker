@@ -24,7 +24,7 @@ Ralph is an autonomous AI agent loop that runs AI coding tools like [Codex CLI](
 
 This repo was made Codex-ready by Yoram Tap.
 
-**Codex PRD flow:** Use the `prd` skill (with `workflows/prd.md`) to generate PRDs in `tasks/`, and the `ralph` skill (with `workflows/ralph.md`) to convert them to `prd.json`. Skills are installed globally in `~/.codex/skills` (not in this repo).
+**Codex PRD flow:** Use the `prd` skill to generate PRDs in `tasks/`, and the `ralph` skill to convert them to `prd.json`. Skills are installed globally in `~/.codex/skills` (not in this repo).
 For terminal runs, answer the interactive questions. For chat/non-interactive runs, pass `--answers "1A, 2B, 3A"` to generate the PRD in one shot.
 
 Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
@@ -92,8 +92,6 @@ Ralph will:
 |------|---------|
 | `ralph.sh` | The bash loop that spawns fresh Codex instances |
 | `AGENTS.md` | Prompt template for Codex |
-| `workflows/prd.md` | Codex prompt for generating PRDs |
-| `workflows/ralph.md` | Codex prompt for converting PRDs to prd.json |
 | `prd.json` | User stories with `passes` status (the task list) |
 | `prd.json.example` | Example PRD format for reference |
 | `progress.txt` | Append-only learnings for future iterations |

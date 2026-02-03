@@ -115,8 +115,6 @@ Ralph is an autonomous AI agent loop that runs Codex repeatedly until all PRD it
 ## Key Files
 
 - `ralph.sh` - The bash loop that spawns fresh AI instances (supports `--tool amp`, `--tool claude`, or `--tool codex`)
-- `workflows/prd.md` - Codex PRD generator prompt
-- `workflows/ralph.md` - Codex PRD → prd.json converter prompt
 - `prd.json.example` - Example PRD format
 
 ## Patterns
