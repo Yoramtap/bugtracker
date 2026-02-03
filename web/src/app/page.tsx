@@ -4,10 +4,12 @@ import styles from "./page.module.css";
 import { posts } from "./blog/posts";
 import BuildLoop from "./components/build-loop";
 import KeyboardCardGrid from "./components/keyboard-card-grid";
+import { getPrdCards } from "./prds/data";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function Home() {
+  const prds = getPrdCards().slice(0, 3);
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -67,6 +69,31 @@ export default function Home() {
               focused: styles.cardFocused,
             }}
             linkLabel="Read the note"
+          />
+        </section>
+
+        <section className={styles.featured} id="prds">
+          <div className={styles.sectionHeader}>
+            <div>
+              <p className={styles.sectionKicker}>prds</p>
+              <h2>Specs we shipped</h2>
+            </div>
+            <Link className={styles.sectionLink} href="/prds">
+              View all PRDs
+            </Link>
+          </div>
+          <KeyboardCardGrid
+            items={prds}
+            hrefBase="/prds"
+            classNames={{
+              grid: styles.cards,
+              card: styles.card,
+              meta: styles.cardMeta,
+              excerpt: styles.cardExcerpt,
+              link: styles.cardLink,
+              focused: styles.cardFocused,
+            }}
+            linkLabel="Read the PRD"
           />
         </section>
 

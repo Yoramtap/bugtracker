@@ -1,45 +1,55 @@
 {
-  "project": "Quiet Navigation",
-  "branchName": "ralph/quiet-navigation",
-  "description": "Add lightweight navigation to the blog: keyboard navigation on the blog index and the “Fresh from the build log” cards on the landing page (j/k and arrow keys), plus previous/next links at the bottom of each post page, keeping the UI calm and minimal.",
+  "project": "PRD Library",
+  "branchName": "codex/prd-library",
+  "description": "Add a PRD library so readers can browse the PRDs that guided each feature, with a /prds index, detail pages that render markdown, and a home page teaser section.",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Keyboard Navigation on Index",
-      "description": "As a reader, I want to move through blog cards with the keyboard so I can scan posts quickly.",
+      "title": "PRD Index Page",
+      "description": "As a reader, I want to browse PRDs so I can understand how features were planned.",
       "acceptanceCriteria": [
-        "j or ArrowDown moves focus to the next card",
-        "k or ArrowUp moves focus to the previous card",
-        "ArrowRight moves focus to the next card; ArrowLeft to the previous",
-        "Enter opens the focused card",
-        "Focus wraps at the ends (last to first, first to last)",
-        "Keyboard navigation does not trigger when typing in inputs, textareas, or contenteditable elements",
-        "Clicking a card keeps the focused state in sync",
-        "A subtle visual focus state appears on the active card",
-        "Works on the blog index and the “Fresh from the build log” cards on the landing page",
+        "A new /prds page lists PRDs as cards",
+        "Each PRD card shows title, date, and a short summary",
+        "Cards match the visual style of blog note cards",
+        "PRDs are sourced from tasks/prd-*.md files",
+        "Keyboard navigation (j/k/arrow keys + enter) works on PRD cards",
         "Verify in browser using agent-browser skill",
         "Typecheck passes"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Verified in browser on Feb 2, 2026."
+      "notes": "Verified in browser on Feb 3, 2026."
     },
     {
       "id": "US-002",
-      "title": "Previous/Next on Post Page",
-      "description": "As a reader, I want links to the previous/next post so I can continue reading in order.",
+      "title": "PRD Detail Page",
+      "description": "As a reader, I want to open a PRD so I can read the full spec.",
       "acceptanceCriteria": [
-        "Post pages show previous/next links near the bottom",
-        "Ordering is based on post date (newest to oldest) using posts from web/src/app/blog/posts.ts",
-        "Links include post titles and clear labels",
-        "Previous/next links do not render when there is no adjacent post",
-        "Links match existing card/link styling",
+        "Each PRD has a detail page at /prds/[slug]",
+        "The page renders the PRD markdown content",
+        "The layout follows the blog post style (header, meta, body)",
+        "The page links back to /prds",
         "Verify in browser using agent-browser skill",
         "Typecheck passes"
       ],
       "priority": 2,
       "passes": true,
-      "notes": "Verified in browser on Feb 2, 2026."
+      "notes": "Verified in browser on Feb 3, 2026."
+    },
+    {
+      "id": "US-003",
+      "title": "Home Page PRD Section",
+      "description": "As a reader, I want to discover PRDs from the home page so I can explore the planning artifacts.",
+      "acceptanceCriteria": [
+        "The home page includes a PRD section with three cards matching the blog teaser style",
+        "Each card shows title, date, and short summary",
+        "The section links to /prds",
+        "Verify in browser using agent-browser skill",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Verified in browser on Feb 3, 2026."
     }
   ]
 }

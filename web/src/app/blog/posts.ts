@@ -479,4 +479,85 @@ export const posts: BlogPost[] = [
       "Backspace is a natural “go back” action when inputs aren’t active.",
     ],
   },
+  {
+    slug: "prd-library-index",
+    title: "PRD library: index page",
+    summary:
+      "Added a /prds index that lists PRDs as cards with keyboard navigation.",
+    excerpt:
+      "Added a /prds index that lists PRDs as cards with keyboard navigation.",
+    date: "Feb 3, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-2.svg",
+    whatShipped:
+      "Introduced a PRD index page that reads task PRDs, shows title/date/summary cards, and supports keyboard navigation.",
+    implemented:
+      "Parsed tasks/prd-*.md on the server to build card metadata and reused the existing card grid for navigation.",
+    files: [
+      "web/src/app/prds/page.tsx",
+      "web/src/app/prds/page.module.css",
+      "web/src/app/prds/data.ts",
+      "prd.json",
+    ],
+    learnings: [
+      "PRD metadata can be derived from markdown headings and intro sections.",
+      "Reusing the card grid keeps navigation consistent across sections.",
+      "Server-side parsing keeps PRD content in sync with tasks/.",
+    ],
+  },
+  {
+    slug: "prd-library-detail",
+    title: "PRD library: detail pages",
+    summary:
+      "Added PRD detail pages that render the markdown specs in a blog-style layout.",
+    excerpt:
+      "Added PRD detail pages that render the markdown specs in a blog-style layout.",
+    date: "Feb 3, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-3.svg",
+    whatShipped:
+      "Introduced /prds/[slug] pages with markdown rendering, meta header, and back link to the PRD index.",
+    implemented:
+      "Loaded PRD markdown from tasks/, parsed headings/lists/code, and styled it to match the blog post cadence.",
+    files: [
+      "web/src/app/prds/[slug]/page.tsx",
+      "web/src/app/prds/[slug]/page.module.css",
+      "web/src/app/prds/markdown.tsx",
+      "web/src/app/prds/data.ts",
+      "prd.json",
+    ],
+    learnings: [
+      "A minimal markdown parser is enough for internal PRDs.",
+      "Keeping PRDs in tasks/ makes the library auto-updating.",
+      "Reusing post styling preserves the editorial feel.",
+    ],
+  },
+  {
+    slug: "prd-library-home",
+    title: "PRD library: home teaser",
+    summary:
+      "Added a PRD teaser section on the home page with three recent specs.",
+    excerpt:
+      "Added a PRD teaser section on the home page with three recent specs.",
+    date: "Feb 3, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-4.svg",
+    whatShipped:
+      "Introduced a PRD section on the landing page that links to /prds and mirrors the build-note card layout.",
+    implemented:
+      "Reused the keyboard card grid for PRDs and pulled the three latest PRDs into the home layout.",
+    files: [
+      "web/src/app/page.tsx",
+      "web/src/app/prds/data.ts",
+      "prd.json",
+    ],
+    learnings: [
+      "Shared card components make new sections quick to add.",
+      "Keeping PRD data server-side prevents content drift.",
+      "Teaser sections work best when they mirror existing grid patterns.",
+    ],
+  },
 ];
