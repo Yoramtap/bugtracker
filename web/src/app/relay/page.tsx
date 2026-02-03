@@ -12,14 +12,6 @@ export default function RelayPage() {
         </p>
       </header>
 
-      <section className={styles.card}>
-        <p className={styles.cardTitle}>Status</p>
-        <p className={styles.cardText}>
-          Relay&apos;s full introduction is here. This is the short version before
-          the long version, delivered with a wink and a checklist.
-        </p>
-      </section>
-
       <section className={styles.section}>
         <h2>Bio</h2>
         <p className={styles.sectionText}>

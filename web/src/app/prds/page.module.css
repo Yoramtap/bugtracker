@@ -70,7 +70,8 @@
 }
 
 .card[data-kind="prd"] {
-  background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+  background: var(--surface);
+  border-color: var(--line);
 }
 
 .card:hover {
