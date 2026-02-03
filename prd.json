@@ -28,8 +28,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Build notes remain below PRDs after reorder; no content changes. Verified on Feb 3, 2026."
     }
   ]
 }

@@ -9,3 +9,9 @@ Started: Tue Feb  3 12:21:34 CET 2026
   - Lint enforces no synchronous setState calls inside effects; move state initialization and initial toast visibility outside the effect body.
   - Prefer static imports over require in server-side PRD data helpers to satisfy lint rules.
 ---
+## 2026-02-03 13:42 CET - US-002
+- Confirmed build notes remain below PRDs with no content changes after section reorder.
+- Files changed: prd.json, progress.txt, archive/prd-prd-first-homepage.md
+- **Learnings for future iterations:**
+  - Moving a PRD markdown file out of `tasks/` removes it from the PRD card list.
+---
