@@ -184,7 +184,7 @@ html[data-night-vision="on"] .heroImageNight {
 }
 
 .card[data-kind="prd"] {
-  background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+  background: var(--surface);
 }
 
 .card[data-kind="story"] {
