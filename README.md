@@ -48,7 +48,7 @@ Copy the ralph files into your project:
 # From your project root
 mkdir -p scripts/ralph
 cp /path/to/ralph/ralph.sh scripts/ralph/
-cp /path/to/ralph/CODEX.md scripts/ralph/CODEX.md
+cp /path/to/ralph/AGENTS.md scripts/ralph/AGENTS.md
 
 chmod +x scripts/ralph/ralph.sh
 ```
@@ -106,7 +106,7 @@ Ralph will:
 | File | Purpose |
 |------|---------|
 | `ralph.sh` | The bash loop that spawns fresh Codex instances |
-| `CODEX.md` | Prompt template for Codex |
+| `AGENTS.md` | Prompt template for Codex |
 | `workflows/prd.md` | Codex prompt for generating PRDs |
 | `workflows/ralph.md` | Codex prompt for converting PRDs to prd.json |
 | `scripts/prd.sh` | Run the Codex PRD generator |
@@ -185,7 +185,7 @@ git log --oneline -10
 
 ## Customizing the Prompt
 
-After copying `CODEX.md` to your project, customize it for your project:
+After copying `AGENTS.md` to your project, customize it for your project:
 - Add project-specific quality check commands
 - Include codebase conventions
 - Add common gotchas for your stack

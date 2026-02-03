@@ -120,7 +120,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   OUTPUT=""
   while true; do
     set +e
-    OUTPUT=$(codex exec --full-auto --cd "$SCRIPT_DIR" - < "$SCRIPT_DIR/CODEX.md" 2>&1 | tee /dev/stderr)
+    OUTPUT=$(codex exec --full-auto --cd "$SCRIPT_DIR" - < "$SCRIPT_DIR/AGENTS.md" 2>&1 | tee /dev/stderr)
     CODEX_STATUS=${PIPESTATUS[0]}
     set -e
 
