@@ -1,6 +1,11 @@
 # Ralph Progress Log
 Started: Tue Feb  3 12:21:34 CET 2026
 ---
-Feb 3, 2026 - US-001 (PRD-First Blog): Added PRD-first blog index sections and CTA anchor.
-Feb 3, 2026 - US-002 (PRD-First Blog): Moved related stories to top of PRD pages.
-Feb 3, 2026 - US-003 (PRD-First Blog): Added related PRD card to build notes.
+## 2026-02-03 13:40 CET - US-001
+- Reordered the home page sections so PRDs render before build notes; verified on the homepage.
+- Fixed lint/typecheck blockers in PRD markdown rendering, PRD data imports, and night-vision toast initialization.
+- Files changed: web/src/app/page.tsx, web/src/app/prds/markdown.tsx, web/src/app/prds/data.ts, web/src/app/components/night-vision-trigger.tsx, prd.json, progress.txt
+- **Learnings for future iterations:**
+  - Lint enforces no synchronous setState calls inside effects; move state initialization and initial toast visibility outside the effect body.
+  - Prefer static imports over require in server-side PRD data helpers to satisfy lint rules.
+---

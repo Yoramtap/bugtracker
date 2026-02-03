@@ -16,7 +16,11 @@ export default function NightVisionTrigger({
 }) {
   const bufferRef = useRef("");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [mode, setMode] = useState<Mode>("off");
+  const [mode, setMode] = useState<Mode>(() => {
+    if (typeof window === "undefined") return "off";
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "on" || stored === "off" ? stored : "off";
+  });
   const [toastMessage, setToastMessage] = useState("");
   const [toastTick, setToastTick] = useState(0);
   const [isToastVisible, setIsToastVisible] = useState(false);
@@ -24,14 +28,8 @@ export default function NightVisionTrigger({
   const showToast = (message: string) => {
     setToastMessage(message);
     setToastTick((prev) => prev + 1);
+    setIsToastVisible(true);
   };
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "on" || stored === "off") {
-      setMode(stored);
-    }
-  }, []);
 
   useEffect(() => {
     const updateHtmlAttribute = () => {
@@ -77,8 +75,6 @@ export default function NightVisionTrigger({
 
   useEffect(() => {
     if (!toastMessage) return;
-
-    setIsToastVisible(true);
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);

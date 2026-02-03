@@ -48,6 +48,32 @@ export default function Home() {
         </section>
 
         <BuildLoop />
+        <section className={styles.featured} id="prds">
+          <div className={styles.sectionHeader}>
+            <div>
+              <p className={styles.sectionKicker}>prds</p>
+              <h2>Specs we shipped</h2>
+            </div>
+            <Link className={styles.sectionLink} href="/prds">
+              View all PRDs
+            </Link>
+          </div>
+          <KeyboardCardGrid
+            items={prds}
+            hrefBase="/prds"
+            classNames={{
+              grid: styles.cards,
+              card: styles.card,
+              meta: styles.cardMeta,
+              excerpt: styles.cardExcerpt,
+              link: styles.cardLink,
+              focused: styles.cardFocused,
+              count: styles.cardCount,
+            }}
+            linkLabel="Read the PRD"
+          />
+        </section>
+
         <section className={styles.featured} id="featured">
           <div className={styles.sectionHeader}>
             <div>
@@ -72,32 +98,6 @@ export default function Home() {
               focused: styles.cardFocused,
             }}
             linkLabel="Read the note"
-          />
-        </section>
-
-        <section className={styles.featured} id="prds">
-          <div className={styles.sectionHeader}>
-            <div>
-              <p className={styles.sectionKicker}>prds</p>
-              <h2>Specs we shipped</h2>
-            </div>
-            <Link className={styles.sectionLink} href="/prds">
-              View all PRDs
-            </Link>
-          </div>
-          <KeyboardCardGrid
-            items={prds}
-            hrefBase="/prds"
-            classNames={{
-              grid: styles.cards,
-              card: styles.card,
-              meta: styles.cardMeta,
-              excerpt: styles.cardExcerpt,
-              link: styles.cardLink,
-              focused: styles.cardFocused,
-              count: styles.cardCount,
-            }}
-            linkLabel="Read the PRD"
           />
         </section>
 

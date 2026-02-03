@@ -100,7 +100,7 @@ export const renderMarkdown = (markdown: string) => {
   return blocks.map((block) => {
     counter += 1;
     if (block.type === "heading") {
-      const Heading = `h${block.level}` as keyof JSX.IntrinsicElements;
+      const Heading = `h${block.level}` as "h1" | "h2" | "h3";
       return <Heading key={`h-${counter}`}>{block.text}</Heading>;
     }
     if (block.type === "list") {

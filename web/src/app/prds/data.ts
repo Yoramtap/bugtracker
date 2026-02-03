@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { posts } from "../blog/posts";
 
 export type PrdEntry = {
   slug: string;
@@ -83,7 +84,6 @@ export const getPrdEntry = (slug: string): PrdEntry | null => {
   if (!fs.existsSync(filePath)) return null;
   const content = fs.readFileSync(filePath, "utf-8");
   const stat = fs.statSync(filePath);
-  const { posts } = require("../blog/posts");
   const relatedStories = posts
     .filter((post: { prdSlug?: string }) => post.prdSlug === slug)
     .map((post: { slug: string; title: string; date: string }) => ({
@@ -102,7 +102,6 @@ export const getPrdEntry = (slug: string): PrdEntry | null => {
 };
 
 export const getPrdCards = (): PrdCard[] => {
-  const { posts } = require("../blog/posts");
   return getPrdEntries().map((entry) => ({
     slug: entry.slug,
     title: entry.title,
