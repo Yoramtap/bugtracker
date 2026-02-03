@@ -1,3 +1,10 @@
 # Ralph Progress Log
 Started: Tue Feb  3 20:07:43 CET 2026
 ---
+## 2026-02-03 20:15 CET - US-001
+- Added /manifesto page with vision, how-we-build steps, and principles content using existing typography.
+- Added manifesto page styles with section layout and step cards.
+- Files changed: web/src/app/manifesto/page.tsx, web/src/app/manifesto/page.module.css, prd.json, progress.txt
+- **Learnings for future iterations:**
+  - Keep new content pages aligned with blog/prds layout patterns for consistent typography and spacing.
+---

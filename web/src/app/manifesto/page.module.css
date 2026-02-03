@@ -1,0 +1,129 @@
+.page {
+  min-height: 100vh;
+  background: radial-gradient(
+    circle at top,
+    var(--bg-gradient-start) 0%,
+    var(--bg-gradient-mid) 55%,
+    var(--bg-gradient-end) 100%
+  );
+  padding: 96px 6vw 80px;
+  color: var(--ink);
+}
+
+.header {
+  max-width: 880px;
+  margin: 0 auto 56px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.kicker {
+  text-transform: lowercase;
+  letter-spacing: 0.18em;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.backLink {
+  align-self: flex-start;
+  text-transform: lowercase;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.section {
+  max-width: 880px;
+  margin: 0 auto 48px;
+}
+
+.section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+}
+
+.section p {
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+.steps li {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stepTitle {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.stepBody {
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.principles {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.principles li {
+  padding-left: 18px;
+  position: relative;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.principles li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 72px 6vw 64px;
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  .section {
+    margin-bottom: 36px;
+  }
+}

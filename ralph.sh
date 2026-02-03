@@ -99,7 +99,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "==============================================================="
 
   # Run Codex non-interactively in this repo
-  OUTPUT=$(codex exec --full-auto --cd "$SCRIPT_DIR" - < "$SCRIPT_DIR/AGENTS.md" 2>&1 | tee /dev/stderr) || true
+  OUTPUT=$(codex exec --full-auto --cd "$SCRIPT_DIR" - < "$SCRIPT_DIR/CODEX.md" 2>&1 | tee /dev/stderr) || true
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
