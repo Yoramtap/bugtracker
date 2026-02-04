@@ -40,7 +40,7 @@ export default async function PrdPage({ params }: Params) {
           <ul className={styles.relatedList}>
             {prd.relatedStories.map((story) => (
               <li key={story.slug} className={styles.relatedItem}>
-                <Link className={styles.relatedLink} href={`/blog/${story.slug}`}>
+                <Link className={styles.relatedLink} href={`/prds/story/${story.slug}`}>
                   <span>{story.title}</span>
                   <span className={styles.relatedMeta}>{story.date}</span>
                 </Link>

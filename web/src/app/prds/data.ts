@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { getPrdSlugsFromTags, posts } from "../blog/posts";
+import { execSync } from "child_process";
+import { getPrdSlugsFromTags, posts } from "./story/posts";
 
 export type PrdEntry = {
   slug: string;
@@ -21,6 +22,7 @@ export type PrdCard = Pick<
 > & { category: string; storyCount: number };
 
 const TASKS_DIR = path.resolve(process.cwd(), "..", "tasks");
+const REPO_ROOT = path.resolve(process.cwd(), "..");
 
 const formatDate = (value: Date) =>
   value.toLocaleDateString("en-US", {
@@ -29,31 +31,67 @@ const formatDate = (value: Date) =>
     year: "numeric",
   });
 
+const getGitCommitDate = (filePath: string): Date | null => {
+  try {
+    const relativePath = path.relative(REPO_ROOT, filePath);
+    const output = execSync(`git log -1 --format=%cs -- "${relativePath}"`, {
+      cwd: REPO_ROOT,
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .toString()
+      .trim();
+    if (!output) return null;
+    return new Date(`${output}T00:00:00Z`);
+  } catch {
+    return null;
+  }
+};
+
+const stripVersionSuffix = (value: string) =>
+  value.replace(/\s*\(v\d+\)\s*$/i, "").trim();
+
 const getTitleFromMarkdown = (markdown: string) => {
   const line = markdown.split("\n").find((row) => row.startsWith("# "));
-  return line ? line.replace(/^#\s+/, "").trim() : "Untitled PRD";
+  if (!line) return "Untitled PRD";
+  return stripVersionSuffix(line.replace(/^#\s+/, "").trim());
 };
 
 const getSummaryFromMarkdown = (markdown: string) => {
   const lines = markdown.split("\n");
-  const introIndex = lines.findIndex((line) =>
-    line.trim().startsWith("## 1. Introduction/Overview")
-  );
+  const introIndex = lines.findIndex((line) => {
+    const trimmed = line.trim().toLowerCase();
+    return (
+      trimmed.startsWith("## 1. introduction/overview") ||
+      trimmed.startsWith("## introduction/overview") ||
+      trimmed.startsWith("## introduction") ||
+      trimmed.startsWith("## overview")
+    );
+  });
   const startIndex = introIndex >= 0 ? introIndex + 1 : 1;
   const summaryLines: string[] = [];
 
-  for (let i = startIndex; i < lines.length; i += 1) {
-    const line = lines[i].trim();
-    if (!line) {
-      if (summaryLines.length > 0) break;
-      continue;
+  const collectSummary = (start: number) => {
+    summaryLines.length = 0;
+    for (let i = start; i < lines.length; i += 1) {
+      const line = lines[i].trim();
+      if (!line) {
+        if (summaryLines.length > 0) break;
+        continue;
+      }
+      if (line.startsWith("## ")) break;
+      if (line.startsWith("# ")) break;
+      summaryLines.push(line);
+      if (summaryLines.join(" ").length > 180) break;
     }
-    if (line.startsWith("## ")) break;
-    summaryLines.push(line);
-    if (summaryLines.join(" ").length > 160) break;
+  };
+
+  collectSummary(startIndex);
+  if (summaryLines.length === 0) {
+    const afterTitleIndex = lines.findIndex((line) => line.startsWith("# "));
+    collectSummary(afterTitleIndex >= 0 ? afterTitleIndex + 1 : 0);
   }
 
-  return summaryLines.join(" ").trim() || "Product brief and implementation plan.";
+  return summaryLines.join(" ").trim() || "Overview pending.";
 };
 
 export const getPrdEntries = (): PrdEntry[] => {
@@ -68,13 +106,14 @@ export const getPrdEntries = (): PrdEntry[] => {
       const filePath = path.join(TASKS_DIR, file);
       const content = fs.readFileSync(filePath, "utf-8");
       const stat = fs.statSync(filePath);
+      const gitDate = getGitCommitDate(filePath) ?? stat.mtime;
       return {
-        sortTime: stat.mtimeMs,
+        sortTime: gitDate instanceof Date ? gitDate.getTime() : stat.mtimeMs,
         entry: {
           slug: file.replace(/^prd-/, "").replace(/\.md$/, ""),
           title: getTitleFromMarkdown(content),
           summary: getSummaryFromMarkdown(content),
-          date: formatDate(stat.mtime),
+          date: formatDate(gitDate),
         },
       };
     })
@@ -88,6 +127,7 @@ export const getPrdEntry = (slug: string): PrdEntry | null => {
   if (!fs.existsSync(filePath)) return null;
   const content = fs.readFileSync(filePath, "utf-8");
   const stat = fs.statSync(filePath);
+  const gitDate = getGitCommitDate(filePath) ?? stat.mtime;
   const relatedStories = posts
     .filter((post) => getPrdSlugsFromTags(post.tags).includes(slug))
     .map((post: { slug: string; title: string; date: string }) => ({
@@ -99,7 +139,7 @@ export const getPrdEntry = (slug: string): PrdEntry | null => {
     slug,
     title: getTitleFromMarkdown(content),
     summary: getSummaryFromMarkdown(content),
-    date: formatDate(stat.mtime),
+    date: formatDate(gitDate),
     content,
     relatedStories,
   };

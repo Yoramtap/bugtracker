@@ -1,51 +1,62 @@
 {
-  "project": "Blog PRD-to-Story Index",
-  "branchName": "ralph/blog-prd-story-index",
-  "description": "Show PRDs as primary entries on /blog with nested related stories inferred from post metadata, ordered newest-first.",
+  "project": "PRDs + Stories Hub",
+  "branchName": "ralph/prds-stories-hub",
+  "description": "Make /prds the single hub for PRDs and related stories, remove /blog from nav, and move the older-PRDs control into /prds.",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Infer PRD-to-story mapping from post metadata",
-      "description": "As a maintainer, I want PRD-to-story relationships inferred from post metadata so I don't have to maintain a separate mapping.",
+      "title": "Show related stories in PRD accordion",
+      "description": "As a reader, I want to see related stories directly under each PRD when expanded so I can connect briefs to shipped work.",
       "acceptanceCriteria": [
-        "Define a deterministic mapping algorithm using post metadata in web/src/app/blog/posts.ts (e.g., tags like prd:<slug>)",
-        "Support associating multiple stories to a single PRD",
-        "Define behavior for stories without PRD tags (e.g., omit or group separately)",
-        "Typecheck passes"
-      ],
-      "priority": 1,
-      "passes": true,
-      "notes": "Implemented tag-based mapping and normalization in posts data."
-    },
-    {
-      "id": "US-002",
-      "title": "Render PRD groups with nested stories on /blog",
-      "description": "As a reader, I want to see each PRD with its related stories nested underneath so I can quickly scan what shipped for each PRD.",
-      "acceptanceCriteria": [
-        "Blog index renders PRD groups (PRD title/link) with nested story links below each",
-        "PRD groups are ordered newest-first by PRD date",
-        "Stories within each PRD group are ordered newest-first by story date",
-        "Layout remains responsive and consistent with the editorial list style",
+        "Expanded PRD rows render a nested list of related stories (link to /blog/[slug])",
+        "Stories appear only when the PRD is expanded",
+        "Stories are ordered newest-first by story date",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Related stories render under expanded PRDs with newest-first ordering."
+    },
+    {
+      "id": "US-002",
+      "title": "Remove /blog as a destination",
+      "description": "As a reader, I want /prds to be the primary hub without a competing blog index.",
+      "acceptanceCriteria": [
+        "Primary nav removes the Build notes link",
+        "/blog is removed from nav and not treated as a primary hub page",
+        "Typecheck passes"
+      ],
       "priority": 2,
       "passes": true,
-      "notes": "Grouped PRDs with nested stories on /blog."
+      "notes": "Primary nav now omits the Build notes link."
     },
     {
       "id": "US-003",
-      "title": "Handle empty and unassigned edge cases",
-      "description": "As a reader, I want clear behavior when PRDs have no linked stories or when posts lack PRD tags.",
+      "title": "Move Show older PRDs control to /prds",
+      "description": "As a reader, I want older PRDs collapsed by default on the main hub to keep the page short.",
       "acceptanceCriteria": [
-        "Define and implement UI behavior for PRDs with no related stories (e.g., show a note or omit)",
-        "Apply the defined behavior for stories without PRD tags",
+        "/prds shows newest PRDs by default and a Show older PRDs control",
+        "Older PRDs expand only when the control is opened",
+        "Control is visually distinct and accessible",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 3,
       "passes": true,
-      "notes": "Added Unassigned group and empty-state note."
+      "notes": "Added Show older PRDs control on /prds with distinct pill styling."
+    },
+    {
+      "id": "US-004",
+      "title": "Hide empty story sections",
+      "description": "As a reader, I don't want empty placeholders under PRDs with no related stories.",
+      "acceptanceCriteria": [
+        "PRDs with zero related stories show no story section when expanded",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Zero-story PRDs render no story section."
     }
   ]
 }

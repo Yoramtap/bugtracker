@@ -18,6 +18,36 @@ export type BlogPost = {
 
 const rawPosts: BlogPost[] = [
   {
+    slug: "prds-stories-hub",
+    title: "PRDs + stories hub",
+    prdSlug: "prds-stories-hub",
+    prdTitle: "PRDs + Stories Hub",
+    summary:
+      "Moved build notes into the PRDs hub so each brief expands to show related stories.",
+    excerpt:
+      "Moved build notes into the PRDs hub so each brief expands to show related stories.",
+    date: "Feb 4, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-6.svg",
+    whatShipped:
+      "Consolidated PRDs and related stories on /prds, removed the blog index route, and moved story pages under /prds/story.",
+    implemented:
+      "Moved story pages to /prds/story, removed /blog routes, and rendered related stories inside expanded PRD rows with an older-PRDs disclosure.",
+    files: [
+      "web/src/app/prds/page.tsx",
+      "web/src/app/prds/page.module.css",
+      "web/src/app/prds/story/[slug]/page.tsx",
+      "web/src/app/prds/story/[slug]/post-nav.tsx",
+      "web/src/app/components/primary-nav.tsx",
+    ],
+    learnings: [
+      "PRD-first navigation feels clearer when stories live directly beneath each brief.",
+      "Removing the blog index reduces navigation noise without losing story detail.",
+      "Story routes should live next to PRD routes to reinforce the hierarchy.",
+    ],
+  },
+  {
     slug: "prd-story-index-mapping",
     title: "PRD story mapping",
     prdSlug: "blog-prd-story-index",
@@ -35,7 +65,7 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Introduced a tag parser and normalized posts to derive PRD slugs from tags while keeping compatibility with existing data.",
     files: [
-      "web/src/app/blog/posts.ts",
+      "web/src/app/prds/story/posts.ts",
       "web/src/app/prds/data.ts",
       "prd.json",
     ],
@@ -63,8 +93,8 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Pulled PRDs from the tasks directory, grouped related posts under each PRD, and preserved newest-first ordering.",
     files: [
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/page.module.css",
       "web/src/app/prds/data.ts",
       "prd.json",
     ],
@@ -92,8 +122,8 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Computed unassigned posts from metadata and rendered a minimal empty-state message for PRDs without stories.",
     files: [
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/page.module.css",
       "prd.json",
     ],
     learnings: [
@@ -179,12 +209,12 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Added the blog index page with post cards, meta line, gradient thumbnails, and an “older posts” link.",
     files: [
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/page.module.css",
       "prd.json",
     ],
     learnings: [
-      "Blog pages use local data arrays and CSS modules under web/src/app/blog.",
+      "Blog pages use local data arrays and CSS modules under web/src/app/prds.",
       "Use lowercase labels and muted palettes to match the editorial tone.",
       "Manual browser verification needed (agent-browser not run here).",
     ],
@@ -207,14 +237,14 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Added blog post pages that render per-entry content with hero image, headings, paragraphs, and list sections, plus a back-to-blog link.",
     files: [
-      "web/src/app/blog/[slug]/page.tsx",
-      "web/src/app/blog/[slug]/page.module.css",
-      "web/src/app/blog/posts.ts",
-      "web/src/app/blog/page.tsx",
+      "web/src/app/prds/story/[slug]/page.tsx",
+      "web/src/app/prds/story/[slug]/page.module.css",
+      "web/src/app/prds/story/posts.ts",
+      "web/src/app/prds/story/page.tsx",
       "prd.json",
     ],
     learnings: [
-      "Use shared blog data in web/src/app/blog/posts.ts for both index and post pages.",
+      "Use shared blog data in web/src/app/prds/story/posts.ts for both index and post pages.",
       "Blog post pages should include hero image and structured sections to keep the editorial rhythm.",
       "Manual browser verification needed (agent-browser not run here).",
     ],
@@ -236,7 +266,7 @@ const rawPosts: BlogPost[] = [
       "Added build-note specific fields (summary/what shipped) to the post model and removed recipe language from sample entries.",
     implemented:
       "Added build-note specific fields (summary/what shipped) to the post model and removed recipe language from sample entries.",
-    files: ["web/src/app/blog/posts.ts", "prd.json"],
+    files: ["web/src/app/prds/story/posts.ts", "prd.json"],
     learnings: [
       "Keep backward-compatible fields during data model transitions to avoid breaking UI.",
       "Centralize build-note fields in posts.ts for consistency across pages.",
@@ -262,8 +292,8 @@ const rawPosts: BlogPost[] = [
       "Updated home, blog index, and blog post pages to read from build-note fields and to use consistent build-log labels.",
     files: [
       "web/src/app/page.tsx",
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/[slug]/page.tsx",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/[slug]/page.tsx",
       "prd.json",
     ],
     learnings: [
@@ -313,7 +343,7 @@ const rawPosts: BlogPost[] = [
       "Updated the blog post route to await params before looking up the note slug, fixing 404s on direct and linked note pages.",
     implemented:
       "Updated the blog post route to await params before looking up the note slug, fixing 404s on direct and linked note pages.",
-    files: ["web/src/app/blog/[slug]/page.tsx"],
+    files: ["web/src/app/prds/story/[slug]/page.tsx"],
     learnings: [
       "In Next.js app router, route params can be async and must be awaited.",
       "A runtime error in a dynamic route can surface as a 404 in dev.",
@@ -339,9 +369,9 @@ const rawPosts: BlogPost[] = [
       "Added overlay links to the cards and adjusted layering so the entire card surface is clickable.",
     files: [
       "web/src/app/page.tsx",
-      "web/src/app/blog/page.tsx",
+      "web/src/app/prds/story/page.tsx",
       "web/src/app/page.module.css",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.module.css",
     ],
     learnings: [
       "Full-card links improve usability when cards already hover like buttons.",
@@ -393,8 +423,8 @@ const rawPosts: BlogPost[] = [
     files: [
       "web/src/app/page.tsx",
       "web/src/app/page.module.css",
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/page.module.css",
       "prd.json",
     ],
     learnings: [
@@ -423,8 +453,8 @@ const rawPosts: BlogPost[] = [
     files: [
       "web/src/app/page.tsx",
       "web/src/app/page.module.css",
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/page.module.css",
       "prd.json",
     ],
     learnings: [
@@ -452,8 +482,8 @@ const rawPosts: BlogPost[] = [
       "Stacked hero CTAs on mobile, reduced hero image dominance, increased card spacing, and strengthened the back-to-blog link.",
     files: [
       "web/src/app/page.module.css",
-      "web/src/app/blog/page.module.css",
-      "web/src/app/blog/[slug]/page.module.css",
+      "web/src/app/prds/story/page.module.css",
+      "web/src/app/prds/story/[slug]/page.module.css",
     ],
     learnings: [
       "Mobile layouts need larger tap targets and more breathing room.",
@@ -612,8 +642,8 @@ const rawPosts: BlogPost[] = [
     files: [
       "web/src/app/globals.css",
       "web/src/app/page.module.css",
-      "web/src/app/blog/page.module.css",
-      "web/src/app/blog/[slug]/page.module.css",
+      "web/src/app/prds/story/page.module.css",
+      "web/src/app/prds/story/[slug]/page.module.css",
       "web/src/app/components/build-loop.module.css",
       "prd.json",
     ],
@@ -667,9 +697,9 @@ const rawPosts: BlogPost[] = [
     files: [
       "web/src/app/components/keyboard-card-grid.tsx",
       "web/src/app/page.tsx",
-      "web/src/app/blog/page.tsx",
+      "web/src/app/prds/story/page.tsx",
       "web/src/app/page.module.css",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.module.css",
       "prd.json",
     ],
     learnings: [
@@ -696,11 +726,11 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Sorted posts by date and wired a client-side navigator that routes smoothly without odd focus highlights.",
     files: [
-      "web/src/app/blog/[slug]/page.tsx",
-      "web/src/app/blog/[slug]/post-nav.tsx",
-      "web/src/app/blog/[slug]/page.module.css",
+      "web/src/app/prds/story/[slug]/page.tsx",
+      "web/src/app/prds/story/[slug]/post-nav.tsx",
+      "web/src/app/prds/story/[slug]/page.module.css",
       "web/src/app/components/keyboard-card-grid.tsx",
-      "web/src/app/blog/page.tsx",
+      "web/src/app/prds/story/page.tsx",
       "prd.json",
     ],
     learnings: [
@@ -814,7 +844,7 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Extended blog post metadata with PRD slugs, then rendered related story links on PRD detail pages.",
     files: [
-      "web/src/app/blog/posts.ts",
+      "web/src/app/prds/story/posts.ts",
       "web/src/app/prds/data.ts",
       "web/src/app/prds/[slug]/page.tsx",
       "web/src/app/prds/[slug]/page.module.css",
@@ -843,7 +873,7 @@ const rawPosts: BlogPost[] = [
       "Completed the manual PRD mapping so every build note now links back to its PRD.",
     implemented:
       "Applied PRD slugs across all existing build notes to guarantee accurate related-story lists.",
-    files: ["web/src/app/blog/posts.ts", "prd.json"],
+    files: ["web/src/app/prds/story/posts.ts", "prd.json"],
     learnings: [
       "Full PRD coverage makes the library more trustworthy.",
       "Explicit mappings prevent accidental grouping by similar titles.",
@@ -898,8 +928,8 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Rendered a PRD link for mapped stories in the blog header metadata area.",
     files: [
-      "web/src/app/blog/[slug]/page.tsx",
-      "web/src/app/blog/[slug]/page.module.css",
+      "web/src/app/prds/story/[slug]/page.tsx",
+      "web/src/app/prds/story/[slug]/page.module.css",
       "prd.json",
     ],
     learnings: [
@@ -924,10 +954,10 @@ const rawPosts: BlogPost[] = [
     whatShipped:
       "Added a PRD section above build notes on the blog index and routed the main CTA to the PRD section.",
     implemented:
-      "Introduced PRD-first sections on /blog with shared card grids and updated the hero CTA to anchor the PRD section.",
+      "Introduced PRD-first sections on /prds with shared card grids and updated the hero CTA to anchor the PRD section.",
     files: [
-      "web/src/app/blog/page.tsx",
-      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/story/page.tsx",
+      "web/src/app/prds/story/page.module.css",
       "web/src/app/page.tsx",
       "prd.json",
     ],
@@ -983,9 +1013,9 @@ const rawPosts: BlogPost[] = [
     implemented:
       "Rendered a PRD card using the mapped PRD title and slug and styled it to match the blog’s calm UI.",
     files: [
-      "web/src/app/blog/[slug]/page.tsx",
-      "web/src/app/blog/[slug]/page.module.css",
-      "web/src/app/blog/posts.ts",
+      "web/src/app/prds/story/[slug]/page.tsx",
+      "web/src/app/prds/story/[slug]/page.module.css",
+      "web/src/app/prds/story/posts.ts",
       "prd.json",
     ],
     learnings: [

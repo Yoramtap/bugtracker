@@ -19,8 +19,8 @@ export default function Home() {
               notes, and the final ship.
             </p>
             <div className={styles.heroCtas}>
-              <Link className={styles.primaryCta} href="/blog#prds">
-                Explore the blog
+              <Link className={styles.primaryCta} href="/prds">
+                Explore the PRDs
               </Link>
             </div>
           </div>

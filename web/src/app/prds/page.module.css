@@ -131,6 +131,74 @@
   gap: 12px;
 }
 
+.storyList {
+  list-style: circle;
+  margin: 6px 0 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.storyDetails {
+  margin-top: 8px;
+}
+
+.storySummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.storySummary::-webkit-details-marker {
+  display: none;
+}
+
+.storySummary:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.storyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  color: var(--accent);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.storyItem {
+  color: var(--ink-soft);
+}
+
+.storyLink {
+  color: var(--ink-soft);
+  transition: color 0.2s ease;
+}
+
+.storyLink:hover,
+.storyLink:focus-visible {
+  color: var(--accent);
+}
+
+.storyTitle {
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
 .prdExcerpt {
   color: var(--ink-soft);
   line-height: 1.7;
@@ -141,6 +209,58 @@
   font-size: 0.95rem;
   color: var(--accent);
   border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.olderItem {
+  list-style: none;
+}
+
+.olderDetails {
+  margin-top: 4px;
+}
+
+.olderSummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+
+.olderSummary::-webkit-details-marker {
+  display: none;
+}
+
+.olderSummary:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.olderDetails[open] .olderSummary {
+  background: var(--surface);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--line));
+}
+
+.olderIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  color: var(--accent);
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
 .card {

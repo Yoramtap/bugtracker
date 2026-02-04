@@ -45,7 +45,7 @@ const getNextIndex = (current: number, delta: number, length: number) => {
 
 export default function KeyboardCardGrid({
   items,
-  hrefBase = "/blog",
+  hrefBase = "/prds/story",
   classNames,
   linkLabel,
   backspaceHref,

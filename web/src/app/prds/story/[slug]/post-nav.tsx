@@ -40,19 +40,19 @@ export default function PostNav({ previousPost, nextPost }: PostNavProps) {
 
       if (goBack) {
         event.preventDefault();
-        router.push("/blog");
+        router.push("/prds");
         return;
       }
 
       if (goNext && nextPost) {
         event.preventDefault();
-        router.push(`/blog/${nextPost.slug}`);
+        router.push(`/prds/story/${nextPost.slug}`);
         return;
       }
 
       if (goPrev && previousPost) {
         event.preventDefault();
-        router.push(`/blog/${previousPost.slug}`);
+        router.push(`/prds/story/${previousPost.slug}`);
       }
     };
 
@@ -65,7 +65,7 @@ export default function PostNav({ previousPost, nextPost }: PostNavProps) {
   return (
     <div className={styles.postNav}>
       {previousPost ? (
-        <Link className={styles.postNavLink} href={`/blog/${previousPost.slug}`}>
+        <Link className={styles.postNavLink} href={`/prds/story/${previousPost.slug}`}>
           <span className={styles.postNavLabel}>Previous</span>
           <span className={styles.postNavTitle}>{previousPost.title}</span>
         </Link>
@@ -73,7 +73,7 @@ export default function PostNav({ previousPost, nextPost }: PostNavProps) {
         <div />
       )}
       {nextPost ? (
-        <Link className={styles.postNavLink} href={`/blog/${nextPost.slug}`}>
+        <Link className={styles.postNavLink} href={`/prds/story/${nextPost.slug}`}>
           <span className={styles.postNavLabel}>Next</span>
           <span className={styles.postNavTitle}>{nextPost.title}</span>
         </Link>
