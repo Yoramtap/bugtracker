@@ -17,6 +17,13 @@
   flex-wrap: wrap;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
 .brand {
   font-family: var(--font-display), "DM Serif Display", serif;
   letter-spacing: 0.22em;
@@ -31,6 +38,7 @@
   font-size: 0.85rem;
   letter-spacing: 0.18em;
   text-transform: lowercase;
+  line-height: 1;
 }
 
 .link {
@@ -53,8 +61,14 @@
     width: 100%;
   }
 
-  .links {
+  .actions {
     width: 100%;
-    gap: 18px;
+    justify-content: space-between;
+  }
+
+  .links {
+    width: auto;
+    gap: 16px;
+    flex-wrap: wrap;
   }
 }

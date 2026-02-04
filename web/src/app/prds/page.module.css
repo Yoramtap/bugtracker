@@ -196,6 +196,7 @@
   font-size: 0.85rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  line-height: 1;
 }
 
 .storySummary::-webkit-details-marker {
@@ -219,6 +220,7 @@
   color: var(--accent);
   font-size: 0.85rem;
   line-height: 1;
+  margin-top: -1px;
 }
 
 .storyItem {
@@ -255,10 +257,11 @@
 
 .olderItem {
   list-style: none;
+  margin-top: 4px;
 }
 
 .olderDetails {
-  margin-top: 4px;
+  margin-top: 10px;
 }
 
 .olderSummary {
@@ -275,6 +278,10 @@
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--surface-muted);
+}
+
+.olderDetails .prdList {
+  margin-top: 12px;
 }
 
 .olderSummary::-webkit-details-marker {

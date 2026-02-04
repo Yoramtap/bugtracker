@@ -1,0 +1,53 @@
+.toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  background: var(--surface-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  margin-top: -1px;
+  color: var(--ink);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.toggle:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 3px;
+}
+
+.toggle svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iconMoon svg {
+  fill: currentColor;
+  stroke: none;
+}
+
+.iconSun,
+.iconMoon {
+  display: inline-flex;
+}
+
+.toggle[data-mode="on"] .iconMoon {
+  display: none;
+}
+
+.toggle[data-mode="off"] .iconSun {
+  display: none;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import styles from "./night-vision-trigger.module.css";
 
 type Mode = "on" | "off";
@@ -8,6 +8,21 @@ type Mode = "on" | "off";
 const BUFFER_LENGTH = 5;
 const TOAST_DURATION_MS = 2200;
 const STORAGE_KEY = "night-vision-mode";
+
+type NightVisionContextValue = {
+  mode: Mode;
+  setMode: (mode: Mode) => void;
+};
+
+const NightVisionContext = createContext<NightVisionContextValue | null>(null);
+
+export const useNightVision = () => {
+  const ctx = useContext(NightVisionContext);
+  if (!ctx) {
+    throw new Error("useNightVision must be used within NightVisionTrigger");
+  }
+  return ctx;
+};
 
 export default function NightVisionTrigger({
   children,
@@ -17,9 +32,9 @@ export default function NightVisionTrigger({
   const bufferRef = useRef("");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mode, setMode] = useState<Mode>(() => {
-    if (typeof window === "undefined") return "off";
+    if (typeof window === "undefined") return "on";
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored === "on" || stored === "off" ? stored : "off";
+    return stored === "on" || stored === "off" ? stored : "on";
   });
   const [toastMessage, setToastMessage] = useState("");
   const [toastTick, setToastTick] = useState(0);
@@ -93,7 +108,7 @@ export default function NightVisionTrigger({
   }, [toastMessage, toastTick]);
 
   return (
-    <>
+    <NightVisionContext.Provider value={{ mode, setMode }}>
       {children}
       <div
         className={`${styles.toast} ${isToastVisible ? styles.visible : ""}`}
@@ -102,6 +117,6 @@ export default function NightVisionTrigger({
       >
         {toastMessage}
       </div>
-    </>
+    </NightVisionContext.Provider>
   );
 }
