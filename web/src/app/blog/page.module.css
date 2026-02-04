@@ -74,26 +74,16 @@
 }
 
 .noteList {
-  list-style: none;
+  list-style: disc;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .noteItem {
-  position: relative;
-  padding-left: 18px;
-}
-
-.noteItem::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  top: 4px;
   color: var(--ink-soft);
-  font-size: 1rem;
 }
 
 .noteLink {

@@ -1,50 +1,50 @@
 {
-  "project": "Build Notes List View",
-  "branchName": "ralph/build-notes-list",
-  "description": "Switch build notes from card grid to a title-only list while keeping PRDs unchanged to improve visual distinction and scan-ability.",
+  "project": "Blog PRD-to-Story Index",
+  "branchName": "ralph/blog-prd-story-index",
+  "description": "Show PRDs as primary entries on /blog with nested related stories inferred from post metadata, ordered newest-first.",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Render build notes as a list",
-      "description": "As a reader, I want build notes in a list so I can scan them quickly and distinguish them from PRDs.",
+      "title": "Infer PRD-to-story mapping from post metadata",
+      "description": "As a maintainer, I want PRD-to-story relationships inferred from post metadata so I don't have to maintain a separate mapping.",
       "acceptanceCriteria": [
-        "Build notes section renders as a vertical list instead of a card grid",
-        "List preserves newest-first ordering (current behavior)",
-        "PRD presentation remains unchanged",
-        "List uses a clear treatment for scan-ability (bullets or subtle dividers)",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
+        "Define a deterministic mapping algorithm using post metadata in web/src/app/blog/posts.ts (e.g., tags like prd:<slug>)",
+        "Support associating multiple stories to a single PRD",
+        "Define behavior for stories without PRD tags (e.g., omit or group separately)",
+        "Typecheck passes"
       ],
       "priority": 1,
-      "passes": true,
+      "passes": false,
       "notes": ""
     },
     {
       "id": "US-002",
-      "title": "Click list item to open build note",
-      "description": "As a reader, I want each build note list item to open the full build note.",
+      "title": "Render PRD groups with nested stories on /blog",
+      "description": "As a reader, I want to see each PRD with its related stories nested underneath so I can quickly scan what shipped for each PRD.",
       "acceptanceCriteria": [
-        "Clicking a list item navigates to the build note page",
-        "List item has a visible hover/active affordance (e.g., underline or background)",
+        "Blog index renders PRD groups (PRD title/link) with nested story links below each",
+        "PRD groups are ordered newest-first by PRD date",
+        "Stories within each PRD group are ordered newest-first by story date",
+        "Layout remains responsive and consistent with the editorial list style",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 2,
-      "passes": true,
+      "passes": false,
       "notes": ""
     },
     {
       "id": "US-003",
-      "title": "List item content is title-only",
-      "description": "As a reader, I want concise list items so I can scan titles fast.",
+      "title": "Handle empty and unassigned edge cases",
+      "description": "As a reader, I want clear behavior when PRDs have no linked stories or when posts lack PRD tags.",
       "acceptanceCriteria": [
-        "Each list item shows the build note title only (no date/excerpt)",
-        "Titles are readable and consistent with existing typography",
+        "Define and implement UI behavior for PRDs with no related stories (e.g., show a note or omit)",
+        "Apply the defined behavior for stories without PRD tags",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "notes": ""
     }
   ]
