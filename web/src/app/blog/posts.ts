@@ -7,6 +7,7 @@ export type BlogPost = {
   category: string;
   author: string;
   image: string;
+  tags?: string[];
   prdSlug?: string;
   prdTitle?: string;
   whatShipped: string;
@@ -15,7 +16,92 @@ export type BlogPost = {
   learnings: string[];
 };
 
-export const posts: BlogPost[] = [
+const rawPosts: BlogPost[] = [
+  {
+    slug: "prd-story-index-mapping",
+    title: "PRD story mapping",
+    prdSlug: "blog-prd-story-index",
+    prdTitle: "Blog PRD-to-Story Index",
+    summary:
+      "Inferred PRD relationships from post metadata so stories can be grouped without manual mapping.",
+    excerpt:
+      "Inferred PRD relationships from post metadata so stories can be grouped without manual mapping.",
+    date: "Feb 4, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-3.svg",
+    whatShipped:
+      "Added tag-driven PRD mapping so posts can declare PRD relationships via metadata instead of hard-coded lists.",
+    implemented:
+      "Introduced a tag parser and normalized posts to derive PRD slugs from tags while keeping compatibility with existing data.",
+    files: [
+      "web/src/app/blog/posts.ts",
+      "web/src/app/prds/data.ts",
+      "prd.json",
+    ],
+    learnings: [
+      "Tag prefixes keep relationships consistent without extra mapping tables.",
+      "Normalize data at export time to keep consumers simple.",
+      "Derive metadata rather than duplicating it across files.",
+    ],
+  },
+  {
+    slug: "prd-story-index-layout",
+    title: "PRD story index layout",
+    prdSlug: "blog-prd-story-index",
+    prdTitle: "Blog PRD-to-Story Index",
+    summary:
+      "Grouped build notes by PRD on the blog index with nested story links.",
+    excerpt:
+      "Grouped build notes by PRD on the blog index with nested story links.",
+    date: "Feb 4, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-5.svg",
+    whatShipped:
+      "Reframed the blog index as a PRD-first list with nested stories to show what shipped per brief.",
+    implemented:
+      "Pulled PRDs from the tasks directory, grouped related posts under each PRD, and preserved newest-first ordering.",
+    files: [
+      "web/src/app/blog/page.tsx",
+      "web/src/app/blog/page.module.css",
+      "web/src/app/prds/data.ts",
+      "prd.json",
+    ],
+    learnings: [
+      "Nested lists read best when the parent and child bullets are visually distinct.",
+      "PRD-first grouping makes scanability much clearer for build logs.",
+      "Keep empty-state notes concise to avoid visual noise.",
+    ],
+  },
+  {
+    slug: "prd-story-index-edge-cases",
+    title: "PRD story index edge cases",
+    prdSlug: "blog-prd-story-index",
+    prdTitle: "Blog PRD-to-Story Index",
+    summary:
+      "Handled unassigned stories and empty PRD groups on the blog index.",
+    excerpt:
+      "Handled unassigned stories and empty PRD groups on the blog index.",
+    date: "Feb 4, 2026",
+    category: "build notes",
+    author: "Ralph",
+    image: "/images/tile-6.svg",
+    whatShipped:
+      "Added a clear Unassigned group and a friendly note when PRDs have no related stories yet.",
+    implemented:
+      "Computed unassigned posts from metadata and rendered a minimal empty-state message for PRDs without stories.",
+    files: [
+      "web/src/app/blog/page.tsx",
+      "web/src/app/blog/page.module.css",
+      "prd.json",
+    ],
+    learnings: [
+      "Explicit unassigned sections help keep metadata gaps visible.",
+      "Empty-state copy should be short and low-contrast.",
+      "Edge cases are easier to maintain when computed once in the page.",
+    ],
+  },
   {
     slug: "us-001-home-page",
     title: "Home page",
@@ -1077,3 +1163,30 @@ export const posts: BlogPost[] = [
     ],
   },
 ];
+
+export const getPrdSlugsFromTags = (tags?: string[]): string[] => {
+  if (!tags || tags.length === 0) return [];
+  return tags
+    .filter((tag) => tag.startsWith("prd:"))
+    .map((tag) => tag.replace(/^prd:/, ""));
+};
+
+const ensurePostTags = (post: BlogPost): string[] => {
+  const tags = post.tags ? [...post.tags] : [];
+  if (post.prdSlug && !tags.includes(`prd:${post.prdSlug}`)) {
+    tags.push(`prd:${post.prdSlug}`);
+  }
+  return tags;
+};
+
+const normalizePost = (post: BlogPost): BlogPost => {
+  const tags = ensurePostTags(post);
+  const prdSlugs = getPrdSlugsFromTags(tags);
+  return {
+    ...post,
+    tags,
+    prdSlug: prdSlugs[0] ?? post.prdSlug,
+  };
+};
+
+export const posts: BlogPost[] = rawPosts.map(normalizePost);

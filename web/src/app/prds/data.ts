@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { posts } from "../blog/posts";
+import { getPrdSlugsFromTags, posts } from "../blog/posts";
 
 export type PrdEntry = {
   slug: string;
@@ -89,7 +89,7 @@ export const getPrdEntry = (slug: string): PrdEntry | null => {
   const content = fs.readFileSync(filePath, "utf-8");
   const stat = fs.statSync(filePath);
   const relatedStories = posts
-    .filter((post: { prdSlug?: string }) => post.prdSlug === slug)
+    .filter((post) => getPrdSlugsFromTags(post.tags).includes(slug))
     .map((post: { slug: string; title: string; date: string }) => ({
       slug: post.slug,
       title: post.title,
@@ -112,7 +112,7 @@ export const getPrdCards = (): PrdCard[] => {
     summary: entry.summary,
     date: entry.date,
     category: "PRD",
-    storyCount: posts.filter((post: { prdSlug?: string }) => post.prdSlug === entry.slug)
+    storyCount: posts.filter((post) => getPrdSlugsFromTags(post.tags).includes(entry.slug))
       .length,
   }));
 };

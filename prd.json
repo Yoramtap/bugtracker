@@ -14,8 +14,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented tag-based mapping and normalization in posts data."
     },
     {
       "id": "US-002",
@@ -30,8 +30,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Grouped PRDs with nested stories on /blog."
     },
     {
       "id": "US-003",
@@ -44,8 +44,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added Unassigned group and empty-state note."
     }
   ]
 }

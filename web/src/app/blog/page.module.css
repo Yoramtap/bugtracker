@@ -73,16 +73,29 @@
   gap: 24px;
 }
 
-.noteList {
+.groupList {
   list-style: disc;
   margin: 0;
   padding: 0 0 0 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 18px;
 }
 
-.noteItem {
+.groupItem {
+  color: var(--ink-soft);
+}
+
+.storyList {
+  list-style: circle;
+  margin: 6px 0 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.storyItem {
   color: var(--ink-soft);
 }
 
@@ -117,6 +130,26 @@
   letter-spacing: 0.01em;
   text-transform: none;
   color: inherit;
+}
+
+.storyTitle {
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.emptyNote {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.unassignedTitle {
+  font-family: var(--font-body), "Work Sans", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--ink-soft);
 }
 
 .card {
