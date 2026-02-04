@@ -11,3 +11,17 @@ Started: $(date)
   - Pattern: Home page build notes live in `web/src/app/page.tsx` with styles in `web/src/app/page.module.css`.
   - Gotcha: Next dev server failed to bind local ports (EPERM), so manual browser verification is required in a different environment.
 ---
+## 2026-02-04 13:26 - US-002
+- Made build note list rows fully clickable on home and blog pages with clear hover/focus affordances.
+- Files changed: web/src/app/page.tsx, web/src/app/page.module.css, web/src/app/blog/page.tsx, web/src/app/blog/page.module.css, prd.json
+- **Learnings for future iterations:**
+  - None.
+- Manual browser verification required (dev server tools unavailable in this run).
+---
+## 2026-02-04 13:26 - US-003
+- Simplified build note list items to title-only on home and blog pages.
+- Files changed: web/src/app/page.tsx, web/src/app/page.module.css, web/src/app/blog/page.tsx, web/src/app/blog/page.module.css, prd.json
+- **Learnings for future iterations:**
+  - None.
+- Manual browser verification required (dev server tools unavailable in this run).
+---

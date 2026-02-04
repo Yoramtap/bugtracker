@@ -88,14 +88,8 @@ export default function Home() {
               .reverse()
               .map((post) => (
                 <li key={post.slug} className={styles.notesItem}>
-                  <div className={styles.notesMeta}>
-                    <span>{post.category}</span>
-                    <span>{post.date}</span>
-                  </div>
-                  <h3 className={styles.notesTitle}>{post.title}</h3>
-                  <p className={styles.notesSummary}>{post.summary}</p>
                   <Link className={styles.notesLink} href={`/blog/${post.slug}`}>
-                    Read the note
+                    <h3 className={styles.notesTitle}>{post.title}</h3>
                   </Link>
                 </li>
               ))}

@@ -33,13 +33,7 @@ export default function BlogIndexPage() {
           {sortedPosts.map((post) => (
             <li key={post.slug} className={styles.noteItem}>
               <Link className={styles.noteLink} href={`/blog/${post.slug}`}>
-                <p className={styles.noteMeta}>
-                  <span>{post.category}</span>
-                  <span>{post.date}</span>
-                </p>
                 <h3 className={styles.noteTitle}>{post.title}</h3>
-                <p className={styles.noteSummary}>{post.summary}</p>
-                <span className={styles.noteCta}>Read the note</span>
               </Link>
             </li>
           ))}
