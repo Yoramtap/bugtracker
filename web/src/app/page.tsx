@@ -82,21 +82,24 @@ export default function Home() {
               View all notes
             </Link>
           </div>
-          <KeyboardCardGrid
-            items={posts.slice(-3).reverse().map((post) => ({
-              ...post,
-              category: "story",
-            }))}
-            classNames={{
-              grid: styles.cards,
-              card: styles.card,
-              meta: styles.cardMeta,
-              excerpt: styles.cardExcerpt,
-              link: styles.cardLink,
-              focused: styles.cardFocused,
-            }}
-            linkLabel="Read the note"
-          />
+          <ul className={styles.notesList}>
+            {posts
+              .slice(-3)
+              .reverse()
+              .map((post) => (
+                <li key={post.slug} className={styles.notesItem}>
+                  <div className={styles.notesMeta}>
+                    <span>{post.category}</span>
+                    <span>{post.date}</span>
+                  </div>
+                  <h3 className={styles.notesTitle}>{post.title}</h3>
+                  <p className={styles.notesSummary}>{post.summary}</p>
+                  <Link className={styles.notesLink} href={`/blog/${post.slug}`}>
+                    Read the note
+                  </Link>
+                </li>
+              ))}
+          </ul>
         </section>
 
         {/* say-hi block intentionally hidden for now */}

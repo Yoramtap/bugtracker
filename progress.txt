@@ -1,3 +1,13 @@
 # Ralph Progress Log
 Started: $(date)
 ---
+## Codebase Patterns
+- Home page build notes are rendered in `web/src/app/page.tsx` with styles in `web/src/app/page.module.css`.
+
+## 2026-02-04 13:01 - US-001
+- Replaced the build notes card grid on the home page with a vertical list using subtle dividers, keeping PRD cards unchanged.
+- Files changed: web/src/app/page.tsx, web/src/app/page.module.css, prd.json
+- **Learnings for future iterations:**
+  - Pattern: Home page build notes live in `web/src/app/page.tsx` with styles in `web/src/app/page.module.css`.
+  - Gotcha: Next dev server failed to bind local ports (EPERM), so manual browser verification is required in a different environment.
+---
