@@ -1,27 +1,16 @@
 # Ralph Progress Log
-Started: $(date)
----
 ## Codebase Patterns
-- Home page build notes are rendered in `web/src/app/page.tsx` with styles in `web/src/app/page.module.css`.
+- For new top-level web pages, follow the route convention `web/src/app/<route>/page.tsx` with a colocated `page.module.css`, and add discoverability via `web/src/app/components/primary-nav.tsx` when it is primary navigation.
 
-## 2026-02-04 13:01 - US-001
-- Replaced the build notes card grid on the home page with a vertical list using subtle dividers, keeping PRD cards unchanged.
-- Files changed: web/src/app/page.tsx, web/src/app/page.module.css, prd.json
-- **Learnings for future iterations:**
-  - Pattern: Home page build notes live in `web/src/app/page.tsx` with styles in `web/src/app/page.module.css`.
-  - Gotcha: Next dev server failed to bind local ports (EPERM), so manual browser verification is required in a different environment.
+Started: Thu Feb  5 22:30:33 CET 2026
 ---
-## 2026-02-04 13:26 - US-002
-- Made build note list rows fully clickable on home and blog pages with clear hover/focus affordances.
-- Files changed: web/src/app/page.tsx, web/src/app/page.module.css, web/src/app/blog/page.tsx, web/src/app/blog/page.module.css, prd.json
+## [2026-02-05 22:31:44 CET] - US-001
+- Implemented the `/replay` route shell with a header, intro copy, and a dedicated timeline container placeholder for upcoming event rendering.
+- Added a `Replay` link to the primary navigation with active-route support via existing `aria-current` logic.
+- Verified quality checks by running `npm run lint` and `npm run build` in `web` (build output includes static route generation for `/replay`).
+- Files changed: `web/src/app/replay/page.tsx`, `web/src/app/replay/page.module.css`, `web/src/app/components/primary-nav.tsx`, `prd.json`, `progress.txt`
 - **Learnings for future iterations:**
-  - None.
-- Manual browser verification required (dev server tools unavailable in this run).
----
-## 2026-02-04 13:26 - US-003
-- Simplified build note list items to title-only on home and blog pages.
-- Files changed: web/src/app/page.tsx, web/src/app/page.module.css, web/src/app/blog/page.tsx, web/src/app/blog/page.module.css, prd.json
-- **Learnings for future iterations:**
-  - None.
-- Manual browser verification required (dev server tools unavailable in this run).
+  - New standalone pages in this app use colocated route files under `web/src/app/<route>/` and generally match the established gradient/panel visual system.
+  - Primary navigation is centralized in `web/src/app/components/primary-nav.tsx`, so route discoverability changes should happen there.
+  - Browser automation verification was not run in this environment; manual browser verification is still required for this story.
 ---
