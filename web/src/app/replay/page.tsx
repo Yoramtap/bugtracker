@@ -1,6 +1,9 @@
 import styles from "./page.module.css";
+import { getReplayEvents } from "./data";
 
 export default function ReplayPage() {
+  const replayEvents = getReplayEvents();
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -18,6 +21,9 @@ export default function ReplayPage() {
         aria-live="polite"
       >
         <h2 className={styles.timelineTitle}>Timeline</h2>
+        <p className={styles.timelineMeta}>
+          {replayEvents.length} events loaded from PRDs and shipped stories.
+        </p>
         <p className={styles.timelineHint}>
           Event groups and detail views land here in upcoming iterations.
         </p>

@@ -1,6 +1,7 @@
 # Ralph Progress Log
 ## Codebase Patterns
 - For new top-level web pages, follow the route convention `web/src/app/<route>/page.tsx` with a colocated `page.module.css`, and add discoverability via `web/src/app/components/primary-nav.tsx` when it is primary navigation.
+- Replay timeline data should be normalized in `web/src/app/replay/data.ts` by combining `getPrdEntries()` and `posts`, then sorted newest-first by parsed date with a deterministic fallback index for ties/unparseable dates.
 
 Started: Thu Feb  5 22:30:33 CET 2026
 ---
@@ -12,5 +13,16 @@ Started: Thu Feb  5 22:30:33 CET 2026
 - **Learnings for future iterations:**
   - New standalone pages in this app use colocated route files under `web/src/app/<route>/` and generally match the established gradient/panel visual system.
   - Primary navigation is centralized in `web/src/app/components/primary-nav.tsx`, so route discoverability changes should happen there.
-  - Browser automation verification was not run in this environment; manual browser verification is still required for this story.
+- Browser automation verification was not run in this environment; manual browser verification is still required for this story.
+---
+## [2026-02-05 22:34:41 CET] - US-002
+- Implemented a server-side replay data utility that maps PRD entries and shipped stories into a unified `ReplayEvent` model.
+- Added replay event normalization fields (`id`, `type`, `title`, `date`, `prdSlug`, `href`) and deterministic newest-first sorting by parsed date with stable fallback ordering.
+- Wired `/replay` to read the new replay events so the data utility is exercised during static build.
+- Verified quality checks by running `npm run lint` and `npm run build` in `web`.
+- Files changed: `web/src/app/replay/data.ts`, `web/src/app/replay/page.tsx`, `web/src/app/replay/page.module.css`, `prd.json`, `progress.txt`
+- **Learnings for future iterations:**
+  - Keep replay event normalization in a dedicated server utility so upcoming timeline UI features can remain presentation-focused.
+  - Story-to-PRD relationships should resolve from tag metadata first (`prd:*`) with `prdSlug` as fallback.
+  - Browser automation verification was not run in this environment; manual browser verification is required for UI-centric stories.
 ---
