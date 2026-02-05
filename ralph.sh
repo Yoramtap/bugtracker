@@ -102,11 +102,11 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   LOG_DIR="$SCRIPT_DIR/logs"
   mkdir -p "$LOG_DIR"
   LOG_FILE="$LOG_DIR/ralph-iteration-$i.log"
-  OUTPUT=$(codex exec --full-auto --cd "$SCRIPT_DIR" - < "$SCRIPT_DIR/CODEX.md" 2>&1 | tee "$LOG_FILE") || true
+  codex exec --full-auto --cd "$SCRIPT_DIR" - < "$SCRIPT_DIR/CODEX.md" 2>&1 | tee "$LOG_FILE" || true
   echo "Codex output saved to: $LOG_FILE"
   
   # Check for completion signal
-  if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
+  if grep -q "<promise>COMPLETE</promise>" "$LOG_FILE"; then
     echo ""
     echo "Ralph completed all tasks!"
     echo "Completed at iteration $i of $MAX_ITERATIONS"

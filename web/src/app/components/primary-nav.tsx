@@ -26,13 +26,6 @@ export default function PrimaryNav() {
             </Link>
             <Link
               className={styles.link}
-              href="/snake"
-              aria-current={isCurrent("/snake") ? "page" : undefined}
-            >
-              Snake
-            </Link>
-            <Link
-              className={styles.link}
               href="/manifesto"
               aria-current={isCurrent("/manifesto") ? "page" : undefined}
             >

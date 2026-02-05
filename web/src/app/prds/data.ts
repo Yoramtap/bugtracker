@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { getPrdSlugsFromTags, posts } from "./story/posts";
 
 export type PrdEntry = {
@@ -34,12 +34,15 @@ const formatDate = (value: Date) =>
 const getGitCommitDate = (filePath: string): Date | null => {
   try {
     const relativePath = path.relative(REPO_ROOT, filePath);
-    const output = execSync(`git log -1 --format=%cs -- "${relativePath}"`, {
-      cwd: REPO_ROOT,
-      stdio: ["ignore", "pipe", "ignore"],
-    })
-      .toString()
-      .trim();
+    const output = execFileSync(
+      "git",
+      ["log", "-1", "--format=%cs", "--", relativePath],
+      {
+        cwd: REPO_ROOT,
+        encoding: "utf-8",
+        stdio: ["ignore", "pipe", "ignore"],
+      }
+    ).trim();
     if (!output) return null;
     return new Date(`${output}T00:00:00Z`);
   } catch {
