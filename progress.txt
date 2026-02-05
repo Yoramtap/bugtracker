@@ -2,6 +2,7 @@
 ## Codebase Patterns
 - For new top-level web pages, follow the route convention `web/src/app/<route>/page.tsx` with a colocated `page.module.css`, and add discoverability via `web/src/app/components/primary-nav.tsx` when it is primary navigation.
 - Replay timeline data should be normalized in `web/src/app/replay/data.ts` by combining `getPrdEntries()` and `posts`, then sorted newest-first by parsed date with a deterministic fallback index for ties/unparseable dates.
+- Replay timeline presentation should group events in `web/src/app/replay/page.tsx` by parsed calendar day (`YYYY-MM-DD` key) while preserving event order from `getReplayEvents()` within each day.
 
 Started: Thu Feb  5 22:30:33 CET 2026
 ---
@@ -24,5 +25,16 @@ Started: Thu Feb  5 22:30:33 CET 2026
 - **Learnings for future iterations:**
   - Keep replay event normalization in a dedicated server utility so upcoming timeline UI features can remain presentation-focused.
   - Story-to-PRD relationships should resolve from tag metadata first (`prd:*`) with `prdSlug` as fallback.
+  - Browser automation verification was not run in this environment; manual browser verification is required for UI-centric stories.
+---
+## [2026-02-05 22:36:47 CET] - US-003
+- Implemented grouped replay timeline rendering by date, with one or more event cards under each day.
+- Added event card content for type label, title, and contextual links (`Open PRD` or `Open Story`) using existing route conventions.
+- Added a replay empty-state message that appears when no events are available.
+- Verified quality checks by running `npm run lint` and `npm run build` in `web`.
+- Files changed: `web/src/app/replay/page.tsx`, `web/src/app/replay/page.module.css`, `prd.json`, `progress.txt`
+- **Learnings for future iterations:**
+  - Keep replay grouping logic in the page layer and leave normalization/sorting in `web/src/app/replay/data.ts` to avoid mixed responsibilities.
+  - Event card link labels are type-driven (`prd_created` -> PRD link, `story_shipped` -> Story link), which keeps rendering deterministic as more event types are added.
   - Browser automation verification was not run in this environment; manual browser verification is required for UI-centric stories.
 ---

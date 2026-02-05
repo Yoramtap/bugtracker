@@ -65,8 +65,72 @@
   font-weight: 600;
 }
 
-.timelineHint {
+.groupList {
+  list-style: none;
   margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.groupItem {
+  display: grid;
+  gap: 10px;
+}
+
+.groupDate {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cardList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.cardItem {
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--line) 74%, var(--accent) 26%);
+  background: color-mix(in srgb, var(--surface-contrast) 32%, var(--surface));
+}
+
+.cardType {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.06rem;
+  line-height: 1.4;
+}
+
+.cardLink {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.cardLink:hover,
+.cardLink:focus-visible {
+  text-decoration: underline;
+}
+
+.emptyState {
+  margin: 6px 0 0;
   color: var(--ink-soft);
   line-height: 1.6;
 }
@@ -79,5 +143,9 @@
   .header,
   .timeline {
     padding: 22px 20px;
+  }
+
+  .cardItem {
+    padding: 14px 14px;
   }
 }

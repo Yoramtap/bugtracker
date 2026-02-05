@@ -47,6 +47,7 @@ npm run dev
 - Always update AGENTS.md with discovered patterns for future iterations
 - TODO: Confirm any new patterns observed in recent Ralph runs
 - After shipping a feature, add build note entries to `web/src/app/prds/story/posts.ts` so it shows up in the build notes list
+- Replay timeline responsibilities are split: normalize/sort events in `web/src/app/replay/data.ts`, then do date-grouped rendering and card presentation in `web/src/app/replay/page.tsx`.
 
 ## Browser Verification
 
