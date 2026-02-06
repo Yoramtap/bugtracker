@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
-const basePath = isProd ? "/codex-loop" : "";
+const useStaticExport = process.env.STATIC_EXPORT === "1";
+const basePath = isProd && useStaticExport ? "/codex-loop" : "";
 
 const nextConfig: NextConfig = {
-  output: "export",
+  output: useStaticExport ? "export" : undefined,
   trailingSlash: true,
   basePath,
   assetPrefix: basePath,

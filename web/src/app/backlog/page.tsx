@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import styles from "./page.module.css";
-import { backlogSource, getBoardBacklogReports, type BugIssue, type TrendPoint } from "./data";
 import {
   CombinedTeamTrendChart,
-  type CombinedTrendPoint,
-  type TeamKey,
 } from "./combined-team-trend-chart";
+import styles from "./page.module.css";
+import type { BacklogSnapshot, TeamKey } from "./types";
+
+const REFRESH_COOLDOWN_MS = 15_000;
 
 const DEFAULT_TEAM_VISIBLE: Record<TeamKey, boolean> = {
   api: true,
@@ -21,81 +21,58 @@ const TEAM_FILTERS: Array<{ key: TeamKey; label: string }> = [
   { key: "react", label: "React FE" },
 ];
 
-function formatIsoDate(date: Date) {
-  return date.toISOString().slice(0, 10);
-}
+async function fetchSnapshot(endpoint: string, method: "GET" | "POST") {
+  const response = await fetch(endpoint, {
+    method,
+    cache: "no-store",
+  });
 
-function buildDerivedTrendFromBugs(bugs: BugIssue[]): TrendPoint[] {
-  if (bugs.length === 0) return [];
+  const payload = await response.json();
 
-  const created = bugs
-    .map((bug) => new Date(`${bug.createdAt}T00:00:00Z`))
-    .filter((date) => Number.isFinite(date.getTime()))
-    .sort((a, b) => a.getTime() - b.getTime());
-
-  if (created.length === 0) return [];
-
-  const start = created[0].getTime();
-  const end = Date.now();
-  const pointsCount = 10;
-  const step = pointsCount > 1 ? (end - start) / (pointsCount - 1) : 0;
-
-  const points: TrendPoint[] = [];
-  for (let index = 0; index < pointsCount; index += 1) {
-    const at = new Date(start + step * index);
-    const boundary = formatIsoDate(at);
-    let highest = 0;
-    let high = 0;
-    let medium = 0;
-    let low = 0;
-
-    for (const bug of bugs) {
-      if (bug.createdAt > boundary) continue;
-      if (bug.priority === "Highest") highest += 1;
-      else if (bug.priority === "High") high += 1;
-      else if (bug.priority === "Medium") medium += 1;
-      else if (bug.priority === "Low") low += 1;
-    }
-
-    points.push({
-      date: boundary,
-      highest,
-      high,
-      medium,
-      low,
-      lowest: 0,
-    });
+  if (!response.ok) {
+    throw new Error(payload?.error ?? "Backlog request failed.");
   }
 
-  return points;
-}
-
-function normalizeTrendDate(date: string) {
-  return date.startsWith("API ") ? date.slice(4) : date;
-}
-
-function emptyTrendPoint(date: string): TrendPoint {
-  return { date, highest: 0, high: 0, medium: 0, low: 0, lowest: 0 };
+  return payload as BacklogSnapshot;
 }
 
 export default function BacklogPage() {
-  const REFRESH_COOLDOWN_MS = 15_000;
-  const [refreshTick, setRefreshTick] = useState(0);
-  const reports = useMemo(() => {
-    return [...getBoardBacklogReports()];
-  }, [refreshTick]);
+  const [snapshot, setSnapshot] = useState<BacklogSnapshot | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [visibleTeams, setVisibleTeams] = useState<Record<TeamKey, boolean>>(
     DEFAULT_TEAM_VISIBLE,
   );
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [syncedAt, setSyncedAt] = useState(backlogSource.syncedAt);
   const [showUpdatedToast, setShowUpdatedToast] = useState(false);
   const [cooldownUntil, setCooldownUntil] = useState(0);
   const [nowMs, setNowMs] = useState(Date.now());
-  const syncedLabel = syncedAt.replace("T", " ").replace("Z", " UTC");
+
   const isOnCooldown = nowMs < cooldownUntil;
-  const refreshDisabled = isRefreshing || isOnCooldown;
+  const refreshDisabled = isRefreshing || isOnCooldown || !snapshot;
   const secondsLeft = Math.max(0, Math.ceil((cooldownUntil - nowMs) / 1000));
+
+  const syncedLabel = useMemo(() => {
+    if (!snapshot?.source.syncedAt) return "Not synced";
+    return snapshot.source.syncedAt.replace("T", " ").replace("Z", " UTC");
+  }, [snapshot?.source.syncedAt]);
+
+  useEffect(() => {
+    let active = true;
+    fetchSnapshot("/api/backlog/read", "GET")
+      .then((payload) => {
+        if (!active) return;
+        setSnapshot(payload);
+        setLoadError(null);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setLoadError(error instanceof Error ? error.message : "Failed to load backlog snapshot.");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!showUpdatedToast) return;
@@ -105,42 +82,29 @@ export default function BacklogPage() {
 
   useEffect(() => {
     if (!isOnCooldown) return;
-    const timer = window.setInterval(() => setNowMs(Date.now()), 250);
+    const timer = window.setInterval(() => setNowMs(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [isOnCooldown]);
 
-  const combinedPoints = useMemo<CombinedTrendPoint[]>(() => {
-    const byId = new Map(reports.map((report) => [report.boardId, report]));
-    const apiReport = byId.get(38);
-    const legacyReport = byId.get(39);
-    const reactReport = byId.get(46);
+  const onRefresh = async () => {
+    if (refreshDisabled) return;
+    setIsRefreshing(true);
+    setNowMs(Date.now());
 
-    const apiTrend = (apiReport?.trend ?? (apiReport ? buildDerivedTrendFromBugs(apiReport.bugs) : []))
-      .map((point) => ({ ...point, date: normalizeTrendDate(point.date) }));
-    const legacyTrend =
-      legacyReport?.trend ?? (legacyReport ? buildDerivedTrendFromBugs(legacyReport.bugs) : []);
-    const reactTrend =
-      reactReport?.trend ?? (reactReport ? buildDerivedTrendFromBugs(reactReport.bugs) : []);
-
-    const apiByDate = new Map(apiTrend.map((point) => [point.date, point]));
-    const legacyByDate = new Map(legacyTrend.map((point) => [point.date, point]));
-    const reactByDate = new Map(reactTrend.map((point) => [point.date, point]));
-
-    const allDates = Array.from(
-      new Set([
-        ...apiTrend.map((point) => point.date),
-        ...legacyTrend.map((point) => point.date),
-        ...reactTrend.map((point) => point.date),
-      ]),
-    ).sort();
-
-    return allDates.map((date) => ({
-      date,
-      api: apiByDate.get(date) ?? emptyTrendPoint(date),
-      legacy: legacyByDate.get(date) ?? emptyTrendPoint(date),
-      react: reactByDate.get(date) ?? emptyTrendPoint(date),
-    }));
-  }, [reports]);
+    try {
+      const payload = await fetchSnapshot("/api/backlog/refresh", "POST");
+      setSnapshot(payload);
+      setLoadError(null);
+      setShowUpdatedToast(true);
+      setCooldownUntil(Date.now() + REFRESH_COOLDOWN_MS);
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : "Failed to refresh backlog snapshot.");
+      // On failure allow immediate retry; do not consume cooldown budget.
+      setCooldownUntil(0);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -156,6 +120,7 @@ export default function BacklogPage() {
               <h2>Combined Team Bug Trend</h2>
             </div>
           </header>
+
           <div className={styles.controlRow}>
             <div className={styles.combinedTeamToggles} role="group" aria-label="Filter teams">
               {TEAM_FILTERS.map((team) => {
@@ -180,17 +145,20 @@ export default function BacklogPage() {
               })}
             </div>
           </div>
+
+          {loadError ? <p className={styles.loadError}>{loadError}</p> : null}
+
           <CombinedTeamTrendChart
-            points={combinedPoints}
+            points={snapshot?.combinedPoints ?? []}
             visibleTeams={visibleTeams}
-            onVisibleTeamsChange={setVisibleTeams}
-            showTeamControls={false}
           />
+
           <div className={styles.bottomSyncControls}>
             <div className={styles.headerActions}>
               <button
                 type="button"
                 className={styles.refreshButton}
+                data-refreshing={isRefreshing ? "true" : "false"}
                 aria-label={
                   refreshDisabled
                     ? `Refresh available in ${secondsLeft}s`
@@ -201,19 +169,10 @@ export default function BacklogPage() {
                 title={
                   refreshDisabled
                     ? `Refresh in ${secondsLeft}s`
-                    : `${backlogSource.note} — Click to refresh`
+                    : `${snapshot?.source.note ?? "Backlog trend snapshot"} — Click to refresh`
                 }
                 disabled={refreshDisabled}
-                onClick={() => {
-                  if (refreshDisabled) return;
-                  setIsRefreshing(true);
-                  setRefreshTick((value) => value + 1);
-                  setSyncedAt(new Date().toISOString());
-                  setShowUpdatedToast(true);
-                  setNowMs(Date.now());
-                  setCooldownUntil(Date.now() + REFRESH_COOLDOWN_MS);
-                  window.setTimeout(() => setIsRefreshing(false), 260);
-                }}
+                onClick={onRefresh}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -240,7 +199,9 @@ export default function BacklogPage() {
                 </svg>
               </button>
               {showUpdatedToast ? <div className={styles.updatedToast}>Updated</div> : null}
-              <span className={styles.syncedBadge}>Synced: {syncedLabel}</span>
+              <span className={styles.syncedBadge}>
+                {isRefreshing ? "Refreshing Jira..." : refreshDisabled && secondsLeft > 0 ? `Retry in ${secondsLeft}s` : `Synced: ${syncedLabel}`}
+              </span>
             </div>
           </div>
         </article>
