@@ -1,42 +1,14 @@
-# Backlog-Only Static Site
+# Bugtracker Snapshot Site
 
-Single-page backlog chart site using preloaded `snapshot.json`.
+This repository hosts a public, static backlog snapshot viewer.
 
-## What Is Included
+## Included
 
-- `index.html`: one page, no menus, no subpages
-- `app.js`: interactive chart with team toggles
-- `snapshot.json`: aggregate bug counts by team/date/priority
+- `index.html`
+- `app.js`
+- `snapshot.json` (aggregate counts only)
 
-## Local Preview
+## Security
 
-From this folder:
-
-```bash
-python3 -m http.server 8080
-```
-
-Open: `http://localhost:8080`
-
-## 2-Week Refresh Workflow (Local-Only Jira Credentials)
-
-1. Refresh in private working repo:
-
-```bash
-cd /Users/yoramtap/Documents/AI/codex-loop/web
-npm run backlog:refresh-trends
-```
-
-2. Copy updated snapshot into this site:
-
-```bash
-cp '/Users/yoramtap/Documents/AI/codex-loop/web/src/app/(site)/backlog/snapshot.json' \
-  '/Users/yoramtap/Documents/AI/codex-loop/backlog-only-site/snapshot.json'
-```
-
-3. Commit and push this backlog-only site repo.
-
-## Safety
-
-- Jira credentials are **not** required in this folder.
-- `snapshot.json` should remain aggregate-only (counts/labels/dates).
+- No Jira credentials or private data-fetching instructions are stored in this repository.
+- Snapshot data should remain aggregate-only.
