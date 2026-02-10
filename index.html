@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Backlog Trends</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #132043;
+        --panel-2: #1b2a52;
+        --line: rgba(150, 187, 247, 0.35);
+        --text: #eaf1ff;
+        --muted: #adc0e8;
+        --chip: #243c72;
+        --chip-active: #2f5fb1;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at top, #1f2f5b 0%, var(--bg) 62%);
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 16px 40px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: linear-gradient(180deg, var(--panel-2), var(--panel));
+        padding: 16px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .meta {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .controls {
+        margin: 14px 0 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        border: 1px solid rgba(175, 203, 250, 0.4);
+        background: var(--chip);
+        color: #dce9ff;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .chip[data-active="true"] {
+        background: var(--chip-active);
+        color: white;
+        border-color: rgba(166, 207, 255, 0.9);
+      }
+
+      .chart {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 6px;
+        background: rgba(10, 16, 30, 0.35);
+      }
+
+      #status {
+        margin-top: 8px;
+        color: #ffd2d2;
+        font-size: 0.84rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="panel" aria-label="Backlog trend chart">
+        <h1>Combined Team Bug Trend</h1>
+        <p id="meta" class="meta">Loading snapshot...</p>
+        <div id="team-controls" class="controls" role="group" aria-label="Filter teams"></div>
+        <div class="chart">
+          <div id="chart" style="width: 100%; min-height: 560px"></div>
+        </div>
+        <p id="status" hidden></p>
+      </section>
+    </main>
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
