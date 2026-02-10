@@ -56,3 +56,20 @@ export const BOARD_39_TREND: TrendPoint[] = [
   { date: "2026-01-19", highest: 0, high: 1, medium: 6, low: 47, lowest: 2 },
   { date: "2026-02-02", highest: 0, high: 1, medium: 4, low: 35, lowest: 0 },
 ];
+
+export const BOARD_40_TREND: TrendPoint[] = [
+  { date: "2025-06-23", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-07-07", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-08-04", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-08-18", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-09-01", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-09-15", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-09-30", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-10-13", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-10-27", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-11-10", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-11-24", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2025-12-08", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2026-01-19", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+  { date: "2026-02-02", highest: 0, high: 0, medium: 0, low: 0, lowest: 0 },
+];

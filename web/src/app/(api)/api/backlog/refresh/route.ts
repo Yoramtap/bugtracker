@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
   // Best-effort local lock: safe for single-process/single-VM usage,
   // but not a distributed lock for serverless or multi-instance deployments.
-  const lockPath = path.resolve(process.cwd(), "src/app/backlog/snapshot.lock");
+  const lockPath = path.resolve(process.cwd(), "src/app/(site)/backlog/snapshot.lock");
   let lockHandle: Awaited<ReturnType<typeof fs.open>> | null = null;
 
   try {

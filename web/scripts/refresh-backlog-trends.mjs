@@ -49,12 +49,17 @@ const BOARDS = [
     label: "NewFrontend",
     doneStatuses: '(Done, "Won\'t Fix")',
   },
+  {
+    constName: "BOARD_40_TREND",
+    label: "Broadcast",
+    doneStatuses: '(Done, "Won\'t Fix")',
+  },
 ];
 
 const PAGE_SIZE = 100;
 const MAX_RETRIES = 5;
-const SNAPSHOT_PATH = path.resolve(process.cwd(), "src/app/backlog/snapshot.json");
-const SNAPSHOT_TMP_PATH = path.resolve(process.cwd(), "src/app/backlog/snapshot.json.tmp");
+const SNAPSHOT_PATH = path.resolve(process.cwd(), "src/app/(site)/backlog/snapshot.json");
+const SNAPSHOT_TMP_PATH = path.resolve(process.cwd(), "src/app/(site)/backlog/snapshot.json.tmp");
 const SNAPSHOT_SCHEMA_VERSION = 1;
 
 function env(name, fallback = "") {
@@ -205,13 +210,20 @@ function buildCombinedSnapshot(computed, syncedAt) {
   const api = computed.BOARD_38_TREND ?? [];
   const legacy = computed.BOARD_39_TREND ?? [];
   const react = computed.BOARD_46_TREND ?? [];
+  const bc = computed.BOARD_40_TREND ?? [];
 
   const apiByDate = new Map(api.map((point) => [point.date, point]));
   const legacyByDate = new Map(legacy.map((point) => [point.date, point]));
   const reactByDate = new Map(react.map((point) => [point.date, point]));
+  const bcByDate = new Map(bc.map((point) => [point.date, point]));
 
   const allDates = Array.from(
-    new Set([...api.map((p) => p.date), ...legacy.map((p) => p.date), ...react.map((p) => p.date)]),
+    new Set([
+      ...api.map((p) => p.date),
+      ...legacy.map((p) => p.date),
+      ...react.map((p) => p.date),
+      ...bc.map((p) => p.date),
+    ]),
   ).sort();
 
   return {
@@ -227,6 +239,7 @@ function buildCombinedSnapshot(computed, syncedAt) {
       api: apiByDate.get(date) ?? emptyPoint(date),
       legacy: legacyByDate.get(date) ?? emptyPoint(date),
       react: reactByDate.get(date) ?? emptyPoint(date),
+      bc: bcByDate.get(date) ?? emptyPoint(date),
     })),
   };
 }
@@ -271,7 +284,9 @@ async function main() {
   const syncedAt = new Date().toISOString();
   const snapshot = buildCombinedSnapshot(computed, syncedAt);
   await writeSnapshotAtomic(snapshot);
-  console.log("Updated snapshot.json for BOARD_38_TREND, BOARD_39_TREND, and BOARD_46_TREND.");
+  console.log(
+    "Updated snapshot.json for BOARD_38_TREND, BOARD_39_TREND, BOARD_46_TREND, and BOARD_40_TREND.",
+  );
 }
 
 main().catch((error) => {

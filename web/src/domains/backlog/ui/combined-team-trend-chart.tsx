@@ -29,12 +29,25 @@ const TEAMS: Array<{ key: TeamKey; label: string }> = [
   { key: "api", label: "API" },
   { key: "legacy", label: "Legacy FE" },
   { key: "react", label: "React FE" },
+  { key: "bc", label: "BC" },
 ];
 
 function toAxisMaxWithHeadroom(value: number) {
   if (value <= 0) return 5;
   const withHeadroom = value + Math.max(1, value * 0.08);
   return Math.max(5, Math.ceil(withHeadroom / 5) * 5);
+}
+
+function chooseYAxisStep(maxValue: number) {
+  const targetTickCount = 7;
+  const roughStep = Math.max(1, maxValue / targetTickCount);
+  const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+  const normalized = roughStep / magnitude;
+
+  if (normalized <= 1) return 1 * magnitude;
+  if (normalized <= 2) return 2 * magnitude;
+  if (normalized <= 5) return 5 * magnitude;
+  return 10 * magnitude;
 }
 
 function parseAxisDate(date: string) {
@@ -82,15 +95,11 @@ export function CombinedTeamTrendChart({
       activePriorityKeys.reduce((sum, key) => sum + (point[key] as number), 0);
 
     const rawMax = points.reduce((max, point) => {
-      const apiTotal = visibleTeams.api ? totalVisible(point.api) : 0;
-      const legacyTotal = visibleTeams.legacy ? totalVisible(point.legacy) : 0;
-      const reactTotal = visibleTeams.react ? totalVisible(point.react) : 0;
-      return Math.max(
-        max,
-        apiTotal,
-        legacyTotal,
-        reactTotal,
-      );
+      const teamMax = TEAMS.reduce((currentMax, team) => {
+        if (!visibleTeams[team.key]) return currentMax;
+        return Math.max(currentMax, totalVisible(point[team.key]));
+      }, 0);
+      return Math.max(max, teamMax);
     }, 0);
     return toAxisMaxWithHeadroom(rawMax);
   }, [points, visiblePriorities, visibleTeams]);
@@ -107,7 +116,7 @@ export function CombinedTeamTrendChart({
   const plotHeight = chartHeight - marginTop - marginBottom;
   const axisY = marginTop + plotHeight;
   const teamLabelY = axisY + 8;
-  const yTickStep = 5;
+  const yTickStep = chooseYAxisStep(maxValue);
   const yTicks = Array.from({ length: Math.floor(maxValue / yTickStep) + 1 }, (_, i) => {
     const value = i * yTickStep;
     const y = marginTop + plotHeight - (plotHeight * value) / maxValue;
@@ -286,37 +295,21 @@ export function CombinedTeamTrendChart({
                   );
                 })}
 
-                <text
-                  x={innerLeft + barWidth / 2}
-                  y={teamLabelY}
-                  textAnchor="end"
-                  className={styles.axisLabelTeam}
-                  transform={`rotate(-90 ${innerLeft + barWidth / 2} ${teamLabelY})`}
-                >
-                  API
-                </text>
-                <text
-                  x={innerLeft + (barWidth + barGap) + barWidth / 2}
-                  y={teamLabelY}
-                  textAnchor="end"
-                  className={styles.axisLabelTeam}
-                  transform={`rotate(-90 ${
-                    innerLeft + (barWidth + barGap) + barWidth / 2
-                  } ${teamLabelY})`}
-                >
-                  Legacy FE
-                </text>
-                <text
-                  x={innerLeft + 2 * (barWidth + barGap) + barWidth / 2}
-                  y={teamLabelY}
-                  textAnchor="end"
-                  className={styles.axisLabelTeam}
-                  transform={`rotate(-90 ${
-                    innerLeft + 2 * (barWidth + barGap) + barWidth / 2
-                  } ${teamLabelY})`}
-                >
-                  React FE
-                </text>
+                {TEAMS.map((team, teamIndex) => {
+                  const labelX = innerLeft + teamIndex * (barWidth + barGap) + barWidth / 2;
+                  return (
+                    <text
+                      key={`${point.date}-${team.key}-label`}
+                      x={labelX}
+                      y={teamLabelY}
+                      textAnchor="end"
+                      className={styles.axisLabelTeam}
+                      transform={`rotate(-90 ${labelX} ${teamLabelY})`}
+                    >
+                      {team.label}
+                    </text>
+                  );
+                })}
 
                 {(() => {
                   const axisDate = parseAxisDate(point.date);

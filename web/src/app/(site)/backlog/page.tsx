@@ -13,12 +13,14 @@ const DEFAULT_TEAM_VISIBLE: Record<TeamKey, boolean> = {
   api: true,
   legacy: true,
   react: true,
+  bc: true,
 };
 
 const TEAM_FILTERS: Array<{ key: TeamKey; label: string }> = [
   { key: "api", label: "API" },
   { key: "legacy", label: "Legacy FE" },
   { key: "react", label: "React FE" },
+  { key: "bc", label: "BC" },
 ];
 
 async function fetchSnapshot(endpoint: string, method: "GET" | "POST") {

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-02-07T12:59:34.668Z",
+  "updatedAt": "2026-02-10T15:17:50.914Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-02-07T12:59:34.666Z",
+    "syncedAt": "2026-02-10T15:17:50.901Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date)."
   },
   "combinedPoints": [
@@ -32,6 +32,14 @@
         "medium": 1,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-06-23",
+        "highest": 3,
+        "high": 53,
+        "medium": 95,
+        "low": 10,
+        "lowest": 1
       }
     },
     {
@@ -59,6 +67,14 @@
         "medium": 1,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-07-07",
+        "highest": 5,
+        "high": 55,
+        "medium": 96,
+        "low": 10,
+        "lowest": 1
       }
     },
     {
@@ -86,6 +102,14 @@
         "medium": 1,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-08-04",
+        "highest": 3,
+        "high": 52,
+        "medium": 90,
+        "low": 9,
+        "lowest": 1
       }
     },
     {
@@ -113,6 +137,14 @@
         "medium": 1,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-08-18",
+        "highest": 3,
+        "high": 53,
+        "medium": 92,
+        "low": 9,
+        "lowest": 1
       }
     },
     {
@@ -140,6 +172,14 @@
         "medium": 1,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-09-01",
+        "highest": 5,
+        "high": 52,
+        "medium": 92,
+        "low": 9,
+        "lowest": 1
       }
     },
     {
@@ -166,6 +206,14 @@
         "high": 0,
         "medium": 1,
         "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-09-15",
+        "highest": 2,
+        "high": 53,
+        "medium": 93,
+        "low": 9,
         "lowest": 0
       }
     },
@@ -194,6 +242,14 @@
         "medium": 1,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-09-30",
+        "highest": 3,
+        "high": 54,
+        "medium": 95,
+        "low": 9,
+        "lowest": 0
       }
     },
     {
@@ -220,6 +276,14 @@
         "high": 0,
         "medium": 2,
         "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-10-13",
+        "highest": 1,
+        "high": 58,
+        "medium": 96,
+        "low": 9,
         "lowest": 0
       }
     },
@@ -248,6 +312,14 @@
         "medium": 4,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-10-27",
+        "highest": 1,
+        "high": 57,
+        "medium": 100,
+        "low": 9,
+        "lowest": 0
       }
     },
     {
@@ -274,6 +346,14 @@
         "high": 1,
         "medium": 6,
         "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-11-10",
+        "highest": 4,
+        "high": 64,
+        "medium": 104,
+        "low": 9,
         "lowest": 0
       }
     },
@@ -302,6 +382,14 @@
         "medium": 5,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2025-11-24",
+        "highest": 4,
+        "high": 67,
+        "medium": 106,
+        "low": 9,
+        "lowest": 0
       }
     },
     {
@@ -328,6 +416,14 @@
         "high": 0,
         "medium": 8,
         "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-12-08",
+        "highest": 6,
+        "high": 67,
+        "medium": 113,
+        "low": 9,
         "lowest": 0
       }
     },
@@ -356,6 +452,14 @@
         "medium": 3,
         "low": 0,
         "lowest": 0
+      },
+      "bc": {
+        "date": "2026-01-19",
+        "highest": 3,
+        "high": 69,
+        "medium": 113,
+        "low": 7,
+        "lowest": 0
       }
     },
     {
@@ -382,6 +486,14 @@
         "high": 0,
         "medium": 3,
         "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2026-02-02",
+        "highest": 3,
+        "high": 70,
+        "medium": 112,
+        "low": 7,
         "lowest": 0
       }
     }

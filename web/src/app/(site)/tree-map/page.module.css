@@ -1,0 +1,661 @@
+.page {
+  --ink-1: #0f2a4a;
+  --ink-2: #2f4f74;
+  --line-1: rgb(112 149 192 / 42%);
+  --line-2: rgb(112 149 192 / 26%);
+  --surface-1: rgb(249 252 255 / 90%);
+  --surface-2: rgb(236 245 255 / 82%);
+  --accent: #2f78d5;
+  --accent-soft: rgb(47 120 213 / 14%);
+  min-height: 100vh;
+  padding: 28px 6vw 72px;
+  background:
+    radial-gradient(circle at 14% -8%, rgb(126 211 255 / 24%), transparent 35%),
+    radial-gradient(circle at 92% 0%, rgb(126 178 255 / 16%), transparent 34%),
+    linear-gradient(180deg, #f3f7fc 0%, #e8f0f8 100%);
+}
+.panel {
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 20px;
+  border: 1px solid var(--line-1);
+  background: linear-gradient(180deg, rgb(248 252 255 / 93%) 0%, rgb(238 246 255 / 90%) 100%);
+  box-shadow:
+    0 18px 44px rgb(13 32 60 / 12%),
+    inset 0 1px 0 rgb(255 255 255 / 86%);
+  padding: 20px;
+}
+.panelWide {
+  max-width: min(1600px, 98vw);
+}
+.header {
+  margin-bottom: 16px;
+  padding: 14px 14px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgb(245 251 255 / 85%) 0%, rgb(231 243 255 / 76%) 100%);
+}
+.kicker {
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(36 85 136);
+  font-weight: 800;
+}
+.header h1 {
+  margin: 8px 0 4px;
+  font-size: clamp(1.7rem, 2.7vw, 2.25rem);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  color: var(--ink-1);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 75%);
+}
+.subhead {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--ink-2);
+  font-size: 1.04rem;
+}
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+.contentGridMapOnly {
+  gap: 0;
+}
+.chartWrap {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 4px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 420px;
+  border-radius: 14px;
+  border: 1px solid var(--line-1);
+  background: linear-gradient(180deg, rgb(239 247 255) 0%, rgb(227 238 252) 100%);
+  padding: 4px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 80%);
+  overflow: hidden;
+}
+.chartWrapExpanded {
+  aspect-ratio: 21 / 9;
+  min-height: min(78vh, 980px);
+}
+.plot {
+  width: 100%;
+  height: 100%;
+}
+.mapLegend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 8px;
+  color: var(--ink-2);
+  font-size: 0.82rem;
+  background: rgb(244 250 255 / 80%);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  padding: 4px 6px;
+}
+.variantSwitch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 2px;
+  border: 1px solid rgb(110 149 191 / 48%);
+  border-radius: 999px;
+  background: rgb(233 243 255 / 88%);
+}
+.variantButton {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #2b527d;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.variantButton[data-active="true"] {
+  border-color: rgb(75 129 202 / 58%);
+  background: linear-gradient(180deg, rgb(255 255 255 / 94%) 0%, rgb(232 242 255 / 95%) 100%);
+  color: #1f4978;
+}
+.variantButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 20%);
+}
+.mapViewToggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgb(83 132 192 / 54%);
+  background: rgb(238 246 255);
+  color: #244f7e;
+  cursor: pointer;
+  transition: transform 140ms ease, filter 160ms ease;
+}
+.mapViewToggle:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+.mapViewToggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.mapViewToggleActive {
+  border-color: rgb(55 118 199 / 66%);
+  background: rgb(224 238 255);
+  color: #1f4a7c;
+}
+.plot :global(.js-plotly-plot),
+.plot :global(.plot-container),
+.plot :global(.svg-container) {
+  width: 100% !important;
+  height: 100% !important;
+}
+.detailsPanel {
+  border: 1px solid var(--line-1);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgb(236 246 255) 0%, rgb(224 236 251) 100%);
+  padding: 12px;
+  overflow: hidden;
+  transform-origin: top;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    max-height 280ms ease,
+    padding 220ms ease,
+    margin 220ms ease,
+    border-color 220ms ease;
+}
+.detailsPanelOpen {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: min(74vh, 1400px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+}
+.detailsPanelClosed {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.99);
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: -4px;
+  border-color: rgb(119 157 196 / 0%);
+  pointer-events: none;
+}
+.controlsSection {
+  display: grid;
+  gap: 8px;
+}
+.controlsHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+.controlsToggle {
+  border: 1px solid rgb(75 129 202 / 58%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 92%) 0%, rgb(230 241 255 / 95%) 100%);
+  color: #214c7d;
+  padding: 8px 14px;
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    filter 160ms ease,
+    box-shadow 160ms ease;
+}
+.controlsToggle:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+.controlsToggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 26%);
+}
+.treeHint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgb(41 74 109 / 88%);
+}
+.treeList {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+.treeBulkActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.bulkActionButton {
+  border: 1px solid rgb(115 154 198 / 56%);
+  border-radius: 8px;
+  background: rgb(234 244 255);
+  color: #2a567f;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.bulkActionButton:hover {
+  background: rgb(226 239 254);
+}
+.bulkActionButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 16%);
+}
+.treeGroupCard {
+  border: 1px solid var(--line-1);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--surface-1) 0%, var(--surface-2) 100%);
+  padding: 7px;
+  display: grid;
+  gap: 6px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 82%);
+}
+.treeGroupHeader {
+  display: block;
+}
+.treeGroupTitleRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 8px;
+}
+.treeToggle {
+  align-self: center;
+  border: 1px solid rgb(122 160 201 / 56%);
+  border-radius: 8px;
+  background: rgb(232 243 255 / 98%);
+  color: rgb(26 57 90);
+  width: 30px;
+  height: 30px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.treeToggle:hover {
+  background: rgb(224 238 254 / 96%);
+}
+.treeToggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 20%);
+}
+.treeGroupNameField {
+  min-width: 0;
+}
+.treeGroupNameField input {
+  width: 100%;
+  border: 1px solid rgb(122 160 201 / 58%);
+  border-radius: 9px;
+  background: rgb(252 255 255 / 96%);
+  color: var(--ink-1);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 8px 10px;
+}
+.treeGroupNameField input:focus-visible {
+  outline: none;
+  border-color: rgb(58 126 212 / 85%);
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 18%);
+}
+.treeAddTitleButton {
+  border-radius: 8px;
+  border: 1px solid rgb(59 130 223 / 58%);
+  background: linear-gradient(180deg, rgb(233 244 255) 0%, rgb(222 237 255) 100%);
+  color: #1f4c7a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.treeAddTitleButton:hover {
+  background: rgb(220 235 255);
+}
+.treeAddTitleButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 18%);
+}
+.treeSizeField {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.treeSizeField span {
+  margin: 0;
+  font-size: 0.56rem;
+  color: rgb(39 74 111 / 82%);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.treeSizeField select {
+  min-width: 94px;
+  border: 1px solid rgb(127 164 201 / 56%);
+  border-radius: 8px;
+  background: rgb(251 254 255 / 94%);
+  color: var(--ink-1);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 7px;
+}
+.treeSizeField select:focus-visible {
+  outline: none;
+  border-color: rgb(58 126 212 / 85%);
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 16%);
+}
+.deleteGroupIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgb(193 70 70 / 55%);
+  background: rgb(255 241 241);
+  color: rgb(127 32 32);
+  cursor: pointer;
+}
+.deleteGroupIconButton:hover {
+  background: rgb(255 230 230);
+}
+.deleteGroupIconButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(193 70 70 / 16%);
+}
+.treeItems {
+  display: grid;
+  gap: 8px;
+}
+.treeChildrenBox {
+  border: 1px solid rgb(132 177 225 / 42%);
+  border-radius: 8px;
+  padding: 7px;
+  background: rgb(244 250 255 / 82%);
+  display: grid;
+  gap: 8px;
+}
+.treeItemRow {
+  border: 1px solid rgb(127 164 204 / 34%);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 90%);
+  padding: 7px;
+  display: grid;
+  gap: 6px;
+}
+.treeItemTitleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+.treeItemTitleField {
+  display: grid;
+  gap: 4px;
+}
+.treeItemTitleField span {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgb(39 74 111 / 82%);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+.treeItemTitleField input {
+  width: 100%;
+  border: 1px solid rgb(127 164 201 / 56%);
+  border-radius: 8px;
+  background: rgb(251 254 255 / 94%);
+  color: var(--ink-1);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 9px;
+}
+.treeItemTitleField input:focus-visible {
+  outline: none;
+  border-color: rgb(58 126 212 / 85%);
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 16%);
+}
+.deleteItemIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgb(193 70 70 / 55%);
+  background: rgb(255 238 238);
+  color: rgb(127 32 32);
+  cursor: pointer;
+}
+.deleteItemIconButton:hover {
+  background: rgb(255 230 230);
+}
+.deleteItemIconButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(193 70 70 / 16%);
+}
+.treeMetaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.treeSmallField {
+  display: grid;
+  gap: 4px;
+}
+.treeSmallField span {
+  margin: 0;
+  font-size: 0.6rem;
+  color: rgb(39 74 111 / 82%);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+.treeSmallField select {
+  width: 100%;
+  border: 1px solid rgb(127 164 201 / 56%);
+  border-radius: 8px;
+  background: rgb(251 254 255 / 94%);
+  color: var(--ink-1);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 8px;
+}
+.treeSmallField select:focus-visible {
+  outline: none;
+  border-color: rgb(58 126 212 / 85%);
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 16%);
+}
+.editorColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.editColumn h2,
+.toolsColumn h2 {
+  margin: 0 0 10px;
+  font-size: 0.84rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(39 75 113 / 88%);
+}
+.editColumn,
+.toolsColumn {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+.toolsColumn {
+  border-left: 1px solid var(--line-2);
+  padding-left: 14px;
+}
+.addButton {
+  border: 1px solid rgb(54 124 208 / 62%);
+  background: linear-gradient(180deg, rgb(232 243 255) 0%, rgb(223 237 255) 100%);
+  color: #214e7f;
+  border-radius: 10px;
+  font-size: 0.87rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  padding: 9px 11px;
+  cursor: pointer;
+}
+.addButton:hover {
+  background: rgb(220 235 255);
+}
+.addButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 18%);
+}
+.pasteSection {
+  margin-top: 0;
+}
+.pasteHint {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  color: rgb(45 76 113 / 88%);
+}
+.pasteHint code {
+  font-size: 0.74rem;
+}
+.pasteTextarea {
+  margin-top: 8px;
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  border: 1px solid rgb(127 164 201 / 56%);
+  border-radius: 9px;
+  background: rgb(251 254 255 / 92%);
+  color: rgb(15 41 68 / 92%);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+  padding: 9px 10px;
+}
+.pasteTextarea:focus-visible {
+  outline: none;
+  border-color: rgb(58 126 212 / 85%);
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 18%);
+}
+.parsedPreview {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border: 1px solid rgb(124 162 202 / 38%);
+  border-radius: 9px;
+  background: rgb(249 252 255 / 86%);
+  max-height: 132px;
+  overflow: auto;
+  list-style: none;
+  display: grid;
+  gap: 5px;
+}
+.parsedPreview li {
+  font-size: 0.8rem;
+  color: rgb(19 47 77 / 92%);
+  line-height: 1.3;
+}
+.applyParsedButton {
+  margin-top: 8px;
+  width: 100%;
+  border: 1px solid rgb(65 122 194 / 58%);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgb(78 143 223) 0%, rgb(54 110 183) 100%);
+  color: rgb(246 250 255);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  padding: 9px 11px;
+  cursor: pointer;
+}
+.applyParsedButton:hover {
+  filter: brightness(1.05);
+}
+.applyParsedButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.applyParsedButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(58 126 212 / 18%);
+}
+.emptyState {
+  margin: 22px 0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px dashed rgb(105 143 185 / 55%);
+  color: rgb(34 71 109);
+  background: rgb(219 235 249 / 36%);
+}
+.legendLabel {
+  font-weight: 700;
+}
+.legendScaleGroup {
+  display: grid;
+  gap: 2px;
+}
+.progressLegendBar {
+  width: 180px;
+  height: 11px;
+  border-radius: 999px;
+  border: 1px solid rgb(105 142 182 / 36%);
+  background: linear-gradient(90deg, #d92d20 0%, #f59e0b 50%, #15803d 100%);
+}
+.legendTickRow {
+  display: flex;
+  justify-content: space-between;
+  width: 180px;
+}
+.legendScale {
+  font-size: 0.78rem;
+  color: rgb(43 70 99 / 85%);
+}
+.count {
+  margin-left: 0;
+  font-weight: 700;
+}
+@media (max-width: 860px) {
+  .page {
+    padding: 20px 4vw 52px;
+  }
+  .panel {
+    padding: 14px;
+  }
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+  .chartWrap {
+    aspect-ratio: 1 / 1;
+    min-height: 360px;
+  }
+  .editorColumns {
+    grid-template-columns: 1fr;
+  }
+  .toolsColumn {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid rgb(123 159 201 / 30%);
+    padding-top: 10px;
+  }
+  .count {
+    margin-left: 0;
+  }
+}

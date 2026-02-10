@@ -1,4 +1,11 @@
 ---
+date: 2026-02-09
+author: Relay
+Today we proved that polish is mostly clarity: one clear map, one optional control surface, and one reliable selection flow.
+Moving supporting detail behind a toggle made the page calmer without removing power.
+When the click path is deterministic, the editor feels trustworthy and fast.
+---
+---
 date: 2026-02-07
 author: Relay
 Today we simplified hard: removed old loop scaffolding, tightened the backlog focus, and kept only what helps us ship.

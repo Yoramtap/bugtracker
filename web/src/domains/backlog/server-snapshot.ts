@@ -1,10 +1,16 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { BOARD_38_TREND, BOARD_39_TREND, BOARD_46_TREND, backlogSource } from "./data";
+import {
+  BOARD_38_TREND,
+  BOARD_39_TREND,
+  BOARD_40_TREND,
+  BOARD_46_TREND,
+  backlogSource,
+} from "./data";
 import type { BacklogSnapshot, CombinedTrendPoint, TrendPoint } from "./types";
 
-const SNAPSHOT_PATH = path.resolve(process.cwd(), "src/app/backlog/snapshot.json");
-const SNAPSHOT_TMP_PATH = path.resolve(process.cwd(), "src/app/backlog/snapshot.json.tmp");
+const SNAPSHOT_PATH = path.resolve(process.cwd(), "src/app/(site)/backlog/snapshot.json");
+const SNAPSHOT_TMP_PATH = path.resolve(process.cwd(), "src/app/(site)/backlog/snapshot.json.tmp");
 const SNAPSHOT_SCHEMA_VERSION = 1;
 
 function normalizeTrendDate(date: string) {
@@ -23,16 +29,19 @@ function buildSnapshotFromModuleData(): BacklogSnapshot {
   }));
   const legacyTrend = BOARD_39_TREND;
   const reactTrend = BOARD_46_TREND;
+  const bcTrend = BOARD_40_TREND;
 
   const apiByDate = new Map(apiTrend.map((point) => [point.date, point]));
   const legacyByDate = new Map(legacyTrend.map((point) => [point.date, point]));
   const reactByDate = new Map(reactTrend.map((point) => [point.date, point]));
+  const bcByDate = new Map(bcTrend.map((point) => [point.date, point]));
 
   const allDates = Array.from(
     new Set([
       ...apiTrend.map((point) => point.date),
       ...legacyTrend.map((point) => point.date),
       ...reactTrend.map((point) => point.date),
+      ...bcTrend.map((point) => point.date),
     ]),
   ).sort();
 
@@ -41,6 +50,7 @@ function buildSnapshotFromModuleData(): BacklogSnapshot {
     api: apiByDate.get(date) ?? emptyTrendPoint(date),
     legacy: legacyByDate.get(date) ?? emptyTrendPoint(date),
     react: reactByDate.get(date) ?? emptyTrendPoint(date),
+    bc: bcByDate.get(date) ?? emptyTrendPoint(date),
   }));
 
   return {
@@ -54,12 +64,25 @@ function buildSnapshotFromModuleData(): BacklogSnapshot {
 export async function getSnapshot(): Promise<BacklogSnapshot> {
   const raw = await fs.readFile(SNAPSHOT_PATH, "utf8");
   const parsed = JSON.parse(raw) as Partial<BacklogSnapshot>;
+  const combinedPoints = Array.isArray(parsed.combinedPoints)
+    ? parsed.combinedPoints.map((point) => {
+        const date = String(point?.date ?? "");
+        return {
+          date,
+          api: point?.api ?? emptyTrendPoint(date),
+          legacy: point?.legacy ?? emptyTrendPoint(date),
+          react: point?.react ?? emptyTrendPoint(date),
+          bc: point?.bc ?? emptyTrendPoint(date),
+        };
+      })
+    : [];
+
   return {
     ...parsed,
     schemaVersion: typeof parsed.schemaVersion === "number" ? parsed.schemaVersion : SNAPSHOT_SCHEMA_VERSION,
     updatedAt: parsed.updatedAt ?? parsed.source?.syncedAt ?? new Date().toISOString(),
     source: parsed.source ?? backlogSource,
-    combinedPoints: Array.isArray(parsed.combinedPoints) ? parsed.combinedPoints : [],
+    combinedPoints,
   } as BacklogSnapshot;
 }
 

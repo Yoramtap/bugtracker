@@ -38,6 +38,13 @@ export default function PrimaryNav() {
             >
               Backlog
             </Link>
+            <Link
+              className={styles.link}
+              href="/tree-map"
+              aria-current={isCurrent("/tree-map") ? "page" : undefined}
+            >
+              Tree map
+            </Link>
           </nav>
           <NightVisionToggle />
         </div>

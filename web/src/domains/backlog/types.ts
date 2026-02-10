@@ -7,17 +7,19 @@ export type TrendPoint = {
   lowest: number;
 };
 
-export type TeamKey = "api" | "legacy" | "react";
+export type TeamKey = "api" | "legacy" | "react" | "bc";
 
 // CombinedTrendPoint consumer mapping:
 // - api: API team consumer metrics
 // - legacy: Legacy frontend team consumer metrics
 // - react: React frontend team consumer metrics
+// - bc: BC team consumer metrics
 export type CombinedTrendPoint = {
   date: string;
   api: TrendPoint;
   legacy: TrendPoint;
   react: TrendPoint;
+  bc: TrendPoint;
 };
 
 // All consumers read from the same snapshot.json payload via this shape.
