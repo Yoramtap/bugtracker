@@ -11,9 +11,6 @@
         --panel-2: #1b2a52;
         --line: rgba(150, 187, 247, 0.35);
         --text: #eaf1ff;
-        --muted: #adc0e8;
-        --chip: #243c72;
-        --chip-active: #2f5fb1;
       }
 
       * {
@@ -26,12 +23,15 @@
         font-family: "Segoe UI", Roboto, Arial, sans-serif;
         color: var(--text);
         background: radial-gradient(circle at top, #1f2f5b 0%, var(--bg) 62%);
+        overflow-x: hidden;
       }
 
       main {
-        max-width: 1100px;
+        width: min(1100px, calc(100% - 32px));
         margin: 0 auto;
-        padding: 28px 16px 40px;
+        padding: 28px 0 40px;
+        display: grid;
+        gap: 18px;
       }
 
       .panel {
@@ -40,41 +40,17 @@
         background: linear-gradient(180deg, var(--panel-2), var(--panel));
         padding: 16px;
         box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+        width: 100%;
       }
 
-      h1 {
+      h1,
+      h2 {
         margin: 0;
         font-size: 1.3rem;
       }
 
-      .meta {
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 0.86rem;
-      }
-
-      .controls {
-        margin: 14px 0 8px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .chip {
-        border: 1px solid rgba(175, 203, 250, 0.4);
-        background: var(--chip);
-        color: #dce9ff;
-        border-radius: 999px;
-        padding: 6px 12px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        cursor: pointer;
-      }
-
-      .chip[data-active="true"] {
-        background: var(--chip-active);
-        color: white;
-        border-color: rgba(166, 207, 255, 0.9);
+      h2 {
+        font-size: 1.15rem;
       }
 
       .chart {
@@ -82,6 +58,11 @@
         border-radius: 12px;
         padding: 6px;
         background: rgba(10, 16, 30, 0.35);
+      }
+
+      .bar-chart-wrap {
+        width: 100%;
+        overflow-x: auto;
       }
 
       #status {
@@ -94,11 +75,16 @@
   <body>
     <main>
       <section class="panel" aria-label="Backlog trend chart">
-        <h1>Combined Team Bug Trend</h1>
-        <p id="meta" class="meta">Loading snapshot...</p>
-        <div id="team-controls" class="controls" role="group" aria-label="Filter teams"></div>
+        <h1>Bug trend across teams</h1>
         <div class="chart">
           <div id="chart" style="width: 100%; min-height: 560px"></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Backlog stacked bars">
+        <h2>Bug composition by priority</h2>
+        <div class="chart">
+          <div id="stacked-chart" class="bar-chart-wrap" style="min-height: 560px"></div>
         </div>
         <p id="status" hidden></p>
       </section>

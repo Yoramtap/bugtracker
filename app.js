@@ -7,76 +7,56 @@ const TEAM_CONFIG = [
   { key: "bc", label: "BC", color: "#BA68C8" },
 ];
 
-const PRIORITY_LABELS = {
-  highest: "Highest",
-  high: "High",
-  medium: "Medium",
-  low: "Low",
-  lowest: "Lowest",
-};
+const PRIORITY_CONFIG = [
+  { key: "highest", label: "Highest", color: "#9c3b2f" },
+  { key: "high", label: "High", color: "#ba7a36" },
+  { key: "medium", label: "Medium", color: "#66707a" },
+  { key: "low", label: "Low", color: "#3f8cab" },
+  { key: "lowest", label: "Lowest", color: "#1f648d" },
+];
+
+const PRIORITY_LABELS = PRIORITY_CONFIG.reduce((acc, priority) => {
+  acc[priority.key] = priority.label;
+  return acc;
+}, {});
 
 const state = {
   snapshot: null,
-  visible: {
-    api: true,
-    legacy: true,
-    react: true,
-    bc: true,
-  },
 };
 
+function toNumber(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
 function totalForPoint(point) {
-  return point.highest + point.high + point.medium + point.low + point.lowest;
+  return (
+    toNumber(point.highest) +
+    toNumber(point.high) +
+    toNumber(point.medium) +
+    toNumber(point.low) +
+    toNumber(point.lowest)
+  );
 }
 
 function breakdownText(point) {
-  return [
-    `${PRIORITY_LABELS.highest}: ${point.highest}`,
-    `${PRIORITY_LABELS.high}: ${point.high}`,
-    `${PRIORITY_LABELS.medium}: ${point.medium}`,
-    `${PRIORITY_LABELS.low}: ${point.low}`,
-    `${PRIORITY_LABELS.lowest}: ${point.lowest}`,
-  ].join("<br>");
+  return PRIORITY_CONFIG.map(
+    (priority) => `${PRIORITY_LABELS[priority.key]}: ${toNumber(point[priority.key])}`
+  ).join("<br>");
 }
 
-function renderTeamControls() {
-  const root = document.getElementById("team-controls");
-  root.innerHTML = "";
-
-  TEAM_CONFIG.forEach((team) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "chip";
-    btn.dataset.active = String(state.visible[team.key]);
-    btn.textContent = team.label;
-
-    btn.addEventListener("click", () => {
-      const next = { ...state.visible, [team.key]: !state.visible[team.key] };
-      if (!Object.values(next).some(Boolean)) return;
-      state.visible = next;
-      renderTeamControls();
-      renderChart();
-    });
-
-    root.appendChild(btn);
-  });
+function formatDateShort(date) {
+  const [year, month, day] = date.split("-");
+  if (!year || !month || !day) return date;
+  return `${month}/${day}`;
 }
 
-function renderMeta() {
-  const meta = document.getElementById("meta");
-  const source = state.snapshot && state.snapshot.source ? state.snapshot.source : {};
-  const syncedAt = source.syncedAt || "Unknown";
-  const updatedAt = state.snapshot && state.snapshot.updatedAt ? state.snapshot.updatedAt : "Unknown";
-  meta.textContent = `Synced: ${syncedAt} | Updated: ${updatedAt}`;
-}
-
-function renderChart() {
+function renderLineChart() {
   if (!state.snapshot || !Array.isArray(state.snapshot.combinedPoints)) return;
 
-  const x = state.snapshot.combinedPoints.map((p) => p.date);
+  const x = state.snapshot.combinedPoints.map((point) => point.date);
   const traces = TEAM_CONFIG.map((team) => {
-    const y = state.snapshot.combinedPoints.map((p) => totalForPoint(p[team.key]));
-    const customData = state.snapshot.combinedPoints.map((p) => breakdownText(p[team.key]));
+    const y = state.snapshot.combinedPoints.map((point) => totalForPoint(point[team.key]));
+    const customData = state.snapshot.combinedPoints.map((point) => breakdownText(point[team.key]));
     return {
       type: "scatter",
       mode: "lines+markers",
@@ -88,13 +68,13 @@ function renderChart() {
         "<b>%{fullData.name}</b><br>Date: %{x}<br>Total: %{y}<br>%{customdata}<extra></extra>",
       line: { color: team.color, width: 3 },
       marker: { size: 7 },
-      visible: state.visible[team.key] ? true : "legendonly",
     };
   });
 
   const layout = {
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
+    uirevision: "backlog-line",
     margin: { t: 18, r: 20, b: 42, l: 56 },
     xaxis: {
       title: "Date",
@@ -118,7 +98,81 @@ function renderChart() {
     },
   };
 
-  Plotly.newPlot("chart", traces, layout, {
+  Plotly.react("chart", traces, layout, {
+    displayModeBar: true,
+    responsive: true,
+  });
+}
+
+function renderStackedBarChart() {
+  if (!state.snapshot || !Array.isArray(state.snapshot.combinedPoints)) return;
+
+  const root = document.getElementById("stacked-chart");
+  if (!root) return;
+
+  const points = state.snapshot.combinedPoints;
+  const flat = [];
+  points.forEach((point) => {
+    TEAM_CONFIG.forEach((team) => {
+      const teamPoint = point[team.key];
+      flat.push({
+        date: point.date,
+        dateShort: formatDateShort(point.date),
+        team: team.label,
+        total: totalForPoint(teamPoint),
+        highest: toNumber(teamPoint.highest),
+        high: toNumber(teamPoint.high),
+        medium: toNumber(teamPoint.medium),
+        low: toNumber(teamPoint.low),
+        lowest: toNumber(teamPoint.lowest),
+      });
+    });
+  });
+
+  const x = [flat.map((item) => item.dateShort), flat.map((item) => item.team)];
+  const traces = PRIORITY_CONFIG.map((priority) => ({
+    type: "bar",
+    name: priority.label,
+    marker: { color: priority.color },
+    x,
+    y: flat.map((item) => item[priority.key]),
+    customdata: flat.map((item) => [item.date, item.team, item.total]),
+    hovertemplate:
+      "<b>%{customdata[1]}</b><br>Date: %{customdata[0]}<br>" +
+      `${priority.label}: %{y}<br>Total: %{customdata[2]}<extra></extra>`,
+  }));
+
+  const layout = {
+    barmode: "stack",
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    uirevision: "backlog-stack",
+    margin: { t: 18, r: 20, b: 84, l: 56 },
+    bargap: 0.3,
+    xaxis: {
+      type: "multicategory",
+      tickangle: -90,
+      tickfont: { size: 10 },
+      color: "#d9e8ff",
+      showgrid: false,
+    },
+    yaxis: {
+      title: "Open Bugs",
+      rangemode: "tozero",
+      color: "#d9e8ff",
+      gridcolor: "rgba(175,203,250,0.12)",
+    },
+    legend: {
+      orientation: "h",
+      yanchor: "bottom",
+      y: 1.02,
+      xanchor: "left",
+      x: 0,
+      font: { color: "#d9e8ff" },
+    },
+  };
+
+  Plotly.react("stacked-chart", traces, layout, {
     displayModeBar: true,
     responsive: true,
   });
@@ -127,13 +181,14 @@ function renderChart() {
 async function loadSnapshot() {
   const status = document.getElementById("status");
   status.hidden = true;
+
   try {
     const response = await fetch("./snapshot.json", { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
     state.snapshot = await response.json();
-    renderMeta();
-    renderTeamControls();
-    renderChart();
+    renderLineChart();
+    renderStackedBarChart();
   } catch (error) {
     status.hidden = false;
     status.textContent = `Failed to load snapshot.json: ${
