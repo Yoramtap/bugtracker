@@ -20,11 +20,12 @@ Use GitHub Pages URLs for iframe embeds (for example in Confluence):
 - Full dashboard: `https://yoramtap.github.io/bugtracker/`
 - Trend chart only: `https://yoramtap.github.io/bugtracker/?chart=trend`
 - Composition chart only: `https://yoramtap.github.io/bugtracker/?chart=composition`
+- UAT aging chart only: `https://yoramtap.github.io/bugtracker/?chart=uat`
 
 Recommended iframe settings:
 
 - Width: `100%`
-- Height: `700px` for trend-only, `900-1000px` for full dashboard
+- Height: `700px` for trend-only/composition-only, `500-650px` for UAT-only, `1400-1700px` for full dashboard (all 3 charts)
 - Scrolling: `Auto`
 
 ## Data Contract (`snapshot.json`)
