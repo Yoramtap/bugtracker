@@ -1,10 +1,21 @@
 :root {
-  --line: rgba(9, 30, 66, 0.12);
-  --text: #172b4d;
-  --chart-grid: rgba(9, 30, 66, 0.14);
-  --status: #ae2e24;
+  --line: rgba(20, 46, 75, 0.14);
+  --text: #1f3347;
+  --chart-grid: rgba(42, 63, 87, 0.16);
+  --chart-active: #4872a7;
+  --status: #8d3f38;
   --panel-bg: transparent;
   --canvas-bg: transparent;
+  --team-api: #3f74a7;
+  --team-legacy: #8f7545;
+  --team-react: #3e7e73;
+  --team-bc: #74659a;
+  --priority-highest: #9c4c43;
+  --priority-high: #b8873e;
+  --priority-medium: #6f788f;
+  --priority-low: #4576b6;
+  --priority-lowest: #357a69;
+  --bar-border: rgba(25, 39, 58, 0.35);
 }
 
 * {

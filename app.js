@@ -1,18 +1,18 @@
 "use strict";
 
 const TEAM_CONFIG = [
-  { key: "api", label: "API", color: "#1d4ed8" },
-  { key: "legacy", label: "Legacy FE", color: "#b45309" },
-  { key: "react", label: "React FE", color: "#15803d" },
-  { key: "bc", label: "BC", color: "#7e22ce" },
+  { key: "api", label: "API" },
+  { key: "legacy", label: "Legacy FE" },
+  { key: "react", label: "React FE" },
+  { key: "bc", label: "BC" },
 ];
 
 const PRIORITY_CONFIG = [
-  { key: "highest", label: "Highest", color: "#ae2e24" },
-  { key: "high", label: "High", color: "#ca7f0a" },
-  { key: "medium", label: "Medium", color: "#5e6c84" },
-  { key: "low", label: "Low", color: "#0c66e4" },
-  { key: "lowest", label: "Lowest", color: "#006e5a" },
+  { key: "highest", label: "Highest" },
+  { key: "high", label: "High" },
+  { key: "medium", label: "Medium" },
+  { key: "low", label: "Low" },
+  { key: "lowest", label: "Lowest" },
 ];
 
 const PRIORITY_LABELS = PRIORITY_CONFIG.reduce((acc, priority) => {
@@ -40,6 +40,21 @@ function getThemeColors() {
   return {
     text: readThemeColor("--text", "#172b4d"),
     grid: readThemeColor("--chart-grid", "rgba(9,30,66,0.14)"),
+    active: readThemeColor("--chart-active", "#0c66e4"),
+    teams: {
+      api: readThemeColor("--team-api", "#2f6ea8"),
+      legacy: readThemeColor("--team-legacy", "#8d6f3f"),
+      react: readThemeColor("--team-react", "#3f7f75"),
+      bc: readThemeColor("--team-bc", "#76649a"),
+    },
+    priorities: {
+      highest: readThemeColor("--priority-highest", "#9f4d44"),
+      high: readThemeColor("--priority-high", "#b48238"),
+      medium: readThemeColor("--priority-medium", "#6f778d"),
+      low: readThemeColor("--priority-low", "#3f73b8"),
+      lowest: readThemeColor("--priority-lowest", "#2f7a67"),
+    },
+    barBorder: readThemeColor("--bar-border", "rgba(25,39,58,0.35)"),
   };
 }
 
@@ -59,7 +74,7 @@ function buildBaseLayout(colors) {
     modebar: {
       bgcolor: CHART_COLORS.transparent,
       color: colors.text,
-      activecolor: "#0c66e4",
+      activecolor: colors.active,
     },
   };
 }
@@ -139,7 +154,7 @@ function renderLineChart() {
       customdata: customData,
       hovertemplate:
         "<b>%{fullData.name}</b><br>Date: %{x}<br>Total: %{y}<br>%{customdata}<extra></extra>",
-      line: { color: team.color, width: 3 },
+      line: { color: themeColors.teams[team.key], width: 3 },
       marker: { size: 7 },
     };
   });
@@ -201,7 +216,10 @@ function renderStackedBarChart() {
   const traces = PRIORITY_CONFIG.map((priority) => ({
     type: "bar",
     name: priority.label,
-    marker: { color: priority.color },
+    marker: {
+      color: themeColors.priorities[priority.key],
+      line: { color: themeColors.barBorder, width: 0.7 },
+    },
     x,
     y: flat.map((item) => item[priority.key]),
     customdata: flat.map((item) => [item.date, item.team, item.total]),
