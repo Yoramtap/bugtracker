@@ -19,6 +19,7 @@ const PRIORITY_LABELS = PRIORITY_CONFIG.reduce((acc, priority) => {
   acc[priority.key] = priority.label;
   return acc;
 }, {});
+const PRIORITY_STACK_ORDER = [...PRIORITY_CONFIG].reverse();
 
 const CHART_COLORS = {
   transparent: "rgba(0,0,0,0)",
@@ -54,6 +55,18 @@ function getThemeColors() {
       low: readThemeColor("--priority-low", "#3f73b8"),
       lowest: readThemeColor("--priority-lowest", "#2f7a67"),
     },
+    uatBuckets: {
+      d0_7: readThemeColor("--uat-bucket-0-7", "#a8c6de"),
+      d8_14: readThemeColor("--uat-bucket-8-14", "#87aecd"),
+      d15_30: readThemeColor("--uat-bucket-15-30", "#5f8fb7"),
+      d31_60: readThemeColor("--uat-bucket-31-60", "#3f6f99"),
+      d61_plus: readThemeColor("--uat-bucket-61-plus", "#2a4f73"),
+    },
+    tooltip: {
+      bg: readThemeColor("--tooltip-bg", "rgba(255,255,255,0.98)"),
+      border: readThemeColor("--tooltip-border", "rgba(31,51,71,0.25)"),
+      text: readThemeColor("--tooltip-text", "#1f3347"),
+    },
     barBorder: readThemeColor("--bar-border", "rgba(25,39,58,0.35)"),
   };
 }
@@ -76,6 +89,12 @@ function buildBaseLayout(colors) {
       color: colors.text,
       activecolor: colors.active,
     },
+    hoverlabel: {
+      bgcolor: colors.tooltip.bg,
+      bordercolor: colors.tooltip.border,
+      font: { color: colors.tooltip.text, size: 12 },
+      namelength: -1,
+    },
   };
 }
 
@@ -84,28 +103,40 @@ function getModeFromUrl() {
   const chart = (params.get("chart") || "").toLowerCase();
   if (chart === "trend") return "trend";
   if (chart === "composition") return "composition";
+  if (chart === "uat") return "uat";
   return "all";
 }
 
 function applyModeVisibility() {
   const trendPanel = document.getElementById("trend-panel");
   const compositionPanel = document.getElementById("composition-panel");
-  if (!trendPanel || !compositionPanel) return;
+  const uatPanel = document.getElementById("uat-panel");
+  if (!trendPanel || !compositionPanel || !uatPanel) return;
 
   if (state.mode === "trend") {
     trendPanel.hidden = false;
     compositionPanel.hidden = true;
+    uatPanel.hidden = true;
     return;
   }
 
   if (state.mode === "composition") {
     trendPanel.hidden = true;
     compositionPanel.hidden = false;
+    uatPanel.hidden = true;
+    return;
+  }
+
+  if (state.mode === "uat") {
+    trendPanel.hidden = true;
+    compositionPanel.hidden = true;
+    uatPanel.hidden = false;
     return;
   }
 
   trendPanel.hidden = false;
   compositionPanel.hidden = false;
+  uatPanel.hidden = false;
 }
 
 function toNumber(value) {
@@ -213,7 +244,7 @@ function renderStackedBarChart() {
   });
 
   const x = [flat.map((item) => item.dateShort), flat.map((item) => item.team)];
-  const traces = PRIORITY_CONFIG.map((priority) => ({
+  const traces = PRIORITY_STACK_ORDER.map((priority) => ({
     type: "bar",
     name: priority.label,
     marker: {
@@ -258,9 +289,108 @@ function renderStackedBarChart() {
   });
 }
 
+function renderUatAgingChart() {
+  const status = document.getElementById("uat-status");
+  const root = document.getElementById("uat-chart");
+  const title = document.querySelector("#uat-panel h2");
+  const baseTitle = "Interactive chart - UAT aging by priority";
+  if (title) title.textContent = baseTitle;
+  if (!status || !root) return;
+
+  status.hidden = true;
+  if (!state.snapshot || !state.snapshot.uatAging) {
+    status.hidden = false;
+    status.textContent = "No UAT aging data found in snapshot.json.";
+    return;
+  }
+
+  const themeColors = getThemeColors();
+  const uat = state.snapshot.uatAging;
+  const scopeLabel = String(uat?.scope?.label || "All labels");
+  if (title) title.textContent = `${baseTitle} (${scopeLabel}, ${toNumber(uat.totalIssues)} total tickets)`;
+  const priorities = PRIORITY_STACK_ORDER.map((priority) => priority.key);
+  const priorityLabels = PRIORITY_CONFIG.reduce((acc, priority) => {
+    acc[priority.key] = priority.label;
+    return acc;
+  }, {});
+  const buckets = Array.isArray(uat.buckets) ? uat.buckets : [];
+  const bucketLabels = buckets.map((bucket) => bucket.label);
+  const bucketTotals = buckets.map((bucket) =>
+    priorities.reduce(
+      (sum, priority) => sum + toNumber(uat?.priorities?.[priority]?.buckets?.[bucket.id]),
+      0
+    )
+  );
+
+  if (buckets.length === 0) {
+    status.hidden = false;
+    status.textContent = "UAT aging buckets are missing from snapshot.json.";
+    return;
+  }
+
+  const traces = priorities.map((priority) => ({
+    type: "bar",
+    name: priorityLabels[priority],
+    x: bucketLabels,
+    y: buckets.map((bucket) => toNumber(uat?.priorities?.[priority]?.buckets?.[bucket.id])),
+    marker: {
+      color: themeColors.priorities[priority] || themeColors.priorities.medium,
+      line: { color: themeColors.barBorder, width: 0.7 },
+    },
+    customdata: buckets.map((_, bucketIndex) => ({
+      total: bucketTotals[bucketIndex],
+    })),
+    hovertemplate:
+      "<b>Time spent: %{x}</b><br>Priority: %{fullData.name}<br>Count: %{y}<br>" +
+      "Total: %{customdata.total}<extra></extra>",
+  }));
+
+  const layout = {
+    ...buildBaseLayout(themeColors),
+    barmode: "stack",
+    uirevision: "backlog-uat-aging",
+    margin: { t: 18, r: 16, b: 52, l: 56 },
+    bargap: 0.28,
+    xaxis: {
+      title: "Time spent",
+      color: themeColors.text,
+      showgrid: false,
+      automargin: true,
+    },
+    yaxis: {
+      title: "Open UAT Bugs",
+      rangemode: "tozero",
+      color: themeColors.text,
+      gridcolor: themeColors.grid,
+      automargin: true,
+    },
+    annotations: [
+      {
+        xref: "paper",
+        yref: "paper",
+        x: 1,
+        y: 1.14,
+        showarrow: false,
+        xanchor: "right",
+        yanchor: "bottom",
+        text: `Scope: ${uat?.scope?.project || "?"} / ${uat?.scope?.issueType || "?"} / ${uat?.scope?.status || "?"} / ${uat?.scope?.label || "?"}`,
+        font: { size: 11, color: themeColors.text },
+      },
+    ],
+  };
+
+  Plotly.react("uat-chart", traces, layout, {
+    displayModeBar: true,
+    displaylogo: false,
+    responsive: true,
+  });
+}
+
 async function loadSnapshot() {
   const status = document.getElementById("status");
+  const uatStatus = document.getElementById("uat-status");
   status.hidden = true;
+  if (uatStatus) uatStatus.hidden = true;
   state.mode = getModeFromUrl();
   applyModeVisibility();
 
@@ -275,11 +405,16 @@ async function loadSnapshot() {
     if (state.mode !== "trend") {
       renderStackedBarChart();
     }
+    renderUatAgingChart();
   } catch (error) {
     status.hidden = false;
     status.textContent = `Failed to load snapshot.json: ${
       error instanceof Error ? error.message : String(error)
     }`;
+    if (uatStatus) {
+      uatStatus.hidden = false;
+      uatStatus.textContent = status.textContent;
+    }
   }
 }
 
