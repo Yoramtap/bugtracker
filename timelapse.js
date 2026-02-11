@@ -31,7 +31,7 @@ const DATASET = {
         A7: "QA",
         A8: "In Review",
         A9: "In Review",
-        A10: "In Review"
+        A10: "In Progress"
       }
     },
     {
@@ -46,7 +46,7 @@ const DATASET = {
         A7: "QA",
         A8: "UAT",
         A9: "In Review",
-        A10: "QA"
+        A10: "In Review"
       }
     },
     {
@@ -61,7 +61,7 @@ const DATASET = {
         A7: "QA",
         A8: "Done",
         A9: "UAT",
-        A10: "QA"
+        A10: "In Progress"
       }
     },
     {
@@ -76,7 +76,7 @@ const DATASET = {
         A7: "QA",
         A8: "Done",
         A9: "Done",
-        A10: "UAT"
+        A10: "QA"
       }
     },
     {
@@ -115,8 +115,8 @@ const DATASET = {
         A1: "Done",
         A2: "Done",
         A3: "Done",
-        A4: "UAT",
-        A5: "QA",
+        A4: "In Progress",
+        A5: "In Progress",
         A6: "QA",
         A7: "QA",
         A8: "Done",
@@ -130,7 +130,7 @@ const DATASET = {
         A1: "Done",
         A2: "Done",
         A3: "Done",
-        A4: "Done",
+        A4: "QA",
         A5: "UAT",
         A6: "QA",
         A7: "QA",
