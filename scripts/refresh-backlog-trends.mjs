@@ -78,7 +78,9 @@ function envPositiveInt(name, fallback) {
 }
 
 function isPlaceholderCredential(value) {
-  const normalized = String(value || "").trim().toLowerCase();
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
   if (!normalized) return true;
   if (normalized.includes("<jira_api_token>")) return true;
   if (normalized.includes("you@company.com")) return true;
@@ -89,7 +91,9 @@ function isPlaceholderCredential(value) {
 }
 
 function isPlaceholderSite(value) {
-  const normalized = String(value || "").trim().toLowerCase();
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
   if (!normalized) return true;
   if (normalized.includes("your-real-site")) return true;
   if (normalized.includes("example.atlassian.net")) return true;
@@ -116,7 +120,10 @@ async function loadLocalEnv() {
       const eqIndex = trimmed.indexOf("=");
       if (eqIndex === -1) continue;
       const key = trimmed.slice(0, eqIndex).trim();
-      const value = trimmed.slice(eqIndex + 1).trim().replace(/^['"]|['"]$/g, "");
+      const value = trimmed
+        .slice(eqIndex + 1)
+        .trim()
+        .replace(/^['"]|['"]$/g, "");
       if (!(key in process.env)) {
         process.env[key] = value;
       }
@@ -208,7 +215,9 @@ function countPriority(counts, priorityName) {
 }
 
 function normalizePriority(priorityName) {
-  const normalized = String(priorityName || "").trim().toLowerCase();
+  const normalized = String(priorityName || "")
+    .trim()
+    .toLowerCase();
   if (PRIORITY_ORDER.includes(normalized)) return normalized;
   return "";
 }
@@ -237,14 +246,21 @@ function daysSince(isoDate) {
 }
 
 function findLastEnteredStatus(changelog, statusName) {
-  const target = String(statusName || "").trim().toLowerCase();
+  const target = String(statusName || "")
+    .trim()
+    .toLowerCase();
   let latest = "";
 
   for (const history of changelog?.histories ?? []) {
     const createdAt = history?.created || "";
     for (const item of history?.items ?? []) {
       if (String(item?.field || "").toLowerCase() !== "status") continue;
-      if (String(item?.toString || "").trim().toLowerCase() !== target) continue;
+      if (
+        String(item?.toString || "")
+          .trim()
+          .toLowerCase() !== target
+      )
+        continue;
       if (!latest || new Date(createdAt).getTime() > new Date(latest).getTime()) {
         latest = createdAt;
       }
@@ -255,7 +271,9 @@ function findLastEnteredStatus(changelog, statusName) {
 }
 
 function quoteJqlValue(value) {
-  const escaped = String(value || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  const escaped = String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"');
   return `"${escaped}"`;
 }
 
@@ -332,7 +350,10 @@ async function fetchSprintsForBoard(site, email, token, boardId) {
   return sprints;
 }
 
-function buildTrendDatesFromSprints(sprints, { lookbackCount, pointMode, includeActive, mondayAnchor }) {
+function buildTrendDatesFromSprints(
+  sprints,
+  { lookbackCount, pointMode, includeActive, mondayAnchor }
+) {
   const dates = [];
 
   for (const sprint of sprints) {
@@ -456,15 +477,21 @@ async function fetchUatIssueAges(site, email, token, config) {
   const issues = [];
   let nextPageToken = "";
   for (;;) {
-    const searchPayload = await jiraRequest(site, email, token, `https://${site}/rest/api/3/search/jql`, {
-      method: "POST",
-      body: JSON.stringify({
-        jql,
-        maxResults: PAGE_SIZE,
-        ...(nextPageToken ? { nextPageToken } : {}),
-        fields: ["priority", "created", "status"]
-      })
-    });
+    const searchPayload = await jiraRequest(
+      site,
+      email,
+      token,
+      `https://${site}/rest/api/3/search/jql`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          jql,
+          maxResults: PAGE_SIZE,
+          ...(nextPageToken ? { nextPageToken } : {}),
+          fields: ["priority", "created", "status"]
+        })
+      }
+    );
     const pageIssues = searchPayload?.issues ?? [];
     issues.push(...pageIssues);
     if (pageIssues.length === 0 || !searchPayload?.nextPageToken) break;
@@ -545,8 +572,8 @@ async function countFor(board, date, site, email, token) {
     "project = TFC",
     "AND type = Bug",
     `AND labels = ${board.label}`,
-    `AND created <= \"${asOfDateTime(date)}\"`,
-    `AND status WAS NOT IN ${board.doneStatuses} ON \"${date}\"`
+    `AND created <= "${asOfDateTime(date)}"`,
+    `AND status WAS NOT IN ${board.doneStatuses} ON "${date}"`
   ].join(" ");
 
   const counts = emptyCounts();

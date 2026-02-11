@@ -4,8 +4,18 @@
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173",
+    "lint": "eslint . --ext .js,.mjs",
+    "lint:fix": "eslint . --ext .js,.mjs --fix",
+    "format": "prettier \"**/*.{js,mjs,css,html,json}\" --write",
+    "format:check": "prettier \"**/*.{js,mjs,css,html,json}\" --check",
     "refresh:full": "node scripts/refresh-backlog-trends.mjs",
     "backlog:setup-auth": "node scripts/setup-backlog-auth.mjs",
     "export:public": "node scripts/export-public.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.0",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.0"
   }
 }
