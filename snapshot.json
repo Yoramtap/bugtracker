@@ -1,0 +1,501 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-02-11T11:40:09.197Z",
+  "source": {
+    "mode": "mcp_snapshot",
+    "syncedAt": "2026-02-11T11:40:09.194Z",
+    "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date)."
+  },
+  "combinedPoints": [
+    {
+      "date": "2025-06-23",
+      "api": {
+        "date": "2025-06-23",
+        "highest": 0,
+        "high": 1,
+        "medium": 9,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-06-23",
+        "highest": 0,
+        "high": 2,
+        "medium": 33,
+        "low": 56,
+        "lowest": 3
+      },
+      "react": {
+        "date": "2025-06-23",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-06-23",
+        "highest": 3,
+        "high": 53,
+        "medium": 95,
+        "low": 10,
+        "lowest": 1
+      }
+    },
+    {
+      "date": "2025-07-07",
+      "api": {
+        "date": "2025-07-07",
+        "highest": 0,
+        "high": 1,
+        "medium": 7,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-07-07",
+        "highest": 0,
+        "high": 2,
+        "medium": 34,
+        "low": 56,
+        "lowest": 3
+      },
+      "react": {
+        "date": "2025-07-07",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-07-07",
+        "highest": 5,
+        "high": 55,
+        "medium": 96,
+        "low": 10,
+        "lowest": 1
+      }
+    },
+    {
+      "date": "2025-08-04",
+      "api": {
+        "date": "2025-08-04",
+        "highest": 0,
+        "high": 2,
+        "medium": 5,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-08-04",
+        "highest": 0,
+        "high": 1,
+        "medium": 31,
+        "low": 55,
+        "lowest": 3
+      },
+      "react": {
+        "date": "2025-08-04",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-08-04",
+        "highest": 3,
+        "high": 52,
+        "medium": 90,
+        "low": 9,
+        "lowest": 1
+      }
+    },
+    {
+      "date": "2025-08-18",
+      "api": {
+        "date": "2025-08-18",
+        "highest": 0,
+        "high": 2,
+        "medium": 8,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-08-18",
+        "highest": 0,
+        "high": 1,
+        "medium": 24,
+        "low": 57,
+        "lowest": 3
+      },
+      "react": {
+        "date": "2025-08-18",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-08-18",
+        "highest": 3,
+        "high": 53,
+        "medium": 92,
+        "low": 9,
+        "lowest": 1
+      }
+    },
+    {
+      "date": "2025-09-01",
+      "api": {
+        "date": "2025-09-01",
+        "highest": 0,
+        "high": 2,
+        "medium": 8,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-09-01",
+        "highest": 0,
+        "high": 1,
+        "medium": 11,
+        "low": 48,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-09-01",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-09-01",
+        "highest": 5,
+        "high": 52,
+        "medium": 92,
+        "low": 9,
+        "lowest": 1
+      }
+    },
+    {
+      "date": "2025-09-15",
+      "api": {
+        "date": "2025-09-15",
+        "highest": 0,
+        "high": 3,
+        "medium": 6,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-09-15",
+        "highest": 0,
+        "high": 2,
+        "medium": 9,
+        "low": 46,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-09-15",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-09-15",
+        "highest": 2,
+        "high": 53,
+        "medium": 93,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2025-09-30",
+      "api": {
+        "date": "2025-09-30",
+        "highest": 1,
+        "high": 2,
+        "medium": 7,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-09-30",
+        "highest": 0,
+        "high": 2,
+        "medium": 10,
+        "low": 45,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-09-30",
+        "highest": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-09-30",
+        "highest": 3,
+        "high": 54,
+        "medium": 95,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2025-10-13",
+      "api": {
+        "date": "2025-10-13",
+        "highest": 1,
+        "high": 2,
+        "medium": 4,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-10-13",
+        "highest": 0,
+        "high": 1,
+        "medium": 12,
+        "low": 45,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-10-13",
+        "highest": 0,
+        "high": 0,
+        "medium": 2,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-10-13",
+        "highest": 1,
+        "high": 58,
+        "medium": 96,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2025-10-27",
+      "api": {
+        "date": "2025-10-27",
+        "highest": 0,
+        "high": 2,
+        "medium": 4,
+        "low": 2,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-10-27",
+        "highest": 0,
+        "high": 1,
+        "medium": 12,
+        "low": 45,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-10-27",
+        "highest": 0,
+        "high": 0,
+        "medium": 4,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-10-27",
+        "highest": 1,
+        "high": 57,
+        "medium": 100,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2025-11-10",
+      "api": {
+        "date": "2025-11-10",
+        "highest": 0,
+        "high": 0,
+        "medium": 4,
+        "low": 5,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-11-10",
+        "highest": 0,
+        "high": 1,
+        "medium": 12,
+        "low": 45,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-11-10",
+        "highest": 0,
+        "high": 1,
+        "medium": 6,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-11-10",
+        "highest": 4,
+        "high": 64,
+        "medium": 104,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2025-11-24",
+      "api": {
+        "date": "2025-11-24",
+        "highest": 0,
+        "high": 0,
+        "medium": 4,
+        "low": 5,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-11-24",
+        "highest": 0,
+        "high": 1,
+        "medium": 9,
+        "low": 46,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-11-24",
+        "highest": 0,
+        "high": 0,
+        "medium": 5,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-11-24",
+        "highest": 4,
+        "high": 67,
+        "medium": 106,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2025-12-08",
+      "api": {
+        "date": "2025-12-08",
+        "highest": 0,
+        "high": 0,
+        "medium": 5,
+        "low": 5,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2025-12-08",
+        "highest": 0,
+        "high": 1,
+        "medium": 8,
+        "low": 47,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2025-12-08",
+        "highest": 0,
+        "high": 0,
+        "medium": 8,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2025-12-08",
+        "highest": 6,
+        "high": 67,
+        "medium": 113,
+        "low": 9,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2026-01-19",
+      "api": {
+        "date": "2026-01-19",
+        "highest": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 5,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2026-01-19",
+        "highest": 0,
+        "high": 1,
+        "medium": 6,
+        "low": 47,
+        "lowest": 2
+      },
+      "react": {
+        "date": "2026-01-19",
+        "highest": 0,
+        "high": 0,
+        "medium": 3,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2026-01-19",
+        "highest": 3,
+        "high": 69,
+        "medium": 113,
+        "low": 7,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2026-02-02",
+      "api": {
+        "date": "2026-02-02",
+        "highest": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 5,
+        "lowest": 0
+      },
+      "legacy": {
+        "date": "2026-02-02",
+        "highest": 0,
+        "high": 1,
+        "medium": 4,
+        "low": 35,
+        "lowest": 0
+      },
+      "react": {
+        "date": "2026-02-02",
+        "highest": 0,
+        "high": 0,
+        "medium": 3,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2026-02-02",
+        "highest": 3,
+        "high": 70,
+        "medium": 112,
+        "low": 7,
+        "lowest": 0
+      }
+    }
+  ]
+}

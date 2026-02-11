@@ -1,0 +1,75 @@
+:root {
+  --line: rgba(9, 30, 66, 0.12);
+  --text: #172b4d;
+  --chart-grid: rgba(9, 30, 66, 0.14);
+  --status: #ae2e24;
+  --panel-bg: transparent;
+  --canvas-bg: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: transparent;
+}
+
+main {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 12px 0 20px;
+  display: grid;
+  gap: 20px;
+}
+
+.panel {
+  border: 0;
+  border-radius: 0;
+  background: var(--panel-bg);
+  padding: 0;
+  box-shadow: none;
+  width: 100%;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.panel > h1,
+.panel > h2 {
+  margin-bottom: 10px;
+}
+
+.chart {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: var(--canvas-bg);
+}
+
+.chart-canvas {
+  width: 100%;
+}
+
+.chart-canvas--tall {
+  min-height: 560px;
+}
+
+.bar-chart-wrap {
+  width: 100%;
+}
+
+.panel-status {
+  margin-top: 8px;
+  color: var(--status);
+  font-size: 0.84rem;
+}
