@@ -8,7 +8,7 @@
     "lint:fix": "eslint . --ext .js,.mjs --fix",
     "format": "prettier \"**/*.{js,mjs,css,html,json}\" --write",
     "format:check": "prettier \"**/*.{js,mjs,css,html,json}\" --check",
-    "refresh:full": "node scripts/refresh-backlog-trends.mjs",
+    "refresh:full": "node scripts/refresh-report-data.mjs",
     "backlog:setup-auth": "node scripts/setup-backlog-auth.mjs",
     "export:public": "node scripts/export-public.mjs"
   },

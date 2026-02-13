@@ -10,7 +10,7 @@ The UI should stay aligned with the public `bugtracker` repo (`index.html`, `app
 - `app.js`
 - `styles.css`
 - `snapshot.json` (generated aggregate counts only)
-- `scripts/refresh-backlog-trends.mjs` (Jira -> snapshot pipeline)
+- `scripts/refresh-report-data.mjs` (Jira -> snapshot pipeline)
 - `scripts/export-public.mjs` (safe export to public repo)
 
 ## Security Model

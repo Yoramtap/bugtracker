@@ -22,7 +22,7 @@ async function main() {
 
   const envPath = path.resolve(process.cwd(), ".env.backlog");
   const body = [
-    "# Local Jira credentials for backlog trend refresh scripts",
+    "# Local Jira credentials for report refresh scripts",
     `ATLASSIAN_SITE=${site}`,
     `ATLASSIAN_EMAIL=${email}`,
     `ATLASSIAN_API_TOKEN=${token}`,
