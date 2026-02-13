@@ -41,6 +41,7 @@ npm run refresh:full
 ```
 
 This regenerates `snapshot.json` in the repo root.
+It also archives a timestamped copy to `snapshots/` on each successful run.
 
 Trend dates are resolved automatically from Jira sprints (Agile API), then used as historical "as-of" dates for backlog snapshots.
 
@@ -84,6 +85,36 @@ The export command only copies:
 - `index.html`
 - `app.js`
 - `styles.css`
+
+## Analysis Brief
+
+Generate a concise analysis memo from `snapshot.json`:
+
+```bash
+cd /Users/yoramtap/Documents/AI/bugtracker-workshop
+npm run analyze:brief
+```
+
+This writes:
+
+- `reports/latest-analysis.md`
+
+The report includes:
+
+- bug trend deltas over time
+- UAT aging concentration/risk
+- UAT aging trend over archived snapshots (when `snapshots/` has at least 2 entries)
+- a short perspective section
+- concrete "move forward" actions
+
+## Snapshot History Archive
+
+Each `npm run refresh:full` run writes:
+
+- latest snapshot: `snapshot.json`
+- historical copy: `snapshots/snapshot-<timestamp>.json`
+
+This archive enables longitudinal UAT analysis across runs without exposing private Jira credentials.
 
 ## UAT Aging (Third Chart)
 

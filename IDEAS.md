@@ -41,7 +41,7 @@ Use this template when adding a new idea:
 ---
 
 ## IDEA-0001: Slack `/commands` for GitHub Reports
-- Status: captured
+- Status: scoping
 - Priority: P2
 - Area: integrations
 - Source: workspace idea capture (2026-02-13)
@@ -60,12 +60,28 @@ Allow users in Slack to run a slash command and receive current GitHub report ou
 - Hosting/runtime for command endpoint
 
 ### Next Action
-- Confirm exact command name and what report(s) should be returned in v1.
+- Complete platform install/deploy steps (Slack app install approval + endpoint hosting), then wire `/bugs` Request URL.
 
 ### Definition of Done
 - [ ] Slash command responds in Slack in under 3 seconds (ack + async reply if needed).
 - [ ] Response includes report summary and at least one deep link to GitHub artifact/data.
 - [ ] Request signature validation is enabled.
+
+### Progress Log
+- 2026-02-13: Confirmed v1 command should be `/bugs`, returning graph URL(s) from public repo.
+- 2026-02-13: Prototyped endpoint approach in `bugtracker` repo (then reverted to keep repo static-only for now).
+- 2026-02-13: Slack app config started (`Slash Commands` + `chat:write`) but install requires company admin approval.
+- 2026-02-13: Deployment path identified (Vercel or similar function host) because GitHub Pages cannot receive slash-command webhooks.
+
+### Current Blockers
+- Slack workspace app installation requires org-level approval.
+- Endpoint host setup is pending (Vercel project + env var for `SLACK_SIGNING_SECRET`).
+
+### Resume Plan (When Unblocked)
+1. Get Slack admin approval to install app in company workspace.
+2. Deploy endpoint host and configure `SLACK_SIGNING_SECRET`.
+3. Set Slack `/bugs` Request URL to deployed endpoint.
+4. Validate commands: `/bugs`, `/bugs composition`, `/bugs uat`, `/bugs all`.
 
 ---
 
@@ -125,3 +141,33 @@ Produce a concise, repeatable analysis of the most recent sprint with clear tren
 - [ ] Analysis document is generated for the latest completed sprint.
 - [ ] Includes metric deltas vs previous sprint.
 - [ ] Includes top 3 recommended actions based on findings.
+
+---
+
+## IDEA-0004: Mobile Agent Messaging (OpenClaw / Codex 5.3)
+- Status: captured
+- Priority: P2
+- Area: automation
+- Source: workspace idea capture (2026-02-13)
+
+### Desired Outcome
+Enable sending messages from phone to a Codex-based agent so requests can be queued and actioned later.
+
+### Parsed Scope
+1. Evaluate candidate runtime path (OpenClaw and/or Codex 5.3-compatible setup).
+2. Define message ingress channel from phone (app, SMS bridge, or chat channel).
+3. Implement task queue with acknowledgment, retry, and execution logs.
+4. Add guardrails for auth, approvals, and high-risk command limits.
+
+### Dependencies
+- Hosted or reachable agent runtime
+- Secure identity/auth path for phone-originated messages
+- Durable queue/store for pending actions
+
+### Next Action
+- Select v1 channel (recommended: messaging app webhook) and confirm expected command examples.
+
+### Definition of Done
+- [ ] Phone message can create a queued task with confirmation.
+- [ ] Task can be actioned later from queue with status updates.
+- [ ] Access is restricted to approved sender identity.

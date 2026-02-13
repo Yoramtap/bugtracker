@@ -9,6 +9,7 @@
     "format": "prettier \"**/*.{js,mjs,css,html,json}\" --write",
     "format:check": "prettier \"**/*.{js,mjs,css,html,json}\" --check",
     "refresh:full": "node scripts/refresh-report-data.mjs",
+    "analyze:brief": "node scripts/analyze-report-data.mjs --output reports/latest-analysis.md",
     "backlog:setup-auth": "node scripts/setup-backlog-auth.mjs",
     "export:public": "node scripts/export-public.mjs"
   },

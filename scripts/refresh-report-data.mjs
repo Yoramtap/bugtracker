@@ -47,6 +47,7 @@ const PAGE_SIZE = 100;
 const MAX_RETRIES = 5;
 const SNAPSHOT_PATH = path.resolve(process.cwd(), "snapshot.json");
 const SNAPSHOT_TMP_PATH = path.resolve(process.cwd(), "snapshot.json.tmp");
+const SNAPSHOTS_DIR_PATH = path.resolve(process.cwd(), "snapshots");
 const SNAPSHOT_SCHEMA_VERSION = 2;
 const ALLOW_EMPTY = process.argv.includes("--allow-empty");
 const PRIORITY_ORDER = ["highest", "high", "medium", "low", "lowest"];
@@ -662,6 +663,22 @@ async function writeSnapshotAtomic(snapshot) {
   }
 }
 
+function snapshotArchiveFileName(syncedAt) {
+  const safeStamp = String(syncedAt || "unknown")
+    .replace(/[:.]/g, "-")
+    .replace(/[^0-9TZ-]/g, "");
+  return `snapshot-${safeStamp}.json`;
+}
+
+async function archiveSnapshot(snapshot, syncedAt) {
+  const serialized = `${JSON.stringify(snapshot, null, 2)}\n`;
+  const fileName = snapshotArchiveFileName(syncedAt);
+  const filePath = path.join(SNAPSHOTS_DIR_PATH, fileName);
+  await fs.mkdir(SNAPSHOTS_DIR_PATH, { recursive: true });
+  await fs.writeFile(filePath, serialized, "utf8");
+  return filePath;
+}
+
 async function main() {
   await loadLocalEnv();
 
@@ -779,10 +796,12 @@ async function main() {
   const syncedAt = new Date().toISOString();
   const snapshot = buildCombinedSnapshot(computed, syncedAt, uatAging);
   await writeSnapshotAtomic(snapshot);
+  const archivedPath = await archiveSnapshot(snapshot, syncedAt);
 
   console.log(
     "Updated snapshot.json for BOARD_38_TREND, BOARD_39_TREND, BOARD_46_TREND, and BOARD_40_TREND."
   );
+  console.log(`Archived snapshot history copy: ${archivedPath}`);
 }
 
 main().catch((error) => {

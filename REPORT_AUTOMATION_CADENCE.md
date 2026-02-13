@@ -15,9 +15,12 @@ This keeps credentials and private access in the workshop repo while exposing on
 1. In `bugtracker-workshop`, run data refresh:
    - `npm run refresh:full`
    - Script: `scripts/refresh-report-data.mjs`
-2. If refresh succeeds, export approved files for public consumption:
+2. If refresh succeeds, generate analysis brief:
+   - `npm run analyze:brief`
+   - Output: `reports/latest-analysis.md`
+3. If analysis succeeds, export approved files for public consumption:
    - `npm run export:public -- --target /Users/yoramtap/Documents/AI/bugtracker`
-3. In `bugtracker`, commit and push:
+4. In `bugtracker`, commit and push:
    - Commit includes updated aggregate report data/UI artifacts
    - Push to GitHub so reports are live
 
@@ -30,11 +33,12 @@ This keeps credentials and private access in the workshop repo while exposing on
 Automation should:
 1. Run on the biweekly Sunday 23:00 cadence.
 2. Stop immediately on refresh failure (do not publish partial/failed data).
-3. Export only approved files to `bugtracker`.
-4. Commit only when there are actual file changes.
-5. Push to GitHub automatically.
-6. Log run status and failure reason.
-7. Notify on failure (at minimum via workflow logs; optional Slack notification).
+3. Stop immediately on analysis failure.
+4. Export only approved files to `bugtracker`.
+5. Commit only when there are actual file changes.
+6. Push to GitHub automatically.
+7. Log run status and failure reason.
+8. Notify on failure (at minimum via workflow logs; optional Slack notification).
 
 ## Suggested Implementation Notes
 - Use GitHub Actions in `bugtracker-workshop` as the scheduler/orchestrator.
@@ -54,14 +58,18 @@ Because this workflow runs locally, use Codex automation as the scheduler/orches
    - Run `npm run refresh:full`
    - If failed: stop and report failure
 2. In `/Users/yoramtap/Documents/AI/bugtracker-workshop`:
+   - Run `npm run analyze:brief`
+   - If failed: stop and report failure
+3. In `/Users/yoramtap/Documents/AI/bugtracker-workshop`:
    - Run `npm run export:public -- --target /Users/yoramtap/Documents/AI/bugtracker`
-3. In `/Users/yoramtap/Documents/AI/bugtracker`:
+4. In `/Users/yoramtap/Documents/AI/bugtracker`:
    - Check for file changes
    - If no changes: report "no changes"
    - If changes: commit and push to GitHub
 
 ### Output Required Per Run
 - `refreshed`: yes/no
+- `analyzed`: yes/no
 - `exported`: yes/no
 - `committed`: yes/no
 - `pushed`: yes/no
