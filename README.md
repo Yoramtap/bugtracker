@@ -1,4 +1,4 @@
-# Bugtracker Snapshot Site
+# Tracker Snapshot Site
 
 This repository hosts a public, static backlog snapshot viewer.
 
@@ -17,10 +17,10 @@ This repository hosts a public, static backlog snapshot viewer.
 
 Use GitHub Pages URLs for iframe embeds (for example in Confluence):
 
-- Full dashboard: `https://yoramtap.github.io/bugtracker/`
-- Trend chart only: `https://yoramtap.github.io/bugtracker/?chart=trend`
-- Composition chart only: `https://yoramtap.github.io/bugtracker/?chart=composition`
-- UAT aging chart only: `https://yoramtap.github.io/bugtracker/?chart=uat`
+- Full dashboard: `https://yoramtap.github.io/tracker/`
+- Trend chart only: `https://yoramtap.github.io/tracker/?chart=trend`
+- Composition chart only: `https://yoramtap.github.io/tracker/?chart=composition`
+- UAT aging chart only: `https://yoramtap.github.io/tracker/?chart=uat`
 
 Recommended iframe settings:
 

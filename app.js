@@ -4,7 +4,7 @@ const TEAM_CONFIG = [
   { key: "api", label: "API" },
   { key: "legacy", label: "Legacy FE" },
   { key: "react", label: "React FE" },
-  { key: "bc", label: "BC" },
+  { key: "bc", label: "BC" }
 ];
 
 const PRIORITY_CONFIG = [
@@ -12,7 +12,7 @@ const PRIORITY_CONFIG = [
   { key: "high", label: "High" },
   { key: "medium", label: "Medium" },
   { key: "low", label: "Low" },
-  { key: "lowest", label: "Lowest" },
+  { key: "lowest", label: "Lowest" }
 ];
 
 const PRIORITY_LABELS = PRIORITY_CONFIG.reduce((acc, priority) => {
@@ -22,18 +22,16 @@ const PRIORITY_LABELS = PRIORITY_CONFIG.reduce((acc, priority) => {
 const PRIORITY_STACK_ORDER = [...PRIORITY_CONFIG].reverse();
 
 const CHART_COLORS = {
-  transparent: "rgba(0,0,0,0)",
+  transparent: "rgba(0,0,0,0)"
 };
 
 const state = {
   snapshot: null,
-  mode: "all",
+  mode: "all"
 };
 
 function readThemeColor(name, fallback) {
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return value || fallback;
 }
 
@@ -46,28 +44,28 @@ function getThemeColors() {
       api: readThemeColor("--team-api", "#2f6ea8"),
       legacy: readThemeColor("--team-legacy", "#8d6f3f"),
       react: readThemeColor("--team-react", "#3f7f75"),
-      bc: readThemeColor("--team-bc", "#76649a"),
+      bc: readThemeColor("--team-bc", "#76649a")
     },
     priorities: {
       highest: readThemeColor("--priority-highest", "#9f4d44"),
       high: readThemeColor("--priority-high", "#b48238"),
       medium: readThemeColor("--priority-medium", "#6f778d"),
       low: readThemeColor("--priority-low", "#3f73b8"),
-      lowest: readThemeColor("--priority-lowest", "#2f7a67"),
+      lowest: readThemeColor("--priority-lowest", "#2f7a67")
     },
     uatBuckets: {
       d0_7: readThemeColor("--uat-bucket-0-7", "#a8c6de"),
       d8_14: readThemeColor("--uat-bucket-8-14", "#87aecd"),
       d15_30: readThemeColor("--uat-bucket-15-30", "#5f8fb7"),
       d31_60: readThemeColor("--uat-bucket-31-60", "#3f6f99"),
-      d61_plus: readThemeColor("--uat-bucket-61-plus", "#2a4f73"),
+      d61_plus: readThemeColor("--uat-bucket-61-plus", "#2a4f73")
     },
     tooltip: {
       bg: readThemeColor("--tooltip-bg", "rgba(255,255,255,0.98)"),
       border: readThemeColor("--tooltip-border", "rgba(31,51,71,0.25)"),
-      text: readThemeColor("--tooltip-text", "#1f3347"),
+      text: readThemeColor("--tooltip-text", "#1f3347")
     },
-    barBorder: readThemeColor("--bar-border", "rgba(25,39,58,0.35)"),
+    barBorder: readThemeColor("--bar-border", "rgba(25,39,58,0.35)")
   };
 }
 
@@ -82,19 +80,19 @@ function buildBaseLayout(colors) {
       y: 1.02,
       xanchor: "left",
       x: 0,
-      font: { color: colors.text },
+      font: { color: colors.text }
     },
     modebar: {
       bgcolor: CHART_COLORS.transparent,
       color: colors.text,
-      activecolor: colors.active,
+      activecolor: colors.active
     },
     hoverlabel: {
       bgcolor: colors.tooltip.bg,
       bordercolor: colors.tooltip.border,
       font: { color: colors.tooltip.text, size: 12 },
-      namelength: -1,
-    },
+      namelength: -1
+    }
   };
 }
 
@@ -173,9 +171,7 @@ function renderLineChart() {
   const x = state.snapshot.combinedPoints.map((point) => point.date);
   const traces = TEAM_CONFIG.map((team) => {
     const y = state.snapshot.combinedPoints.map((point) => totalForPoint(point[team.key]));
-    const customData = state.snapshot.combinedPoints.map((point) =>
-      breakdownText(point[team.key])
-    );
+    const customData = state.snapshot.combinedPoints.map((point) => breakdownText(point[team.key]));
     return {
       type: "scatter",
       mode: "lines+markers",
@@ -186,9 +182,13 @@ function renderLineChart() {
       hovertemplate:
         "<b>%{fullData.name}</b><br>Date: %{x}<br>Total: %{y}<br>%{customdata}<extra></extra>",
       line: { color: themeColors.teams[team.key], width: 3 },
-      marker: { size: 7 },
+      marker: { size: 7 }
     };
   });
+
+  const allYValues = traces.flatMap((trace) => trace.y).filter((value) => Number.isFinite(value));
+  const maxY = allYValues.length ? Math.max(...allYValues) : 10;
+  const paddedMaxY = Math.max(10, Math.ceil(maxY * 1.08));
 
   const layout = {
     ...buildBaseLayout(themeColors),
@@ -199,21 +199,21 @@ function renderLineChart() {
       tickangle: -30,
       color: themeColors.text,
       gridcolor: themeColors.grid,
-      automargin: true,
+      automargin: true
     },
     yaxis: {
       title: "Open Bugs",
-      rangemode: "tozero",
+      range: [0, paddedMaxY],
       color: themeColors.text,
       gridcolor: themeColors.grid,
-      automargin: true,
-    },
+      automargin: true
+    }
   };
 
   Plotly.react("chart", traces, layout, {
     displayModeBar: true,
     displaylogo: false,
-    responsive: true,
+    responsive: true
   });
 }
 
@@ -238,7 +238,7 @@ function renderStackedBarChart() {
         high: toNumber(teamPoint.high),
         medium: toNumber(teamPoint.medium),
         low: toNumber(teamPoint.low),
-        lowest: toNumber(teamPoint.lowest),
+        lowest: toNumber(teamPoint.lowest)
       });
     });
   });
@@ -249,14 +249,14 @@ function renderStackedBarChart() {
     name: priority.label,
     marker: {
       color: themeColors.priorities[priority.key],
-      line: { color: themeColors.barBorder, width: 0.7 },
+      line: { color: themeColors.barBorder, width: 0.7 }
     },
     x,
     y: flat.map((item) => item[priority.key]),
     customdata: flat.map((item) => [item.date, item.team, item.total]),
     hovertemplate:
       "<b>%{customdata[1]}</b><br>Date: %{customdata[0]}<br>" +
-      `${priority.label}: %{y}<br>Total: %{customdata[2]}<extra></extra>`,
+      `${priority.label}: %{y}<br>Total: %{customdata[2]}<extra></extra>`
   }));
 
   const layout = {
@@ -271,21 +271,21 @@ function renderStackedBarChart() {
       tickfont: { size: 9 },
       color: themeColors.text,
       showgrid: false,
-      automargin: true,
+      automargin: true
     },
     yaxis: {
       title: "Open Bugs",
       rangemode: "tozero",
       color: themeColors.text,
       gridcolor: themeColors.grid,
-      automargin: true,
-    },
+      automargin: true
+    }
   };
 
   Plotly.react("stacked-chart", traces, layout, {
     displayModeBar: true,
     displaylogo: false,
-    responsive: true,
+    responsive: true
   });
 }
 
@@ -307,7 +307,8 @@ function renderUatAgingChart() {
   const themeColors = getThemeColors();
   const uat = state.snapshot.uatAging;
   const scopeLabel = String(uat?.scope?.label || "All labels");
-  if (title) title.textContent = `${baseTitle} (${scopeLabel}, ${toNumber(uat.totalIssues)} total tickets)`;
+  if (title)
+    title.textContent = `${baseTitle} (${scopeLabel}, ${toNumber(uat.totalIssues)} total tickets)`;
   const priorities = PRIORITY_STACK_ORDER.map((priority) => priority.key);
   const priorityLabels = PRIORITY_CONFIG.reduce((acc, priority) => {
     acc[priority.key] = priority.label;
@@ -335,14 +336,14 @@ function renderUatAgingChart() {
     y: buckets.map((bucket) => toNumber(uat?.priorities?.[priority]?.buckets?.[bucket.id])),
     marker: {
       color: themeColors.priorities[priority] || themeColors.priorities.medium,
-      line: { color: themeColors.barBorder, width: 0.7 },
+      line: { color: themeColors.barBorder, width: 0.7 }
     },
     customdata: buckets.map((_, bucketIndex) => ({
-      total: bucketTotals[bucketIndex],
+      total: bucketTotals[bucketIndex]
     })),
     hovertemplate:
       "<b>Time spent: %{x}</b><br>Priority: %{fullData.name}<br>Count: %{y}<br>" +
-      "Total: %{customdata.total}<extra></extra>",
+      "Total: %{customdata.total}<extra></extra>"
   }));
 
   const layout = {
@@ -355,14 +356,14 @@ function renderUatAgingChart() {
       title: "Time spent",
       color: themeColors.text,
       showgrid: false,
-      automargin: true,
+      automargin: true
     },
     yaxis: {
       title: "Open UAT Bugs",
       rangemode: "tozero",
       color: themeColors.text,
       gridcolor: themeColors.grid,
-      automargin: true,
+      automargin: true
     },
     annotations: [
       {
@@ -374,15 +375,15 @@ function renderUatAgingChart() {
         xanchor: "right",
         yanchor: "bottom",
         text: `Scope: ${uat?.scope?.project || "?"} / ${uat?.scope?.issueType || "?"} / ${uat?.scope?.status || "?"} / ${uat?.scope?.label || "?"}`,
-        font: { size: 11, color: themeColors.text },
-      },
-    ],
+        font: { size: 11, color: themeColors.text }
+      }
+    ]
   };
 
   Plotly.react("uat-chart", traces, layout, {
     displayModeBar: true,
     displaylogo: false,
-    responsive: true,
+    responsive: true
   });
 }
 

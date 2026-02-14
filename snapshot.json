@@ -1,10 +1,15 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-02-11T19:09:59.352Z",
+  "updatedAt": "2026-02-14T19:52:34.632Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-02-11T19:09:59.352Z",
-    "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps."
+    "syncedAt": "2026-02-14T19:52:34.632Z",
+    "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps.",
+    "trendDates": {
+      "count": 14,
+      "usedFallbackDates": false,
+      "fallbackReason": ""
+    }
   },
   "uatAging": {
     "scope": {
@@ -13,7 +18,7 @@
       "status": "UAT",
       "label": "Broadcast"
     },
-    "generatedAt": "2026-02-11T19:09:59.352Z",
+    "generatedAt": "2026-02-14T19:52:34.632Z",
     "totalIssues": 19,
     "buckets": [
       {
@@ -50,8 +55,8 @@
     "priorities": {
       "highest": {
         "count": 6,
-        "avgDays": 8,
-        "maxDays": 27,
+        "avgDays": 11,
+        "maxDays": 30,
         "buckets": {
           "d0_7": 3,
           "d8_14": 2,
@@ -62,8 +67,8 @@
       },
       "high": {
         "count": 4,
-        "avgDays": 36,
-        "maxDays": 61,
+        "avgDays": 37,
+        "maxDays": 64,
         "buckets": {
           "d0_7": 1,
           "d8_14": 0,
@@ -74,13 +79,13 @@
       },
       "medium": {
         "count": 9,
-        "avgDays": 37.6,
-        "maxDays": 61,
+        "avgDays": 40.6,
+        "maxDays": 64,
         "buckets": {
-          "d0_7": 2,
-          "d8_14": 0,
-          "d15_30": 3,
-          "d31_60": 1,
+          "d0_7": 0,
+          "d8_14": 2,
+          "d15_30": 1,
+          "d31_60": 3,
           "d61_plus": 3
         }
       },
@@ -580,7 +585,7 @@
         "date": "2026-02-16",
         "highest": 0,
         "high": 1,
-        "medium": 7,
+        "medium": 6,
         "low": 32,
         "lowest": 0
       },
@@ -588,14 +593,14 @@
         "date": "2026-02-16",
         "highest": 0,
         "high": 0,
-        "medium": 7,
+        "medium": 6,
         "low": 0,
         "lowest": 0
       },
       "bc": {
         "date": "2026-02-16",
         "highest": 6,
-        "high": 68,
+        "high": 70,
         "medium": 113,
         "low": 7,
         "lowest": 0
