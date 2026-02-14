@@ -65,7 +65,14 @@ h2 {
 
 .panel > h1,
 .panel > h2 {
-  margin-bottom: 10px;
+  margin-bottom: 4px;
+}
+
+.panel-subtitle {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 0.84rem;
+  color: rgba(31, 51, 71, 0.72);
 }
 
 .chart {

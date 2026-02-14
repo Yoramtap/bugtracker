@@ -30,6 +30,26 @@ const state = {
   mode: "all"
 };
 
+function formatUpdatedAt(value) {
+  const parsed = new Date(String(value || ""));
+  if (!Number.isFinite(parsed.getTime())) return "Unknown";
+  return parsed.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function setLastUpdatedSubtitles(snapshot) {
+  const label = `Last updated: ${formatUpdatedAt(snapshot?.updatedAt)}`;
+  for (const id of ["trend-updated", "composition-updated", "uat-updated"]) {
+    const node = document.getElementById(id);
+    if (node) node.textContent = label;
+  }
+}
+
 function readThemeColor(name, fallback) {
   const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return value || fallback;
@@ -322,6 +342,8 @@ function renderUatAgingChart() {
       0
     )
   );
+  const maxStackTotal = bucketTotals.length ? Math.max(...bucketTotals) : 0;
+  const paddedMaxY = maxStackTotal > 0 ? Math.ceil(maxStackTotal * 1.22) : 1;
 
   if (buckets.length === 0) {
     status.hidden = false;
@@ -360,7 +382,7 @@ function renderUatAgingChart() {
     },
     yaxis: {
       title: "Open UAT Bugs",
-      rangemode: "tozero",
+      range: [0, paddedMaxY],
       color: themeColors.text,
       gridcolor: themeColors.grid,
       automargin: true
@@ -400,6 +422,7 @@ async function loadSnapshot() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     state.snapshot = await response.json();
+    setLastUpdatedSubtitles(state.snapshot);
     if (state.mode !== "composition") {
       renderLineChart();
     }
