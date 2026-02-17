@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "teams": [
+    "API",
+    "Frontend",
+    "Broadcast",
+    "Titanium",
+    "Orchestration",
+    "Shift"
+  ],
+  "sprints": [
+    {
+      "sprint_start": "2026-01-19",
+      "sprint_end": "2026-02-01",
+      "teams": [
+        {
+          "team": "API",
+          "goals_total": 2,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Frontend",
+          "goals_total": 3,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Broadcast",
+          "goals_total": 1,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Titanium",
+          "goals_total": 3,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Orchestration",
+          "goals_total": 2,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Shift",
+          "goals_total": 0,
+          "goals_passed": 0,
+          "goals_failed": 0
+        }
+      ]
+    },
+    {
+      "sprint_start": "2026-02-02",
+      "sprint_end": "2026-02-15",
+      "teams": [
+        {
+          "team": "API",
+          "goals_total": 1,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Frontend",
+          "goals_total": 3,
+          "goals_passed": 1,
+          "goals_failed": 0
+        },
+        {
+          "team": "Broadcast",
+          "goals_total": 3,
+          "goals_passed": 0,
+          "goals_failed": 2
+        },
+        {
+          "team": "Titanium",
+          "goals_total": 5,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Orchestration",
+          "goals_total": 4,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Shift",
+          "goals_total": 0,
+          "goals_passed": 0,
+          "goals_failed": 0
+        }
+      ]
+    },
+    {
+      "sprint_start": "2026-02-16",
+      "sprint_end": "2026-03-01",
+      "teams": [
+        {
+          "team": "API",
+          "goals_total": 2,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Frontend",
+          "goals_total": 3,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Broadcast",
+          "goals_total": 2,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Titanium",
+          "goals_total": 3,
+          "goals_passed": 1,
+          "goals_failed": 0
+        },
+        {
+          "team": "Orchestration",
+          "goals_total": 4,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Shift",
+          "goals_total": 0,
+          "goals_passed": 0,
+          "goals_failed": 0
+        }
+      ]
+    },
+    {
+      "sprint_start": "2026-03-02",
+      "sprint_end": "2026-03-15",
+      "teams": [
+        {
+          "team": "API",
+          "goals_total": 3,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Frontend",
+          "goals_total": 2,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Broadcast",
+          "goals_total": 2,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Titanium",
+          "goals_total": 4,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Orchestration",
+          "goals_total": 3,
+          "goals_passed": 0,
+          "goals_failed": 0
+        },
+        {
+          "team": "Shift",
+          "goals_total": 0,
+          "goals_passed": 0,
+          "goals_failed": 0
+        }
+      ]
+    }
+  ]
+}

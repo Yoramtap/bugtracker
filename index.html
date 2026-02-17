@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://cdn.plot.ly; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <title>Backlog Trends</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section id="trend-panel" class="panel" aria-label="Backlog trend chart">
+        <h1>Interactive chart - Bug trend across teams</h1>
+        <p id="trend-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="chart">
+          <div id="chart" class="chart-canvas chart-canvas--tall"></div>
+        </div>
+      </section>
+
+      <section id="composition-panel" class="panel" aria-label="Backlog stacked bars">
+        <h2>Interactive chart - Bug composition by priority</h2>
+        <p id="composition-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="composition-toggle-row">
+          <label for="composition-team-scope">Team</label>
+          <select id="composition-team-scope">
+            <option value="bc">BC</option>
+            <option value="api">API</option>
+            <option value="legacy">Legacy</option>
+            <option value="react">React</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+        <div class="chart">
+          <div id="stacked-chart" class="chart-canvas chart-canvas--tall bar-chart-wrap"></div>
+        </div>
+        <p id="status" class="panel-status" hidden></p>
+      </section>
+
+      <section id="uat-panel" class="panel" aria-label="UAT aging by priority">
+        <h2>Interactive chart - UAT aging by priority</h2>
+        <p id="uat-context" class="panel-subtitle">Broadcast, -- currently in UAT</p>
+        <p id="uat-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="chart">
+          <div id="uat-chart" class="chart-canvas"></div>
+        </div>
+        <p id="uat-status" class="panel-status" hidden></p>
+      </section>
+
+      <section id="management-panel" class="panel" aria-label="Broadcast flow by priority">
+        <h2>Interactive chart - Broadcast flow by priority (Median Dev vs Median UAT)</h2>
+        <p id="management-context" class="panel-subtitle">Broadcast, -- historical flow tickets (sample)</p>
+        <p id="management-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="management-toggle-row">
+          <label for="management-uat-scope">Issue scope</label>
+          <select id="management-uat-scope">
+            <option value="all">All issues</option>
+            <option value="bugs_only">Bugs only</option>
+          </select>
+        </div>
+        <div class="chart">
+          <div id="management-chart" class="chart-canvas"></div>
+        </div>
+        <p id="management-status" class="panel-status" hidden></p>
+      </section>
+
+      <section id="sprint-goals-panel" class="panel" aria-label="Sprint goals by team">
+        <h2>Interactive chart - Sprint goals by team</h2>
+        <p id="sprint-goals-context" class="panel-subtitle">--</p>
+        <p id="sprint-goals-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="composition-toggle-row">
+          <label for="sprint-goals-team-scope">Team</label>
+          <select id="sprint-goals-team-scope">
+            <option value="API">API</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Broadcast">Broadcast</option>
+            <option value="Titanium">Titanium</option>
+            <option value="Orchestration">Orchestration</option>
+            <option value="Shift">Shift</option>
+          </select>
+        </div>
+        <div class="chart">
+          <div id="sprint-goals-chart" class="chart-canvas"></div>
+        </div>
+        <p id="sprint-goals-status" class="panel-status" hidden></p>
+      </section>
+
+      <section id="product-cycle-panel" class="panel" aria-label="Product cycle time by team">
+        <h2>Cycle time from parking lot exit to done</h2>
+        <p id="product-cycle-context" class="panel-subtitle">--</p>
+        <p id="product-cycle-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="management-toggle-row">
+          <label for="product-cycle-effort-scope">Effort</label>
+          <select id="product-cycle-effort-scope">
+            <option value="all">All</option>
+            <option value="single">Single-team</option>
+            <option value="combined">Combined</option>
+          </select>
+          <label for="product-cycle-metric-scope">Metric</label>
+          <select id="product-cycle-metric-scope">
+            <option value="median">Median</option>
+            <option value="average">Average</option>
+          </select>
+        </div>
+        <div class="chart">
+          <div id="product-cycle-chart" class="chart-canvas chart-canvas--tall"></div>
+        </div>
+        <p id="product-cycle-totals" class="panel-summary" hidden></p>
+        <p id="product-cycle-status" class="panel-status" hidden></p>
+      </section>
+
+      <section id="lifecycle-days-panel" class="panel" aria-label="Lifecycle phase days by team">
+        <h2>Lifecycle time spent per phase</h2>
+        <p id="lifecycle-days-context" class="panel-subtitle">--</p>
+        <p id="lifecycle-days-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="management-toggle-row">
+          <label for="lifecycle-days-year-scope">Year</label>
+          <select id="lifecycle-days-year-scope">
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+          <label for="lifecycle-days-metric-scope">Metric</label>
+          <select id="lifecycle-days-metric-scope">
+            <option value="median">Median</option>
+            <option value="average">Average</option>
+          </select>
+        </div>
+        <div class="chart">
+          <div id="lifecycle-days-chart" class="chart-canvas chart-canvas--tall"></div>
+        </div>
+        <p id="lifecycle-days-status" class="panel-status" hidden></p>
+      </section>
+    </main>
+
+    <script
+      src="https://cdn.plot.ly/plotly-2.35.2.min.js"
+      integrity="sha384-cCVCZkAjYNxaYKbM8lsArLznDF/SvMFr1jcZrvOpSTCa0W40ZAdLzHCEulnUa5i7"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
