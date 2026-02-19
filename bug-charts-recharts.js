@@ -49,15 +49,17 @@
     wideMax: 28
   };
   const EMBED_COMPACT = new URLSearchParams(window.location.search).has("chart");
+  const EMBED_VIEWPORT_HEIGHT = Math.max(0, Math.floor(window.innerHeight || 0));
+  const EMBED_CHART_HEIGHT = Math.max(280, Math.min(350, EMBED_VIEWPORT_HEIGHT - 90));
   const CHART_HEIGHTS = EMBED_COMPACT
     ? {
-        trend: 270,
-        composition: 270,
-        uat: 250,
-        sprintGoals: 250,
-        management: 250,
-        productCycle: 270,
-        lifecycleDays: 270
+        trend: EMBED_CHART_HEIGHT,
+        composition: EMBED_CHART_HEIGHT,
+        uat: EMBED_CHART_HEIGHT,
+        sprintGoals: EMBED_CHART_HEIGHT,
+        management: EMBED_CHART_HEIGHT,
+        productCycle: EMBED_CHART_HEIGHT,
+        lifecycleDays: EMBED_CHART_HEIGHT
       }
     : {
         trend: 380,
