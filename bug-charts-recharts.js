@@ -179,7 +179,7 @@
             "p",
             {
               key: item.dataKey,
-              style: { margin: "2px 0", color: item.color || colors.text, fontSize: "12px" }
+              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
             },
             `${item.name}: ${toNumber(item.value)}`
           )
@@ -233,7 +233,7 @@
             "p",
             {
               key: item.dataKey,
-              style: { margin: "2px 0", color: item.color || colors.text, fontSize: "12px" }
+              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
             },
             `${item.name}: ${toNumber(item.value)}`
           )
@@ -329,6 +329,7 @@
         "span",
         {
           style: {
+            color: "var(--text, #1f3347)",
             opacity: hiddenKeys.has(entry?.dataKey) ? 0.45 : 1,
             textDecoration: hiddenKeys.has(entry?.dataKey) ? "line-through" : "none"
           }
@@ -665,7 +666,7 @@
             "p",
             {
               key: item.dataKey,
-              style: { margin: "2px 0", color: item.color || colors.text, fontSize: "12px" }
+              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
             },
             `${item.name}: ${value}${suffix}`
           )
@@ -807,7 +808,7 @@
             "p",
             {
               key: item.dataKey,
-              style: { margin: "2px 0", color: item.color || colors.text, fontSize: "12px" }
+              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
             },
             `${item.name}: ${toNumber(item.value).toFixed(2)} days (avg ${avg.toFixed(2)}, n ${count})`
           )
@@ -911,7 +912,7 @@
             "p",
             {
               key,
-              style: { margin: "2px 0", color: item.color || colors.text, fontSize: "12px" }
+              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
             },
             `${item.name}: ${toNumber(item.value).toFixed(2)} days (${metricLabel}), n ${toNumber(
               meta.n
@@ -1032,7 +1033,7 @@
             "p",
             {
               key,
-              style: { margin: "2px 0", color: item.color || colors.text, fontSize: "12px" }
+              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
             },
             `${item.name}: ${toNumber(item.value).toFixed(2)} days (${metricLabel}), n ${toNumber(
               meta.n
