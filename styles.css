@@ -78,6 +78,7 @@ h2 {
   color: rgba(31, 51, 71, 0.72);
 }
 
+#trend-updated,
 #composition-updated,
 #uat-updated,
 #management-updated,
@@ -126,13 +127,6 @@ body.embed-compact #product-cycle-updated,
 body.embed-compact #lifecycle-days-updated {
   top: 2px;
   font-size: 0.76rem;
-}
-
-#trend-updated {
-  position: static;
-  margin: 0 0 6px;
-  text-align: center;
-  font-size: 0.82rem;
 }
 
 body.embed-compact .management-toggle-row,
