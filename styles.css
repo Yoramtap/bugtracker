@@ -105,8 +105,8 @@ body.embed-compact .panel-subtitle {
 
 body.embed-compact .management-toggle-row,
 body.embed-compact .composition-toggle-row {
-  margin: 6px 0 0;
-  padding-top: 4px;
+  margin: 0 0 2px;
+  padding-top: 0;
 }
 
 body.embed-compact .chart-canvas--tall {
@@ -146,9 +146,9 @@ body.embed-compact .chart-canvas--tall {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin: 6px 0 0;
-  padding-top: 4px;
-  border-top: 1px solid rgba(31, 51, 71, 0.08);
+  margin: 0 0 2px;
+  padding-top: 0;
+  border-top: 0;
   font-size: 0.86rem;
   color: rgba(31, 51, 71, 0.88);
 }
@@ -167,9 +167,9 @@ body.embed-compact .chart-canvas--tall {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin: 6px 0 0;
-  padding-top: 4px;
-  border-top: 1px solid rgba(31, 51, 71, 0.08);
+  margin: 0 0 2px;
+  padding-top: 0;
+  border-top: 0;
   font-size: 0.86rem;
   color: rgba(31, 51, 71, 0.88);
 }
