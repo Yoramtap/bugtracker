@@ -731,8 +731,8 @@
     );
   }
 
-  function ProductCycleTooltipContent(colors, metricLabel) {
-    return function renderProductCycleTooltip({ active, payload }) {
+  function MetricSeriesTooltipContent(colors, metricLabel) {
+    return function renderMetricSeriesTooltip({ active, payload }) {
       if (!active || !Array.isArray(payload) || payload.length === 0) return null;
       const row = payload[0]?.payload || {};
       const blocks = [
@@ -762,7 +762,7 @@
     };
   }
 
-  function ProductCycleChartView({ rows, seriesDefs, colors, yUpper, metricLabel }) {
+  function MultiSeriesBarChartView({ rows, seriesDefs, colors, yUpper, metricLabel, cellColorAccessor }) {
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
     const geometry = groupedBarGeometry(rows.length, seriesDefs.length);
     return h(
@@ -792,7 +792,7 @@
           domain: [0, yUpper]
         }),
         h(Tooltip, {
-          content: ProductCycleTooltipContent(colors, metricLabel),
+          content: MetricSeriesTooltipContent(colors, metricLabel),
           cursor: { fill: "rgba(31,51,71,0.12)" }
         }),
         h(
@@ -824,105 +824,15 @@
               ...barBaseStyle(colors),
               activeBar: activeBarStyle(colors)
             },
-            rows.map((row, index) =>
-              h(Cell, {
-                key: `${series.key}-${index}`,
-                fill: row[`color_${series.key}`] || series.color
-              })
-            )
+            typeof cellColorAccessor === "function"
+              ? rows.map((row, index) =>
+                  h(Cell, {
+                    key: `${series.key}-${index}`,
+                    fill: cellColorAccessor(row, series)
+                  })
+                )
+              : null
           )
-        )
-      )
-    );
-  }
-
-  function LifecycleTooltipContent(colors, metricLabel) {
-    return function renderLifecycleTooltip({ active, payload }) {
-      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
-      const row = payload[0]?.payload || {};
-      const blocks = [
-        h(
-          "p",
-          { key: "team", style: { margin: "0 0 6px", fontWeight: 600, color: colors.text } },
-          row.team || ""
-        )
-      ];
-      for (const item of payload) {
-        const key = item?.dataKey;
-        const meta = row?.[`meta_${key}`] || {};
-        blocks.push(
-          h(
-            "p",
-            {
-              key,
-              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
-            },
-            `${item.name}: ${toNumber(item.value).toFixed(2)} days (${metricLabel}), n ${toNumber(
-              meta.n
-            )}, median ${toNumber(meta.median).toFixed(2)}, avg ${toNumber(meta.average).toFixed(2)}`
-          )
-        );
-      }
-      return renderTooltipCard(colors, blocks);
-    };
-  }
-
-  function LifecycleDaysChartView({ rows, phaseDefs, colors, yUpper, metricLabel }) {
-    const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
-    const geometry = groupedBarGeometry(rows.length, phaseDefs.length);
-    return h(
-      ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.dense },
-      h(
-        BarChart,
-        {
-          data: rows,
-          margin: { top: 30, right: 20, bottom: 52, left: 20 },
-          barCategoryGap: geometry.categoryGap,
-          barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: geometry.maxBarSize
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "team",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          interval: 0,
-          height: 40
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          allowDecimals: false,
-          domain: [0, yUpper]
-        }),
-        h(Tooltip, {
-          content: LifecycleTooltipContent(colors, metricLabel),
-          cursor: { fill: "rgba(31,51,71,0.12)" }
-        }),
-        h(
-          Legend,
-          buildLegendProps({
-            colors,
-            payload: buildLegendPayload(
-              phaseDefs.map((phase) => ({ dataKey: phase.key, name: phase.label, fill: phase.color })),
-              "rect"
-            ),
-            hiddenKeys,
-            setHiddenKeys
-          })
-        ),
-        phaseDefs.map((phase) =>
-          h(Bar, {
-            key: phase.key,
-            dataKey: phase.key,
-            name: phase.label,
-            fill: phase.color,
-            barSize: geometry.barSize,
-            ...barBaseStyle(colors),
-            activeBar: activeBarStyle(colors),
-            hide: hiddenKeys.has(phase.key)
-          })
         )
       )
     );
@@ -1011,7 +921,16 @@
     }
     const yValues = defs.flatMap((series) => chartRows.map((row) => toNumber(row?.[series.key])));
     const yUpper = computeYUpper(yValues, { min: 1, pad: 1.15 });
-    root.render(h(ProductCycleChartView, { rows: chartRows, seriesDefs: defs, colors, yUpper, metricLabel }));
+    root.render(
+      h(MultiSeriesBarChartView, {
+        rows: chartRows,
+        seriesDefs: defs,
+        colors,
+        yUpper,
+        metricLabel,
+        cellColorAccessor: (row, series) => row?.[`color_${series.key}`] || series.color
+      })
+    );
   }
 
   function renderLifecycleDaysChart({ containerId, rows, phaseDefs, colors, metricLabel = "Median" }) {
@@ -1025,7 +944,12 @@
     }
     const yValues = defs.flatMap((phase) => chartRows.map((row) => toNumber(row?.[phase.key])));
     const yUpper = computeYUpper(yValues, { min: 1, pad: 1.15 });
-    root.render(h(LifecycleDaysChartView, { rows: chartRows, phaseDefs: defs, colors, yUpper, metricLabel }));
+    const seriesDefs = defs.map((phase) => ({
+      key: phase.key,
+      name: phase.label,
+      color: phase.color
+    }));
+    root.render(h(MultiSeriesBarChartView, { rows: chartRows, seriesDefs, colors, yUpper, metricLabel }));
   }
 
   window.DashboardCharts = {

@@ -229,6 +229,21 @@ function toCount(value) {
   return Math.trunc(number);
 }
 
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function metricOrZero(value) {
+  return isFiniteNumber(value) ? value : 0;
+}
+
+function readFlowMetricByBands(flow, bands, key) {
+  return bands.map((band) => {
+    const value = flow?.[band]?.[key];
+    return isFiniteNumber(value) ? value : null;
+  });
+}
+
 function getProductCycleTeamsFromAggregates(publicAggregates) {
   const configured = Array.isArray(state.productCycle?.teams)
     ? state.productCycle.teams.filter((team) => typeof team === "string" && team.trim())
@@ -437,8 +452,7 @@ function renderProductCycleChartFromPublicAggregates(publicAggregates, effortSco
     for (const entry of perYear) {
       const key = `year_${entry.year}`;
       const stat = entry.teamStats.find((item) => item.team === team) || {};
-      const metricValue =
-        typeof stat.metric === "number" && Number.isFinite(stat.metric) ? stat.metric : 0;
+      const metricValue = metricOrZero(stat.metric);
       row[key] = metricValue;
       row[`meta_${key}`] = {
         n: toNumber(stat.n),
@@ -509,8 +523,7 @@ function renderLifecycleDaysChartFromPublicAggregates(publicAggregates, year, me
       const median = toFiniteMetric(source.median);
       const average = toFiniteMetric(source.average);
       const metricValue = metric === "average" ? average : median;
-      row[phase.key] =
-        typeof metricValue === "number" && Number.isFinite(metricValue) ? metricValue : 0;
+      row[phase.key] = metricOrZero(metricValue);
       row[`meta_${phase.key}`] = {
         n: toCount(source.n),
         median: median || 0,
@@ -627,22 +640,10 @@ function renderManagementChart() {
   const bands = ["highest", "high", "medium"];
   const baseLabels = ["Highest", "High", "Medium"];
   const themeColors = getThemeColors();
-  const devMedian = bands.map((band) => {
-    const value = flow?.[band]?.median_dev_days;
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  });
-  const uatMedian = bands.map((band) => {
-    const value = flow?.[band]?.median_uat_days;
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  });
-  const devAvg = bands.map((band) => {
-    const value = flow?.[band]?.avg_dev_days;
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  });
-  const uatAvg = bands.map((band) => {
-    const value = flow?.[band]?.avg_uat_days;
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  });
+  const devMedian = readFlowMetricByBands(flow, bands, "median_dev_days");
+  const uatMedian = readFlowMetricByBands(flow, bands, "median_uat_days");
+  const devAvg = readFlowMetricByBands(flow, bands, "avg_dev_days");
+  const uatAvg = readFlowMetricByBands(flow, bands, "avg_uat_days");
   const devCounts = bands.map((band) => toNumber(flow?.[band]?.n_dev));
   const uatCounts = bands.map((band) => toNumber(flow?.[band]?.n_uat));
   const labels = baseLabels;
@@ -657,10 +658,10 @@ function renderManagementChart() {
 
   const rows = labels.map((label, idx) => ({
     label,
-    devMedian: Number.isFinite(devMedian[idx]) ? devMedian[idx] : 0,
-    uatMedian: Number.isFinite(uatMedian[idx]) ? uatMedian[idx] : 0,
-    devAvg: Number.isFinite(devAvg[idx]) ? devAvg[idx] : 0,
-    uatAvg: Number.isFinite(uatAvg[idx]) ? uatAvg[idx] : 0,
+    devMedian: metricOrZero(devMedian[idx]),
+    uatMedian: metricOrZero(uatMedian[idx]),
+    devAvg: metricOrZero(devAvg[idx]),
+    uatAvg: metricOrZero(uatAvg[idx]),
     devCount: devCounts[idx],
     uatCount: uatCounts[idx]
   }));
@@ -676,8 +677,8 @@ function renderManagementChart() {
     for (const band of ["medium", "high", "highest"]) {
       const dev = candidate?.[band]?.median_dev_days;
       const uat = candidate?.[band]?.median_uat_days;
-      if (typeof dev === "number" && Number.isFinite(dev)) variantYValues.push(dev);
-      if (typeof uat === "number" && Number.isFinite(uat)) variantYValues.push(uat);
+      if (isFiniteNumber(dev)) variantYValues.push(dev);
+      if (isFiniteNumber(uat)) variantYValues.push(uat);
     }
   }
   const maxY = [...yValues, ...variantYValues].length
