@@ -381,16 +381,16 @@
     return {
       fillOpacity: 1,
       stroke: colors.text,
-      strokeOpacity: 0.42,
-      strokeWidth: 1.2
+      strokeOpacity: 0.62,
+      strokeWidth: 1.5
     };
   }
 
   function barBaseStyle(colors) {
     return {
       stroke: colors.text,
-      strokeOpacity: 0.24,
-      strokeWidth: 0.85
+      strokeOpacity: 0.42,
+      strokeWidth: 1.15
     };
   }
 
