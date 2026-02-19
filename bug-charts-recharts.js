@@ -474,7 +474,7 @@
 
     return h(
       ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.composition },
+      { width: "100%", height: CHART_HEIGHTS.trend },
       h(
         LineChart,
         {
@@ -540,7 +540,7 @@
 
     return h(
       ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.trend },
+      { width: "100%", height: CHART_HEIGHTS.composition },
       h(
         BarChart,
         {
