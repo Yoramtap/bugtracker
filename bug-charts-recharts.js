@@ -542,10 +542,9 @@
           tickFormatter: (value, index) => {
             if (!isAllTeams) return value;
             const row = rows[index] || {};
-            const date = String(row.bucketLabel || "").split(" • ")[0];
             const team = row.team || "";
             if (!team) return "";
-            return index % TEAM_CONFIG.length === 0 ? `${date} ${team}` : team;
+            return team;
           }
         }),
         h(YAxis, {
