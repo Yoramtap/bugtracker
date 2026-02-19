@@ -50,16 +50,18 @@
   };
   const EMBED_COMPACT = new URLSearchParams(window.location.search).has("chart");
   const EMBED_VIEWPORT_HEIGHT = Math.max(0, Math.floor(window.innerHeight || 0));
-  const EMBED_BASE_HEIGHT = Math.max(230, Math.min(300, EMBED_VIEWPORT_HEIGHT - 145));
+  function fitEmbedHeight(overhead, min, max) {
+    return Math.max(min, Math.min(max, EMBED_VIEWPORT_HEIGHT - overhead));
+  }
   const CHART_HEIGHTS = EMBED_COMPACT
     ? {
-        trend: EMBED_BASE_HEIGHT,
-        composition: EMBED_BASE_HEIGHT,
-        uat: EMBED_BASE_HEIGHT - 10,
-        sprintGoals: EMBED_BASE_HEIGHT - 10,
-        management: EMBED_BASE_HEIGHT - 28,
-        productCycle: EMBED_BASE_HEIGHT - 24,
-        lifecycleDays: EMBED_BASE_HEIGHT - 24
+        trend: fitEmbedHeight(95, 285, 340),
+        composition: fitEmbedHeight(115, 270, 320),
+        uat: fitEmbedHeight(120, 260, 315),
+        sprintGoals: fitEmbedHeight(125, 260, 310),
+        management: fitEmbedHeight(150, 240, 285),
+        productCycle: fitEmbedHeight(160, 230, 275),
+        lifecycleDays: fitEmbedHeight(160, 230, 275)
       }
     : {
         trend: 380,
