@@ -510,6 +510,7 @@
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
     const isAllTeams = scope === "all";
     const categoryGap = isAllTeams ? BAR_LAYOUT.categoryGap : groupedCategoryGap(rows.length);
+    const singleTeamMaxBarSize = rows.length <= 12 ? 34 : rows.length <= 20 ? 28 : BAR_LAYOUT.normalMax;
     const priorityDefs = PRIORITY_STACK_ORDER.map((priority) => ({
       dataKey: priority.key,
       name: priority.label,
@@ -526,22 +527,25 @@
           margin: { top: 18, right: 20, bottom: 52, left: 20 },
           barCategoryGap: categoryGap,
           barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: isAllTeams ? BAR_LAYOUT.denseMax : BAR_LAYOUT.normalMax
+          maxBarSize: isAllTeams ? BAR_LAYOUT.denseMax : singleTeamMaxBarSize
         },
         h(CartesianGrid, { stroke: colors.grid, vertical: false }),
         h(XAxis, {
-          dataKey: isAllTeams ? "tickLabel" : "bucketLabel",
+          dataKey: "bucketLabel",
           stroke: colors.text,
           tick: { fill: colors.text, fontSize: 11 },
-          angle: 0,
-          textAnchor: "middle",
+          angle: isAllTeams ? -90 : -25,
+          textAnchor: "end",
           interval: 0,
-          height: 40,
+          minTickGap: isAllTeams ? 0 : 16,
+          height: isAllTeams ? 92 : 56,
           tickFormatter: (value, index) => {
             if (!isAllTeams) return value;
-            if (!value) return "";
-            const dateIndex = Math.floor(index / TEAM_CONFIG.length);
-            return dateIndex % 2 === 0 ? value : "";
+            const row = rows[index] || {};
+            const date = String(row.bucketLabel || "").split(" • ")[0];
+            const team = row.team || "";
+            if (!team) return "";
+            return index % TEAM_CONFIG.length === 0 ? `${date} ${team}` : team;
           }
         }),
         h(YAxis, {
