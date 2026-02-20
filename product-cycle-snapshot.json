@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-02-19T18:37:54.814Z",
+  "generatedAt": "2026-02-20T18:45:40.052Z",
   "teams": [
     "API",
     "Frontend",
@@ -33,117 +33,369 @@
           "all": {
             "teams": {
               "API": {
-                "n": 57,
-                "median": 21.14,
-                "average": 30.69
+                "total": {
+                  "n": 57,
+                  "median": 21.14,
+                  "average": 30.69
+                },
+                "lead": {
+                  "n": 52,
+                  "median": 27.48,
+                  "average": 40.62
+                },
+                "cycle": {
+                  "n": 41,
+                  "median": 23.03,
+                  "average": 28.22
+                }
               },
               "Frontend": {
-                "n": 25,
-                "median": 22.96,
-                "average": 43.23
+                "total": {
+                  "n": 25,
+                  "median": 22.96,
+                  "average": 43.23
+                },
+                "lead": {
+                  "n": 22,
+                  "median": 25.95,
+                  "average": 56.03
+                },
+                "cycle": {
+                  "n": 21,
+                  "median": 21.98,
+                  "average": 35.61
+                }
               },
               "Broadcast": {
-                "n": 20,
-                "median": 28.38,
-                "average": 50.27
+                "total": {
+                  "n": 20,
+                  "median": 28.38,
+                  "average": 50.27
+                },
+                "lead": {
+                  "n": 20,
+                  "median": 53.24,
+                  "average": 105.62
+                },
+                "cycle": {
+                  "n": 13,
+                  "median": 30.89,
+                  "average": 50.41
+                }
               },
               "Titanium": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Orchestration": {
-                "n": 13,
-                "median": 97.85,
-                "average": 80.42
+                "total": {
+                  "n": 13,
+                  "median": 97.85,
+                  "average": 80.42
+                },
+                "lead": {
+                  "n": 11,
+                  "median": 159.09,
+                  "average": 155.7
+                },
+                "cycle": {
+                  "n": 7,
+                  "median": 105.57,
+                  "average": 95.6
+                }
               },
               "Shift": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "UNMAPPED": {
-                "n": 19,
-                "median": 35.78,
-                "average": 52.09
+                "total": {
+                  "n": 19,
+                  "median": 35.78,
+                  "average": 52.09
+                },
+                "lead": {
+                  "n": 14,
+                  "median": 106.76,
+                  "average": 126.24
+                },
+                "cycle": {
+                  "n": 6,
+                  "median": 79.05,
+                  "average": 71.76
+                }
               }
             }
           },
           "single": {
             "teams": {
               "API": {
-                "n": 23,
-                "median": 17.05,
-                "average": 30.08
+                "total": {
+                  "n": 23,
+                  "median": 17.05,
+                  "average": 30.08
+                },
+                "lead": {
+                  "n": 20,
+                  "median": 31.98,
+                  "average": 50.48
+                },
+                "cycle": {
+                  "n": 17,
+                  "median": 27.92,
+                  "average": 32.04
+                }
               },
               "Frontend": {
-                "n": 23,
-                "median": 22.85,
-                "average": 35.6
+                "total": {
+                  "n": 23,
+                  "median": 22.85,
+                  "average": 35.6
+                },
+                "lead": {
+                  "n": 20,
+                  "median": 24.43,
+                  "average": 41.18
+                },
+                "cycle": {
+                  "n": 19,
+                  "median": 15.03,
+                  "average": 25.57
+                }
               },
               "Broadcast": {
-                "n": 20,
-                "median": 28.38,
-                "average": 50.27
+                "total": {
+                  "n": 20,
+                  "median": 28.38,
+                  "average": 50.27
+                },
+                "lead": {
+                  "n": 20,
+                  "median": 53.24,
+                  "average": 105.62
+                },
+                "cycle": {
+                  "n": 13,
+                  "median": 30.89,
+                  "average": 50.41
+                }
               },
               "Titanium": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Orchestration": {
-                "n": 13,
-                "median": 97.85,
-                "average": 80.42
+                "total": {
+                  "n": 13,
+                  "median": 97.85,
+                  "average": 80.42
+                },
+                "lead": {
+                  "n": 11,
+                  "median": 159.09,
+                  "average": 155.7
+                },
+                "cycle": {
+                  "n": 7,
+                  "median": 105.57,
+                  "average": 95.6
+                }
               },
               "Shift": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "UNMAPPED": {
-                "n": 19,
-                "median": 35.78,
-                "average": 52.09
+                "total": {
+                  "n": 19,
+                  "median": 35.78,
+                  "average": 52.09
+                },
+                "lead": {
+                  "n": 14,
+                  "median": 106.76,
+                  "average": 126.24
+                },
+                "cycle": {
+                  "n": 6,
+                  "median": 79.05,
+                  "average": 71.76
+                }
               }
             }
           },
           "combined": {
             "teams": {
               "API": {
-                "n": 34,
-                "median": 22.99,
-                "average": 31.11
+                "total": {
+                  "n": 34,
+                  "median": 22.99,
+                  "average": 31.11
+                },
+                "lead": {
+                  "n": 32,
+                  "median": 25.56,
+                  "average": 34.46
+                },
+                "cycle": {
+                  "n": 24,
+                  "median": 22.02,
+                  "average": 25.51
+                }
               },
               "Frontend": {
-                "n": 19,
-                "median": 41.81,
-                "average": 44.93
+                "total": {
+                  "n": 19,
+                  "median": 41.81,
+                  "average": 44.93
+                },
+                "lead": {
+                  "n": 18,
+                  "median": 44.27,
+                  "average": 55.61
+                },
+                "cycle": {
+                  "n": 15,
+                  "median": 24.04,
+                  "average": 40.47
+                }
               },
               "Broadcast": {
-                "n": 22,
-                "median": 12.77,
-                "average": 35.88
+                "total": {
+                  "n": 22,
+                  "median": 12.77,
+                  "average": 35.88
+                },
+                "lead": {
+                  "n": 20,
+                  "median": 29.43,
+                  "average": 49.08
+                },
+                "cycle": {
+                  "n": 13,
+                  "median": 25.73,
+                  "average": 40.69
+                }
               },
               "Titanium": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Orchestration": {
-                "n": 2,
-                "median": 24.96,
-                "average": 24.96
+                "total": {
+                  "n": 2,
+                  "median": 24.96,
+                  "average": 24.96
+                },
+                "lead": {
+                  "n": 1,
+                  "median": 49.92,
+                  "average": 49.92
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Shift": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "UNMAPPED": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               }
             }
           }
@@ -152,117 +404,369 @@
           "all": {
             "teams": {
               "API": {
-                "n": 10,
-                "median": 43.95,
-                "average": 47.06
+                "total": {
+                  "n": 10,
+                  "median": 43.95,
+                  "average": 47.06
+                },
+                "lead": {
+                  "n": 10,
+                  "median": 43.95,
+                  "average": 47.05
+                },
+                "cycle": {
+                  "n": 10,
+                  "median": 26.16,
+                  "average": 31.49
+                }
               },
               "Frontend": {
-                "n": 1,
-                "median": 23.64,
-                "average": 23.64
+                "total": {
+                  "n": 1,
+                  "median": 23.64,
+                  "average": 23.64
+                },
+                "lead": {
+                  "n": 1,
+                  "median": 23.64,
+                  "average": 23.64
+                },
+                "cycle": {
+                  "n": 1,
+                  "median": 23.64,
+                  "average": 23.64
+                }
               },
               "Broadcast": {
-                "n": 3,
-                "median": 135.41,
-                "average": 135.67
+                "total": {
+                  "n": 3,
+                  "median": 135.41,
+                  "average": 135.67
+                },
+                "lead": {
+                  "n": 3,
+                  "median": 171.66,
+                  "average": 229.78
+                },
+                "cycle": {
+                  "n": 3,
+                  "median": 85.88,
+                  "average": 94.67
+                }
               },
               "Titanium": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Orchestration": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Shift": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "UNMAPPED": {
-                "n": 1,
-                "median": 0,
-                "average": 0
+                "total": {
+                  "n": 1,
+                  "median": 0,
+                  "average": 0
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               }
             }
           },
           "single": {
             "teams": {
               "API": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Frontend": {
-                "n": 1,
-                "median": 23.64,
-                "average": 23.64
+                "total": {
+                  "n": 1,
+                  "median": 23.64,
+                  "average": 23.64
+                },
+                "lead": {
+                  "n": 1,
+                  "median": 23.64,
+                  "average": 23.64
+                },
+                "cycle": {
+                  "n": 1,
+                  "median": 23.64,
+                  "average": 23.64
+                }
               },
               "Broadcast": {
-                "n": 3,
-                "median": 135.41,
-                "average": 135.67
+                "total": {
+                  "n": 3,
+                  "median": 135.41,
+                  "average": 135.67
+                },
+                "lead": {
+                  "n": 3,
+                  "median": 171.66,
+                  "average": 229.78
+                },
+                "cycle": {
+                  "n": 3,
+                  "median": 85.88,
+                  "average": 94.67
+                }
               },
               "Titanium": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Orchestration": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Shift": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "UNMAPPED": {
-                "n": 1,
-                "median": 0,
-                "average": 0
+                "total": {
+                  "n": 1,
+                  "median": 0,
+                  "average": 0
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               }
             }
           },
           "combined": {
             "teams": {
               "API": {
-                "n": 10,
-                "median": 43.95,
-                "average": 47.06
+                "total": {
+                  "n": 10,
+                  "median": 43.95,
+                  "average": 47.06
+                },
+                "lead": {
+                  "n": 10,
+                  "median": 43.95,
+                  "average": 47.05
+                },
+                "cycle": {
+                  "n": 10,
+                  "median": 26.16,
+                  "average": 31.49
+                }
               },
               "Frontend": {
-                "n": 6,
-                "median": 33.59,
-                "average": 39.63
+                "total": {
+                  "n": 6,
+                  "median": 33.59,
+                  "average": 39.63
+                },
+                "lead": {
+                  "n": 6,
+                  "median": 33.59,
+                  "average": 39.63
+                },
+                "cycle": {
+                  "n": 6,
+                  "median": 29.41,
+                  "average": 37.72
+                }
               },
               "Broadcast": {
-                "n": 4,
-                "median": 61.42,
-                "average": 58.19
+                "total": {
+                  "n": 4,
+                  "median": 61.42,
+                  "average": 58.19
+                },
+                "lead": {
+                  "n": 4,
+                  "median": 61.42,
+                  "average": 58.19
+                },
+                "cycle": {
+                  "n": 4,
+                  "median": 9.58,
+                  "average": 22.16
+                }
               },
               "Titanium": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Orchestration": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "Shift": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               },
               "UNMAPPED": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "total": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "lead": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                },
+                "cycle": {
+                  "n": 0,
+                  "median": null,
+                  "average": null
+                }
               }
             }
           }
@@ -275,21 +779,36 @@
             "done": 134,
             "ongoing_year_end": 142,
             "ongoing_now": 142,
-            "cycle_sample": 134
+            "cycle_sample": 134,
+            "samples": {
+              "total": 134,
+              "lead": 119,
+              "cycle": 88
+            }
           },
           "single": {
             "total": 188,
             "done": 98,
             "ongoing_year_end": 90,
             "ongoing_now": 90,
-            "cycle_sample": 98
+            "cycle_sample": 98,
+            "samples": {
+              "total": 98,
+              "lead": 85,
+              "cycle": 62
+            }
           },
           "combined": {
             "total": 88,
             "done": 36,
             "ongoing_year_end": 52,
             "ongoing_now": 52,
-            "cycle_sample": 36
+            "cycle_sample": 36,
+            "samples": {
+              "total": 36,
+              "lead": 34,
+              "cycle": 26
+            }
           }
         },
         "2026": {
@@ -298,21 +817,36 @@
             "done": 15,
             "ongoing_year_end": 14,
             "ongoing_now": 14,
-            "cycle_sample": 15
+            "cycle_sample": 15,
+            "samples": {
+              "total": 15,
+              "lead": 14,
+              "cycle": 14
+            }
           },
           "single": {
             "total": 13,
             "done": 5,
             "ongoing_year_end": 8,
             "ongoing_now": 8,
-            "cycle_sample": 5
+            "cycle_sample": 5,
+            "samples": {
+              "total": 5,
+              "lead": 4,
+              "cycle": 4
+            }
           },
           "combined": {
             "total": 16,
             "done": 10,
             "ongoing_year_end": 6,
             "ongoing_now": 6,
-            "cycle_sample": 10
+            "cycle_sample": 10,
+            "samples": {
+              "total": 10,
+              "lead": 10,
+              "cycle": 10
+            }
           }
         }
       }

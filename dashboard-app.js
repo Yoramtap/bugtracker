@@ -1,80 +1,43 @@
 "use strict";
 
-const PRIORITY_CONFIG = [
-  { key: "highest", label: "Highest" },
-  { key: "high", label: "High" },
-  { key: "medium", label: "Medium" },
-  { key: "low", label: "Low" },
-  { key: "lowest", label: "Lowest" }
-];
+const PRIORITY_CONFIG = [{ key: "highest", label: "Highest" }, { key: "high", label: "High" }, { key: "medium", label: "Medium" }, { key: "low", label: "Low" }, { key: "lowest", label: "Lowest" }];
 
 const PRODUCT_CYCLE_COMPARE_YEARS = ["2025", "2026"];
 const PRODUCT_CYCLE_EFFORT_SCOPE_OPTIONS = ["all", "single", "combined"];
+const PRODUCT_CYCLE_WINDOW_SCOPE_OPTIONS = ["lead", "cycle"];
 const LIFECYCLE_YEAR_OPTIONS = ["2025", "2026"];
 const PRODUCT_CYCLE_PHASES = [
-  {
-    key: "parking_lot",
-    label: "Parking lot",
-    color: "var(--uat-bucket-0-7)"
-  },
-  {
-    key: "design",
-    label: "Design",
-    color: "var(--uat-bucket-8-14)"
-  },
-  {
-    key: "ready_for_development",
-    label: "Ready",
-    color: "var(--uat-bucket-15-30)"
-  },
-  {
-    key: "in_development",
-    label: "In Development",
-    color: "var(--uat-bucket-31-60)"
-  },
-  {
-    key: "feedback",
-    label: "Feedback",
-    color: "var(--uat-bucket-61-plus)"
-  }
+  { key: "parking_lot", label: "Parking lot" },
+  { key: "design", label: "Design" },
+  { key: "ready_for_development", label: "Ready" },
+  { key: "in_development", label: "In Development" },
+  { key: "feedback", label: "Feedback" }
 ];
-const MODE_PANEL_IDS = {
-  trend: "trend-panel",
-  composition: "composition-panel",
-  uat: "uat-panel",
-  management: "management-panel",
-  "product-cycle": "product-cycle-panel",
-  "lifecycle-days": "lifecycle-days-panel"
-};
-const CHART_STATUS_IDS = [
-  "composition-status",
-  "trend-status",
-  "uat-status",
-  "management-status",
-  "product-cycle-status",
-  "lifecycle-days-status"
-];
-const LAST_UPDATED_IDS = [
-  "trend-updated",
-  "composition-updated",
-  "uat-updated",
-  "management-updated",
-  "product-cycle-updated",
-  "lifecycle-days-updated"
-];
+const MODE_PANEL_IDS = { trend: "trend-panel", composition: "composition-panel", uat: "uat-panel", management: "management-panel", "product-cycle": "product-cycle-panel", "lifecycle-days": "lifecycle-days-panel" };
+const CHART_STATUS_IDS = ["composition-status", "trend-status", "uat-status", "management-status", "product-cycle-status", "lifecycle-days-status"];
+const LAST_UPDATED_IDS = ["trend-updated", "composition-updated", "uat-updated", "management-updated", "product-cycle-updated", "lifecycle-days-updated"];
 const PRODUCT_CYCLE_UPDATED_IDS = ["product-cycle-updated", "lifecycle-days-updated"];
-
-const state = {
-  snapshot: null,
-  productCycle: null,
-  mode: "all",
-  managementUatScope: "all",
-  compositionTeamScope: "bc",
-  productCycleEffortScope: "all",
-  productCycleMetricScope: "median",
-  lifecycleDaysYearScope: "2026",
-  lifecycleDaysMetricScope: "median"
+const PUBLIC_AGGREGATE_CHART_CONFIG = {
+  productCycle: {
+    windowRadioName: "product-cycle-window-scope",
+    valueSelectId: "product-cycle-effort-scope",
+    metricSelectId: "product-cycle-metric-scope",
+    statusId: "product-cycle-status",
+    contextId: "product-cycle-context",
+    containerId: "cycle-time-parking-lot-to-done-chart",
+    missingMessage: "No product cycle aggregates found in product-cycle-snapshot.json."
+  },
+  lifecycleDays: {
+    valueSelectId: "lifecycle-days-year-scope",
+    metricSelectId: "lifecycle-days-metric-scope",
+    statusId: "lifecycle-days-status",
+    contextId: "lifecycle-days-context",
+    containerId: "lifecycle-time-spent-per-phase-chart",
+    missingMessage: "No lifecycle aggregates found in product-cycle-snapshot.json."
+  }
 };
+
+const state = { snapshot: null, productCycle: null, mode: "all", managementUatScope: "all", compositionTeamScope: "bc", productCycleWindowScope: "cycle", productCycleEffortScope: "all", productCycleMetricScope: "median", lifecycleDaysYearScope: "2026", lifecycleDaysMetricScope: "median" };
 
 const dashboardUiUtils = window.DashboardViewUtils;
 if (!dashboardUiUtils) {
@@ -92,14 +55,39 @@ const {
   getModeFromUrl
 } = dashboardUiUtils;
 
-function setLastUpdatedSubtitles(snapshot) {
-  const label = `Last updated: ${formatUpdatedAt(snapshot?.updatedAt)}`;
-  setTextForIds(LAST_UPDATED_IDS, label);
+function syncSelectValue(selectId, value) {
+  const select = document.getElementById(selectId);
+  if (select) select.value = value;
 }
 
-function setProductCycleUpdatedSubtitles(productCycle, fallbackUpdatedAt = "") {
-  const label = `Last updated: ${formatUpdatedAt(productCycle?.generatedAt || fallbackUpdatedAt)}`;
-  setTextForIds(PRODUCT_CYCLE_UPDATED_IDS, label);
+function bindSelectChange(selectId, onChange) {
+  const select = document.getElementById(selectId);
+  if (!select || select.dataset.bound === "1") return;
+  select.dataset.bound = "1";
+  select.addEventListener("change", () => onChange(select.value));
+}
+
+function normalizeOption(value, options, fallback) {
+  return options.includes(value) ? value : fallback;
+}
+
+function normalizeMetric(value) {
+  return value === "average" ? "average" : "median";
+}
+
+function getRenderer(statusId, rendererName, missingMessage) {
+  const renderer = window.DashboardCharts?.[rendererName];
+  if (renderer) return renderer;
+  setStatusMessage(statusId, missingMessage);
+  return null;
+}
+
+function renderSnapshotChart({ statusId, rendererName, missingMessage, containerId, extra = {} }) {
+  setStatusMessage(statusId);
+  if (!state.snapshot || !Array.isArray(state.snapshot.combinedPoints)) return;
+  const renderChart = getRenderer(statusId, rendererName, missingMessage);
+  if (!renderChart) return;
+  renderChart({ containerId, snapshot: state.snapshot, colors: getThemeColors(), ...extra });
 }
 
 function applyModeVisibility() {
@@ -113,52 +101,22 @@ function applyModeVisibility() {
   }
 }
 
-function renderBugTrendAcrossTeamsChart() {
-  setStatusMessage("trend-status");
-  if (!state.snapshot || !Array.isArray(state.snapshot.combinedPoints)) return;
-  if (!window.DashboardCharts?.renderBugTrendAcrossTeamsChart) {
-    setStatusMessage(
-      "trend-status",
-      "Trend chart unavailable: Recharts did not load. Check local script paths."
-    );
-    return;
-  }
-
-  window.DashboardCharts.renderBugTrendAcrossTeamsChart({
-    containerId: "bug-trend-chart",
-    snapshot: state.snapshot,
-    colors: getThemeColors()
-  });
-}
-
 function renderBugCompositionByPriorityChart() {
-  setStatusMessage("composition-status");
-  if (!state.snapshot || !Array.isArray(state.snapshot.combinedPoints)) return;
-  if (!window.DashboardCharts?.renderBugCompositionByPriorityChart) {
-    setStatusMessage(
-      "composition-status",
-      "Composition chart unavailable: Recharts did not load. Check local script paths."
-    );
-    return;
-  }
-
-  const scopeSelect = document.getElementById("composition-team-scope");
   const scope = state.compositionTeamScope || "bc";
-  if (scopeSelect) scopeSelect.value = scope;
-
-  window.DashboardCharts.renderBugCompositionByPriorityChart({
+  syncSelectValue("composition-team-scope", scope);
+  renderSnapshotChart({
+    statusId: "composition-status",
+    rendererName: "renderBugCompositionByPriorityChart",
+    missingMessage: "Composition chart unavailable: Recharts did not load. Check local script paths.",
     containerId: "bug-composition-chart",
-    snapshot: state.snapshot,
-    colors: getThemeColors(),
-    scope
+    extra: { scope }
   });
 }
 
 function renderUatOpenByPriorityChart() {
   const status = document.getElementById("uat-status");
-  const root = document.getElementById("uat-open-by-priority-chart");
   const context = document.getElementById("uat-context");
-  if (!status || !root) return;
+  if (!status) return;
 
   status.hidden = true;
   if (!state.snapshot || !state.snapshot.uatAging) {
@@ -192,8 +150,9 @@ function renderUatOpenByPriorityChart() {
     return row;
   });
 
-  if (!window.DashboardCharts?.renderUatOpenByPriorityChart) return;
-  window.DashboardCharts.renderUatOpenByPriorityChart({
+  const renderChart = window.DashboardCharts?.renderUatOpenByPriorityChart;
+  if (!renderChart) return;
+  renderChart({
     containerId: "uat-open-by-priority-chart",
     rows: chartRows,
     priorities,
@@ -201,20 +160,11 @@ function renderUatOpenByPriorityChart() {
   });
 }
 
-function bindCompositionTeamScopeToggle() {
-  const scopeSelect = document.getElementById("composition-team-scope");
-  if (!scopeSelect || scopeSelect.dataset.bound === "1") return;
-
-  scopeSelect.dataset.bound = "1";
-  scopeSelect.addEventListener("change", () => {
-    state.compositionTeamScope = scopeSelect.value || "bc";
-    renderBugCompositionByPriorityChart();
+function bindStateSelect(selectId, stateKey, normalizeValue, onChangeRender) {
+  bindSelectChange(selectId, (value) => {
+    state[stateKey] = normalizeValue(value);
+    onChangeRender();
   });
-}
-
-function getProductCyclePublicAggregates() {
-  const value = state.productCycle?.publicAggregates;
-  return value && typeof value === "object" ? value : null;
 }
 
 function toFiniteMetric(value) {
@@ -229,18 +179,105 @@ function toCount(value) {
   return Math.trunc(number);
 }
 
-function isFiniteNumber(value) {
-  return typeof value === "number" && Number.isFinite(value);
+function metricLabel(metric) {
+  return metric === "average" ? "Average" : "Median";
 }
 
-function metricOrZero(value) {
-  return isFiniteNumber(value) ? value : 0;
+function normalizeProductCycleWindow(value) {
+  return PRODUCT_CYCLE_WINDOW_SCOPE_OPTIONS.includes(value) ? value : "cycle";
+}
+
+function productCycleWindowMeta(windowScope) {
+  if (windowScope === "lead") {
+    return {
+      key: "lead",
+      title: "Lead time: parking lot, design, ready for delivery, delivery, feedback",
+      contextLabel: "Lead time per team",
+      sampleLabel: "lead sample"
+    };
+  }
+  if (windowScope === "cycle") {
+    return {
+      key: "cycle",
+      title: "Cycle time: delivery and feedback to done",
+      contextLabel: "Cycle time per team",
+      sampleLabel: "cycle sample"
+    };
+  }
+  return {
+    key: "cycle",
+    title: "Cycle time: delivery and feedback to done",
+    contextLabel: "Cycle time per team",
+    sampleLabel: "cycle sample"
+  };
+}
+
+function readCycleWindowStats(teamNode, windowScope) {
+  if (!teamNode || typeof teamNode !== "object") return {};
+  if (teamNode.total || teamNode.lead || teamNode.cycle) {
+    return teamNode[windowScope] || {};
+  }
+  return windowScope === "total" ? teamNode : {};
+}
+
+function getLifecycleWindowStats(publicAggregates, year, team, windowScope) {
+  const phasesNode = publicAggregates?.lifecyclePhaseDays?.byYear?.[year]?.teams?.[team] || {};
+  const phaseKeys =
+    windowScope === "lead"
+      ? ["parking_lot", "design", "ready_for_development", "in_development", "feedback"]
+      : ["in_development", "feedback"];
+  const stats = phaseKeys.map((key) => phasesNode?.[key] || {});
+  const medians = stats.map((item) => Number(item?.median)).filter(Number.isFinite);
+  const averages = stats.map((item) => Number(item?.average)).filter(Number.isFinite);
+  const counts = stats.map((item) => Number(item?.n)).filter(Number.isFinite);
+  if (medians.length === 0 && averages.length === 0) return {};
+  return {
+    n: counts.length ? Math.min(...counts) : 0,
+    median: medians.length ? Number(medians.reduce((sum, value) => sum + value, 0).toFixed(2)) : null,
+    average: averages.length ? Number(averages.reduce((sum, value) => sum + value, 0).toFixed(2)) : null
+  };
+}
+
+function readMetricStats(source, metric) {
+  const median = toFiniteMetric(source?.median);
+  const average = toFiniteMetric(source?.average);
+  return {
+    value: toNumber(metric === "average" ? average : median),
+    n: toCount(source?.n),
+    median: toNumber(median),
+    average: toNumber(average)
+  };
+}
+
+function buildMetricRowsByDefs({ teams, defs, metric, readSource }) {
+  return teams.map((team) => {
+    const row = { team };
+    for (const def of defs) {
+      const stats = readMetricStats(readSource(team, def.key), metric);
+      row[def.key] = stats.value;
+      row[`meta_${def.key}`] = { n: stats.n, median: stats.median, average: stats.average };
+    }
+    return row;
+  });
+}
+
+function computeYUpperFromRows(rows, defs, pad = 1.15) {
+  const keys = (Array.isArray(defs) ? defs : []).map((def) => def?.key).filter(Boolean);
+  const values = [];
+  for (const row of Array.isArray(rows) ? rows : []) {
+    for (const key of keys) {
+      const value = Number(row?.[key]);
+      if (Number.isFinite(value)) values.push(value);
+    }
+  }
+  if (values.length === 0) return 1;
+  return Math.max(1, Math.ceil(Math.max(...values) * pad));
 }
 
 function readFlowMetricByBands(flow, bands, key) {
   return bands.map((band) => {
     const value = flow?.[band]?.[key];
-    return isFiniteNumber(value) ? value : null;
+    return Number.isFinite(value) ? value : null;
   });
 }
 
@@ -251,24 +288,13 @@ function getProductCycleTeamsFromAggregates(publicAggregates) {
   if (configured.length > 0) return configured;
 
   const found = new Set();
-  const cycleByYear = publicAggregates?.cycleTime?.byYear;
-  if (cycleByYear && typeof cycleByYear === "object") {
-    for (const yearNode of Object.values(cycleByYear)) {
-      if (!yearNode || typeof yearNode !== "object") continue;
-      for (const effortNode of Object.values(yearNode)) {
-        const teamsNode = effortNode?.teams;
-        if (!teamsNode || typeof teamsNode !== "object") continue;
-        for (const team of Object.keys(teamsNode)) found.add(team);
-      }
+  for (const yearNode of Object.values(publicAggregates?.cycleTime?.byYear || {})) {
+    for (const effortNode of Object.values(yearNode || {})) {
+      for (const team of Object.keys(effortNode?.teams || {})) found.add(team);
     }
   }
-  const lifecycleByYear = publicAggregates?.lifecyclePhaseDays?.byYear;
-  if (lifecycleByYear && typeof lifecycleByYear === "object") {
-    for (const yearNode of Object.values(lifecycleByYear)) {
-      const teamsNode = yearNode?.teams;
-      if (!teamsNode || typeof teamsNode !== "object") continue;
-      for (const team of Object.keys(teamsNode)) found.add(team);
-    }
+  for (const yearNode of Object.values(publicAggregates?.lifecyclePhaseDays?.byYear || {})) {
+    for (const team of Object.keys(yearNode?.teams || {})) found.add(team);
   }
 
   const ordered = Array.from(found).sort((a, b) => a.localeCompare(b));
@@ -278,120 +304,13 @@ function getProductCycleTeamsFromAggregates(publicAggregates) {
   return ordered;
 }
 
-function hexToRgb(color) {
-  const raw = String(color || "").trim();
-  const short = /^#([0-9a-f]{3})$/i.exec(raw);
-  if (short) {
-    const [r, g, b] = short[1].split("").map((ch) => Number.parseInt(ch + ch, 16));
-    return { r, g, b };
-  }
-  const full = /^#([0-9a-f]{6})$/i.exec(raw);
-  if (full) {
-    const hex = full[1];
-    return {
-      r: Number.parseInt(hex.slice(0, 2), 16),
-      g: Number.parseInt(hex.slice(2, 4), 16),
-      b: Number.parseInt(hex.slice(4, 6), 16)
-    };
-  }
-  return null;
-}
-
-function shadeColor(color, amount) {
-  const rgb = hexToRgb(color);
-  if (!rgb) return color;
-  const clamp = (value) => Math.max(0, Math.min(255, value));
-  const r = clamp(Math.round(rgb.r + amount));
-  const g = clamp(Math.round(rgb.g + amount));
-  const b = clamp(Math.round(rgb.b + amount));
-  return `rgb(${r}, ${g}, ${b})`;
-}
-
-function cycleTeamBaseColor(themeColors, teamName) {
-  if (teamName === "API") return themeColors.teams.api;
-  if (teamName === "Frontend") return themeColors.teams.react;
-  if (teamName === "Broadcast") return themeColors.teams.bc;
-  if (teamName === "UNMAPPED") return readThemeColor("--mgmt-dev", "#98a3af");
-  return themeColors.teams.legacy;
-}
-
-function cycleYearTeamColor(themeColors, teamName, year) {
-  const base = cycleTeamBaseColor(themeColors, teamName);
-  if (year === "2026") return shadeColor(base, -20);
-  return base;
-}
-
-function bindManagementUatScopeToggle() {
-  const scopeSelect = document.getElementById("management-uat-scope");
-  if (!scopeSelect || scopeSelect.dataset.bound === "1") return;
-
-  scopeSelect.dataset.bound = "1";
-  scopeSelect.addEventListener("change", () => {
-    state.managementUatScope = scopeSelect.value === "bugs_only" ? "bugs_only" : "all";
-    renderDevelopmentTimeVsUatTimeChart();
-  });
-}
-
-function bindProductCycleControls() {
-  const effortSelect = document.getElementById("product-cycle-effort-scope");
-  const metricSelect = document.getElementById("product-cycle-metric-scope");
-  if (!effortSelect || !metricSelect || effortSelect.dataset.bound === "1") return;
-
-  effortSelect.dataset.bound = "1";
-  metricSelect.dataset.bound = "1";
-
-  effortSelect.addEventListener("change", () => {
-    state.productCycleEffortScope = PRODUCT_CYCLE_EFFORT_SCOPE_OPTIONS.includes(effortSelect.value)
-      ? effortSelect.value
-      : "all";
-    renderCycleTimeParkingLotToDoneChart();
-  });
-
-  metricSelect.addEventListener("change", () => {
-    state.productCycleMetricScope = metricSelect.value === "average" ? "average" : "median";
-    renderCycleTimeParkingLotToDoneChart();
-  });
-}
-
-function bindLifecycleDaysControls() {
-  const yearSelect = document.getElementById("lifecycle-days-year-scope");
-  const metricSelect = document.getElementById("lifecycle-days-metric-scope");
-  if (!yearSelect || !metricSelect || yearSelect.dataset.bound === "1") return;
-
-  yearSelect.dataset.bound = "1";
-  metricSelect.dataset.bound = "1";
-
-  yearSelect.addEventListener("change", () => {
-    state.lifecycleDaysYearScope = LIFECYCLE_YEAR_OPTIONS.includes(yearSelect.value)
-      ? yearSelect.value
-      : "2026";
-    renderLifecycleTimeSpentPerPhaseChart();
-  });
-
-  metricSelect.addEventListener("change", () => {
-    state.lifecycleDaysMetricScope = metricSelect.value === "average" ? "average" : "median";
-    renderLifecycleTimeSpentPerPhaseChart();
-  });
-}
-
-function setProductCycleTotalsText(text) {
-  const totals = document.getElementById("product-cycle-totals");
-  if (!totals) return;
-  const value = String(text || "").trim();
-  if (!value) {
-    totals.hidden = true;
-    totals.textContent = "";
-    return;
-  }
-  totals.hidden = false;
-  totals.textContent = value;
-}
-
-function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregates, effortScope, metric) {
+function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregates, effortScope, metric, windowScope) {
   const status = document.getElementById("product-cycle-status");
   const context = document.getElementById("product-cycle-context");
+  const titleNode = document.getElementById("product-cycle-title");
   if (!status || !context) return;
-  setProductCycleTotalsText("");
+  const windowMeta = productCycleWindowMeta(windowScope);
+  if (titleNode) titleNode.textContent = windowMeta.title;
 
   const teams = getProductCycleTeamsFromAggregates(publicAggregates);
   if (teams.length === 0) {
@@ -400,43 +319,30 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
     return;
   }
 
-  const metricLabel = metric === "average" ? "Average" : "Median";
-  const yearsToShow = PRODUCT_CYCLE_COMPARE_YEARS;
-  const perYear = yearsToShow.map((year) => {
-    const teamNodes = publicAggregates?.cycleTime?.byYear?.[year]?.[effortScope]?.teams || {};
+  const metricLabelValue = metricLabel(metric);
+  const perYear = PRODUCT_CYCLE_COMPARE_YEARS.map((year) => {
     const totalsNode = publicAggregates?.cycleTime?.totalsByYear?.[year]?.[effortScope] || {};
-    const teamStats = teams.map((team) => {
-      const row = teamNodes?.[team] || {};
-      const median = toFiniteMetric(row.median);
-      const average = toFiniteMetric(row.average);
-      const metricValue = metric === "average" ? average : median;
-      return {
-        team,
-        n: toCount(row.n),
-        median,
-        average,
-        metric: metricValue
-      };
-    });
+    const samplesNode = totalsNode?.samples && typeof totalsNode.samples === "object" ? totalsNode.samples : {};
+    const sampleCount = toCount(
+      samplesNode?.[windowMeta.key] ??
+        (windowMeta.key === "cycle"
+          ? totalsNode.cycle_sample
+          : publicAggregates?.lifecyclePhaseDays?.totalsByYear?.[year]?.cycle_sample || 0)
+    );
     return {
       year,
       ideasInYearCount: toCount(totalsNode.total),
-      doneInYearCount: toCount(totalsNode.done),
-      openAtYearEnd: toCount(totalsNode.ongoing_year_end),
-      openNow: toCount(totalsNode.ongoing_now),
-      cycleRowsCount: toCount(totalsNode.cycle_sample),
-      teamStats
+      cycleRowsCount: sampleCount
     };
   });
 
   const totalIdeasCombined = perYear.reduce((sum, entry) => sum + entry.ideasInYearCount, 0);
   const totalCycleSample = perYear.reduce((sum, entry) => sum + entry.cycleRowsCount, 0);
-  const contextText = `Cycle time per team. Total ideas (2025+2026): ${totalIdeasCombined} • cycle sample: ${totalCycleSample}`;
-  context.textContent = contextText;
+  context.textContent = `${windowMeta.contextLabel}. Total ideas (2025+2026): ${totalIdeasCombined} • ${windowMeta.sampleLabel}: ${totalCycleSample}`;
 
   if (perYear.every((entry) => entry.cycleRowsCount === 0)) {
     status.hidden = false;
-    status.textContent = `No completed Parking lot exit -> Done items found for ${yearsToShow.join(", ")}.`;
+    status.textContent = `No completed ${windowMeta.contextLabel.toLowerCase()} items found for ${PRODUCT_CYCLE_COMPARE_YEARS.join(", ")}.`;
     clearChartContainer("cycle-time-parking-lot-to-done-chart");
     return;
   }
@@ -447,44 +353,74 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
     name: String(entry.year),
     color: index % 2 === 0 ? themeColors.teams.api : themeColors.teams.bc
   }));
-  const rows = teams.map((team) => {
-    const row = { team };
-    for (const entry of perYear) {
-      const key = `year_${entry.year}`;
-      const stat = entry.teamStats.find((item) => item.team === team) || {};
-      const metricValue = metricOrZero(stat.metric);
-      row[key] = metricValue;
-      row[`meta_${key}`] = {
-        n: toNumber(stat.n),
-        median: toFiniteMetric(stat.median) || 0,
-        average: toFiniteMetric(stat.average) || 0
-      };
-      row[`color_${key}`] = cycleYearTeamColor(themeColors, team, entry.year);
+  const rows = buildMetricRowsByDefs({
+    teams,
+    defs: seriesDefs,
+    metric,
+    readSource: (team, key) => {
+      const year = key.slice(5);
+      const teamNode = publicAggregates?.cycleTime?.byYear?.[year]?.[effortScope]?.teams?.[team] || {};
+      const stats = readCycleWindowStats(teamNode, windowMeta.key);
+      if (stats && Object.keys(stats).length > 0) return stats;
+      return getLifecycleWindowStats(publicAggregates, year, team, windowMeta.key);
     }
-    return row;
   });
+  const leadAnchorRows =
+    windowMeta.key === "lead"
+      ? rows
+      : buildMetricRowsByDefs({
+          teams,
+          defs: seriesDefs,
+          metric,
+          readSource: (team, key) => {
+            const year = key.slice(5);
+            const teamNode = publicAggregates?.cycleTime?.byYear?.[year]?.[effortScope]?.teams?.[team] || {};
+            const stats = readCycleWindowStats(teamNode, "lead");
+            if (stats && Object.keys(stats).length > 0) return stats;
+            return getLifecycleWindowStats(publicAggregates, year, team, "lead");
+          }
+        });
+  const yUpper = computeYUpperFromRows(leadAnchorRows, seriesDefs, 1.15);
 
-  if (!window.DashboardCharts?.renderCycleTimeParkingLotToDoneChart) {
-    status.hidden = false;
-    status.textContent = "Product cycle chart unavailable: Recharts renderer missing.";
-    return;
-  }
-  window.DashboardCharts.renderCycleTimeParkingLotToDoneChart({
+  const renderChart = getRenderer(
+    "product-cycle-status",
+    "renderCycleTimeParkingLotToDoneChart",
+    "Product cycle chart unavailable: Recharts renderer missing."
+  );
+  if (!renderChart) return;
+  renderChart({
     containerId: "cycle-time-parking-lot-to-done-chart",
     rows,
     seriesDefs,
     colors: themeColors,
-    metricLabel
+    metricLabel: metricLabelValue,
+    yUpperOverride: yUpper
   });
-  setProductCycleTotalsText("");
 
   const yearsWithoutCycles = perYear
     .filter((entry) => entry.cycleRowsCount === 0)
     .map((entry) => entry.year);
   if (yearsWithoutCycles.length > 0) {
     status.hidden = false;
-    status.textContent = `No completed Parking lot exit -> Done items found for ${yearsWithoutCycles.join(", ")}; showing other year(s).`;
+    status.textContent = `No completed ${windowMeta.contextLabel.toLowerCase()} items found for ${yearsWithoutCycles.join(", ")}; showing other year(s).`;
   }
+}
+
+function withPublicAggregates({ statusId, contextId, containerId, missingMessage, onReady }) {
+  const status = document.getElementById(statusId);
+  const context = contextId ? document.getElementById(contextId) : null;
+  if (!status || (contextId && !context)) return;
+
+  status.hidden = true;
+  const value = state.productCycle?.publicAggregates;
+  const publicAggregates = value && typeof value === "object" ? value : null;
+  if (!publicAggregates) {
+    status.hidden = false;
+    status.textContent = missingMessage;
+    clearChartContainer(containerId);
+    return;
+  }
+  onReady({ status, context, publicAggregates });
 }
 
 function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggregates, year, metric) {
@@ -499,8 +435,8 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     return;
   }
 
-  const metricLabel = metric === "average" ? "Average" : "Median";
-  const chartTitleText = `Lifecycle time spent per phase (${metricLabel})`;
+  const metricLabelValue = metricLabel(metric);
+  const chartTitleText = `Lifecycle time spent per phase (${metricLabelValue})`;
 
   const themeColors = getThemeColors();
   const phaseColors = [
@@ -515,33 +451,22 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     label: phase.label,
     color: phaseColors[phaseIndex] || themeColors.teams.legacy
   }));
-  const rows = teams.map((team) => {
-    const row = { team };
-    for (const phase of PRODUCT_CYCLE_PHASES) {
-      const source =
-        publicAggregates?.lifecyclePhaseDays?.byYear?.[year]?.teams?.[team]?.[phase.key] || {};
-      const median = toFiniteMetric(source.median);
-      const average = toFiniteMetric(source.average);
-      const metricValue = metric === "average" ? average : median;
-      row[phase.key] = metricOrZero(metricValue);
-      row[`meta_${phase.key}`] = {
-        n: toCount(source.n),
-        median: median || 0,
-        average: average || 0
-      };
-    }
-    return row;
+  const rows = buildMetricRowsByDefs({
+    teams,
+    defs: phaseDefs,
+    metric,
+    readSource: (team, key) =>
+      publicAggregates?.lifecyclePhaseDays?.byYear?.[year]?.teams?.[team]?.[key] || {}
   });
   const plottedValues = phaseDefs
     .flatMap((phase) => rows.map((row) => row[phase.key]))
-    .filter((value) => typeof value === "number" && Number.isFinite(value) && value > 0);
+    .filter((value) => Number.isFinite(value) && value > 0);
 
   const totalsNode = publicAggregates?.lifecyclePhaseDays?.totalsByYear?.[year] || {};
   const doneCount = toCount(totalsNode.done);
   const ongoingCount = toCount(totalsNode.ongoing);
   const totalCount = toCount(totalsNode.total);
   const sampleCount = toCount(totalsNode.cycle_sample);
-  const totalsText = `${year}: total ${totalCount} • done ${doneCount} • ongoing ${ongoingCount} • cycle sample ${sampleCount}`;
 
   if (plottedValues.length === 0) {
     status.hidden = false;
@@ -549,85 +474,98 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     clearChartContainer("lifecycle-time-spent-per-phase-chart");
     return;
   }
-  if (!window.DashboardCharts?.renderLifecycleTimeSpentPerPhaseChart) {
-    status.hidden = false;
-    status.textContent = "Lifecycle chart unavailable: Recharts renderer missing.";
-    return;
-  }
-  window.DashboardCharts.renderLifecycleTimeSpentPerPhaseChart({
+  const renderChart = getRenderer(
+    "lifecycle-days-status",
+    "renderLifecycleTimeSpentPerPhaseChart",
+    "Lifecycle chart unavailable: Recharts renderer missing."
+  );
+  if (!renderChart) return;
+  renderChart({
     containerId: "lifecycle-time-spent-per-phase-chart",
     rows,
     phaseDefs,
     colors: themeColors,
-    metricLabel
+    metricLabel: metricLabelValue
   });
-  context.textContent = `${chartTitleText} • ${totalsText}`;
+  context.textContent = `${chartTitleText} • ${year}: total ${totalCount} • done ${doneCount} • ongoing ${ongoingCount} • cycle sample ${sampleCount}`;
 }
 
 function renderCycleTimeParkingLotToDoneChart() {
-  const status = document.getElementById("product-cycle-status");
-  const root = document.getElementById("cycle-time-parking-lot-to-done-chart");
-  const context = document.getElementById("product-cycle-context");
-  const effortSelect = document.getElementById("product-cycle-effort-scope");
-  const metricSelect = document.getElementById("product-cycle-metric-scope");
-  if (!status || !root || !context) return;
+  const config = PUBLIC_AGGREGATE_CHART_CONFIG.productCycle;
+  const windowScope = normalizeProductCycleWindow(state.productCycleWindowScope);
+  const effortScope = normalizeOption(state.productCycleEffortScope, PRODUCT_CYCLE_EFFORT_SCOPE_OPTIONS, "all");
+  const metric = normalizeMetric(state.productCycleMetricScope);
 
-  status.hidden = true;
-  setProductCycleTotalsText("");
-  const effortScope = PRODUCT_CYCLE_EFFORT_SCOPE_OPTIONS.includes(state.productCycleEffortScope)
-    ? state.productCycleEffortScope
-    : "all";
-  const metric = state.productCycleMetricScope === "average" ? "average" : "median";
-  if (effortSelect) effortSelect.value = effortScope;
-  if (metricSelect) metricSelect.value = metric;
+  syncRadioValue(config.windowRadioName, windowScope);
+  syncSelectValue(config.valueSelectId, effortScope);
+  syncSelectValue(config.metricSelectId, metric);
 
-  const publicAggregates = getProductCyclePublicAggregates();
-  if (!publicAggregates) {
-    status.hidden = false;
-    status.textContent = "No product cycle aggregates found in product-cycle-snapshot.json.";
-    clearChartContainer("cycle-time-parking-lot-to-done-chart");
-    return;
-  }
-  renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregates, effortScope, metric);
+  withPublicAggregates({
+    statusId: config.statusId,
+    contextId: config.contextId,
+    containerId: config.containerId,
+    missingMessage: config.missingMessage,
+    onReady: ({ publicAggregates }) =>
+      renderCycleTimeParkingLotToDoneChartFromPublicAggregates(
+        publicAggregates,
+        effortScope,
+        metric,
+        windowScope
+      )
+  });
+}
+
+function syncRadioValue(name, value) {
+  const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
+  radios.forEach((radio) => {
+    radio.checked = radio.value === value;
+  });
+}
+
+function bindRadioState(name, stateKey, normalizeValue, onChangeRender) {
+  const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
+  if (radios.length === 0) return;
+  radios.forEach((radio) => {
+    if (radio.dataset.bound === "1") return;
+    radio.dataset.bound = "1";
+    radio.addEventListener("change", () => {
+      if (!radio.checked) return;
+      state[stateKey] = normalizeValue(radio.value);
+      onChangeRender();
+    });
+  });
 }
 
 function renderLifecycleTimeSpentPerPhaseChart() {
-  const status = document.getElementById("lifecycle-days-status");
-  const root = document.getElementById("lifecycle-time-spent-per-phase-chart");
-  const context = document.getElementById("lifecycle-days-context");
-  const yearSelect = document.getElementById("lifecycle-days-year-scope");
-  const metricSelect = document.getElementById("lifecycle-days-metric-scope");
-  if (!status || !root || !context) return;
+  renderPublicAggregateScopedChart(
+    PUBLIC_AGGREGATE_CHART_CONFIG.lifecycleDays,
+    normalizeOption(state.lifecycleDaysYearScope, LIFECYCLE_YEAR_OPTIONS, "2026"),
+    normalizeMetric(state.lifecycleDaysMetricScope),
+    renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates
+  );
+}
 
-  status.hidden = true;
-  const year = LIFECYCLE_YEAR_OPTIONS.includes(state.lifecycleDaysYearScope)
-    ? state.lifecycleDaysYearScope
-    : "2026";
-  const metric = state.lifecycleDaysMetricScope === "average" ? "average" : "median";
-  if (yearSelect) yearSelect.value = year;
-  if (metricSelect) metricSelect.value = metric;
-
-  const publicAggregates = getProductCyclePublicAggregates();
-  if (!publicAggregates) {
-    status.hidden = false;
-    status.textContent = "No lifecycle aggregates found in product-cycle-snapshot.json.";
-    clearChartContainer("lifecycle-time-spent-per-phase-chart");
-    return;
-  }
-  renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggregates, year, metric);
+function renderPublicAggregateScopedChart(config, value, metric, renderWithAggregates) {
+  syncSelectValue(config.valueSelectId, value);
+  syncSelectValue(config.metricSelectId, metric);
+  withPublicAggregates({
+    statusId: config.statusId,
+    contextId: config.contextId,
+    containerId: config.containerId,
+    missingMessage: config.missingMessage,
+    onReady: ({ publicAggregates }) => renderWithAggregates(publicAggregates, value, metric)
+  });
 }
 
 function renderDevelopmentTimeVsUatTimeChart() {
   const status = document.getElementById("management-status");
-  const root = document.getElementById("development-time-vs-uat-time-chart");
   const context = document.getElementById("management-context");
-  if (!status || !root || !context) return;
+  if (!status || !context) return;
 
   status.hidden = true;
 
   const scope = state.managementUatScope === "bugs_only" ? "bugs_only" : "all";
-  const scopeSelect = document.getElementById("management-uat-scope");
-  if (scopeSelect) scopeSelect.value = scope;
+  syncSelectValue("management-uat-scope", scope);
   const flowVariants = state.snapshot?.kpis?.broadcast?.flow_by_priority_variants;
   const scopedFlow = flowVariants && typeof flowVariants === "object" ? flowVariants[scope] : null;
   const flow = scopedFlow || state.snapshot?.kpis?.broadcast?.flow_by_priority;
@@ -638,7 +576,7 @@ function renderDevelopmentTimeVsUatTimeChart() {
   }
 
   const bands = ["highest", "high", "medium"];
-  const baseLabels = ["Highest", "High", "Medium"];
+  const labels = ["Highest", "High", "Medium"];
   const themeColors = getThemeColors();
   const devMedian = readFlowMetricByBands(flow, bands, "median_dev_days");
   const uatMedian = readFlowMetricByBands(flow, bands, "median_uat_days");
@@ -646,7 +584,6 @@ function renderDevelopmentTimeVsUatTimeChart() {
   const uatAvg = readFlowMetricByBands(flow, bands, "avg_uat_days");
   const devCounts = bands.map((band) => toNumber(flow?.[band]?.n_dev));
   const uatCounts = bands.map((band) => toNumber(flow?.[band]?.n_uat));
-  const labels = baseLabels;
   const totalFlowTickets = bands.reduce(
     (sum, band, idx) => sum + Math.max(devCounts[idx], uatCounts[idx]),
     0
@@ -658,40 +595,37 @@ function renderDevelopmentTimeVsUatTimeChart() {
 
   const rows = labels.map((label, idx) => ({
     label,
-    devMedian: metricOrZero(devMedian[idx]),
-    uatMedian: metricOrZero(uatMedian[idx]),
-    devAvg: metricOrZero(devAvg[idx]),
-    uatAvg: metricOrZero(uatAvg[idx]),
+    devMedian: toNumber(devMedian[idx]),
+    uatMedian: toNumber(uatMedian[idx]),
+    devAvg: toNumber(devAvg[idx]),
+    uatAvg: toNumber(uatAvg[idx]),
     devCount: devCounts[idx],
     uatCount: uatCounts[idx]
   }));
 
-  const yValues = [...devMedian, ...uatMedian].filter((value) => Number.isFinite(value));
+  const yValues = [...devMedian, ...uatMedian].filter(Number.isFinite);
   const variantCandidates = [
     flowVariants?.all,
     flowVariants?.bugs_only,
     state.snapshot?.kpis?.broadcast?.flow_by_priority
   ].filter((candidate) => candidate && typeof candidate === "object");
-  const variantYValues = [];
-  for (const candidate of variantCandidates) {
-    for (const band of ["medium", "high", "highest"]) {
-      const dev = candidate?.[band]?.median_dev_days;
-      const uat = candidate?.[band]?.median_uat_days;
-      if (isFiniteNumber(dev)) variantYValues.push(dev);
-      if (isFiniteNumber(uat)) variantYValues.push(uat);
-    }
-  }
+  const variantYValues = variantCandidates.flatMap((candidate) =>
+    ["medium", "high", "highest"].flatMap((band) =>
+      [candidate?.[band]?.median_dev_days, candidate?.[band]?.median_uat_days].filter(Number.isFinite)
+    )
+  );
   const maxY = [...yValues, ...variantYValues].length
     ? Math.max(...yValues, ...variantYValues)
     : 1;
   const paddedMaxY = Math.max(1, Math.ceil(maxY * 1.12));
 
-  if (!window.DashboardCharts?.renderDevelopmentTimeVsUatTimeChart) {
-    status.hidden = false;
-    status.textContent = "Management chart unavailable: Recharts renderer missing.";
-    return;
-  }
-  window.DashboardCharts.renderDevelopmentTimeVsUatTimeChart({
+  const renderChart = getRenderer(
+    "management-status",
+    "renderDevelopmentTimeVsUatTimeChart",
+    "Management chart unavailable: Recharts renderer missing."
+  );
+  if (!renderChart) return;
+  renderChart({
     containerId: "development-time-vs-uat-time-chart",
     rows,
     colors: themeColors,
@@ -725,22 +659,41 @@ async function loadSnapshot() {
       const message = `Failed to load product-cycle-snapshot.json: HTTP ${productCycleResponse.status}`;
       setStatusMessageForIds(["product-cycle-status", "lifecycle-days-status"], message);
     }
-    bindCompositionTeamScopeToggle();
-    bindManagementUatScopeToggle();
-    bindProductCycleControls();
-    bindLifecycleDaysControls();
-    setLastUpdatedSubtitles(state.snapshot);
-    setProductCycleUpdatedSubtitles(state.productCycle, state.snapshot?.updatedAt);
-    if (state.mode !== "composition") {
-      renderBugTrendAcrossTeamsChart();
-    }
-    if (state.mode !== "trend") {
-      renderBugCompositionByPriorityChart();
-    }
-    renderUatOpenByPriorityChart();
-    renderDevelopmentTimeVsUatTimeChart();
-    renderCycleTimeParkingLotToDoneChart();
-    renderLifecycleTimeSpentPerPhaseChart();
+    [
+      ["composition-team-scope", "compositionTeamScope", (value) => value || "bc", renderBugCompositionByPriorityChart],
+      ["management-uat-scope", "managementUatScope", (value) => (value === "bugs_only" ? "bugs_only" : "all"), renderDevelopmentTimeVsUatTimeChart],
+      ["product-cycle-effort-scope", "productCycleEffortScope", (value) => normalizeOption(value, PRODUCT_CYCLE_EFFORT_SCOPE_OPTIONS, "all"), renderCycleTimeParkingLotToDoneChart],
+      ["product-cycle-metric-scope", "productCycleMetricScope", normalizeMetric, renderCycleTimeParkingLotToDoneChart],
+      ["lifecycle-days-year-scope", "lifecycleDaysYearScope", (value) => normalizeOption(value, LIFECYCLE_YEAR_OPTIONS, "2026"), renderLifecycleTimeSpentPerPhaseChart],
+      ["lifecycle-days-metric-scope", "lifecycleDaysMetricScope", normalizeMetric, renderLifecycleTimeSpentPerPhaseChart]
+    ].forEach(([selectId, stateKey, normalizeValue, onChangeRender]) =>
+      bindStateSelect(selectId, stateKey, normalizeValue, onChangeRender)
+    );
+    bindRadioState("product-cycle-window-scope", "productCycleWindowScope", normalizeProductCycleWindow, renderCycleTimeParkingLotToDoneChart);
+    setTextForIds(LAST_UPDATED_IDS, `Last updated: ${formatUpdatedAt(state.snapshot?.updatedAt)}`);
+    setTextForIds(
+      PRODUCT_CYCLE_UPDATED_IDS,
+      `Last updated: ${formatUpdatedAt(state.productCycle?.generatedAt || state.snapshot?.updatedAt)}`
+    );
+    [
+      {
+        skipMode: "composition",
+        run: () =>
+          renderSnapshotChart({
+            statusId: "trend-status",
+            rendererName: "renderBugTrendAcrossTeamsChart",
+            missingMessage: "Trend chart unavailable: Recharts did not load. Check local script paths.",
+            containerId: "bug-trend-chart"
+          })
+      },
+      { skipMode: "trend", run: renderBugCompositionByPriorityChart },
+      { run: renderUatOpenByPriorityChart },
+      { run: renderDevelopmentTimeVsUatTimeChart },
+      { run: renderCycleTimeParkingLotToDoneChart },
+      { run: renderLifecycleTimeSpentPerPhaseChart }
+    ].forEach(({ skipMode, run }) => {
+      if (!skipMode || state.mode !== skipMode) run();
+    });
   } catch (error) {
     const message = `Failed to load backlog-snapshot.json: ${
       error instanceof Error ? error.message : String(error)

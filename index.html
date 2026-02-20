@@ -68,10 +68,13 @@
       </section>
 
       <section id="product-cycle-panel" class="panel" aria-label="Product cycle time by team">
-        <h2>Cycle time: leaving parking lot to done</h2>
+        <h2 id="product-cycle-title">Cycle time: leaving parking lot to done</h2>
         <p id="product-cycle-context" class="panel-subtitle">--</p>
         <p id="product-cycle-updated" class="panel-subtitle">Last updated: --</p>
         <div class="management-toggle-row">
+          <span>Window</span>
+          <label><input type="radio" name="product-cycle-window-scope" value="lead" /> Lead time</label>
+          <label><input type="radio" name="product-cycle-window-scope" value="cycle" checked /> Cycle time</label>
           <label for="product-cycle-effort-scope">Effort</label>
           <select id="product-cycle-effort-scope">
             <option value="all">All</option>

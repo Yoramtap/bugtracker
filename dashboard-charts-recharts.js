@@ -18,48 +18,31 @@
     XAxis,
     YAxis,
     Tooltip,
-    Legend,
-    Cell
+    Legend
   } = Recharts;
 
-  const TEAM_CONFIG = [
-    { key: "api", label: "API" },
-    { key: "legacy", label: "Legacy FE" },
-    { key: "react", label: "React FE" },
-    { key: "bc", label: "BC" }
-  ];
-  const PRIORITY_CONFIG = [
-    { key: "highest", label: "Highest" },
-    { key: "high", label: "High" },
-    { key: "medium", label: "Medium" },
-    { key: "low", label: "Low" },
-    { key: "lowest", label: "Lowest" }
-  ];
+  const TEAM_CONFIG = [{ key: "api", label: "API" }, { key: "legacy", label: "Legacy FE" }, { key: "react", label: "React FE" }, { key: "bc", label: "BC" }];
+  const PRIORITY_CONFIG = [{ key: "highest", label: "Highest" }, { key: "high", label: "High" }, { key: "medium", label: "Medium" }, { key: "low", label: "Low" }, { key: "lowest", label: "Lowest" }];
   const PRIORITY_STACK_ORDER = [...PRIORITY_CONFIG].reverse();
   const PRIORITY_LABELS = PRIORITY_CONFIG.reduce((acc, item) => {
     acc[item.key] = item.label;
     return acc;
   }, {});
-  const BAR_LAYOUT = {
-    categoryGap: "18%",
-    groupGap: 2,
-    denseMax: 12,
-    normalMax: 22,
-    wideMax: 28
-  };
-  const CHART_HEIGHTS = {
-    standard: 460,
-    dense: 560
-  };
+  const BAR_LAYOUT = { categoryGap: "18%", groupGap: 2, denseMax: 12, normalMax: 22 };
+  const CHART_HEIGHTS = { standard: 460, dense: 560 };
+  const BAR_CURSOR_FILL = "rgba(31,51,71,0.12)";
+  const TREND_TEAM_LINES = [
+    ["api", "API", "api"],
+    ["legacy", "Legacy FE", "legacy"],
+    ["react", "React FE", "react"],
+    ["bc", "BC", "bc"]
+  ];
+  const TREND_LONG_LINES = [
+    { dataKey: "bcLong30", name: "BC long-standing (30d+)", stroke: "#8e9aaa", strokeDasharray: "4 3" },
+    { dataKey: "bcLong60", name: "BC long-standing (60d+)", stroke: "#6f7f92", strokeDasharray: "7 4" }
+  ];
 
-  const roots = {
-    trend: null,
-    composition: null,
-    uat: null,
-    management: null,
-    productCycle: null,
-    lifecycleDays: null
-  };
+  const roots = { trend: null, composition: null, uat: null, management: null, productCycle: null, lifecycleDays: null };
   const rootContainerIds = {};
 
   function toNumber(value) {
@@ -105,6 +88,16 @@
     if (container) container.innerHTML = "";
   }
 
+  function renderWithRoot(kind, containerId, canRender, renderFn) {
+    const root = ensureRoot(kind, containerId);
+    if (!root) return;
+    if (!canRender) {
+      root.render(null);
+      return;
+    }
+    renderFn(root);
+  }
+
   function buildTrendData(snapshot) {
     const points = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
     return points.map((point) => {
@@ -120,13 +113,7 @@
         react: totalForPoint(react),
         bc: totalForPoint(bc),
         bcLong30: toNumber(bc.longstanding_30d_plus),
-        bcLong60: toNumber(bc.longstanding_60d_plus),
-        breakdown: {
-          api,
-          legacy,
-          react,
-          bc
-        }
+        bcLong60: toNumber(bc.longstanding_60d_plus)
       };
     });
   }
@@ -139,12 +126,11 @@
 
     const rows = [];
     for (const point of points) {
-      selectedTeams.forEach((team, teamIndex) => {
+      selectedTeams.forEach((team) => {
         const teamPoint = point?.[team.key] || {};
         const shortDate = formatDateShort(point.date);
         rows.push({
           bucketLabel: isSingleTeam ? shortDate : `${shortDate} • ${team.label}`,
-          tickLabel: isSingleTeam ? shortDate : teamIndex === 0 ? shortDate : "",
           date: point.date,
           team: team.label,
           highest: toNumber(teamPoint.highest),
@@ -159,159 +145,48 @@
     return rows;
   }
 
-  function TrendTooltipContent(colors) {
-    return function renderTrendTooltip({ active, payload }) {
+  function makeTooltipLine(key, text, colors, { margin = "2px 0", fontSize = "12px", fontWeight, color } = {}) {
+    const style = { margin, color: color || colors.text };
+    if (fontSize) style.fontSize = fontSize;
+    if (fontWeight) style.fontWeight = fontWeight;
+    return h("p", { key, style }, text);
+  }
+
+  function trendLineDefs(colors) {
+    return [
+      ...TREND_TEAM_LINES.map(([dataKey, name, colorKey]) => ({
+        dataKey,
+        name,
+        stroke: colors.teams[colorKey],
+        strokeWidth: 2.5,
+        dot: { r: 3 }
+      })),
+      ...TREND_LONG_LINES.map((line) => ({
+        ...line,
+        strokeWidth: 2,
+        dot: { r: 3 }
+      }))
+    ];
+  }
+
+  function tooltipTitleLine(key, text, colors) {
+    return makeTooltipLine(key, text, colors, { margin: "0 0 6px", fontWeight: 600, fontSize: null });
+  }
+
+  function createTooltipContent(colors, buildLines) {
+    return function renderTooltip({ active, payload }) {
       if (!active || !Array.isArray(payload) || payload.length === 0) return null;
       const row = payload[0]?.payload || {};
-
-      const blocks = [
-        h(
-          "p",
-          {
-            key: "date",
-            style: { margin: "0 0 6px", fontWeight: 600, color: colors.text }
-          },
-          row.date || ""
-        )
-      ];
-
-      for (const item of payload) {
-        blocks.push(
-          h(
-            "p",
-            {
-              key: item.dataKey,
-              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
-            },
-            `${item.name}: ${toNumber(item.value)}`
-          )
-        );
-      }
-
-      return renderTooltipCard(colors, blocks);
+      return renderTooltipCard(colors, buildLines(row, payload));
     };
   }
 
-  function CompositionTooltipContent(colors) {
-    return function renderCompositionTooltip({ active, payload }) {
-      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
-      const row = payload[0]?.payload || {};
-
-      const blocks = [
-        h(
-          "p",
-          {
-            key: "title",
-            style: { margin: "0 0 6px", fontWeight: 600, color: colors.text }
-          },
-          `${row.team || ""} · ${row.date || ""}`
-        ),
-        h(
-          "p",
-          {
-            key: "total",
-            style: { margin: "0 0 6px", fontSize: "12px", color: colors.text }
-          },
-          `Total: ${toNumber(row.total)}`
-        )
-      ];
-
-      for (const item of payload) {
-        blocks.push(
-          h(
-            "p",
-            {
-              key: item.dataKey,
-              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
-            },
-            `${item.name}: ${toNumber(item.value)}`
-          )
-        );
-      }
-
-      return renderTooltipCard(colors, blocks);
-    };
-  }
-
-  function UatAgingTooltipContent(colors, priorities) {
-    return function renderUatAgingTooltip({ active, payload }) {
-      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
-      const row = payload[0]?.payload || {};
-      const blocks = [
-        h(
-          "p",
-          {
-            key: "title",
-            style: { margin: "0 0 6px", fontWeight: 600, color: colors.text }
-          },
-          row.bucketLabel || ""
-        ),
-        h(
-          "p",
-          {
-            key: "total",
-            style: { margin: "0 0 6px", fontSize: "12px", color: colors.text }
-          },
-          `Total: ${toNumber(row.total)}`
-        )
-      ];
-
-      for (const priority of priorities) {
-        const value = toNumber(row[priority.key]);
-        if (value <= 0) continue;
-        blocks.push(
-          h(
-            "p",
-            {
-              key: priority.key,
-              style: {
-                margin: "2px 0",
-                color: colors.priorities[priority.key] || colors.text,
-                fontSize: "12px"
-              }
-            },
-            `${PRIORITY_LABELS[priority.key] || priority.key}: ${value}`
-          )
-        );
-      }
-
-      return renderTooltipCard(colors, blocks);
-    };
-  }
 
   function toggleLegendKey(prevSet, key) {
     const next = new Set(prevSet);
     if (next.has(key)) next.delete(key);
     else next.add(key);
     return next;
-  }
-
-  function legendFormatter(hiddenKeys) {
-    return (value, entry) =>
-      h(
-        "span",
-        {
-          style: {
-            color: "var(--text, #1f3347)",
-            opacity: hiddenKeys.has(entry?.dataKey) ? 0.45 : 1,
-            textDecoration: hiddenKeys.has(entry?.dataKey) ? "line-through" : "none"
-          }
-        },
-        value
-      );
-  }
-
-  function getLegendKey(entry) {
-    return entry?.dataKey || entry?.payload?.dataKey || null;
-  }
-
-  function buildLegendPayload(defs, type) {
-    return defs.map((item) => ({
-      value: item.name,
-      type,
-      color: item.stroke || item.fill,
-      dataKey: item.dataKey
-    }));
   }
 
   function renderTooltipCard(colors, blocks) {
@@ -331,19 +206,85 @@
     );
   }
 
-  function buildLegendProps({ colors, payload, hiddenKeys, setHiddenKeys }) {
+  function renderLegendNode({ colors, defs, type, hiddenKeys, setHiddenKeys }) {
+    return h(
+      Legend,
+      {
+        verticalAlign: "top",
+        height: 36,
+        wrapperStyle: { color: colors.text, cursor: "pointer" },
+        payload: defs.map((item) => ({
+          value: item.name,
+          type,
+          color: item.stroke || item.fill,
+          dataKey: item.dataKey
+        })),
+        onClick: (entry) => {
+          const key = entry?.dataKey || entry?.payload?.dataKey || null;
+          if (!key) return;
+          setHiddenKeys((prev) => toggleLegendKey(prev, key));
+        },
+        formatter: (value, entry) =>
+          h(
+            "span",
+            {
+              style: {
+                color: "var(--text, #1f3347)",
+                opacity: hiddenKeys.has(entry?.dataKey) ? 0.45 : 1,
+                textDecoration: hiddenKeys.has(entry?.dataKey) ? "line-through" : "none"
+              }
+            },
+            value
+          )
+      }
+    );
+  }
+
+  function axisTick(colors) {
+    return { fill: colors.text, fontSize: 11 };
+  }
+
+  function baseYAxisProps(colors, domain = null) {
     return {
-      verticalAlign: "top",
-      height: 36,
-      wrapperStyle: { color: colors.text, cursor: "pointer" },
-      payload,
-      onClick: (entry) => {
-        const key = getLegendKey(entry);
-        if (!key) return;
-        setHiddenKeys((prev) => toggleLegendKey(prev, key));
-      },
-      formatter: legendFormatter(hiddenKeys)
+      stroke: colors.text,
+      tick: axisTick(colors),
+      allowDecimals: false,
+      ...(domain ? { domain } : {})
     };
+  }
+
+  function renderBarChartShell({
+    rows,
+    colors,
+    height,
+    margin,
+    layout,
+    xAxisProps,
+    yAxisProps,
+    tooltipProps,
+    legendNode,
+    barNodes
+  }) {
+    return h(
+      ResponsiveContainer,
+      { width: "100%", height },
+      h(
+        BarChart,
+        {
+          data: rows,
+          margin,
+          barCategoryGap: layout.categoryGap,
+          barGap: BAR_LAYOUT.groupGap,
+          maxBarSize: layout.maxBarSize
+        },
+        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
+        h(XAxis, xAxisProps),
+        h(YAxis, yAxisProps),
+        h(Tooltip, tooltipProps),
+        legendNode,
+        ...barNodes
+      )
+    );
   }
 
   function computeYUpper(values, { min = 1, pad = 1.12 } = {}) {
@@ -352,12 +293,6 @@
     );
     if (finiteValues.length === 0) return min;
     return Math.max(min, Math.ceil(Math.max(...finiteValues) * pad));
-  }
-
-  function groupedCategoryGap(rowsCount) {
-    if (rowsCount <= 8) return "2%";
-    if (rowsCount <= 14) return "8%";
-    return BAR_LAYOUT.categoryGap;
   }
 
   function groupedBarGeometry(rowsCount, seriesCount = 2) {
@@ -380,11 +315,7 @@
     };
   }
 
-  function activeBarStyle(_colors) {
-    return {
-      fillOpacity: 1
-    };
-  }
+  const ACTIVE_BAR_STYLE = { fillOpacity: 1 };
 
   function barBaseStyle(colors) {
     return {
@@ -404,52 +335,7 @@
 
   function TrendChartView({ rows, colors, yUpper }) {
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
-    const lineDefs = [
-      {
-        dataKey: "api",
-        name: "API",
-        stroke: colors.teams.api,
-        strokeWidth: 2.5,
-        dot: { r: 3 }
-      },
-      {
-        dataKey: "legacy",
-        name: "Legacy FE",
-        stroke: colors.teams.legacy,
-        strokeWidth: 2.5,
-        dot: { r: 3 }
-      },
-      {
-        dataKey: "react",
-        name: "React FE",
-        stroke: colors.teams.react,
-        strokeWidth: 2.5,
-        dot: { r: 3 }
-      },
-      {
-        dataKey: "bc",
-        name: "BC",
-        stroke: colors.teams.bc,
-        strokeWidth: 2.5,
-        dot: { r: 3 }
-      },
-      {
-        dataKey: "bcLong30",
-        name: "BC long-standing (30d+)",
-        stroke: "#8e9aaa",
-        strokeDasharray: "4 3",
-        strokeWidth: 2,
-        dot: { r: 3 }
-      },
-      {
-        dataKey: "bcLong60",
-        name: "BC long-standing (60d+)",
-        stroke: "#6f7f92",
-        strokeDasharray: "7 4",
-        strokeWidth: 2,
-        dot: { r: 3 }
-      }
-    ];
+    const lineDefs = trendLineDefs(colors);
 
     return h(
       ResponsiveContainer,
@@ -473,18 +359,15 @@
           domain: [0, yUpper]
         }),
         h(Tooltip, {
-          content: TrendTooltipContent(colors),
+          content: createTooltipContent(colors, (row, payload) => [
+            tooltipTitleLine("date", row.date || "", colors),
+            ...payload.map((item) =>
+              makeTooltipLine(item.dataKey, `${item.name}: ${toNumber(item.value)}`, colors)
+            )
+          ]),
           cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
         }),
-        h(
-          Legend,
-          buildLegendProps({
-            colors,
-            payload: buildLegendPayload(lineDefs, "line"),
-            hiddenKeys,
-            setHiddenKeys
-          })
-        ),
+        renderLegendNode({ colors, defs: lineDefs, type: "line", hiddenKeys, setHiddenKeys }),
         lineDefs.map((line) =>
           h(Line, {
             key: line.dataKey,
@@ -503,403 +386,186 @@
     );
   }
 
+  function GroupedBarChartView({
+    rows,
+    defs,
+    colors,
+    yUpper,
+    xAxisProps,
+    tooltipProps,
+    height = CHART_HEIGHTS.standard,
+    margin = { top: 18, right: 20, bottom: 52, left: 20 }
+  }) {
+    const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
+    const geometry = groupedBarGeometry(rows.length, defs.length);
+    const barNodes = defs.map((def) =>
+      h(Bar, {
+        key: def.dataKey,
+        dataKey: def.dataKey,
+        name: def.name,
+        fill: def.fill,
+        barSize: geometry.barSize,
+        ...barBaseStyle(colors),
+        activeBar: ACTIVE_BAR_STYLE,
+        hide: hiddenKeys.has(def.dataKey)
+      })
+    );
+    return renderBarChartShell({
+      rows,
+      colors,
+      height,
+      margin,
+      layout: geometry,
+      xAxisProps: {
+        ...xAxisProps,
+        stroke: colors.text,
+        tick: axisTick(colors)
+      },
+      yAxisProps: baseYAxisProps(colors, yUpper ? [0, yUpper] : null),
+      tooltipProps,
+      legendNode: renderLegendNode({ colors, defs, type: "rect", hiddenKeys, setHiddenKeys }),
+      barNodes
+    });
+  }
+
+  function renderGroupedBars(kind, containerId, canRender, props) {
+    renderWithRoot(kind, containerId, canRender, (root) => {
+      root.render(h(GroupedBarChartView, props));
+    });
+  }
+
   function CompositionChartView({ rows, colors, scope }) {
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
     const isAllTeams = scope === "all";
-    const categoryGap = isAllTeams ? BAR_LAYOUT.categoryGap : groupedCategoryGap(rows.length);
+    const categoryGap =
+      isAllTeams || rows.length > 14 ? BAR_LAYOUT.categoryGap : rows.length <= 8 ? "2%" : "8%";
     const singleTeamMaxBarSize = rows.length <= 12 ? 34 : rows.length <= 20 ? 28 : BAR_LAYOUT.normalMax;
     const priorityDefs = PRIORITY_STACK_ORDER.map((priority) => ({
       dataKey: priority.key,
       name: priority.label,
       fill: colors.priorities[priority.key]
     }));
-
-    return h(
-      ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.dense },
-      h(
-        BarChart,
-        {
-          data: rows,
-          margin: { top: 18, right: 20, bottom: 52, left: 20 },
-          barCategoryGap: categoryGap,
-          barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: isAllTeams ? BAR_LAYOUT.denseMax : singleTeamMaxBarSize
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "bucketLabel",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          angle: isAllTeams ? -90 : -25,
-          textAnchor: "end",
-          interval: 0,
-          minTickGap: isAllTeams ? 0 : 16,
-          height: isAllTeams ? 92 : 56,
-          tickFormatter: (value, index) => {
-            if (!isAllTeams) return value;
-            const row = rows[index] || {};
-            const team = row.team || "";
-            if (!team) return "";
-            return team;
-          }
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          allowDecimals: false
-        }),
-        h(Tooltip, {
-          content: CompositionTooltipContent(colors),
-          cursor: { fill: "rgba(31,51,71,0.12)" }
-        }),
-        h(
-          Legend,
-          buildLegendProps({
-            colors,
-            payload: buildLegendPayload(priorityDefs, "rect"),
-            hiddenKeys,
-            setHiddenKeys
-          })
-        ),
-        priorityDefs.map((priority) =>
-          h(Bar, {
-            key: priority.dataKey,
-            dataKey: priority.dataKey,
-            name: priority.name,
-            stackId: "backlog",
-            fill: priority.fill,
-            ...barBaseStyle(colors),
-            activeBar: activeBarStyle(colors),
-            hide: hiddenKeys.has(priority.dataKey),
-            isAnimationActive: false
-          })
-        )
-      )
+    const barNodes = priorityDefs.map((priority) =>
+      h(Bar, {
+        key: priority.dataKey,
+        dataKey: priority.dataKey,
+        name: priority.name,
+        stackId: "backlog",
+        fill: priority.fill,
+        ...barBaseStyle(colors),
+        activeBar: ACTIVE_BAR_STYLE,
+        hide: hiddenKeys.has(priority.dataKey),
+        isAnimationActive: false
+      })
     );
-  }
-
-  function UatAgingChartView({ chartRows, activePriorities, colors }) {
-    const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
-    const priorityDefs = activePriorities.map((priority) => ({
-      dataKey: priority.key,
-      name: priority.label,
-      fill: colors.priorities[priority.key]
-    }));
-    const geometry = groupedBarGeometry(chartRows.length, priorityDefs.length);
-
-    return h(
-      ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.standard },
-      h(
-        BarChart,
-        {
-          data: chartRows,
-          margin: { top: 18, right: 20, bottom: 52, left: 20 },
-          barCategoryGap: geometry.categoryGap,
-          barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: geometry.maxBarSize
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "bucketLabel",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          interval: 0,
-          height: 44
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          allowDecimals: false
-        }),
-        h(Tooltip, {
-          content: UatAgingTooltipContent(colors, activePriorities),
-          cursor: { fill: "rgba(31,51,71,0.12)" }
-        }),
-        h(
-          Legend,
-          buildLegendProps({
-            colors,
-            payload: buildLegendPayload(priorityDefs, "rect"),
-            hiddenKeys,
-            setHiddenKeys
-          })
-        ),
-        priorityDefs.map((priority) =>
-          h(Bar, {
-            key: priority.dataKey,
-            dataKey: priority.dataKey,
-            name: priority.name,
-            fill: priority.fill,
-            barSize: geometry.barSize,
-            ...barBaseStyle(colors),
-            activeBar: activeBarStyle(colors),
-            hide: hiddenKeys.has(priority.dataKey)
-          })
-        )
-      )
-    );
-  }
-
-  function ManagementTooltipContent(colors) {
-    return function renderManagementTooltip({ active, payload }) {
-      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
-      const row = payload[0]?.payload || {};
-      const blocks = [
-        h(
-          "p",
-          { key: "label", style: { margin: "0 0 6px", fontWeight: 600, color: colors.text } },
-          row.label || ""
-        )
-      ];
-      for (const item of payload) {
-        const isDev = item?.dataKey === "devMedian";
-        const count = isDev ? toNumber(row.devCount) : toNumber(row.uatCount);
-        const avg = isDev ? toNumber(row.devAvg) : toNumber(row.uatAvg);
-        blocks.push(
-          h(
-            "p",
-            {
-              key: item.dataKey,
-              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
-            },
-            `${item.name}: ${toNumber(item.value).toFixed(2)} days (avg ${avg.toFixed(2)}, n ${count})`
+    return renderBarChartShell({
+      rows,
+      colors,
+      height: CHART_HEIGHTS.dense,
+      margin: { top: 18, right: 20, bottom: 52, left: 20 },
+      layout: { categoryGap, maxBarSize: isAllTeams ? BAR_LAYOUT.denseMax : singleTeamMaxBarSize },
+      xAxisProps: {
+        dataKey: "bucketLabel",
+        stroke: colors.text,
+        tick: axisTick(colors),
+        angle: isAllTeams ? -90 : -25,
+        textAnchor: "end",
+        interval: 0,
+        minTickGap: isAllTeams ? 0 : 16,
+        height: isAllTeams ? 92 : 56,
+        tickFormatter: (value, index) => {
+          if (!isAllTeams) return value;
+          const row = rows[index] || {};
+          const team = row.team || "";
+          return team || "";
+        }
+      },
+      yAxisProps: baseYAxisProps(colors),
+      tooltipProps: {
+        content: createTooltipContent(colors, (row, payload) => [
+          tooltipTitleLine("title", `${row.team || ""} · ${row.date || ""}`, colors),
+          makeTooltipLine("total", `Total: ${toNumber(row.total)}`, colors, { margin: "0 0 6px" }),
+          ...payload.map((item) =>
+            makeTooltipLine(item.dataKey, `${item.name}: ${toNumber(item.value)}`, colors)
           )
-        );
-      }
-      return renderTooltipCard(colors, blocks);
-    };
-  }
-
-  function ManagementChartView({ rows, colors, yUpper, devColor, uatColor }) {
-    const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
-    const defs = [
-      { dataKey: "devMedian", name: "Median Dev", fill: devColor },
-      { dataKey: "uatMedian", name: "Median UAT", fill: uatColor }
-    ];
-    const geometry = groupedBarGeometry(rows.length, defs.length);
-    return h(
-      ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.standard },
-      h(
-        BarChart,
-        {
-          data: rows,
-          margin: { top: 18, right: 20, bottom: 52, left: 20 },
-          barCategoryGap: geometry.categoryGap,
-          barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: geometry.maxBarSize
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "label",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          interval: 0,
-          height: 40
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          allowDecimals: false,
-          domain: [0, yUpper]
-        }),
-        h(Tooltip, { content: ManagementTooltipContent(colors), cursor: { fill: "rgba(31,51,71,0.12)" } }),
-        h(
-          Legend,
-          buildLegendProps({
-            colors,
-            payload: buildLegendPayload(defs, "rect"),
-            hiddenKeys,
-            setHiddenKeys
-          })
-        ),
-        defs.map((def) =>
-          h(Bar, {
-            key: def.dataKey,
-            dataKey: def.dataKey,
-            name: def.name,
-            fill: def.fill,
-            barSize: geometry.barSize,
-            ...barBaseStyle(colors),
-            activeBar: activeBarStyle(colors),
-            hide: hiddenKeys.has(def.dataKey)
-          })
-        )
-      )
-    );
-  }
-
-  function MetricSeriesTooltipContent(colors, metricLabel) {
-    return function renderMetricSeriesTooltip({ active, payload }) {
-      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
-      const row = payload[0]?.payload || {};
-      const blocks = [
-        h(
-          "p",
-          { key: "team", style: { margin: "0 0 6px", fontWeight: 600, color: colors.text } },
-          row.team || ""
-        )
-      ];
-      for (const item of payload) {
-        const key = item?.dataKey;
-        const meta = row?.[`meta_${key}`] || {};
-        blocks.push(
-          h(
-            "p",
-            {
-              key,
-              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
-            },
-            `${item.name}: ${toNumber(item.value).toFixed(2)} days (${metricLabel}), n ${toNumber(
-              meta.n
-            )}, median ${toNumber(meta.median).toFixed(2)}, avg ${toNumber(meta.average).toFixed(2)}`
-          )
-        );
-      }
-      return renderTooltipCard(colors, blocks);
-    };
-  }
-
-  function MultiSeriesBarChartView({ rows, seriesDefs, colors, yUpper, metricLabel, cellColorAccessor }) {
-    const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
-    const geometry = groupedBarGeometry(rows.length, seriesDefs.length);
-    return h(
-      ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.dense },
-      h(
-        BarChart,
-        {
-          data: rows,
-          margin: { top: 30, right: 20, bottom: 52, left: 20 },
-          barCategoryGap: geometry.categoryGap,
-          barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: geometry.maxBarSize
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "team",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          interval: 0,
-          height: 40
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          allowDecimals: false,
-          domain: [0, yUpper]
-        }),
-        h(Tooltip, {
-          content: MetricSeriesTooltipContent(colors, metricLabel),
-          cursor: { fill: "rgba(31,51,71,0.12)" }
-        }),
-        h(
-          Legend,
-          buildLegendProps({
-            colors,
-            payload: buildLegendPayload(
-              seriesDefs.map((series) => ({
-                dataKey: series.key,
-                name: series.name,
-                fill: series.color
-              })),
-              "rect"
-            ),
-            hiddenKeys,
-            setHiddenKeys
-          })
-        ),
-        seriesDefs.map((series) =>
-          h(
-            Bar,
-            {
-              key: series.key,
-              dataKey: series.key,
-              name: series.name,
-              hide: hiddenKeys.has(series.key),
-              fill: series.color,
-              barSize: geometry.barSize,
-              ...barBaseStyle(colors),
-              activeBar: activeBarStyle(colors)
-            },
-            typeof cellColorAccessor === "function"
-              ? rows.map((row, index) =>
-                  h(Cell, {
-                    key: `${series.key}-${index}`,
-                    fill: cellColorAccessor(row, series)
-                  })
-                )
-              : null
-          )
-        )
-      )
-    );
+        ]),
+        cursor: { fill: BAR_CURSOR_FILL }
+      },
+      legendNode: renderLegendNode({ colors, defs: priorityDefs, type: "rect", hiddenKeys, setHiddenKeys }),
+      barNodes
+    });
   }
 
   function renderBugTrendAcrossTeamsChart({ containerId, snapshot, colors }) {
-    const root = ensureRoot("trend", containerId);
-    if (!root) return;
-
     const rows = buildTrendData(snapshot);
-    if (rows.length === 0) {
-      root.render(null);
-      return;
-    }
-
-    const yUpper = computeYUpper(
-      [
-        ...rows.map((row) => row.api),
-        ...rows.map((row) => row.legacy),
-        ...rows.map((row) => row.react),
-        ...rows.map((row) => row.bc),
-        ...rows.map((row) => row.bcLong30),
-        ...rows.map((row) => row.bcLong60)
-      ],
-      { min: 10, pad: 1.08 }
-    );
-
-    root.render(h(TrendChartView, { rows, colors, yUpper }));
+    renderWithRoot("trend", containerId, rows.length > 0, (root) => {
+      const yUpper = computeYUpper(
+        [
+          ...rows.map((row) => row.api),
+          ...rows.map((row) => row.legacy),
+          ...rows.map((row) => row.react),
+          ...rows.map((row) => row.bc),
+          ...rows.map((row) => row.bcLong30),
+          ...rows.map((row) => row.bcLong60)
+        ],
+        { min: 10, pad: 1.08 }
+      );
+      root.render(h(TrendChartView, { rows, colors, yUpper }));
+    });
   }
 
   function renderBugCompositionByPriorityChart({ containerId, snapshot, colors, scope = "bc" }) {
-    const root = ensureRoot("composition", containerId);
-    if (!root) return;
-
     const rows = buildCompositionData(snapshot, scope);
-    if (rows.length === 0) {
-      root.render(null);
-      return;
-    }
-
-    root.render(h(CompositionChartView, { rows, colors, scope }));
+    renderWithRoot("composition", containerId, rows.length > 0, (root) => {
+      root.render(h(CompositionChartView, { rows, colors, scope }));
+    });
   }
 
   function renderUatOpenByPriorityChart({ containerId, rows, priorities, colors }) {
-    const root = ensureRoot("uat", containerId);
-    if (!root) return;
-
     const chartRows = Array.isArray(rows) ? rows : [];
     const activePriorities = PRIORITY_STACK_ORDER.filter((item) =>
       Array.isArray(priorities) ? priorities.includes(item.key) : false
     );
-    if (chartRows.length === 0 || activePriorities.length === 0) {
-      root.render(null);
-      return;
-    }
-
-    root.render(h(UatAgingChartView, { chartRows, activePriorities, colors }));
+    renderGroupedBars(
+      "uat",
+      containerId,
+      chartRows.length > 0 && activePriorities.length > 0,
+      {
+        rows: chartRows,
+        defs: activePriorities.map((priority) => ({
+          dataKey: priority.key,
+          name: priority.label,
+          fill: colors.priorities[priority.key]
+        })),
+        colors,
+        xAxisProps: {
+          dataKey: "bucketLabel",
+          interval: 0,
+          height: 44
+        },
+        tooltipProps: {
+          content: createTooltipContent(colors, (row) => [
+            tooltipTitleLine("title", row.bucketLabel || "", colors),
+            makeTooltipLine("total", `Total: ${toNumber(row.total)}`, colors, { margin: "0 0 6px" }),
+            ...activePriorities.flatMap((priority) => {
+              const value = toNumber(row[priority.key]);
+              if (value <= 0) return [];
+              return makeTooltipLine(
+                priority.key,
+                `${PRIORITY_LABELS[priority.key] || priority.key}: ${value}`,
+                colors,
+                { color: colors.priorities[priority.key] || colors.text }
+              );
+            })
+          ]),
+          cursor: { fill: BAR_CURSOR_FILL }
+        }
+      }
+    );
   }
 
   function renderDevelopmentTimeVsUatTimeChart({ containerId, rows, colors, devColor, uatColor }) {
-    const root = ensureRoot("management", containerId);
-    if (!root) return;
     const chartRows = Array.isArray(rows) ? rows : [];
-    if (chartRows.length === 0) {
-      root.render(null);
-      return;
-    }
     const yUpper = computeYUpper(
       [
         ...chartRows.map((row) => toNumber(row.devMedian)),
@@ -907,62 +573,111 @@
       ],
       { min: 1, pad: 1.12 }
     );
-    root.render(h(ManagementChartView, { rows: chartRows, colors, yUpper, devColor, uatColor }));
+    renderGroupedBars("management", containerId, chartRows.length > 0, {
+      rows: chartRows,
+      defs: [
+        { dataKey: "devMedian", name: "Median Dev", fill: devColor },
+        { dataKey: "uatMedian", name: "Median UAT", fill: uatColor }
+      ],
+      colors,
+      yUpper,
+      xAxisProps: {
+        dataKey: "label",
+        interval: 0,
+        height: 40
+      },
+      tooltipProps: {
+        content: createTooltipContent(colors, (row, payload) => [
+          tooltipTitleLine("label", row.label || "", colors),
+          ...payload.map((item) => {
+            const isDev = item?.dataKey === "devMedian";
+            const count = isDev ? toNumber(row.devCount) : toNumber(row.uatCount);
+            const avg = isDev ? toNumber(row.devAvg) : toNumber(row.uatAvg);
+            return makeTooltipLine(
+              item.dataKey,
+              `${item.name}: ${toNumber(item.value).toFixed(2)} days (avg ${avg.toFixed(2)}, n ${count})`,
+              colors
+            );
+          })
+        ]),
+        cursor: { fill: BAR_CURSOR_FILL }
+      }
+    });
   }
 
-  function renderCycleTimeParkingLotToDoneChart({
+  function renderMultiSeriesBars({
+    kind,
     containerId,
     rows,
-    seriesDefs,
+    defs,
     colors,
-    metricLabel = "Median"
+    metricLabel = "Median",
+    yUpperOverride = null
   }) {
-    const root = ensureRoot("productCycle", containerId);
-    if (!root) return;
     const chartRows = Array.isArray(rows) ? rows : [];
-    const defs = Array.isArray(seriesDefs) ? seriesDefs : [];
-    if (chartRows.length === 0 || defs.length === 0) {
-      root.render(null);
-      return;
-    }
-    const yValues = defs.flatMap((series) => chartRows.map((row) => toNumber(row?.[series.key])));
-    const yUpper = computeYUpper(yValues, { min: 1, pad: 1.15 });
-    root.render(
-      h(MultiSeriesBarChartView, {
-        rows: chartRows,
-        seriesDefs: defs,
-        colors,
-        yUpper,
-        metricLabel,
-        cellColorAccessor: (row, series) => row?.[`color_${series.key}`] || series.color
-      })
-    );
-  }
-
-  function renderLifecycleTimeSpentPerPhaseChart({
-    containerId,
-    rows,
-    phaseDefs,
-    colors,
-    metricLabel = "Median"
-  }) {
-    const root = ensureRoot("lifecycleDays", containerId);
-    if (!root) return;
-    const chartRows = Array.isArray(rows) ? rows : [];
-    const defs = Array.isArray(phaseDefs) ? phaseDefs : [];
-    if (chartRows.length === 0 || defs.length === 0) {
-      root.render(null);
-      return;
-    }
-    const yValues = defs.flatMap((phase) => chartRows.map((row) => toNumber(row?.[phase.key])));
-    const yUpper = computeYUpper(yValues, { min: 1, pad: 1.15 });
-    const seriesDefs = defs.map((phase) => ({
-      key: phase.key,
-      name: phase.label,
-      color: phase.color
+    const seriesDefs = (Array.isArray(defs) ? defs : []).map((def) => ({
+      key: def.key,
+      name: def.name || def.label || def.key,
+      color: def.color
     }));
-    root.render(h(MultiSeriesBarChartView, { rows: chartRows, seriesDefs, colors, yUpper, metricLabel }));
+    const yValues = seriesDefs.flatMap((series) => chartRows.map((row) => toNumber(row?.[series.key])));
+    const yUpper =
+      Number.isFinite(yUpperOverride) && yUpperOverride > 0
+        ? Math.ceil(yUpperOverride)
+        : computeYUpper(yValues, { min: 1, pad: 1.15 });
+    renderGroupedBars(kind, containerId, chartRows.length > 0 && seriesDefs.length > 0, {
+      rows: chartRows,
+      defs: seriesDefs.map((series) => ({
+        dataKey: series.key,
+        name: series.name,
+        fill: series.color
+      })),
+      colors,
+      yUpper,
+      height: CHART_HEIGHTS.dense,
+      margin: { top: 30, right: 20, bottom: 52, left: 20 },
+      xAxisProps: {
+        dataKey: "team",
+        interval: 0,
+        height: 40
+      },
+      tooltipProps: {
+        content: createTooltipContent(colors, (row, payload) => [
+          tooltipTitleLine("team", row.team || "", colors),
+          ...payload.map((item) => {
+            const key = item?.dataKey;
+            const meta = row?.[`meta_${key}`] || {};
+            return makeTooltipLine(
+              key,
+              `${item.name}: ${toNumber(item.value).toFixed(2)} days (${metricLabel}), n ${toNumber(
+                meta.n
+              )}, median ${toNumber(meta.median).toFixed(2)}, avg ${toNumber(meta.average).toFixed(2)}`,
+              colors
+            );
+          })
+        ]),
+        cursor: { fill: BAR_CURSOR_FILL }
+      }
+    });
   }
+
+  function renderNamedMultiSeriesBars(kind, defs) {
+    return ({ containerId, rows, colors, metricLabel = "Median", yUpperOverride = null }) =>
+      renderMultiSeriesBars({
+        kind,
+        containerId,
+        rows,
+        defs,
+        colors,
+        metricLabel,
+        yUpperOverride
+      });
+  }
+
+  const renderCycleTimeParkingLotToDoneChart = ({ seriesDefs, ...rest }) =>
+    renderNamedMultiSeriesBars("productCycle", seriesDefs)(rest);
+  const renderLifecycleTimeSpentPerPhaseChart = ({ phaseDefs, ...rest }) =>
+    renderNamedMultiSeriesBars("lifecycleDays", phaseDefs)(rest);
 
   window.DashboardCharts = {
     renderBugTrendAcrossTeamsChart,
