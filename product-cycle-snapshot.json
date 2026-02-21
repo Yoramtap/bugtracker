@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-02-21T11:21:53.064Z",
+  "generatedAt": "2026-02-21T12:06:14.958Z",
   "teams": [
     "API",
     "Frontend",
@@ -34,76 +34,76 @@
             "teams": {
               "API": {
                 "lead": {
-                  "n": 52,
-                  "median": 27.48,
-                  "average": 40.62
+                  "n": 57,
+                  "median": 27.93,
+                  "average": 43.78
                 },
                 "cycle": {
-                  "n": 41,
-                  "median": 23.03,
-                  "average": 28.22
+                  "n": 44,
+                  "median": 22.02,
+                  "average": 26.29
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 52,
-                      "median": 27.48,
-                      "average": 40.62
+                      "n": 57,
+                      "median": 27.93,
+                      "average": 43.78
                     },
                     "cycle": {
-                      "n": 41,
-                      "median": 23.03,
-                      "average": 28.22
+                      "n": 44,
+                      "median": 22.02,
+                      "average": 26.29
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 96,
-                      "median": 77.05,
-                      "average": 141.24
+                      "n": 127,
+                      "median": 117.22,
+                      "average": 159.49
                     },
                     "cycle": {
-                      "n": 50,
-                      "median": 26.89,
-                      "average": 47.16
+                      "n": 53,
+                      "median": 25.73,
+                      "average": 44.49
                     }
                   }
                 }
               },
               "Frontend": {
                 "lead": {
-                  "n": 22,
-                  "median": 25.95,
-                  "average": 56.03
+                  "n": 25,
+                  "median": 22.96,
+                  "average": 49.35
                 },
                 "cycle": {
-                  "n": 21,
-                  "median": 21.98,
-                  "average": 35.61
+                  "n": 23,
+                  "median": 15.03,
+                  "average": 32.51
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 22,
-                      "median": 25.95,
-                      "average": 56.03
+                      "n": 25,
+                      "median": 22.96,
+                      "average": 49.35
                     },
                     "cycle": {
-                      "n": 21,
-                      "median": 21.98,
-                      "average": 35.61
+                      "n": 23,
+                      "median": 15.03,
+                      "average": 32.51
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 23,
-                      "median": 26.01,
-                      "average": 56.85
+                      "n": 27,
+                      "median": 25.9,
+                      "average": 62.14
                     },
                     "cycle": {
-                      "n": 21,
-                      "median": 21.98,
-                      "average": 35.61
+                      "n": 23,
+                      "median": 15.03,
+                      "average": 32.51
                     }
                   }
                 }
@@ -111,8 +111,8 @@
               "Broadcast": {
                 "lead": {
                   "n": 20,
-                  "median": 53.24,
-                  "average": 105.62
+                  "median": 54.83,
+                  "average": 108.91
                 },
                 "cycle": {
                   "n": 13,
@@ -123,8 +123,8 @@
                   "finished_work": {
                     "lead": {
                       "n": 20,
-                      "median": 53.24,
-                      "average": 105.62
+                      "median": 54.83,
+                      "average": 108.91
                     },
                     "cycle": {
                       "n": 13,
@@ -134,14 +134,14 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 46,
-                      "median": 262.31,
-                      "average": 222.75
+                      "n": 51,
+                      "median": 262.3,
+                      "average": 232.29
                     },
                     "cycle": {
                       "n": 20,
                       "median": 45.78,
-                      "average": 76.69
+                      "average": 76.7
                     }
                   }
                 }
@@ -172,52 +172,52 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 7,
-                      "median": 165.47,
-                      "average": 157.29
+                      "n": 8,
+                      "median": 165.5,
+                      "average": 149.71
                     },
                     "cycle": {
                       "n": 4,
-                      "median": 126.85,
-                      "average": 126.85
+                      "median": 126.88,
+                      "average": 126.88
                     }
                   }
                 }
               },
               "Orchestration": {
                 "lead": {
-                  "n": 11,
-                  "median": 159.09,
-                  "average": 155.7
+                  "n": 13,
+                  "median": 185.61,
+                  "average": 142.33
                 },
                 "cycle": {
-                  "n": 7,
-                  "median": 105.57,
-                  "average": 95.6
+                  "n": 8,
+                  "median": 100.34,
+                  "average": 83.65
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 11,
-                      "median": 159.09,
-                      "average": 155.7
+                      "n": 13,
+                      "median": 185.61,
+                      "average": 142.33
                     },
                     "cycle": {
-                      "n": 7,
-                      "median": 105.57,
-                      "average": 95.6
+                      "n": 8,
+                      "median": 100.34,
+                      "average": 83.65
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 26,
-                      "median": 197.56,
-                      "average": 220.49
+                      "n": 33,
+                      "median": 193.58,
+                      "average": 205.01
                     },
                     "cycle": {
-                      "n": 14,
-                      "median": 104.05,
-                      "average": 124.6
+                      "n": 15,
+                      "median": 102.56,
+                      "average": 116.31
                     }
                   }
                 }
@@ -262,9 +262,9 @@
               },
               "UNMAPPED": {
                 "lead": {
-                  "n": 14,
-                  "median": 106.76,
-                  "average": 126.24
+                  "n": 19,
+                  "median": 91.26,
+                  "average": 100.31
                 },
                 "cycle": {
                   "n": 6,
@@ -274,9 +274,9 @@
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 14,
-                      "median": 106.76,
-                      "average": 126.24
+                      "n": 19,
+                      "median": 91.26,
+                      "average": 100.31
                     },
                     "cycle": {
                       "n": 6,
@@ -286,13 +286,13 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 20,
+                      "n": 30,
                       "median": 146.21,
-                      "average": 167.67
+                      "average": 161.91
                     },
                     "cycle": {
                       "n": 8,
-                      "median": 81.5,
+                      "median": 81.51,
                       "average": 106.48
                     }
                   }
@@ -304,76 +304,76 @@
             "teams": {
               "API": {
                 "lead": {
-                  "n": 20,
-                  "median": 31.98,
-                  "average": 50.48
+                  "n": 23,
+                  "median": 24.04,
+                  "average": 44.65
                 },
                 "cycle": {
-                  "n": 17,
-                  "median": 27.92,
-                  "average": 32.04
+                  "n": 18,
+                  "median": 25.48,
+                  "average": 30.26
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 20,
-                      "median": 31.98,
-                      "average": 50.48
+                      "n": 23,
+                      "median": 24.04,
+                      "average": 44.65
                     },
                     "cycle": {
-                      "n": 17,
-                      "median": 27.92,
-                      "average": 32.04
+                      "n": 18,
+                      "median": 25.48,
+                      "average": 30.26
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 31,
-                      "median": 66.13,
-                      "average": 135.39
+                      "n": 41,
+                      "median": 117.22,
+                      "average": 149.38
                     },
                     "cycle": {
-                      "n": 22,
-                      "median": 32.53,
-                      "average": 53.37
+                      "n": 23,
+                      "median": 29.02,
+                      "average": 51.05
                     }
                   }
                 }
               },
               "Frontend": {
                 "lead": {
-                  "n": 20,
-                  "median": 24.43,
-                  "average": 41.18
+                  "n": 23,
+                  "median": 22.85,
+                  "average": 35.86
                 },
                 "cycle": {
-                  "n": 19,
-                  "median": 15.03,
-                  "average": 25.57
+                  "n": 21,
+                  "median": 14.74,
+                  "average": 23.14
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 20,
-                      "median": 24.43,
-                      "average": 41.18
+                      "n": 23,
+                      "median": 22.85,
+                      "average": 35.86
                     },
                     "cycle": {
-                      "n": 19,
-                      "median": 15.03,
-                      "average": 25.57
+                      "n": 21,
+                      "median": 14.74,
+                      "average": 23.14
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 21,
-                      "median": 25.89,
-                      "average": 42.78
+                      "n": 25,
+                      "median": 22.96,
+                      "average": 50.75
                     },
                     "cycle": {
-                      "n": 19,
-                      "median": 15.03,
-                      "average": 25.57
+                      "n": 21,
+                      "median": 14.74,
+                      "average": 23.14
                     }
                   }
                 }
@@ -381,8 +381,8 @@
               "Broadcast": {
                 "lead": {
                   "n": 20,
-                  "median": 53.24,
-                  "average": 105.62
+                  "median": 54.83,
+                  "average": 108.91
                 },
                 "cycle": {
                   "n": 13,
@@ -393,8 +393,8 @@
                   "finished_work": {
                     "lead": {
                       "n": 20,
-                      "median": 53.24,
-                      "average": 105.62
+                      "median": 54.83,
+                      "average": 108.91
                     },
                     "cycle": {
                       "n": 13,
@@ -404,14 +404,14 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 46,
-                      "median": 262.31,
-                      "average": 222.75
+                      "n": 51,
+                      "median": 262.3,
+                      "average": 232.29
                     },
                     "cycle": {
                       "n": 20,
                       "median": 45.78,
-                      "average": 76.69
+                      "average": 76.7
                     }
                   }
                 }
@@ -442,52 +442,52 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 7,
-                      "median": 165.47,
-                      "average": 157.29
+                      "n": 8,
+                      "median": 165.5,
+                      "average": 149.71
                     },
                     "cycle": {
                       "n": 4,
-                      "median": 126.85,
-                      "average": 126.85
+                      "median": 126.88,
+                      "average": 126.88
                     }
                   }
                 }
               },
               "Orchestration": {
                 "lead": {
-                  "n": 11,
-                  "median": 159.09,
-                  "average": 155.7
+                  "n": 13,
+                  "median": 185.61,
+                  "average": 142.33
                 },
                 "cycle": {
-                  "n": 7,
-                  "median": 105.57,
-                  "average": 95.6
+                  "n": 8,
+                  "median": 100.34,
+                  "average": 83.65
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 11,
-                      "median": 159.09,
-                      "average": 155.7
+                      "n": 13,
+                      "median": 185.61,
+                      "average": 142.33
                     },
                     "cycle": {
-                      "n": 7,
-                      "median": 105.57,
-                      "average": 95.6
+                      "n": 8,
+                      "median": 100.34,
+                      "average": 83.65
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 26,
-                      "median": 197.56,
-                      "average": 220.49
+                      "n": 33,
+                      "median": 193.58,
+                      "average": 205.01
                     },
                     "cycle": {
-                      "n": 14,
-                      "median": 104.05,
-                      "average": 124.6
+                      "n": 15,
+                      "median": 102.56,
+                      "average": 116.31
                     }
                   }
                 }
@@ -532,9 +532,9 @@
               },
               "UNMAPPED": {
                 "lead": {
-                  "n": 14,
-                  "median": 106.76,
-                  "average": 126.24
+                  "n": 19,
+                  "median": 91.26,
+                  "average": 100.31
                 },
                 "cycle": {
                   "n": 6,
@@ -544,9 +544,9 @@
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 14,
-                      "median": 106.76,
-                      "average": 126.24
+                      "n": 19,
+                      "median": 91.26,
+                      "average": 100.31
                     },
                     "cycle": {
                       "n": 6,
@@ -556,13 +556,13 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 20,
+                      "n": 30,
                       "median": 146.21,
-                      "average": 167.67
+                      "average": 161.91
                     },
                     "cycle": {
                       "n": 8,
-                      "median": 81.5,
+                      "median": 81.51,
                       "average": 106.48
                     }
                   }
@@ -574,47 +574,47 @@
             "teams": {
               "API": {
                 "lead": {
-                  "n": 32,
-                  "median": 25.56,
-                  "average": 34.46
+                  "n": 34,
+                  "median": 32.33,
+                  "average": 43.19
                 },
                 "cycle": {
-                  "n": 24,
-                  "median": 22.02,
-                  "average": 25.51
+                  "n": 26,
+                  "median": 20.48,
+                  "average": 23.55
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 32,
-                      "median": 25.56,
-                      "average": 34.46
+                      "n": 34,
+                      "median": 32.33,
+                      "average": 43.19
                     },
                     "cycle": {
-                      "n": 24,
-                      "median": 22.02,
-                      "average": 25.51
+                      "n": 26,
+                      "median": 20.48,
+                      "average": 23.55
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 65,
-                      "median": 82.14,
-                      "average": 144.04
+                      "n": 86,
+                      "median": 118.57,
+                      "average": 164.3
                     },
                     "cycle": {
-                      "n": 28,
-                      "median": 24.88,
-                      "average": 42.28
+                      "n": 30,
+                      "median": 23.07,
+                      "average": 39.46
                     }
                   }
                 }
               },
               "Frontend": {
                 "lead": {
-                  "n": 18,
-                  "median": 44.27,
-                  "average": 55.61
+                  "n": 19,
+                  "median": 46.62,
+                  "average": 70.73
                 },
                 "cycle": {
                   "n": 15,
@@ -624,9 +624,9 @@
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 18,
-                      "median": 44.27,
-                      "average": 55.61
+                      "n": 19,
+                      "median": 46.62,
+                      "average": 70.73
                     },
                     "cycle": {
                       "n": 15,
@@ -636,52 +636,52 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 33,
-                      "median": 94.04,
-                      "average": 147.72
+                      "n": 48,
+                      "median": 178.66,
+                      "average": 173.4
                     },
                     "cycle": {
                       "n": 18,
                       "median": 34.25,
-                      "average": 44.73
+                      "average": 44.74
                     }
                   }
                 }
               },
               "Broadcast": {
                 "lead": {
-                  "n": 20,
-                  "median": 29.43,
-                  "average": 49.08
+                  "n": 22,
+                  "median": 32.33,
+                  "average": 60.67
                 },
                 "cycle": {
-                  "n": 13,
-                  "median": 25.73,
-                  "average": 40.69
+                  "n": 15,
+                  "median": 11.09,
+                  "average": 35.26
                 },
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 20,
-                      "median": 29.43,
-                      "average": 49.08
+                      "n": 22,
+                      "median": 32.33,
+                      "average": 60.67
                     },
                     "cycle": {
-                      "n": 13,
-                      "median": 25.73,
-                      "average": 40.69
+                      "n": 15,
+                      "median": 11.09,
+                      "average": 35.26
                     }
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 45,
-                      "median": 89.45,
-                      "average": 169.38
+                      "n": 57,
+                      "median": 189,
+                      "average": 179.94
                     },
                     "cycle": {
-                      "n": 16,
-                      "median": 26.89,
-                      "average": 64.71
+                      "n": 18,
+                      "median": 26.23,
+                      "average": 57.53
                     }
                   }
                 }
@@ -726,9 +726,9 @@
               },
               "Orchestration": {
                 "lead": {
-                  "n": 1,
-                  "median": 49.92,
-                  "average": 49.92
+                  "n": 2,
+                  "median": 190.07,
+                  "average": 190.07
                 },
                 "cycle": {
                   "n": 0,
@@ -738,9 +738,9 @@
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 1,
-                      "median": 49.92,
-                      "average": 49.92
+                      "n": 2,
+                      "median": 190.07,
+                      "average": 190.07
                     },
                     "cycle": {
                       "n": 0,
@@ -750,9 +750,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 5,
-                      "median": 194.05,
-                      "average": 189.6
+                      "n": 7,
+                      "median": 194.08,
+                      "average": 192.9
                     },
                     "cycle": {
                       "n": 0,
@@ -848,7 +848,7 @@
                 "lead": {
                   "n": 10,
                   "median": 43.95,
-                  "average": 47.05
+                  "average": 47.06
                 },
                 "cycle": {
                   "n": 10,
@@ -860,7 +860,7 @@
                     "lead": {
                       "n": 10,
                       "median": 43.95,
-                      "average": 47.05
+                      "average": 47.06
                     },
                     "cycle": {
                       "n": 10,
@@ -870,9 +870,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 16,
+                      "n": 17,
                       "median": 26.13,
-                      "average": 33.38
+                      "average": 32.32
                     },
                     "cycle": {
                       "n": 10,
@@ -923,8 +923,8 @@
               "Broadcast": {
                 "lead": {
                   "n": 3,
-                  "median": 171.66,
-                  "average": 229.78
+                  "median": 171.74,
+                  "average": 232.44
                 },
                 "cycle": {
                   "n": 3,
@@ -935,8 +935,8 @@
                   "finished_work": {
                     "lead": {
                       "n": 3,
-                      "median": 171.66,
-                      "average": 229.78
+                      "median": 171.74,
+                      "average": 232.44
                     },
                     "cycle": {
                       "n": 3,
@@ -946,9 +946,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 4,
-                      "median": 153.53,
-                      "average": 178.12
+                      "n": 5,
+                      "median": 143.31,
+                      "average": 147.96
                     },
                     "cycle": {
                       "n": 3,
@@ -1023,8 +1023,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 1,
-                      "median": 23.42,
-                      "average": 23.42
+                      "median": 23.46,
+                      "average": 23.46
                     },
                     "cycle": {
                       "n": 0,
@@ -1074,9 +1074,9 @@
               },
               "UNMAPPED": {
                 "lead": {
-                  "n": 0,
-                  "median": null,
-                  "average": null
+                  "n": 1,
+                  "median": 126.92,
+                  "average": 126.92
                 },
                 "cycle": {
                   "n": 0,
@@ -1086,9 +1086,9 @@
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 0,
-                      "median": null,
-                      "average": null
+                      "n": 1,
+                      "median": 126.92,
+                      "average": 126.92
                     },
                     "cycle": {
                       "n": 0,
@@ -1098,9 +1098,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 2,
-                      "median": 6.29,
-                      "average": 6.29
+                      "n": 5,
+                      "median": 10.43,
+                      "average": 35.07
                     },
                     "cycle": {
                       "n": 0,
@@ -1141,8 +1141,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 1,
-                      "median": 23.15,
-                      "average": 23.15
+                      "median": 23.18,
+                      "average": 23.18
                     },
                     "cycle": {
                       "n": 0,
@@ -1193,8 +1193,8 @@
               "Broadcast": {
                 "lead": {
                   "n": 3,
-                  "median": 171.66,
-                  "average": 229.78
+                  "median": 171.74,
+                  "average": 232.44
                 },
                 "cycle": {
                   "n": 3,
@@ -1205,8 +1205,8 @@
                   "finished_work": {
                     "lead": {
                       "n": 3,
-                      "median": 171.66,
-                      "average": 229.78
+                      "median": 171.74,
+                      "average": 232.44
                     },
                     "cycle": {
                       "n": 3,
@@ -1216,9 +1216,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 4,
-                      "median": 153.53,
-                      "average": 178.12
+                      "n": 5,
+                      "median": 143.31,
+                      "average": 147.96
                     },
                     "cycle": {
                       "n": 3,
@@ -1293,8 +1293,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 1,
-                      "median": 23.42,
-                      "average": 23.42
+                      "median": 23.46,
+                      "average": 23.46
                     },
                     "cycle": {
                       "n": 0,
@@ -1344,9 +1344,9 @@
               },
               "UNMAPPED": {
                 "lead": {
-                  "n": 0,
-                  "median": null,
-                  "average": null
+                  "n": 1,
+                  "median": 126.92,
+                  "average": 126.92
                 },
                 "cycle": {
                   "n": 0,
@@ -1356,9 +1356,9 @@
                 "idea_scopes": {
                   "finished_work": {
                     "lead": {
-                      "n": 0,
-                      "median": null,
-                      "average": null
+                      "n": 1,
+                      "median": 126.92,
+                      "average": 126.92
                     },
                     "cycle": {
                       "n": 0,
@@ -1368,9 +1368,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 2,
-                      "median": 6.29,
-                      "average": 6.29
+                      "n": 5,
+                      "median": 10.43,
+                      "average": 35.07
                     },
                     "cycle": {
                       "n": 0,
@@ -1388,7 +1388,7 @@
                 "lead": {
                   "n": 10,
                   "median": 43.95,
-                  "average": 47.05
+                  "average": 47.06
                 },
                 "cycle": {
                   "n": 10,
@@ -1400,7 +1400,7 @@
                     "lead": {
                       "n": 10,
                       "median": 43.95,
-                      "average": 47.05
+                      "average": 47.06
                     },
                     "cycle": {
                       "n": 10,
@@ -1410,9 +1410,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 15,
+                      "n": 16,
                       "median": 26.13,
-                      "average": 34.07
+                      "average": 32.89
                     },
                     "cycle": {
                       "n": 10,
@@ -1450,7 +1450,7 @@
                     "lead": {
                       "n": 9,
                       "median": 26.13,
-                      "average": 29.4
+                      "average": 30.54
                     },
                     "cycle": {
                       "n": 6,
@@ -1463,8 +1463,8 @@
               "Broadcast": {
                 "lead": {
                   "n": 4,
-                  "median": 61.42,
-                  "average": 58.19
+                  "median": 61.43,
+                  "average": 58.2
                 },
                 "cycle": {
                   "n": 4,
@@ -1475,8 +1475,8 @@
                   "finished_work": {
                     "lead": {
                       "n": 4,
-                      "median": 61.42,
-                      "average": 58.19
+                      "median": 61.43,
+                      "average": 58.2
                     },
                     "cycle": {
                       "n": 4,
@@ -1486,9 +1486,9 @@
                   },
                   "full_backlog": {
                     "lead": {
-                      "n": 9,
-                      "median": 8.19,
-                      "average": 30.36
+                      "n": 10,
+                      "median": 10.43,
+                      "average": 28.85
                     },
                     "cycle": {
                       "n": 4,
@@ -1661,17 +1661,17 @@
             "done": 134,
             "ongoing_year_end": 142,
             "ongoing_now": 142,
-            "cycle_sample": 88,
+            "cycle_sample": 94,
             "samples": {
-              "lead": 119,
-              "cycle": 88,
+              "lead": 134,
+              "cycle": 94,
               "finished_work": {
-                "lead": 119,
-                "cycle": 88
+                "lead": 134,
+                "cycle": 94
               },
               "full_backlog": {
-                "lead": 218,
-                "cycle": 117
+                "lead": 276,
+                "cycle": 123
               }
             }
           },
@@ -1680,17 +1680,17 @@
             "done": 98,
             "ongoing_year_end": 90,
             "ongoing_now": 90,
-            "cycle_sample": 62,
+            "cycle_sample": 66,
             "samples": {
-              "lead": 85,
-              "cycle": 62,
+              "lead": 98,
+              "cycle": 66,
               "finished_work": {
-                "lead": 85,
-                "cycle": 62
+                "lead": 98,
+                "cycle": 66
               },
               "full_backlog": {
-                "lead": 151,
-                "cycle": 87
+                "lead": 188,
+                "cycle": 91
               }
             }
           },
@@ -1699,17 +1699,17 @@
             "done": 36,
             "ongoing_year_end": 52,
             "ongoing_now": 52,
-            "cycle_sample": 26,
+            "cycle_sample": 28,
             "samples": {
-              "lead": 34,
-              "cycle": 26,
+              "lead": 36,
+              "cycle": 28,
               "finished_work": {
-                "lead": 34,
-                "cycle": 26
+                "lead": 36,
+                "cycle": 28
               },
               "full_backlog": {
-                "lead": 67,
-                "cycle": 30
+                "lead": 88,
+                "cycle": 32
               }
             }
           }
@@ -1722,14 +1722,14 @@
             "ongoing_now": 14,
             "cycle_sample": 14,
             "samples": {
-              "lead": 14,
+              "lead": 15,
               "cycle": 14,
               "finished_work": {
-                "lead": 14,
+                "lead": 15,
                 "cycle": 14
               },
               "full_backlog": {
-                "lead": 24,
+                "lead": 29,
                 "cycle": 14
               }
             }
@@ -1741,14 +1741,14 @@
             "ongoing_now": 8,
             "cycle_sample": 4,
             "samples": {
-              "lead": 4,
+              "lead": 5,
               "cycle": 4,
               "finished_work": {
-                "lead": 4,
+                "lead": 5,
                 "cycle": 4
               },
               "full_backlog": {
-                "lead": 9,
+                "lead": 13,
                 "cycle": 4
               }
             }
@@ -1767,7 +1767,7 @@
                 "cycle": 10
               },
               "full_backlog": {
-                "lead": 15,
+                "lead": 16,
                 "cycle": 10
               }
             }
@@ -1781,36 +1781,36 @@
           "teams": {
             "API": {
               "parking_lot": {
-                "n": 24,
-                "median": 12.46,
-                "average": 30.68
+                "n": 55,
+                "median": 0.36,
+                "average": 20.35
               },
               "design": {
                 "n": 4,
-                "median": 0.8,
+                "median": 0.81,
                 "average": 4.1
               },
               "ready_for_development": {
-                "n": 10,
-                "median": 9.58,
-                "average": 20.26
+                "n": 11,
+                "median": 7.21,
+                "average": 18.42
               },
               "in_development": {
-                "n": 40,
-                "median": 21.75,
-                "average": 26.95
+                "n": 43,
+                "median": 19.02,
+                "average": 25.07
               },
               "feedback": {
-                "n": 8,
-                "median": 10.13,
-                "average": 9.87
+                "n": 10,
+                "median": 8.14,
+                "average": 7.9
               }
             },
             "Frontend": {
               "parking_lot": {
-                "n": 10,
-                "median": 37.88,
-                "average": 46.24
+                "n": 19,
+                "median": 0.19,
+                "average": 24.39
               },
               "design": {
                 "n": 2,
@@ -1818,14 +1818,14 @@
                 "average": 0.02
               },
               "ready_for_development": {
-                "n": 3,
-                "median": 3.09,
-                "average": 7.48
+                "n": 4,
+                "median": 2.73,
+                "average": 5.61
               },
               "in_development": {
-                "n": 21,
-                "median": 21.98,
-                "average": 34.8
+                "n": 23,
+                "median": 15.03,
+                "average": 31.77
               },
               "feedback": {
                 "n": 1,
@@ -1835,9 +1835,9 @@
             },
             "Broadcast": {
               "parking_lot": {
-                "n": 12,
-                "median": 63.03,
-                "average": 116.93
+                "n": 18,
+                "median": 23.91,
+                "average": 81.61
               },
               "design": {
                 "n": 2,
@@ -1889,9 +1889,9 @@
             },
             "Orchestration": {
               "parking_lot": {
-                "n": 11,
-                "median": 59.9,
-                "average": 94.87
+                "n": 12,
+                "median": 55.34,
+                "average": 98.42
               },
               "design": {
                 "n": 0,
@@ -1904,9 +1904,9 @@
                 "average": null
               },
               "in_development": {
-                "n": 6,
-                "median": 112.75,
-                "average": 98.11
+                "n": 7,
+                "median": 105.57,
+                "average": 84.09
               },
               "feedback": {
                 "n": 2,
@@ -1943,9 +1943,9 @@
             },
             "UNMAPPED": {
               "parking_lot": {
-                "n": 10,
-                "median": 102.97,
-                "average": 133.68
+                "n": 16,
+                "median": 83.98,
+                "average": 92.21
               },
               "design": {
                 "n": 0,
@@ -1974,36 +1974,36 @@
               "teams": {
                 "API": {
                   "parking_lot": {
-                    "n": 24,
-                    "median": 12.46,
-                    "average": 30.68
+                    "n": 55,
+                    "median": 0.36,
+                    "average": 20.35
                   },
                   "design": {
                     "n": 4,
-                    "median": 0.8,
+                    "median": 0.81,
                     "average": 4.1
                   },
                   "ready_for_development": {
-                    "n": 10,
-                    "median": 9.58,
-                    "average": 20.26
+                    "n": 11,
+                    "median": 7.21,
+                    "average": 18.42
                   },
                   "in_development": {
-                    "n": 40,
-                    "median": 21.75,
-                    "average": 26.95
+                    "n": 43,
+                    "median": 19.02,
+                    "average": 25.07
                   },
                   "feedback": {
-                    "n": 8,
-                    "median": 10.13,
-                    "average": 9.87
+                    "n": 10,
+                    "median": 8.14,
+                    "average": 7.9
                   }
                 },
                 "Frontend": {
                   "parking_lot": {
-                    "n": 10,
-                    "median": 37.88,
-                    "average": 46.24
+                    "n": 19,
+                    "median": 0.19,
+                    "average": 24.39
                   },
                   "design": {
                     "n": 2,
@@ -2011,14 +2011,14 @@
                     "average": 0.02
                   },
                   "ready_for_development": {
-                    "n": 3,
-                    "median": 3.09,
-                    "average": 7.48
+                    "n": 4,
+                    "median": 2.73,
+                    "average": 5.61
                   },
                   "in_development": {
-                    "n": 21,
-                    "median": 21.98,
-                    "average": 34.8
+                    "n": 23,
+                    "median": 15.03,
+                    "average": 31.77
                   },
                   "feedback": {
                     "n": 1,
@@ -2028,9 +2028,9 @@
                 },
                 "Broadcast": {
                   "parking_lot": {
-                    "n": 12,
-                    "median": 63.03,
-                    "average": 116.93
+                    "n": 18,
+                    "median": 23.91,
+                    "average": 81.61
                   },
                   "design": {
                     "n": 2,
@@ -2082,9 +2082,9 @@
                 },
                 "Orchestration": {
                   "parking_lot": {
-                    "n": 11,
-                    "median": 59.9,
-                    "average": 94.87
+                    "n": 12,
+                    "median": 55.34,
+                    "average": 98.42
                   },
                   "design": {
                     "n": 0,
@@ -2097,9 +2097,9 @@
                     "average": null
                   },
                   "in_development": {
-                    "n": 6,
-                    "median": 112.75,
-                    "average": 98.11
+                    "n": 7,
+                    "median": 105.57,
+                    "average": 84.09
                   },
                   "feedback": {
                     "n": 2,
@@ -2136,9 +2136,9 @@
                 },
                 "UNMAPPED": {
                   "parking_lot": {
-                    "n": 10,
-                    "median": 102.97,
-                    "average": 133.68
+                    "n": 16,
+                    "median": 83.98,
+                    "average": 92.21
                   },
                   "design": {
                     "n": 0,
@@ -2167,51 +2167,51 @@
               "teams": {
                 "API": {
                   "parking_lot": {
-                    "n": 59,
-                    "median": 151.36,
-                    "average": 168.11
+                    "n": 121,
+                    "median": 77.68,
+                    "average": 137.3
                   },
                   "design": {
                     "n": 16,
-                    "median": 37.38,
-                    "average": 53.61
+                    "median": 37.4,
+                    "average": 53.63
                   },
                   "ready_for_development": {
-                    "n": 13,
-                    "median": 14.11,
-                    "average": 32.71
+                    "n": 16,
+                    "median": 9.58,
+                    "average": 26.58
                   },
                   "in_development": {
-                    "n": 49,
-                    "median": 23.03,
-                    "average": 46.51
+                    "n": 52,
+                    "median": 22.14,
+                    "average": 43.83
                   },
                   "feedback": {
-                    "n": 8,
-                    "median": 10.13,
-                    "average": 9.87
+                    "n": 10,
+                    "median": 8.14,
+                    "average": 7.9
                   }
                 },
                 "Frontend": {
                   "parking_lot": {
-                    "n": 10,
-                    "median": 37.88,
-                    "average": 46.24
+                    "n": 21,
+                    "median": 0.19,
+                    "average": 39.65
                   },
                   "design": {
                     "n": 3,
                     "median": 0.02,
-                    "average": 24.96
+                    "average": 24.98
                   },
                   "ready_for_development": {
-                    "n": 3,
-                    "median": 3.09,
-                    "average": 7.48
+                    "n": 4,
+                    "median": 2.73,
+                    "average": 5.61
                   },
                   "in_development": {
-                    "n": 21,
-                    "median": 21.98,
-                    "average": 34.8
+                    "n": 23,
+                    "median": 15.03,
+                    "average": 31.77
                   },
                   "feedback": {
                     "n": 1,
@@ -2221,19 +2221,19 @@
                 },
                 "Broadcast": {
                   "parking_lot": {
-                    "n": 36,
-                    "median": 323.61,
-                    "average": 231.04
+                    "n": 49,
+                    "median": 241.57,
+                    "average": 202.41
                   },
                   "design": {
-                    "n": 5,
-                    "median": 35.02,
-                    "average": 46.35
+                    "n": 6,
+                    "median": 32.41,
+                    "average": 38.63
                   },
                   "ready_for_development": {
                     "n": 6,
                     "median": 20.6,
-                    "average": 27.22
+                    "average": 27.21
                   },
                   "in_development": {
                     "n": 20,
@@ -2243,29 +2243,29 @@
                   "feedback": {
                     "n": 10,
                     "median": 11.45,
-                    "average": 41.91
+                    "average": 41.92
                   }
                 },
                 "Titanium": {
                   "parking_lot": {
-                    "n": 2,
-                    "median": 18.48,
-                    "average": 18.48
+                    "n": 6,
+                    "median": 6.97,
+                    "average": 22.24
                   },
                   "design": {
-                    "n": 4,
-                    "median": 30.09,
-                    "average": 58.47
+                    "n": 5,
+                    "median": 8.21,
+                    "average": 46.78
                   },
                   "ready_for_development": {
                     "n": 6,
-                    "median": 30.41,
-                    "average": 53.79
+                    "median": 30.4,
+                    "average": 53.8
                   },
                   "in_development": {
                     "n": 4,
-                    "median": 126.85,
-                    "average": 126.85
+                    "median": 126.88,
+                    "average": 126.88
                   },
                   "feedback": {
                     "n": 0,
@@ -2275,14 +2275,14 @@
                 },
                 "Orchestration": {
                   "parking_lot": {
-                    "n": 21,
-                    "median": 185.61,
-                    "average": 178.88
+                    "n": 32,
+                    "median": 96.95,
+                    "average": 149.65
                   },
                   "design": {
-                    "n": 4,
-                    "median": 51.01,
-                    "average": 48.86
+                    "n": 5,
+                    "median": 30.21,
+                    "average": 39.1
                   },
                   "ready_for_development": {
                     "n": 2,
@@ -2290,9 +2290,9 @@
                     "average": 18.23
                   },
                   "in_development": {
-                    "n": 13,
-                    "median": 105.57,
-                    "average": 127.99
+                    "n": 14,
+                    "median": 104.07,
+                    "average": 118.86
                   },
                   "feedback": {
                     "n": 2,
@@ -2329,14 +2329,14 @@
                 },
                 "UNMAPPED": {
                   "parking_lot": {
-                    "n": 14,
-                    "median": 146.21,
-                    "average": 164.39
+                    "n": 26,
+                    "median": 130.44,
+                    "average": 146.36
                   },
                   "design": {
                     "n": 1,
-                    "median": 162.11,
-                    "average": 162.11
+                    "median": 162.14,
+                    "average": 162.14
                   },
                   "ready_for_development": {
                     "n": 2,
@@ -2345,7 +2345,7 @@
                   },
                   "in_development": {
                     "n": 7,
-                    "median": 77.03,
+                    "median": 77.04,
                     "average": 106.15
                   },
                   "feedback": {
@@ -2362,9 +2362,9 @@
           "teams": {
             "API": {
               "parking_lot": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "n": 6,
+                "median": 0,
+                "average": 0
               },
               "design": {
                 "n": 3,
@@ -2373,7 +2373,7 @@
               },
               "ready_for_development": {
                 "n": 4,
-                "median": 22.61,
+                "median": 22.6,
                 "average": 35.56
               },
               "in_development": {
@@ -2383,15 +2383,15 @@
               },
               "feedback": {
                 "n": 2,
-                "median": 16.71,
-                "average": 16.71
+                "median": 16.72,
+                "average": 16.72
               }
             },
             "Frontend": {
               "parking_lot": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "n": 1,
+                "median": 0,
+                "average": 0
               },
               "design": {
                 "n": 0,
@@ -2416,9 +2416,9 @@
             },
             "Broadcast": {
               "parking_lot": {
-                "n": 2,
-                "median": 184.06,
-                "average": 184.06
+                "n": 3,
+                "median": 85.86,
+                "average": 125.37
               },
               "design": {
                 "n": 1,
@@ -2426,9 +2426,9 @@
                 "average": 37.21
               },
               "ready_for_development": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "n": 1,
+                "median": 0,
+                "average": 0
               },
               "in_development": {
                 "n": 3,
@@ -2524,9 +2524,9 @@
             },
             "UNMAPPED": {
               "parking_lot": {
-                "n": 0,
-                "median": null,
-                "average": null
+                "n": 1,
+                "median": 126.92,
+                "average": 126.92
               },
               "design": {
                 "n": 0,
@@ -2555,9 +2555,9 @@
               "teams": {
                 "API": {
                   "parking_lot": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 6,
+                    "median": 0,
+                    "average": 0
                   },
                   "design": {
                     "n": 3,
@@ -2566,7 +2566,7 @@
                   },
                   "ready_for_development": {
                     "n": 4,
-                    "median": 22.61,
+                    "median": 22.6,
                     "average": 35.56
                   },
                   "in_development": {
@@ -2576,15 +2576,15 @@
                   },
                   "feedback": {
                     "n": 2,
-                    "median": 16.71,
-                    "average": 16.71
+                    "median": 16.72,
+                    "average": 16.72
                   }
                 },
                 "Frontend": {
                   "parking_lot": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 1,
+                    "median": 0,
+                    "average": 0
                   },
                   "design": {
                     "n": 0,
@@ -2609,9 +2609,9 @@
                 },
                 "Broadcast": {
                   "parking_lot": {
-                    "n": 2,
-                    "median": 184.06,
-                    "average": 184.06
+                    "n": 3,
+                    "median": 85.86,
+                    "average": 125.37
                   },
                   "design": {
                     "n": 1,
@@ -2619,9 +2619,9 @@
                     "average": 37.21
                   },
                   "ready_for_development": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 1,
+                    "median": 0,
+                    "average": 0
                   },
                   "in_development": {
                     "n": 3,
@@ -2717,9 +2717,9 @@
                 },
                 "UNMAPPED": {
                   "parking_lot": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 1,
+                    "median": 126.92,
+                    "average": 126.92
                   },
                   "design": {
                     "n": 0,
@@ -2748,18 +2748,18 @@
               "teams": {
                 "API": {
                   "parking_lot": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 9,
+                    "median": 0,
+                    "average": 1.68
                   },
                   "design": {
                     "n": 9,
-                    "median": 5.4,
-                    "average": 8.55
+                    "median": 5.43,
+                    "average": 8.57
                   },
                   "ready_for_development": {
                     "n": 4,
-                    "median": 22.61,
+                    "median": 22.6,
                     "average": 35.56
                   },
                   "in_development": {
@@ -2769,15 +2769,15 @@
                   },
                   "feedback": {
                     "n": 2,
-                    "median": 16.71,
-                    "average": 16.71
+                    "median": 16.72,
+                    "average": 16.72
                   }
                 },
                 "Frontend": {
                   "parking_lot": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 1,
+                    "median": 0,
+                    "average": 0
                   },
                   "design": {
                     "n": 0,
@@ -2802,19 +2802,19 @@
                 },
                 "Broadcast": {
                   "parking_lot": {
-                    "n": 2,
-                    "median": 184.06,
-                    "average": 184.06
+                    "n": 4,
+                    "median": 52.59,
+                    "average": 98.86
                   },
                   "design": {
                     "n": 2,
-                    "median": 30.17,
-                    "average": 30.17
+                    "median": 30.18,
+                    "average": 30.18
                   },
                   "ready_for_development": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 1,
+                    "median": 0,
+                    "average": 0
                   },
                   "in_development": {
                     "n": 3,
@@ -2857,13 +2857,13 @@
                 "Orchestration": {
                   "parking_lot": {
                     "n": 1,
-                    "median": 0.27,
-                    "average": 0.27
+                    "median": 0.28,
+                    "average": 0.28
                   },
                   "design": {
                     "n": 1,
-                    "median": 23.15,
-                    "average": 23.15
+                    "median": 23.18,
+                    "average": 23.18
                   },
                   "ready_for_development": {
                     "n": 0,
@@ -2910,14 +2910,14 @@
                 },
                 "UNMAPPED": {
                   "parking_lot": {
-                    "n": 0,
-                    "median": null,
-                    "average": null
+                    "n": 4,
+                    "median": 14.77,
+                    "average": 40.67
                   },
                   "design": {
                     "n": 2,
-                    "median": 6.29,
-                    "average": 6.29
+                    "median": 6.33,
+                    "average": 6.33
                   },
                   "ready_for_development": {
                     "n": 0,
@@ -2945,13 +2945,13 @@
           "total": 276,
           "done": 134,
           "ongoing": 142,
-          "cycle_sample": 119,
+          "cycle_sample": 131,
           "samples": {
             "finished_work": {
-              "cycle_sample": 119
+              "cycle_sample": 131
             },
             "full_backlog": {
-              "cycle_sample": 218
+              "cycle_sample": 270
             }
           }
         },
@@ -2959,13 +2959,13 @@
           "total": 29,
           "done": 15,
           "ongoing": 14,
-          "cycle_sample": 14,
+          "cycle_sample": 15,
           "samples": {
             "finished_work": {
-              "cycle_sample": 14
+              "cycle_sample": 15
             },
             "full_backlog": {
-              "cycle_sample": 24
+              "cycle_sample": 28
             }
           }
         }
