@@ -24,15 +24,15 @@
       <section id="composition-panel" class="panel" aria-label="Backlog stacked bars">
         <h2>Interactive chart - Bug composition by priority</h2>
         <p id="composition-updated" class="panel-subtitle">Last updated: --</p>
-        <div class="composition-toggle-row">
-          <label for="composition-team-scope">Team</label>
-          <select id="composition-team-scope">
-            <option value="bc">BC</option>
-            <option value="api">API</option>
-            <option value="legacy">Legacy</option>
-            <option value="react">React</option>
-            <option value="all">All</option>
-          </select>
+        <div class="radio-control-groups" aria-label="Composition controls">
+          <fieldset class="radio-group-card">
+            <legend>Team</legend>
+            <label><input type="radio" name="composition-team-scope" value="bc" checked /> BC</label>
+            <label><input type="radio" name="composition-team-scope" value="api" /> API</label>
+            <label><input type="radio" name="composition-team-scope" value="legacy" /> Legacy</label>
+            <label><input type="radio" name="composition-team-scope" value="react" /> React</label>
+            <label><input type="radio" name="composition-team-scope" value="all" /> All</label>
+          </fieldset>
         </div>
         <div class="chart">
           <div id="bug-composition-chart" class="chart-canvas chart-canvas--dense bar-chart-wrap"></div>
@@ -54,12 +54,12 @@
         <h2>Interactive chart - Development time vs UAT time</h2>
         <p id="management-context" class="panel-subtitle">Broadcast, -- historical flow tickets (sample)</p>
         <p id="management-updated" class="panel-subtitle">Last updated: --</p>
-        <div class="management-toggle-row">
-          <label for="management-uat-scope">Issue scope</label>
-          <select id="management-uat-scope">
-            <option value="all">All issues</option>
-            <option value="bugs_only">Bugs only</option>
-          </select>
+        <div class="radio-control-groups" aria-label="Management controls">
+          <fieldset class="radio-group-card">
+            <legend>Issue scope</legend>
+            <label><input type="radio" name="management-uat-scope" value="all" checked /> All issues</label>
+            <label><input type="radio" name="management-uat-scope" value="bugs_only" /> Bugs only</label>
+          </fieldset>
         </div>
         <div class="chart">
           <div id="development-time-vs-uat-time-chart" class="chart-canvas chart-canvas--standard"></div>
@@ -71,21 +71,28 @@
         <h2 id="product-cycle-title">Cycle time: leaving parking lot to done</h2>
         <p id="product-cycle-context" class="panel-subtitle">--</p>
         <p id="product-cycle-updated" class="panel-subtitle">Last updated: --</p>
-        <div class="management-toggle-row">
-          <span>Window</span>
-          <label><input type="radio" name="product-cycle-window-scope" value="lead" /> Lead time</label>
-          <label><input type="radio" name="product-cycle-window-scope" value="cycle" checked /> Cycle time</label>
-          <label for="product-cycle-effort-scope">Effort</label>
-          <select id="product-cycle-effort-scope">
-            <option value="all">All</option>
-            <option value="single">Single-team</option>
-            <option value="combined">Combined</option>
-          </select>
-          <label for="product-cycle-metric-scope">Metric</label>
-          <select id="product-cycle-metric-scope">
-            <option value="median">Median</option>
-            <option value="average">Average</option>
-          </select>
+        <div class="radio-control-groups" aria-label="Product cycle controls">
+          <fieldset class="radio-group-card">
+            <legend>Sample set</legend>
+            <label><input type="radio" name="product-cycle-idea-scope" value="finished_work" checked /> Finished work</label>
+            <label><input type="radio" name="product-cycle-idea-scope" value="full_backlog" /> Full backlog</label>
+          </fieldset>
+          <fieldset class="radio-group-card">
+            <legend>Metric</legend>
+            <label><input type="radio" name="product-cycle-window-scope" value="lead" /> Lead time</label>
+            <label><input type="radio" name="product-cycle-window-scope" value="cycle" checked /> Cycle time</label>
+          </fieldset>
+          <fieldset class="radio-group-card">
+            <legend>Effort</legend>
+            <label><input type="radio" name="product-cycle-effort-scope" value="all" checked /> All</label>
+            <label><input type="radio" name="product-cycle-effort-scope" value="single" /> Single-team</label>
+            <label><input type="radio" name="product-cycle-effort-scope" value="combined" /> Combined</label>
+          </fieldset>
+          <fieldset class="radio-group-card">
+            <legend>Measured in</legend>
+            <label><input type="radio" name="product-cycle-metric-scope" value="median" checked /> Median</label>
+            <label><input type="radio" name="product-cycle-metric-scope" value="average" /> Average</label>
+          </fieldset>
         </div>
         <div class="chart">
           <div id="cycle-time-parking-lot-to-done-chart" class="chart-canvas chart-canvas--dense"></div>
@@ -98,17 +105,22 @@
         <h2>Lifecycle time spent per phase</h2>
         <p id="lifecycle-days-context" class="panel-subtitle">--</p>
         <p id="lifecycle-days-updated" class="panel-subtitle">Last updated: --</p>
-        <div class="management-toggle-row">
-          <label for="lifecycle-days-year-scope">Year</label>
-          <select id="lifecycle-days-year-scope">
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-          </select>
-          <label for="lifecycle-days-metric-scope">Metric</label>
-          <select id="lifecycle-days-metric-scope">
-            <option value="median">Median</option>
-            <option value="average">Average</option>
-          </select>
+        <div class="radio-control-groups" aria-label="Lifecycle controls">
+          <fieldset class="radio-group-card">
+            <legend>Sample set</legend>
+            <label><input type="radio" name="lifecycle-days-idea-scope" value="finished_work" checked /> Finished work</label>
+            <label><input type="radio" name="lifecycle-days-idea-scope" value="full_backlog" /> Full backlog</label>
+          </fieldset>
+          <fieldset class="radio-group-card">
+            <legend>Year</legend>
+            <label><input type="radio" name="lifecycle-days-year-scope" value="2025" /> 2025</label>
+            <label><input type="radio" name="lifecycle-days-year-scope" value="2026" checked /> 2026</label>
+          </fieldset>
+          <fieldset class="radio-group-card">
+            <legend>Measured in</legend>
+            <label><input type="radio" name="lifecycle-days-metric-scope" value="median" checked /> Median</label>
+            <label><input type="radio" name="lifecycle-days-metric-scope" value="average" /> Average</label>
+          </fieldset>
         </div>
         <div class="chart">
           <div id="lifecycle-time-spent-per-phase-chart" class="chart-canvas chart-canvas--dense"></div>

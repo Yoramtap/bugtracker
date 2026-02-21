@@ -647,11 +647,12 @@
           ...payload.map((item) => {
             const key = item?.dataKey;
             const meta = row?.[`meta_${key}`] || {};
+            const valueText = `${toNumber(item.value).toFixed(2)} days`;
             return makeTooltipLine(
               key,
-              `${item.name}: ${toNumber(item.value).toFixed(2)} days (${metricLabel}), n ${toNumber(
-                meta.n
-              )}, median ${toNumber(meta.median).toFixed(2)}, avg ${toNumber(meta.average).toFixed(2)}`,
+              `${item.name}: ${valueText} (${metricLabel}), n ${toNumber(meta.n)}, median ${toNumber(
+                meta.median
+              ).toFixed(2)}, avg ${toNumber(meta.average).toFixed(2)}`,
               colors
             );
           })
