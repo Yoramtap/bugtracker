@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-02-28T12:00:06.065Z",
+  "generatedAt": "2026-03-01T23:18:03.305Z",
   "teams": [
     "API",
     "Frontend",
@@ -59,13 +59,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 126,
-                      "median": 123.3,
-                      "average": 163.89
+                      "median": 124.03,
+                      "average": 164.66
                     },
                     "cycle": {
                       "n": 52,
                       "median": 26.23,
-                      "average": 45.79
+                      "average": 45.88
                     }
                   }
                 }
@@ -98,7 +98,7 @@
                     "lead": {
                       "n": 27,
                       "median": 25.9,
-                      "average": 62.66
+                      "average": 62.77
                     },
                     "cycle": {
                       "n": 23,
@@ -136,12 +136,12 @@
                     "lead": {
                       "n": 51,
                       "median": 262.3,
-                      "average": 236.55
+                      "average": 237.44
                     },
                     "cycle": {
                       "n": 20,
-                      "median": 46.88,
-                      "average": 78.09
+                      "median": 47.61,
+                      "average": 78.39
                     }
                   }
                 }
@@ -173,13 +173,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 7,
-                      "median": 172.49,
-                      "average": 152.46
+                      "median": 173.96,
+                      "average": 153.93
                     },
                     "cycle": {
                       "n": 5,
-                      "median": 103.48,
-                      "average": 107.71
+                      "median": 104.95,
+                      "average": 109.18
                     }
                   }
                 }
@@ -212,12 +212,12 @@
                     "lead": {
                       "n": 32,
                       "median": 195.31,
-                      "average": 213.32
+                      "average": 214.2
                     },
                     "cycle": {
                       "n": 16,
                       "median": 100.34,
-                      "average": 111.85
+                      "average": 112.5
                     }
                   }
                 }
@@ -288,12 +288,12 @@
                     "lead": {
                       "n": 30,
                       "median": 146.21,
-                      "average": 164.48
+                      "average": 165.02
                     },
                     "cycle": {
                       "n": 8,
                       "median": 81.51,
-                      "average": 107.36
+                      "average": 107.54
                     }
                   }
                 }
@@ -330,12 +330,12 @@
                     "lead": {
                       "n": 40,
                       "median": 125.72,
-                      "average": 154.44
+                      "average": 155.06
                     },
                     "cycle": {
                       "n": 22,
                       "median": 32.53,
-                      "average": 53.61
+                      "average": 53.67
                     }
                   }
                 }
@@ -368,7 +368,7 @@
                     "lead": {
                       "n": 25,
                       "median": 22.96,
-                      "average": 51.31
+                      "average": 51.42
                     },
                     "cycle": {
                       "n": 21,
@@ -406,12 +406,12 @@
                     "lead": {
                       "n": 51,
                       "median": 262.3,
-                      "average": 236.55
+                      "average": 237.44
                     },
                     "cycle": {
                       "n": 20,
-                      "median": 46.88,
-                      "average": 78.09
+                      "median": 47.61,
+                      "average": 78.39
                     }
                   }
                 }
@@ -443,13 +443,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 7,
-                      "median": 172.49,
-                      "average": 152.46
+                      "median": 173.96,
+                      "average": 153.93
                     },
                     "cycle": {
                       "n": 5,
-                      "median": 103.48,
-                      "average": 107.71
+                      "median": 104.95,
+                      "average": 109.18
                     }
                   }
                 }
@@ -482,12 +482,12 @@
                     "lead": {
                       "n": 32,
                       "median": 195.31,
-                      "average": 213.32
+                      "average": 214.2
                     },
                     "cycle": {
                       "n": 16,
                       "median": 100.34,
-                      "average": 111.85
+                      "average": 112.5
                     }
                   }
                 }
@@ -558,12 +558,12 @@
                     "lead": {
                       "n": 30,
                       "median": 146.21,
-                      "average": 164.48
+                      "average": 165.02
                     },
                     "cycle": {
                       "n": 8,
                       "median": 81.51,
-                      "average": 107.36
+                      "average": 107.54
                     }
                   }
                 }
@@ -599,13 +599,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 86,
-                      "median": 122.07,
-                      "average": 168.29
+                      "median": 122.81,
+                      "average": 169.13
                     },
                     "cycle": {
                       "n": 30,
                       "median": 23.07,
-                      "average": 40.06
+                      "average": 40.16
                     }
                   }
                 }
@@ -637,13 +637,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 48,
-                      "median": 185.66,
-                      "average": 177.33
+                      "median": 187.13,
+                      "average": 178.16
                     },
                     "cycle": {
                       "n": 18,
                       "median": 34.25,
-                      "average": 45.35
+                      "average": 45.43
                     }
                   }
                 }
@@ -676,12 +676,12 @@
                     "lead": {
                       "n": 57,
                       "median": 189,
-                      "average": 183.99
+                      "average": 184.84
                     },
                     "cycle": {
                       "n": 18,
                       "median": 26.23,
-                      "average": 58.3
+                      "average": 58.47
                     }
                   }
                 }
@@ -751,8 +751,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 7,
-                      "median": 201.08,
-                      "average": 197.9
+                      "median": 202.55,
+                      "average": 198.95
                     },
                     "cycle": {
                       "n": 0,
@@ -872,7 +872,7 @@
                     "lead": {
                       "n": 19,
                       "median": 26.13,
-                      "average": 34.92
+                      "average": 35.46
                     },
                     "cycle": {
                       "n": 11,
@@ -948,7 +948,7 @@
                     "lead": {
                       "n": 5,
                       "median": 143.31,
-                      "average": 150.76
+                      "average": 151.35
                     },
                     "cycle": {
                       "n": 3,
@@ -1023,8 +1023,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 2,
-                      "median": 53.19,
-                      "average": 53.19
+                      "median": 53.92,
+                      "average": 53.92
                     },
                     "cycle": {
                       "n": 0,
@@ -1099,13 +1099,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 6,
-                      "median": 16.98,
-                      "average": 34.38
+                      "median": 18.45,
+                      "average": 35.61
                     },
                     "cycle": {
                       "n": 1,
-                      "median": 2.2,
-                      "average": 2.2
+                      "median": 3.67,
+                      "average": 3.67
                     }
                   }
                 }
@@ -1141,8 +1141,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 3,
-                      "median": 30.17,
-                      "average": 34.05
+                      "median": 31.64,
+                      "average": 35.03
                     },
                     "cycle": {
                       "n": 1,
@@ -1218,7 +1218,7 @@
                     "lead": {
                       "n": 5,
                       "median": 143.31,
-                      "average": 150.76
+                      "average": 151.35
                     },
                     "cycle": {
                       "n": 3,
@@ -1293,8 +1293,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 2,
-                      "median": 53.19,
-                      "average": 53.19
+                      "median": 53.92,
+                      "average": 53.92
                     },
                     "cycle": {
                       "n": 0,
@@ -1369,13 +1369,13 @@
                   "full_backlog": {
                     "lead": {
                       "n": 6,
-                      "median": 16.98,
-                      "average": 34.38
+                      "median": 18.45,
+                      "average": 35.61
                     },
                     "cycle": {
                       "n": 1,
-                      "median": 2.2,
-                      "average": 2.2
+                      "median": 3.67,
+                      "average": 3.67
                     }
                   }
                 }
@@ -1412,7 +1412,7 @@
                     "lead": {
                       "n": 16,
                       "median": 26.13,
-                      "average": 35.08
+                      "average": 35.54
                     },
                     "cycle": {
                       "n": 10,
@@ -1450,7 +1450,7 @@
                     "lead": {
                       "n": 9,
                       "median": 26.13,
-                      "average": 32.87
+                      "average": 33.36
                     },
                     "cycle": {
                       "n": 6,
@@ -1487,8 +1487,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 10,
-                      "median": 17.42,
-                      "average": 32.35
+                      "median": 18.89,
+                      "average": 33.08
                     },
                     "cycle": {
                       "n": 4,
@@ -3330,13 +3330,13 @@
                 "API": {
                   "parking_lot": {
                     "n": 121,
-                    "median": 78.97,
-                    "average": 140.45
+                    "median": 80.44,
+                    "average": 141.12
                   },
                   "design": {
                     "n": 15,
-                    "median": 36.14,
-                    "average": 56.65
+                    "median": 37.61,
+                    "average": 57.43
                   },
                   "ready_for_development": {
                     "n": 16,
@@ -3346,7 +3346,7 @@
                   "in_development": {
                     "n": 51,
                     "median": 22.17,
-                    "average": 45.14
+                    "average": 45.23
                   },
                   "feedback": {
                     "n": 10,
@@ -3358,12 +3358,12 @@
                   "parking_lot": {
                     "n": 21,
                     "median": 0.19,
-                    "average": 39.98
+                    "average": 40.05
                   },
                   "design": {
                     "n": 3,
                     "median": 0.02,
-                    "average": 27.31
+                    "average": 27.8
                   },
                   "ready_for_development": {
                     "n": 4,
@@ -3384,13 +3384,13 @@
                 "Broadcast": {
                   "parking_lot": {
                     "n": 49,
-                    "median": 241.57,
-                    "average": 206.12
+                    "median": 242.66,
+                    "average": 206.9
                   },
                   "design": {
                     "n": 6,
                     "median": 32.41,
-                    "average": 39.8
+                    "average": 40.04
                   },
                   "ready_for_development": {
                     "n": 6,
@@ -3399,25 +3399,25 @@
                   },
                   "in_development": {
                     "n": 20,
-                    "median": 41.96,
-                    "average": 56.43
+                    "median": 42.7,
+                    "average": 56.58
                   },
                   "feedback": {
                     "n": 10,
                     "median": 11.45,
-                    "average": 43.32
+                    "average": 43.61
                   }
                 },
                 "Titanium": {
                   "parking_lot": {
                     "n": 5,
                     "median": 0.02,
-                    "average": 25.31
+                    "average": 25.6
                   },
                   "design": {
                     "n": 5,
                     "median": 8.21,
-                    "average": 48.18
+                    "average": 48.47
                   },
                   "ready_for_development": {
                     "n": 5,
@@ -3426,8 +3426,8 @@
                   },
                   "in_development": {
                     "n": 5,
-                    "median": 103.48,
-                    "average": 107.71
+                    "median": 104.95,
+                    "average": 109.18
                   },
                   "feedback": {
                     "n": 0,
@@ -3438,13 +3438,13 @@
                 "Orchestration": {
                   "parking_lot": {
                     "n": 31,
-                    "median": 107.54,
-                    "average": 156.96
+                    "median": 109.01,
+                    "average": 157.48
                   },
                   "design": {
                     "n": 4,
                     "median": 17.11,
-                    "average": 33.65
+                    "average": 34.02
                   },
                   "ready_for_development": {
                     "n": 2,
@@ -3454,7 +3454,7 @@
                   "in_development": {
                     "n": 15,
                     "median": 105.57,
-                    "average": 113.94
+                    "average": 114.62
                   },
                   "feedback": {
                     "n": 2,
@@ -3493,12 +3493,12 @@
                   "parking_lot": {
                     "n": 26,
                     "median": 130.44,
-                    "average": 148.78
+                    "average": 149.29
                   },
                   "design": {
                     "n": 1,
-                    "median": 169.13,
-                    "average": 169.13
+                    "median": 170.6,
+                    "average": 170.6
                   },
                   "ready_for_development": {
                     "n": 2,
@@ -3508,7 +3508,7 @@
                   "in_development": {
                     "n": 7,
                     "median": 77.04,
-                    "average": 107.15
+                    "average": 107.36
                   },
                   "feedback": {
                     "n": 2,
@@ -3523,13 +3523,13 @@
                     "API": {
                       "parking_lot": {
                         "n": 121,
-                        "median": 78.97,
-                        "average": 140.45
+                        "median": 80.44,
+                        "average": 141.12
                       },
                       "design": {
                         "n": 15,
-                        "median": 36.14,
-                        "average": 56.65
+                        "median": 37.61,
+                        "average": 57.43
                       },
                       "ready_for_development": {
                         "n": 16,
@@ -3539,7 +3539,7 @@
                       "in_development": {
                         "n": 51,
                         "median": 22.17,
-                        "average": 45.14
+                        "average": 45.23
                       },
                       "feedback": {
                         "n": 10,
@@ -3551,12 +3551,12 @@
                       "parking_lot": {
                         "n": 21,
                         "median": 0.19,
-                        "average": 39.98
+                        "average": 40.05
                       },
                       "design": {
                         "n": 3,
                         "median": 0.02,
-                        "average": 27.31
+                        "average": 27.8
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -3577,13 +3577,13 @@
                     "Broadcast": {
                       "parking_lot": {
                         "n": 49,
-                        "median": 241.57,
-                        "average": 206.12
+                        "median": 242.66,
+                        "average": 206.9
                       },
                       "design": {
                         "n": 6,
                         "median": 32.41,
-                        "average": 39.8
+                        "average": 40.04
                       },
                       "ready_for_development": {
                         "n": 6,
@@ -3592,25 +3592,25 @@
                       },
                       "in_development": {
                         "n": 20,
-                        "median": 41.96,
-                        "average": 56.43
+                        "median": 42.7,
+                        "average": 56.58
                       },
                       "feedback": {
                         "n": 10,
                         "median": 11.45,
-                        "average": 43.32
+                        "average": 43.61
                       }
                     },
                     "Titanium": {
                       "parking_lot": {
                         "n": 5,
                         "median": 0.02,
-                        "average": 25.31
+                        "average": 25.6
                       },
                       "design": {
                         "n": 5,
                         "median": 8.21,
-                        "average": 48.18
+                        "average": 48.47
                       },
                       "ready_for_development": {
                         "n": 5,
@@ -3619,8 +3619,8 @@
                       },
                       "in_development": {
                         "n": 5,
-                        "median": 103.48,
-                        "average": 107.71
+                        "median": 104.95,
+                        "average": 109.18
                       },
                       "feedback": {
                         "n": 0,
@@ -3631,13 +3631,13 @@
                     "Orchestration": {
                       "parking_lot": {
                         "n": 31,
-                        "median": 107.54,
-                        "average": 156.96
+                        "median": 109.01,
+                        "average": 157.48
                       },
                       "design": {
                         "n": 4,
                         "median": 17.11,
-                        "average": 33.65
+                        "average": 34.02
                       },
                       "ready_for_development": {
                         "n": 2,
@@ -3647,7 +3647,7 @@
                       "in_development": {
                         "n": 15,
                         "median": 105.57,
-                        "average": 113.94
+                        "average": 114.62
                       },
                       "feedback": {
                         "n": 2,
@@ -3686,12 +3686,12 @@
                       "parking_lot": {
                         "n": 26,
                         "median": 130.44,
-                        "average": 148.78
+                        "average": 149.29
                       },
                       "design": {
                         "n": 1,
-                        "median": 169.13,
-                        "average": 169.13
+                        "median": 170.6,
+                        "average": 170.6
                       },
                       "ready_for_development": {
                         "n": 2,
@@ -3701,7 +3701,7 @@
                       "in_development": {
                         "n": 7,
                         "median": 77.04,
-                        "average": 107.15
+                        "average": 107.36
                       },
                       "feedback": {
                         "n": 2,
@@ -3717,12 +3717,12 @@
                       "parking_lot": {
                         "n": 39,
                         "median": 17.05,
-                        "average": 121.23
+                        "average": 121.79
                       },
                       "design": {
                         "n": 3,
                         "median": 0.9,
-                        "average": 47.53
+                        "average": 48.02
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -3732,7 +3732,7 @@
                       "in_development": {
                         "n": 22,
                         "median": 32.54,
-                        "average": 53.61
+                        "average": 53.67
                       },
                       "feedback": {
                         "n": 0,
@@ -3744,12 +3744,12 @@
                       "parking_lot": {
                         "n": 20,
                         "median": 0.12,
-                        "average": 34.62
+                        "average": 34.69
                       },
                       "design": {
                         "n": 3,
                         "median": 0.02,
-                        "average": 27.31
+                        "average": 27.8
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -3770,13 +3770,13 @@
                     "Broadcast": {
                       "parking_lot": {
                         "n": 49,
-                        "median": 241.57,
-                        "average": 206.12
+                        "median": 242.66,
+                        "average": 206.9
                       },
                       "design": {
                         "n": 6,
                         "median": 32.41,
-                        "average": 39.8
+                        "average": 40.04
                       },
                       "ready_for_development": {
                         "n": 6,
@@ -3785,25 +3785,25 @@
                       },
                       "in_development": {
                         "n": 20,
-                        "median": 41.96,
-                        "average": 56.43
+                        "median": 42.7,
+                        "average": 56.58
                       },
                       "feedback": {
                         "n": 10,
                         "median": 11.45,
-                        "average": 43.32
+                        "average": 43.61
                       }
                     },
                     "Titanium": {
                       "parking_lot": {
                         "n": 5,
                         "median": 0.02,
-                        "average": 25.31
+                        "average": 25.6
                       },
                       "design": {
                         "n": 5,
                         "median": 8.21,
-                        "average": 48.18
+                        "average": 48.47
                       },
                       "ready_for_development": {
                         "n": 5,
@@ -3812,8 +3812,8 @@
                       },
                       "in_development": {
                         "n": 5,
-                        "median": 103.48,
-                        "average": 107.71
+                        "median": 104.95,
+                        "average": 109.18
                       },
                       "feedback": {
                         "n": 0,
@@ -3824,13 +3824,13 @@
                     "Orchestration": {
                       "parking_lot": {
                         "n": 31,
-                        "median": 107.54,
-                        "average": 156.96
+                        "median": 109.01,
+                        "average": 157.48
                       },
                       "design": {
                         "n": 4,
                         "median": 17.11,
-                        "average": 33.65
+                        "average": 34.02
                       },
                       "ready_for_development": {
                         "n": 2,
@@ -3840,7 +3840,7 @@
                       "in_development": {
                         "n": 15,
                         "median": 105.57,
-                        "average": 113.94
+                        "average": 114.62
                       },
                       "feedback": {
                         "n": 2,
@@ -3879,12 +3879,12 @@
                       "parking_lot": {
                         "n": 26,
                         "median": 130.44,
-                        "average": 148.78
+                        "average": 149.29
                       },
                       "design": {
                         "n": 1,
-                        "median": 169.13,
-                        "average": 169.13
+                        "median": 170.6,
+                        "average": 170.6
                       },
                       "ready_for_development": {
                         "n": 2,
@@ -3894,7 +3894,7 @@
                       "in_development": {
                         "n": 7,
                         "median": 77.04,
-                        "average": 107.15
+                        "average": 107.36
                       },
                       "feedback": {
                         "n": 2,
@@ -3909,13 +3909,13 @@
                     "API": {
                       "parking_lot": {
                         "n": 82,
-                        "median": 103.8,
-                        "average": 149.59
+                        "median": 104.54,
+                        "average": 150.31
                       },
                       "design": {
                         "n": 12,
-                        "median": 40.9,
-                        "average": 58.92
+                        "median": 41.63,
+                        "average": 59.78
                       },
                       "ready_for_development": {
                         "n": 12,
@@ -3925,7 +3925,7 @@
                       "in_development": {
                         "n": 29,
                         "median": 21.55,
-                        "average": 38.72
+                        "average": 38.82
                       },
                       "feedback": {
                         "n": 10,
@@ -3936,13 +3936,13 @@
                     "Frontend": {
                       "parking_lot": {
                         "n": 44,
-                        "median": 160.29,
-                        "average": 165.78
+                        "median": 161.76,
+                        "average": 166.59
                       },
                       "design": {
                         "n": 5,
                         "median": 25.99,
-                        "average": 71.19
+                        "average": 71.78
                       },
                       "ready_for_development": {
                         "n": 5,
@@ -3952,7 +3952,7 @@
                       "in_development": {
                         "n": 18,
                         "median": 27.25,
-                        "average": 44.4
+                        "average": 44.48
                       },
                       "feedback": {
                         "n": 1,
@@ -3963,13 +3963,13 @@
                     "Broadcast": {
                       "parking_lot": {
                         "n": 54,
-                        "median": 129.21,
-                        "average": 161.06
+                        "median": 129.94,
+                        "average": 161.74
                       },
                       "design": {
                         "n": 10,
-                        "median": 59.34,
-                        "average": 68.22
+                        "median": 60.07,
+                        "average": 69.1
                       },
                       "ready_for_development": {
                         "n": 6,
@@ -3979,7 +3979,7 @@
                       "in_development": {
                         "n": 17,
                         "median": 15.93,
-                        "average": 56.09
+                        "average": 56.26
                       },
                       "feedback": {
                         "n": 11,
@@ -4017,13 +4017,13 @@
                     "Orchestration": {
                       "parking_lot": {
                         "n": 7,
-                        "median": 182.07,
-                        "average": 168.74
+                        "median": 183.54,
+                        "average": 169.58
                       },
                       "design": {
                         "n": 1,
-                        "median": 10.33,
-                        "average": 10.33
+                        "median": 11.8,
+                        "average": 11.8
                       },
                       "ready_for_development": {
                         "n": 2,
@@ -5655,12 +5655,12 @@
                   "parking_lot": {
                     "n": 10,
                     "median": 0,
-                    "average": 2.06
+                    "average": 2.21
                   },
                   "design": {
                     "n": 10,
-                    "median": 12.42,
-                    "average": 18.35
+                    "median": 13.89,
+                    "average": 19.23
                   },
                   "ready_for_development": {
                     "n": 4,
@@ -5708,13 +5708,13 @@
                 "Broadcast": {
                   "parking_lot": {
                     "n": 4,
-                    "median": 56.09,
-                    "average": 100.6
+                    "median": 56.82,
+                    "average": 100.97
                   },
                   "design": {
                     "n": 2,
-                    "median": 33.68,
-                    "average": 33.68
+                    "median": 34.41,
+                    "average": 34.41
                   },
                   "ready_for_development": {
                     "n": 1,
@@ -5767,8 +5767,8 @@
                   },
                   "design": {
                     "n": 2,
-                    "median": 52.99,
-                    "average": 52.99
+                    "median": 53.73,
+                    "average": 53.73
                   },
                   "ready_for_development": {
                     "n": 0,
@@ -5816,13 +5816,13 @@
                 "UNMAPPED": {
                   "parking_lot": {
                     "n": 5,
-                    "median": 17.42,
-                    "average": 35.93
+                    "median": 18.9,
+                    "average": 36.82
                   },
                   "design": {
                     "n": 2,
-                    "median": 12.22,
-                    "average": 12.22
+                    "median": 12.96,
+                    "average": 12.96
                   },
                   "ready_for_development": {
                     "n": 0,
@@ -5831,8 +5831,8 @@
                   },
                   "in_development": {
                     "n": 1,
-                    "median": 2.2,
-                    "average": 2.2
+                    "median": 3.67,
+                    "average": 3.67
                   },
                   "feedback": {
                     "n": 0,
@@ -5848,12 +5848,12 @@
                       "parking_lot": {
                         "n": 10,
                         "median": 0,
-                        "average": 2.06
+                        "average": 2.21
                       },
                       "design": {
                         "n": 10,
-                        "median": 12.42,
-                        "average": 18.35
+                        "median": 13.89,
+                        "average": 19.23
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -5901,13 +5901,13 @@
                     "Broadcast": {
                       "parking_lot": {
                         "n": 4,
-                        "median": 56.09,
-                        "average": 100.6
+                        "median": 56.82,
+                        "average": 100.97
                       },
                       "design": {
                         "n": 2,
-                        "median": 33.68,
-                        "average": 33.68
+                        "median": 34.41,
+                        "average": 34.41
                       },
                       "ready_for_development": {
                         "n": 1,
@@ -5960,8 +5960,8 @@
                       },
                       "design": {
                         "n": 2,
-                        "median": 52.99,
-                        "average": 52.99
+                        "median": 53.73,
+                        "average": 53.73
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6009,13 +6009,13 @@
                     "UNMAPPED": {
                       "parking_lot": {
                         "n": 5,
-                        "median": 17.42,
-                        "average": 35.93
+                        "median": 18.9,
+                        "average": 36.82
                       },
                       "design": {
                         "n": 2,
-                        "median": 12.22,
-                        "average": 12.22
+                        "median": 12.96,
+                        "average": 12.96
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6024,8 +6024,8 @@
                       },
                       "in_development": {
                         "n": 1,
-                        "median": 2.2,
-                        "average": 2.2
+                        "median": 3.67,
+                        "average": 3.67
                       },
                       "feedback": {
                         "n": 0,
@@ -6040,13 +6040,13 @@
                     "API": {
                       "parking_lot": {
                         "n": 1,
-                        "median": 5.52,
-                        "average": 5.52
+                        "median": 6.99,
+                        "average": 6.99
                       },
                       "design": {
                         "n": 2,
-                        "median": 47.26,
-                        "average": 47.26
+                        "median": 48,
+                        "average": 48
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6094,13 +6094,13 @@
                     "Broadcast": {
                       "parking_lot": {
                         "n": 4,
-                        "median": 56.09,
-                        "average": 100.6
+                        "median": 56.82,
+                        "average": 100.97
                       },
                       "design": {
                         "n": 2,
-                        "median": 33.68,
-                        "average": 33.68
+                        "median": 34.41,
+                        "average": 34.41
                       },
                       "ready_for_development": {
                         "n": 1,
@@ -6153,8 +6153,8 @@
                       },
                       "design": {
                         "n": 2,
-                        "median": 52.99,
-                        "average": 52.99
+                        "median": 53.73,
+                        "average": 53.73
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6202,13 +6202,13 @@
                     "UNMAPPED": {
                       "parking_lot": {
                         "n": 5,
-                        "median": 17.42,
-                        "average": 35.93
+                        "median": 18.9,
+                        "average": 36.82
                       },
                       "design": {
                         "n": 2,
-                        "median": 12.22,
-                        "average": 12.22
+                        "median": 12.96,
+                        "average": 12.96
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6217,8 +6217,8 @@
                       },
                       "in_development": {
                         "n": 1,
-                        "median": 2.2,
-                        "average": 2.2
+                        "median": 3.67,
+                        "average": 3.67
                       },
                       "feedback": {
                         "n": 0,
@@ -6238,8 +6238,8 @@
                       },
                       "design": {
                         "n": 8,
-                        "median": 12.37,
-                        "average": 11.12
+                        "median": 13.84,
+                        "average": 12.04
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -6265,8 +6265,8 @@
                       },
                       "design": {
                         "n": 5,
-                        "median": 12.32,
-                        "average": 11.88
+                        "median": 13.79,
+                        "average": 12.76
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6292,8 +6292,8 @@
                       },
                       "design": {
                         "n": 6,
-                        "median": 12.42,
-                        "average": 12.91
+                        "median": 13.89,
+                        "average": 14.14
                       },
                       "ready_for_development": {
                         "n": 4,

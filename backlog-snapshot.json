@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-02-28T11:58:35.411Z",
+  "updatedAt": "2026-03-01T23:17:10.417Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-02-28T11:58:35.411Z",
+    "syncedAt": "2026-03-01T23:17:10.417Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps.",
     "trendDates": {
       "source": "sprint_anchor",
@@ -11,7 +11,7 @@
       "firstDate": "2025-06-23",
       "lastDate": "2026-02-16",
       "startBoundary": "2025-06-23",
-      "endBoundary": "2026-02-28",
+      "endBoundary": "2026-03-01",
       "totalResolvedBeforeConstraints": 18,
       "usedFallbackDates": false,
       "fallbackReason": "",
@@ -30,8 +30,8 @@
       "status": "UAT",
       "label": "Broadcast"
     },
-    "generatedAt": "2026-02-28T11:58:34.826Z",
-    "totalIssues": 18,
+    "generatedAt": "2026-03-01T23:17:09.851Z",
+    "totalIssues": 15,
     "buckets": [
       {
         "id": "d0_7",
@@ -66,21 +66,21 @@
     ],
     "priorities": {
       "highest": {
-        "count": 4,
-        "avgDays": 22,
-        "maxDays": 44,
+        "count": 2,
+        "avgDays": 9.5,
+        "maxDays": 19,
         "buckets": {
           "d0_7": 1,
           "d8_14": 0,
-          "d15_30": 2,
-          "d31_60": 1,
+          "d15_30": 1,
+          "d31_60": 0,
           "d61_plus": 0
         }
       },
       "high": {
         "count": 5,
-        "avgDays": 41.6,
-        "maxDays": 78,
+        "avgDays": 42.8,
+        "maxDays": 79,
         "buckets": {
           "d0_7": 1,
           "d8_14": 0,
@@ -90,11 +90,11 @@
         }
       },
       "medium": {
-        "count": 9,
-        "avgDays": 49.9,
-        "maxDays": 78,
+        "count": 8,
+        "avgDays": 56.9,
+        "maxDays": 79,
         "buckets": {
-          "d0_7": 1,
+          "d0_7": 0,
           "d8_14": 0,
           "d15_30": 2,
           "d31_60": 2,
@@ -133,23 +133,23 @@
         "highest": {
           "avg_dev_days": 9.12,
           "median_dev_days": 0.87,
-          "avg_uat_days": 18.62,
-          "median_uat_days": 18.41,
+          "avg_uat_days": 18.48,
+          "median_uat_days": 19.89,
           "n_dev": 7,
           "n_uat": 7
         },
         "high": {
           "avg_dev_days": 29.33,
           "median_dev_days": 0.99,
-          "avg_uat_days": 66.22,
-          "median_uat_days": 73.38,
+          "avg_uat_days": 67.69,
+          "median_uat_days": 74.85,
           "n_dev": 5,
           "n_uat": 5
         },
         "medium": {
-          "avg_dev_days": 30.3,
-          "median_dev_days": 5.97,
-          "avg_uat_days": 55,
+          "avg_dev_days": 30.84,
+          "median_dev_days": 7,
+          "avg_uat_days": 56.31,
           "median_uat_days": 42.5,
           "n_dev": 11,
           "n_uat": 11
@@ -160,23 +160,23 @@
           "highest": {
             "avg_dev_days": 9.12,
             "median_dev_days": 0.87,
-            "avg_uat_days": 18.62,
-            "median_uat_days": 18.41,
+            "avg_uat_days": 18.48,
+            "median_uat_days": 19.89,
             "n_dev": 7,
             "n_uat": 7
           },
           "high": {
             "avg_dev_days": 29.33,
             "median_dev_days": 0.99,
-            "avg_uat_days": 66.22,
-            "median_uat_days": 73.38,
+            "avg_uat_days": 67.69,
+            "median_uat_days": 74.85,
             "n_dev": 5,
             "n_uat": 5
           },
           "medium": {
-            "avg_dev_days": 30.3,
-            "median_dev_days": 5.97,
-            "avg_uat_days": 55,
+            "avg_dev_days": 30.84,
+            "median_dev_days": 7,
+            "avg_uat_days": 56.31,
             "median_uat_days": 42.5,
             "n_dev": 11,
             "n_uat": 11
@@ -186,24 +186,24 @@
           "highest": {
             "avg_dev_days": 9.12,
             "median_dev_days": 0.87,
-            "avg_uat_days": 18.62,
-            "median_uat_days": 18.41,
+            "avg_uat_days": 18.48,
+            "median_uat_days": 19.89,
             "n_dev": 7,
             "n_uat": 7
           },
           "high": {
             "avg_dev_days": 36.66,
             "median_dev_days": 1.04,
-            "avg_uat_days": 52.69,
-            "median_uat_days": 48.26,
+            "avg_uat_days": 54.16,
+            "median_uat_days": 49.73,
             "n_dev": 4,
             "n_uat": 4
           },
           "medium": {
             "avg_dev_days": 0.72,
             "median_dev_days": 0.94,
-            "avg_uat_days": 46.23,
-            "median_uat_days": 43.48,
+            "avg_uat_days": 47.33,
+            "median_uat_days": 44.22,
             "n_dev": 4,
             "n_uat": 4
           }
@@ -212,40 +212,40 @@
       "uat_now_count": {
         "current": {
           "all": {
-            "count": 18,
-            "oldest_age_days": 180.37,
-            "avg_age_days": 61.61
+            "count": 15,
+            "oldest_age_days": 181.84,
+            "avg_age_days": 68.99
           },
           "bugs_only": {
-            "count": 11,
-            "oldest_age_days": 75.47,
-            "avg_age_days": 35.56
+            "count": 9,
+            "oldest_age_days": 76.94,
+            "avg_age_days": 35.41
           }
         }
       }
     },
     "kpi_8": {
       "broadcast": {
-        "dev_time_days_avg": 15.65,
-        "dev_time_days_median": 1.29,
-        "uat_time_days_avg": 53.32,
-        "uat_time_days_median": 36.38,
+        "dev_time_days_avg": 15.46,
+        "dev_time_days_median": 1.01,
+        "uat_time_days_avg": 51.77,
+        "uat_time_days_median": 31.26,
         "dev_vs_uat_ratio": 0.05,
         "uat_time_by_priority": {
           "highest": {
             "n_with_uat": 7,
-            "uat_time_days_avg": 18.62,
-            "uat_time_days_median": 18.41
+            "uat_time_days_avg": 18.48,
+            "uat_time_days_median": 19.89
           },
           "high": {
             "n_with_uat": 5,
-            "uat_time_days_avg": 66.22,
-            "uat_time_days_median": 73.38
+            "uat_time_days_avg": 67.69,
+            "uat_time_days_median": 74.85
           },
           "medium": {
-            "n_with_uat": 8,
-            "uat_time_days_avg": 75.63,
-            "uat_time_days_median": 58.92
+            "n_with_uat": 9,
+            "uat_time_days_avg": 68.82,
+            "uat_time_days_median": 45.94
           },
           "other": {
             "n_with_uat": 0,
@@ -256,33 +256,33 @@
         "high_priority": {
           "dev_time_days_avg": 27.29,
           "dev_time_days_median": 1.17,
-          "uat_time_days_avg": 66.22,
-          "uat_time_days_median": 73.38
+          "uat_time_days_avg": 67.69,
+          "uat_time_days_median": 74.85
         }
       }
     },
     "kpi_9": {
       "broadcast": {
-        "uat_over_14d_pct": 83.33,
-        "uat_loop_rate_pct": 39.13,
+        "uat_over_14d_pct": 86.67,
+        "uat_loop_rate_pct": 43.48,
         "uat_by_priority": {
           "highest": {
-            "uat_current_count": 4,
-            "uat_current_oldest_age_days": 44,
-            "uat_current_age_days_avg": 22,
-            "uat_current_age_days_median": 22
+            "uat_current_count": 2,
+            "uat_current_oldest_age_days": 19,
+            "uat_current_age_days_avg": 9.5,
+            "uat_current_age_days_median": 9.5
           },
           "high": {
             "uat_current_count": 5,
-            "uat_current_oldest_age_days": 78,
-            "uat_current_age_days_avg": 41.6,
-            "uat_current_age_days_median": 38
+            "uat_current_oldest_age_days": 79,
+            "uat_current_age_days_avg": 42.8,
+            "uat_current_age_days_median": 40
           },
           "medium": {
-            "uat_current_count": 9,
-            "uat_current_oldest_age_days": 78,
-            "uat_current_age_days_avg": 49.89,
-            "uat_current_age_days_median": 46
+            "uat_current_count": 8,
+            "uat_current_oldest_age_days": 79,
+            "uat_current_age_days_avg": 56.88,
+            "uat_current_age_days_median": 61
           },
           "other": {
             "uat_current_count": 0,
@@ -292,9 +292,9 @@
           }
         },
         "high_priority": {
-          "uat_current_age_days_avg": 41.6,
-          "uat_current_age_days_median": 38,
-          "uat_current_oldest_age_days": 78
+          "uat_current_age_days_avg": 42.8,
+          "uat_current_age_days_median": 40,
+          "uat_current_oldest_age_days": 79
         }
       }
     }
@@ -1044,7 +1044,7 @@
       "legacy": {
         "date": "2026-02-16",
         "highest": 0,
-        "high": 2,
+        "high": 3,
         "medium": 6,
         "low": 31,
         "lowest": 0
@@ -1060,12 +1060,12 @@
       "bc": {
         "date": "2026-02-16",
         "highest": 5,
-        "high": 76,
+        "high": 78,
         "medium": 116,
         "low": 8,
         "lowest": 0,
-        "longstanding_30d_plus": 184,
-        "longstanding_60d_plus": 168
+        "longstanding_30d_plus": 182,
+        "longstanding_60d_plus": 167
       }
     }
   ]
