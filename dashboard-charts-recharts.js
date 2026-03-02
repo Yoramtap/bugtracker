@@ -1124,7 +1124,7 @@
         colors,
         yUpper,
         height: singleChartHeightForMode("uat", CHART_HEIGHTS.standard),
-        showLegend: false,
+        showLegend: true,
         colorByCategoryKey: "bucketLabel",
         xAxisProps: {
           dataKey: "bucketLabel",
