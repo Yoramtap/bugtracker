@@ -634,8 +634,7 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     categoryKey: "phaseLabel",
     timeWindowLabel: "",
     orientation: "columns",
-    showLegend: false,
-    colorByCategoryKey: "phaseLabel"
+    showLegend: false
   });
   context.textContent = `${chartTitleText} • ${yearLabel} • sample size: ${lifecycleSampleSize} • unmapped excluded`;
 }
