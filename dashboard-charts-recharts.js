@@ -323,6 +323,12 @@
       {
         verticalAlign: "top",
         height: legendHeight,
+        iconSize: compact ? 11 : 13,
+        itemStyle: {
+          paddingRight: compact ? 10 : 12,
+          paddingBottom: compact ? 6 : 4,
+          cursor: "pointer"
+        },
         wrapperStyle: {
           color: colors.text,
           cursor: "pointer",
@@ -348,7 +354,12 @@
                 color: "var(--text, #1f3347)",
                 opacity: hiddenKeys.has(entry?.dataKey) ? 0.45 : 1,
                 textDecoration: hiddenKeys.has(entry?.dataKey) ? "line-through" : "none",
-                fontSize: compact ? 11 : 12
+                fontSize: compact ? 11 : 12,
+                display: "inline-flex",
+                alignItems: "center",
+                minHeight: compact ? "34px" : "30px",
+                padding: compact ? "4px 6px" : "2px 5px",
+                borderRadius: "10px"
               }
             },
             value

@@ -280,6 +280,82 @@ h2 {
   gap: 4px;
   font-size: 0.82rem;
   color: rgba(31, 51, 71, 0.92);
+  padding: 4px 6px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  min-height: 30px;
+}
+
+.radio-group-card label:has(input:checked) {
+  border-color: rgba(63, 115, 184, 0.44);
+  background: rgba(63, 115, 184, 0.08);
+}
+
+.radio-group-card input[type="radio"] {
+  inline-size: 14px;
+  block-size: 14px;
+}
+
+.chart-canvas .recharts-default-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 2px 4px 6px;
+  line-height: 1.3;
+}
+
+.chart-canvas .recharts-default-legend .recharts-legend-item {
+  margin-right: 0 !important;
+}
+
+.chart-canvas .recharts-default-legend .recharts-legend-item-text {
+  line-height: 1.25;
+}
+
+@media (max-width: 768px) {
+  .radio-control-groups {
+    padding: 0 6px;
+    gap: 8px;
+  }
+
+  .radio-group-card {
+    width: min(100%, 440px);
+    min-width: 0;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .radio-group-card legend {
+    width: 100%;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  .radio-group-card label {
+    min-height: 42px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+    border-color: rgba(31, 51, 71, 0.16);
+    background: rgba(255, 255, 255, 0.75);
+  }
+
+  .radio-group-card input[type="radio"] {
+    inline-size: 16px;
+    block-size: 16px;
+  }
+
+  .chart-canvas .recharts-default-legend {
+    gap: 8px 8px;
+    justify-content: flex-start;
+    padding-inline: 8px;
+  }
+
+  .chart-canvas .recharts-default-legend .recharts-legend-item {
+    min-height: 38px;
+  }
+}
 }
 
 .composition-toggle-row {
