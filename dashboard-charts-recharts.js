@@ -21,8 +21,7 @@
     CartesianGrid,
     XAxis,
     YAxis,
-    Tooltip,
-    Legend
+    Tooltip
   } = Recharts;
 
   const TEAM_CONFIG = [{ key: "api", label: "API" }, { key: "legacy", label: "Legacy FE" }, { key: "react", label: "React FE" }, { key: "bc", label: "BC" }];
@@ -124,13 +123,6 @@
     const width = viewportWidthPx();
     const itemsPerRow = width <= 420 ? 2 : width <= 680 ? 3 : width <= 1024 ? 4 : 6;
     return Math.max(1, Math.ceil(count / itemsPerRow));
-  }
-
-  function legendHeightForDefs(defsCount, compact) {
-    const rows = legendRowsForViewport(defsCount);
-    const rowHeight = compact ? 28 : 24;
-    const base = compact ? 36 : 30;
-    return Math.max(base, rows * rowHeight + 6);
   }
 
   function tickIntervalForMobileLabels(pointsCount) {
@@ -342,55 +334,56 @@
     );
   }
 
-  function renderLegendNode({ colors, defs, type, hiddenKeys, setHiddenKeys, compact = false }) {
-    const legendHeight = legendHeightForDefs(Array.isArray(defs) ? defs.length : 0, compact);
+  function renderLegendNode({ colors, defs, hiddenKeys, setHiddenKeys, compact = false }) {
+    const legendRows = legendRowsForViewport(Array.isArray(defs) ? defs.length : 0);
+    const shouldOpenByDefault = !compact && legendRows <= 2;
     return h(
-      Legend,
+      "details",
       {
-        verticalAlign: "top",
-        height: legendHeight,
-        iconSize: compact ? 11 : 13,
-        itemStyle: {
-          paddingRight: compact ? 10 : 12,
-          paddingBottom: compact ? 6 : 4,
-          cursor: "pointer"
-        },
-        wrapperStyle: {
-          color: colors.text,
-          cursor: "pointer",
-          fontSize: compact ? 11 : 12,
-          lineHeight: compact ? "1.25" : "1.3"
-        },
-        payload: defs.map((item) => ({
-          value: item.name,
-          type,
-          color: item.stroke || item.fill,
-          dataKey: item.dataKey
-        })),
-        onClick: (entry) => {
-          const key = entry?.dataKey || entry?.payload?.dataKey || null;
-          if (!key) return;
-          setHiddenKeys((prev) => toggleLegendKey(prev, key));
-        },
-        formatter: (value, entry) =>
-          h(
-            "span",
+        className: "series-drawer",
+        open: shouldOpenByDefault
+      },
+      h(
+        "summary",
+        { className: "series-drawer__summary" },
+        "Series"
+      ),
+      h(
+        "div",
+        { className: "series-drawer__items" },
+        defs.map((item) => {
+          const key = item?.dataKey || "";
+          const hidden = hiddenKeys.has(key);
+          const swatchColor = item?.stroke || item?.fill || colors.text;
+          return h(
+            "button",
             {
-              style: {
-                color: "var(--text, #1f3347)",
-                opacity: hiddenKeys.has(entry?.dataKey) ? 0.45 : 1,
-                textDecoration: hiddenKeys.has(entry?.dataKey) ? "line-through" : "none",
-                fontSize: compact ? 11 : 12,
-                display: "inline-flex",
-                alignItems: "center",
-                minHeight: compact ? "34px" : "30px",
-                padding: compact ? "4px 6px" : "2px 5px",
-                borderRadius: "10px"
-              }
+              type: "button",
+              className: "series-drawer__item",
+              "aria-pressed": hidden ? "false" : "true",
+              title: hidden ? `Show ${item.name}` : `Hide ${item.name}`,
+              onClick: () => setHiddenKeys((prev) => toggleLegendKey(prev, key))
             },
-            value
-          )
-      }
+            h("span", {
+              className: "series-drawer__swatch",
+              style: { background: swatchColor, opacity: hidden ? 0.35 : 1 }
+            }),
+            h(
+              "span",
+              {
+                className: "series-drawer__label",
+                style: {
+                  color: "var(--text, #1f3347)",
+                  opacity: hidden ? 0.45 : 1,
+                  textDecoration: hidden ? "line-through" : "none",
+                  fontSize: compact ? 11 : 12
+                }
+              },
+              item.name
+            )
+          );
+        })
+      )
     );
   }
 
@@ -491,7 +484,7 @@
     };
   }
 
-function renderBarChartShell({
+  function renderBarChartShell({
     rows,
     colors,
     height,
@@ -501,31 +494,35 @@ function renderBarChartShell({
     xAxisProps,
     yAxisProps,
     tooltipProps,
-    legendNode,
+    legendDrawerNode,
     barNodes,
     overlayNodes = [],
     gridVertical = false
   }) {
     return h(
-      ResponsiveContainer,
-      { width: "100%", height },
+      "div",
+      { className: "chart-series-shell" },
+      legendDrawerNode,
       h(
-        BarChart,
-        {
-          data: rows,
-          layout: chartLayout,
-          margin,
-          barCategoryGap: layout.categoryGap,
-          barGap: BAR_LAYOUT.groupGap,
-          maxBarSize: layout.maxBarSize
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: gridVertical }),
-        h(XAxis, xAxisProps),
-        h(YAxis, yAxisProps),
-        h(Tooltip, tooltipProps),
-        legendNode,
-        ...barNodes,
-        ...overlayNodes
+        ResponsiveContainer,
+        { width: "100%", height },
+        h(
+          BarChart,
+          {
+            data: rows,
+            layout: chartLayout,
+            margin,
+            barCategoryGap: layout.categoryGap,
+            barGap: BAR_LAYOUT.groupGap,
+            maxBarSize: layout.maxBarSize
+          },
+          h(CartesianGrid, { stroke: colors.grid, vertical: gridVertical }),
+          h(XAxis, xAxisProps),
+          h(YAxis, yAxisProps),
+          h(Tooltip, tooltipProps),
+          ...barNodes,
+          ...overlayNodes
+        )
       )
     );
   }
@@ -597,58 +594,61 @@ function renderBarChartShell({
     const layout = trendLayoutForViewport(rows.length);
 
     return h(
-      ResponsiveContainer,
-      { width: "100%", height: layout.chartHeight },
+      "div",
+      { className: "chart-series-shell" },
+      renderLegendNode({
+        colors,
+        defs: lineDefs,
+        hiddenKeys,
+        setHiddenKeys,
+        compact: layout.legendCompact
+      }),
       h(
-        LineChart,
-        {
-          data: rows,
-          margin: layout.margin
-        },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "dateShort",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: layout.xTickFontSize },
-          tickMargin: layout.xTickMargin,
-          interval: layout.xAxisInterval,
-          minTickGap: layout.minTickGap
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: layout.yTickFontSize },
-          domain: [0, yUpper]
-        }),
-        h(Tooltip, {
-          content: createTooltipContent(colors, (row, payload) => [
-            tooltipTitleLine("date", row.date || "", colors),
-            ...payload.map((item) =>
-              makeTooltipLine(item.dataKey, `${item.name}: ${toNumber(item.value)}`, colors)
-            )
-          ]),
-          cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
-        }),
-        renderLegendNode({
-          colors,
-          defs: lineDefs,
-          type: "line",
-          hiddenKeys,
-          setHiddenKeys,
-          compact: layout.legendCompact
-        }),
-        lineDefs.map((line) =>
-          h(Line, {
-            key: line.dataKey,
-            type: "monotone",
-            dataKey: line.dataKey,
-            name: line.name,
-            stroke: line.stroke,
-            strokeDasharray: line.strokeDasharray,
-            strokeWidth: line.strokeWidth,
-            dot: line.dot,
-            activeDot: activeLineDot(colors),
-            hide: hiddenKeys.has(line.dataKey)
-          })
+        ResponsiveContainer,
+        { width: "100%", height: layout.chartHeight },
+        h(
+          LineChart,
+          {
+            data: rows,
+            margin: layout.margin
+          },
+          h(CartesianGrid, { stroke: colors.grid, vertical: false }),
+          h(XAxis, {
+            dataKey: "dateShort",
+            stroke: colors.text,
+            tick: { fill: colors.text, fontSize: layout.xTickFontSize },
+            tickMargin: layout.xTickMargin,
+            interval: layout.xAxisInterval,
+            minTickGap: layout.minTickGap
+          }),
+          h(YAxis, {
+            stroke: colors.text,
+            tick: { fill: colors.text, fontSize: layout.yTickFontSize },
+            domain: [0, yUpper]
+          }),
+          h(Tooltip, {
+            content: createTooltipContent(colors, (row, payload) => [
+              tooltipTitleLine("date", row.date || "", colors),
+              ...payload.map((item) =>
+                makeTooltipLine(item.dataKey, `${item.name}: ${toNumber(item.value)}`, colors)
+              )
+            ]),
+            cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
+          }),
+          lineDefs.map((line) =>
+            h(Line, {
+              key: line.dataKey,
+              type: "monotone",
+              dataKey: line.dataKey,
+              name: line.name,
+              stroke: line.stroke,
+              strokeDasharray: line.strokeDasharray,
+              strokeWidth: line.strokeWidth,
+              dot: line.dot,
+              activeDot: activeLineDot(colors),
+              hide: hiddenKeys.has(line.dataKey)
+            })
+          )
         )
       )
     );
@@ -821,8 +821,8 @@ function renderBarChartShell({
           }
         : baseYAxisProps(colors, yUpper ? [0, yUpper] : null),
       tooltipProps,
-      legendNode: showLegend
-        ? renderLegendNode({ colors, defs, type: "rect", hiddenKeys, setHiddenKeys })
+      legendDrawerNode: showLegend
+        ? renderLegendNode({ colors, defs, hiddenKeys, setHiddenKeys })
         : null,
       barNodes,
       overlayNodes,
@@ -895,7 +895,7 @@ function renderBarChartShell({
         ]),
         cursor: { fill: BAR_CURSOR_FILL }
       },
-      legendNode: renderLegendNode({ colors, defs: priorityDefs, type: "rect", hiddenKeys, setHiddenKeys }),
+      legendDrawerNode: renderLegendNode({ colors, defs: priorityDefs, hiddenKeys, setHiddenKeys }),
       barNodes
     });
   }

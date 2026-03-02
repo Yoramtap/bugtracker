@@ -186,6 +186,65 @@ h2 {
   max-width: 100%;
 }
 
+.chart-series-shell {
+  display: grid;
+  gap: 6px;
+}
+
+.series-drawer {
+  border: 1px solid rgba(31, 51, 71, 0.2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 2px 8px 8px;
+}
+
+.series-drawer__summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(31, 51, 71, 0.9);
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.series-drawer__summary::-webkit-details-marker {
+  display: none;
+}
+
+.series-drawer__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.series-drawer__item {
+  border: 1px solid rgba(31, 51, 71, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text);
+  padding: 6px 10px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.series-drawer__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.series-drawer__label {
+  line-height: 1.2;
+}
+
 .chart-canvas--standard {
   min-height: 280px;
 }
@@ -400,6 +459,24 @@ h2 {
 
   .chart-canvas .recharts-default-legend .recharts-legend-item {
     min-height: 38px;
+  }
+
+  .series-drawer {
+    padding: 2px 6px 8px;
+  }
+
+  .series-drawer__summary {
+    min-height: 40px;
+    font-size: 0.88rem;
+  }
+
+  .series-drawer__items {
+    gap: 6px;
+  }
+
+  .series-drawer__item {
+    min-height: 42px;
+    padding: 8px 10px;
   }
 }
 }
