@@ -1180,8 +1180,8 @@
     renderGroupedBars("management", containerId, chartRows.length > 0, {
       rows: chartRows,
       defs: [
-        { dataKey: "devMedian", name: "Median Dev", fill: devColor, categoryColors: devTintByLabel },
-        { dataKey: "uatMedian", name: "Median UAT", fill: uatColor, categoryColors: uatTintByLabel }
+        { dataKey: "devMedian", name: "Development time (Median)", fill: devColor, categoryColors: devTintByLabel },
+        { dataKey: "uatMedian", name: "UAT time (Median)", fill: uatColor, categoryColors: uatTintByLabel }
       ],
       colors,
       yUpper,
