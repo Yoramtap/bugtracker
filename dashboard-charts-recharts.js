@@ -1018,11 +1018,11 @@
     const compactViewport = isCompactViewport();
     const xInterval = compactViewport ? tickIntervalForMobileLabels(rows.length) : 0;
     const compositionPriorityPalette = {
-      lowest: "#FDE4CC",
-      low: "#F9C28D",
-      medium: "#F29A5A",
-      high: "#E4683A",
-      highest: "#B83A2A"
+      lowest: "#F4E7D6",
+      low: "#EFC899",
+      medium: "#E7AA73",
+      high: "#D68A61",
+      highest: "#B96958"
     };
     const categoryGap =
       isAllTeams || rows.length > 14 ? BAR_LAYOUT.categoryGap : rows.length <= 8 ? "2%" : "8%";
