@@ -813,8 +813,8 @@ function renderDevelopmentTimeVsUatTimeChart() {
     return;
   }
 
-  const bands = ["highest", "high", "medium"];
-  const labels = ["Highest", "High", "Medium"];
+  const bands = ["medium", "high", "highest"];
+  const labels = ["Medium", "High", "Highest"];
   const themeColors = getThemeColors();
   const devMedian = readFlowMetricByBands(flow, bands, "median_dev_days");
   const uatMedian = readFlowMetricByBands(flow, bands, "median_uat_days");

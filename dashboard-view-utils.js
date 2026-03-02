@@ -60,11 +60,11 @@
         bc: readThemeColor("--team-bc", "#76649a")
       },
       priorities: {
-        highest: readThemeColor("--priority-highest", "#9f4d44"),
-        high: readThemeColor("--priority-high", "#b48238"),
-        medium: readThemeColor("--priority-medium", "#6f778d"),
-        low: readThemeColor("--priority-low", "#3f73b8"),
-        lowest: readThemeColor("--priority-lowest", "#2f7a67")
+        highest: readThemeColor("--priority-highest", "#b96958"),
+        high: readThemeColor("--priority-high", "#d68a61"),
+        medium: readThemeColor("--priority-medium", "#e7aa73"),
+        low: readThemeColor("--priority-low", "#efc899"),
+        lowest: readThemeColor("--priority-lowest", "#f4e7d6")
       },
       uatBuckets: {
         d0_7: readThemeColor("--uat-bucket-0-7", "#a8c6de"),
