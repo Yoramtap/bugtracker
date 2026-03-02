@@ -15,12 +15,11 @@ const MODE_PANEL_IDS = {
   composition: "composition-panel",
   uat: "uat-panel",
   management: "management-panel",
-  "management-combined": "management-combined-panel",
   "product-cycle": "product-cycle-panel",
   "lifecycle-days": "lifecycle-days-panel"
 };
-const CHART_STATUS_IDS = ["composition-status", "trend-status", "uat-status", "management-status", "management-combined-status", "product-cycle-status", "lifecycle-days-status"];
-const LAST_UPDATED_IDS = ["trend-updated", "composition-updated", "uat-updated", "management-updated", "management-combined-updated", "product-cycle-updated", "lifecycle-days-updated"];
+const CHART_STATUS_IDS = ["composition-status", "trend-status", "uat-status", "management-status", "product-cycle-status", "lifecycle-days-status"];
+const LAST_UPDATED_IDS = ["trend-updated", "composition-updated", "uat-updated", "management-updated", "product-cycle-updated", "lifecycle-days-updated"];
 const PRODUCT_CYCLE_UPDATED_IDS = ["product-cycle-updated", "lifecycle-days-updated"];
 const PUBLIC_AGGREGATE_CHART_CONFIG = {
   productCycle: {
@@ -879,93 +878,6 @@ function renderDevelopmentTimeVsUatTimeChart() {
 
 }
 
-function renderCombinedDevelopmentAndUatChart() {
-  const status = document.getElementById("management-combined-status");
-  const context = document.getElementById("management-combined-context");
-  if (!status || !context) return;
-
-  status.hidden = true;
-
-  const flow = state.snapshot?.kpis?.broadcast?.flow_by_priority_variants?.all
-    || state.snapshot?.kpis?.broadcast?.flow_by_priority;
-  if (!flow || typeof flow !== "object") {
-    status.hidden = false;
-    status.textContent = "No Broadcast flow_by_priority data found for combined chart.";
-    return;
-  }
-
-  const uat = state.snapshot?.uatAging;
-  if (!uat || typeof uat !== "object") {
-    status.hidden = false;
-    status.textContent = "No UAT aging data found for combined chart.";
-    return;
-  }
-
-  const bands = ["highest", "high", "medium"];
-  const labels = ["Highest", "High", "Medium"];
-  const devMedian = readFlowMetricByBands(flow, bands, "median_dev_days");
-  const uatMedian = readFlowMetricByBands(flow, bands, "median_uat_days");
-  const devAvg = readFlowMetricByBands(flow, bands, "avg_dev_days");
-  const uatAvg = readFlowMetricByBands(flow, bands, "avg_uat_days");
-  const devCounts = bands.map((band) => toNumber(flow?.[band]?.n_dev));
-  const uatCounts = bands.map((band) => toNumber(flow?.[band]?.n_uat));
-
-  const rows = labels.map((label, idx) => ({
-    label,
-    devMedian: toNumber(devMedian[idx]),
-    uatMedian: toNumber(uatMedian[idx]),
-    devAvg: toNumber(devAvg[idx]),
-    uatAvg: toNumber(uatAvg[idx]),
-    devCount: toNumber(devCounts[idx]),
-    uatCount: toNumber(uatCounts[idx]),
-    uatOpen: toNumber(uat?.priorities?.[bands[idx]]?.total)
-  }));
-
-  const groupedByLabel = new Map();
-  const buckets = Array.isArray(uat.buckets) ? uat.buckets : [];
-  for (const bucket of buckets) {
-    const label = uatBucketWeekLabel(bucket);
-    if (!groupedByLabel.has(label)) {
-      groupedByLabel.set(label, {
-        bucketLabel: label,
-        highest: 0,
-        high: 0,
-        medium: 0,
-        total: 0
-      });
-    }
-    const row = groupedByLabel.get(label);
-    for (const priorityKey of UAT_PRIORITY_KEYS) {
-      const value = toNumber(uat?.priorities?.[priorityKey]?.buckets?.[bucket.id]);
-      row[priorityKey] += value;
-      row.total += value;
-    }
-  }
-  const bucketOrder = ["1-2 weeks", "1 month", "2 months", "more than two months"];
-  const bucketRows = bucketOrder.map((label) => groupedByLabel.get(label)).filter(Boolean);
-  if (bucketRows.length === 0) {
-    status.hidden = false;
-    status.textContent = "UAT age buckets missing for combined chart.";
-    return;
-  }
-
-  const flowSample = rows.reduce((sum, row) => sum + Math.max(toNumber(row.devCount), toNumber(row.uatCount)), 0);
-  context.textContent = `Combined pilot: median Dev vs UAT + current UAT load + age buckets • ${String(uat?.scope?.label || "Broadcast")} • sample size: ${flowSample}/${toNumber(uat.totalIssues)} (flow/uat)`;
-
-  const renderChart = getRenderer(
-    "management-combined-status",
-    "renderCombinedDevelopmentAndUatChart",
-    "Combined chart unavailable: Recharts renderer missing."
-  );
-  if (!renderChart) return;
-  renderChart({
-    containerId: "development-uat-combined-chart",
-    rows,
-    bucketRows,
-    colors: getThemeColors()
-  });
-}
-
 async function loadSnapshot() {
   setStatusMessageForIds(CHART_STATUS_IDS);
   state.mode = getModeFromUrl();
@@ -1018,7 +930,6 @@ async function loadSnapshot() {
       { skipMode: "trend", run: renderBugCompositionByPriorityChart },
       { run: renderUatOpenByPriorityChart },
       { run: renderDevelopmentTimeVsUatTimeChart },
-      { run: renderCombinedDevelopmentAndUatChart },
       { run: renderCycleTimeParkingLotToDoneChart },
       { run: renderLifecycleTimeSpentPerPhaseChart }
     ].forEach(({ skipMode, run }) => {

@@ -10,7 +10,6 @@
   const h = React.createElement;
   const {
     ResponsiveContainer,
-    ComposedChart,
     LineChart,
     Line,
     BarChart,
@@ -49,7 +48,6 @@
     composition: null,
     uat: null,
     management: null,
-    managementCombined: null,
     productCycle: null,
     lifecycleDays: null
   };
@@ -1230,219 +1228,6 @@
     });
   }
 
-  function CombinedManagementChartView({ rows, bucketRows, colors }) {
-    const chartRows = Array.isArray(rows) ? rows : [];
-    const ageRows = Array.isArray(bucketRows) ? bucketRows : [];
-    const compactViewport = isCompactViewport();
-
-    const mainAxis = buildNiceNumberAxis(
-      computeYUpper(
-        [
-          ...chartRows.map((row) => toNumber(row.devMedian)),
-          ...chartRows.map((row) => toNumber(row.uatMedian))
-        ],
-        { min: 1, pad: 1.12 }
-      )
-    );
-    const loadAxis = buildNiceNumberAxis(
-      computeYUpper(chartRows.map((row) => toNumber(row.uatOpen)), { min: 1, pad: 1.1 })
-    );
-    const bucketAxis = buildNiceNumberAxis(
-      computeYUpper(ageRows.map((row) => toNumber(row.total)), { min: 1, pad: 1.08 })
-    );
-
-    const mainHeight = singleChartHeightForMode("management", compactViewport ? 340 : 300);
-    const miniHeight = compactViewport ? 230 : 200;
-    const priorityColors = {
-      Highest: colors.priorities?.highest || "#9f4d44",
-      High: colors.priorities?.high || "#b48238",
-      Medium: colors.priorities?.medium || "#6f778d"
-    };
-
-    return h(
-      "div",
-      { className: "chart-series-shell" },
-      h(
-        ResponsiveContainer,
-        { width: "100%", height: mainHeight },
-        h(
-          ComposedChart,
-          {
-            data: chartRows,
-            margin: { top: 8, right: compactViewport ? 8 : 18, bottom: 18, left: compactViewport ? 4 : 8 },
-            barCategoryGap: compactViewport ? "34%" : "26%",
-            barGap: 4
-          },
-          h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-          h(XAxis, {
-            dataKey: "label",
-            stroke: colors.text,
-            tick: { ...axisTick(colors), fontSize: compactViewport ? 11 : 12 },
-            interval: 0,
-            height: 32
-          }),
-          h(YAxis, {
-            yAxisId: "days",
-            stroke: colors.text,
-            tick: axisTick(colors),
-            allowDecimals: false,
-            domain: [0, mainAxis.upper],
-            ticks: mainAxis.ticks,
-            width: compactViewport ? 34 : 42
-          }),
-          h(YAxis, {
-            yAxisId: "load",
-            orientation: "right",
-            stroke: colors.text,
-            tick: { ...axisTick(colors), fontSize: compactViewport ? 10 : 11 },
-            allowDecimals: false,
-            domain: [0, loadAxis.upper],
-            ticks: loadAxis.ticks,
-            width: compactViewport ? 34 : 40
-          }),
-          h(Tooltip, {
-            content: createTooltipContent(colors, (row) => [
-              tooltipTitleLine("label", row.label || "", colors),
-              makeTooltipLine("dev", "Median Dev", colors, {
-                subItems: [
-                  `median = ${toWhole(row.devMedian)} days`,
-                  `average = ${toWhole(row.devAvg)} days`,
-                  `n = ${toWhole(row.devCount)}`
-                ]
-              }),
-              makeTooltipLine("uat", "Median UAT", colors, {
-                subItems: [
-                  `median = ${toWhole(row.uatMedian)} days`,
-                  `average = ${toWhole(row.uatAvg)} days`,
-                  `n = ${toWhole(row.uatCount)}`
-                ]
-              }),
-              makeTooltipLine("load", "Current UAT load", colors, {
-                subItems: [`items in UAT = ${toWhole(row.uatOpen)}`]
-              })
-            ]),
-            cursor: { fill: BAR_CURSOR_FILL }
-          }),
-          h(ReferenceLine, { yAxisId: "days", y: 14, stroke: "rgba(31,51,71,0.25)", strokeDasharray: "4 4" }),
-          h(Bar, {
-            yAxisId: "days",
-            dataKey: "devMedian",
-            name: "Median Dev",
-            fill: "#9aa8ba",
-            radius: [6, 6, 0, 0],
-            maxBarSize: compactViewport ? 28 : 34
-          },
-          chartRows.map((row, index) =>
-            h(Cell, {
-              key: `combined-dev-${index}`,
-              fill: blendHexWithWhite(priorityColors[row.label] || "#8f98a9", 0.4)
-            })
-          )),
-          h(Bar, {
-            yAxisId: "days",
-            dataKey: "uatMedian",
-            name: "Median UAT",
-            fill: "#5a6f8e",
-            radius: [6, 6, 0, 0],
-            maxBarSize: compactViewport ? 28 : 34
-          },
-          chartRows.map((row, index) =>
-            h(Cell, {
-              key: `combined-uat-${index}`,
-              fill: blendHexWithWhite(priorityColors[row.label] || "#8f98a9", 0.08)
-            })
-          )),
-          h(Line, {
-            yAxisId: "load",
-            type: "monotone",
-            dataKey: "uatOpen",
-            name: "Current UAT load",
-            stroke: "#2f6ea8",
-            strokeWidth: compactViewport ? 2.2 : 2.4,
-            dot: { r: compactViewport ? 3 : 4, strokeWidth: 1, fill: "#ffffff" },
-            activeDot: { r: compactViewport ? 4 : 5 }
-          })
-        )
-      ),
-      h(
-        ResponsiveContainer,
-        { width: "100%", height: miniHeight },
-        h(
-          BarChart,
-          {
-            data: ageRows,
-            margin: { top: 12, right: 8, bottom: compactViewport ? 34 : 24, left: compactViewport ? 4 : 8 },
-            barCategoryGap: compactViewport ? "34%" : "28%",
-            barGap: 2
-          },
-          h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-          h(XAxis, {
-            dataKey: "bucketLabel",
-            stroke: colors.text,
-            tick: { ...axisTick(colors), fontSize: compactViewport ? 11 : 12 },
-            interval: 0,
-            angle: compactViewport ? -12 : 0,
-            textAnchor: compactViewport ? "end" : "middle",
-            height: compactViewport ? 54 : 34
-          }),
-          h(YAxis, {
-            stroke: colors.text,
-            tick: { ...axisTick(colors), fontSize: compactViewport ? 10 : 11 },
-            allowDecimals: false,
-            domain: [0, bucketAxis.upper],
-            ticks: bucketAxis.ticks,
-            width: compactViewport ? 34 : 40
-          }),
-          h(Tooltip, {
-            content: createTooltipContent(colors, (row) => [
-              tooltipTitleLine("bucket", row.bucketLabel || "", colors),
-              makeTooltipLine("highest", "Highest", colors, {
-                subItems: [`count = ${toWhole(row.highest)}`]
-              }),
-              makeTooltipLine("high", "High", colors, {
-                subItems: [`count = ${toWhole(row.high)}`]
-              }),
-              makeTooltipLine("medium", "Medium", colors, {
-                subItems: [`count = ${toWhole(row.medium)}`]
-              }),
-              makeTooltipLine("total", "Total", colors, {
-                subItems: [`items = ${toWhole(row.total)}`]
-              })
-            ]),
-            cursor: { fill: BAR_CURSOR_FILL }
-          }),
-          h(Bar, {
-            dataKey: "highest",
-            stackId: "uat-age",
-            name: "Highest",
-            fill: blendHexWithWhite(colors.priorities?.highest || "#9f4d44", 0.14),
-            radius: [4, 4, 0, 0]
-          }),
-          h(Bar, {
-            dataKey: "high",
-            stackId: "uat-age",
-            name: "High",
-            fill: blendHexWithWhite(colors.priorities?.high || "#b48238", 0.18)
-          }),
-          h(Bar, {
-            dataKey: "medium",
-            stackId: "uat-age",
-            name: "Medium",
-            fill: blendHexWithWhite(colors.priorities?.medium || "#6f778d", 0.12)
-          })
-        )
-      )
-    );
-  }
-
-  function renderCombinedDevelopmentAndUatChart({ containerId, rows, bucketRows, colors }) {
-    const chartRows = Array.isArray(rows) ? rows : [];
-    const ageRows = Array.isArray(bucketRows) ? bucketRows : [];
-    renderWithRoot("managementCombined", containerId, chartRows.length > 0, (root) => {
-      root.render(h(CombinedManagementChartView, { rows: chartRows, bucketRows: ageRows, colors }));
-    });
-  }
-
   function renderMultiSeriesBars({
     kind,
     modeKey = "all",
@@ -1617,7 +1402,6 @@
     renderBugCompositionByPriorityChart,
     renderUatPriorityAgingChart,
     renderDevelopmentTimeVsUatTimeChart,
-    renderCombinedDevelopmentAndUatChart,
     renderCycleTimeParkingLotToDoneChart: ({ seriesDefs, ...rest }) =>
       renderMultiSeriesBars({
         kind: "productCycle",
