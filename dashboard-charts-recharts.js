@@ -342,11 +342,31 @@
       if (Array.isArray(line.subItems) && line.subItems.length > 0) {
         return line.subItems.map((item) => String(item || "").trim()).filter(Boolean);
       }
-      const text = String(line.text || "");
-      const parts = text.split(",").map((part) => part.trim()).filter(Boolean);
-      if (parts.length <= 1) return [];
-      line.text = parts[0];
-      return parts.slice(1);
+      const text = String(line.text || "").trim();
+      const colonIndex = text.indexOf(":");
+      if (colonIndex > 0) {
+        const label = text.slice(0, colonIndex).trim();
+        const detail = text.slice(colonIndex + 1).trim();
+        const parts = detail.split(",").map((part) => part.trim()).filter(Boolean);
+        if (parts.length > 1) {
+          line.text = label;
+          return parts;
+        }
+      }
+      return [];
+    };
+
+    const normalizeMainText = (line) => {
+      if (!line || line.isTitle) return String(line?.text || "");
+      const text = String(line.text || "").trim();
+      const colonIndex = text.indexOf(":");
+      if (colonIndex > 0) {
+        const label = text.slice(0, colonIndex).trim();
+        const detail = text.slice(colonIndex + 1).trim();
+        const parts = detail.split(",").map((part) => part.trim()).filter(Boolean);
+        if (parts.length > 1) return label;
+      }
+      return text;
     };
     const lines = (Array.isArray(blocks) ? blocks : [])
       .map(normalizeLine)
@@ -364,30 +384,47 @@
           boxShadow: "0 4px 14px rgba(0,0,0,0.1)"
         }
       },
-      h(
-        "ul",
-        {
-          style: {
-            margin: 0,
-            paddingLeft: "18px",
-            listStyleType: "disc"
-          }
-        },
-        lines.map((line, index) => {
-          const subItems = asSubItems(line);
+      ...lines.map((line, index) => {
+        if (line.isTitle) {
           return h(
+            "p",
+            {
+              key: line.key || `tooltip-title-${index}`,
+              style: {
+                margin: "0 0 6px",
+                color: line?.style?.color || colors.text,
+                fontSize: line?.style?.fontSize || "12px",
+                fontWeight: line?.style?.fontWeight || 700,
+                lineHeight: line?.style?.lineHeight || "1.4"
+              }
+            },
+            String(line.text || "")
+          );
+        }
+
+        const subItems = asSubItems(line);
+        return h(
+          "ul",
+          {
+            key: line.key || `tooltip-ul-${index}`,
+            style: {
+              margin: 0,
+              paddingLeft: "18px",
+              listStyleType: "disc"
+            }
+          },
+          h(
             "li",
             {
-              key: line.key || `tooltip-li-${index}`,
               style: {
                 margin: "2px 0",
                 color: line?.style?.color || colors.text,
                 fontSize: line?.style?.fontSize || "12px",
-                fontWeight: line?.style?.fontWeight || (line.isTitle ? 700 : 500),
+                fontWeight: line?.style?.fontWeight || 500,
                 lineHeight: line?.style?.lineHeight || "1.4"
               }
             },
-            h("span", null, line.text),
+            h("span", null, normalizeMainText(line)),
             subItems.length > 0
               ? h(
                   "ul",
@@ -416,9 +453,9 @@
                   )
                 )
               : null
-          );
-        })
-      )
+          )
+        );
+      })
     );
   }
 
