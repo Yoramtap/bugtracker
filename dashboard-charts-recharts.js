@@ -337,6 +337,15 @@
   function renderLegendNode({ colors, defs, hiddenKeys, setHiddenKeys, compact = false }) {
     const legendRows = legendRowsForViewport(Array.isArray(defs) ? defs.length : 0);
     const shouldOpenByDefault = !compact && legendRows <= 2;
+    const shortLabel = (value) => {
+      const raw = String(value || "");
+      if (!compact) return raw;
+      if (raw === "BC long-standing (30d+)") return "BC 30d+";
+      if (raw === "BC long-standing (60d+)") return "BC 60d+";
+      if (raw === "Median Dev") return "Dev";
+      if (raw === "Median UAT") return "UAT";
+      return raw;
+    };
     return h(
       "details",
       {
@@ -379,7 +388,7 @@
                   fontSize: compact ? 11 : 12
                 }
               },
-              item.name
+              shortLabel(item.name)
             )
           );
         })

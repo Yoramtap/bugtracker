@@ -112,13 +112,14 @@ h2 {
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  border: 1.5px solid rgba(31, 51, 71, 0.48);
+  border: 2px solid rgba(31, 51, 71, 0.6);
   background: rgba(247, 251, 255, 0.96);
   color: rgba(31, 51, 71, 0.98);
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1;
   cursor: help;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.92) inset;
 }
 
 .help-popover {
@@ -197,7 +198,7 @@ h2 {
   background: rgba(255, 255, 255, 0.9);
   width: min(100%, 760px);
   margin: 0 auto;
-  padding: 10px 10px 8px;
+  padding: 12px 10px 10px;
   position: relative;
 }
 
@@ -228,7 +229,7 @@ h2 {
   gap: 8px;
   align-items: center;
   justify-content: center;
-  margin-top: 0;
+  margin-top: 2px;
 }
 
 .series-drawer__item {
@@ -253,6 +254,7 @@ h2 {
 
 .series-drawer__label {
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .chart-canvas--standard {
@@ -483,12 +485,23 @@ h2 {
   }
 
   .series-drawer__items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
+    justify-content: stretch;
   }
 
   .series-drawer__item {
     min-height: 42px;
     padding: 8px 10px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .series-drawer__label {
+    white-space: normal;
+    line-height: 1.15;
+    text-wrap: balance;
   }
 }
 }
