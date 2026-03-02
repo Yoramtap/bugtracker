@@ -1017,13 +1017,20 @@
     const isAllTeams = scope === "all";
     const compactViewport = isCompactViewport();
     const xInterval = compactViewport ? tickIntervalForMobileLabels(rows.length) : 0;
+    const compositionPriorityPalette = {
+      lowest: "#FDE4CC",
+      low: "#F9C28D",
+      medium: "#F29A5A",
+      high: "#E4683A",
+      highest: "#B83A2A"
+    };
     const categoryGap =
       isAllTeams || rows.length > 14 ? BAR_LAYOUT.categoryGap : rows.length <= 8 ? "2%" : "8%";
     const singleTeamMaxBarSize = rows.length <= 12 ? 34 : rows.length <= 20 ? 28 : BAR_LAYOUT.normalMax;
     const priorityDefs = PRIORITY_STACK_ORDER.map((priority) => ({
       dataKey: priority.key,
       name: priority.label,
-      fill: colors.priorities[priority.key]
+      fill: compositionPriorityPalette[priority.key] || colors.priorities[priority.key]
     }));
     const barNodes = priorityDefs.map((priority) =>
       h(Bar, {
