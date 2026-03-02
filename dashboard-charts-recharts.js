@@ -736,9 +736,9 @@
 
   function barBaseStyle(colors) {
     return {
-      stroke: colors.text,
-      strokeOpacity: 0.22,
-      strokeWidth: 0.85
+      stroke: colors.barBorder || "#111111",
+      strokeOpacity: 1,
+      strokeWidth: 0.7
     };
   }
 
