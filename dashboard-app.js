@@ -576,19 +576,30 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
   const yearLabel = year;
 
   const themeColors = getThemeColors();
-  const teamColors = [
-    "#9CA3AF",
-    "#9CA3AF",
-    "#9CA3AF",
-    "#9CA3AF",
-    "#9CA3AF",
-    "#9CA3AF"
+  const bugPaletteFallback = [
+    themeColors.teams.api,
+    themeColors.teams.legacy,
+    themeColors.teams.react,
+    themeColors.teams.bc
   ];
+  const resolveTeamColor = (teamName, index) => {
+    const raw = String(teamName || "").trim();
+    const key = raw.toLowerCase();
+    if (key === "api" || key.includes("api")) return themeColors.teams.api;
+    if (key === "legacy" || key.includes("legacy") || key.includes("frontend")) return themeColors.teams.legacy;
+    if (key === "react" || key.includes("react")) return themeColors.teams.react;
+    if (key === "broadcast" || key === "bc" || key.includes("broadcast")) return themeColors.teams.bc;
+    return bugPaletteFallback[index % bugPaletteFallback.length];
+  };
+  const teamColorMap = Object.fromEntries(
+    orderProductCycleTeams(teams).map((team, index) => [team, resolveTeamColor(team, index)])
+  );
   const { teamDefs: lifecycleTeamDefsBase, rows } = buildLifecycleRowsByPhaseAndTeam(publicAggregates, year, teams);
   const teamDefs = lifecycleTeamDefsBase.map((teamDef, index) => ({
     ...teamDef,
-    color: teamColors[index % teamColors.length],
-    showSeriesLabel: false
+    color: bugPaletteFallback[index % bugPaletteFallback.length],
+    showSeriesLabel: false,
+    metaTeamColorMap: teamColorMap
   }));
   const plottedValues = teamDefs
     .flatMap((teamDef) => rows.map((row) => row[teamDef.key]))

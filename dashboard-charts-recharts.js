@@ -765,6 +765,17 @@
             })
           );
         });
+      } else if (def?.metaTeamColorMap && typeof def.metaTeamColorMap === "object") {
+        rows.forEach((row, index) => {
+          const metaTeam = String(row?.[`meta_${def.dataKey}`]?.team || "");
+          const fill = def.metaTeamColorMap?.[metaTeam] || def.fill;
+          barChildren.push(
+            h(Cell, {
+              key: `cell-meta-team-${def.dataKey}-${index}`,
+              fill
+            })
+          );
+        });
       }
       return h(Bar, {
         key: def.dataKey,
@@ -1105,7 +1116,8 @@
       stackId: def.stackId,
       showValueLabel: Boolean(def.showValueLabel),
       showSeriesLabel: Boolean(def.showSeriesLabel),
-      seriesLabel: def.seriesLabel || def.name || def.label || def.key
+      seriesLabel: def.seriesLabel || def.name || def.label || def.key,
+      metaTeamColorMap: def.metaTeamColorMap
     }));
     const yValues = seriesDefs.flatMap((series) => chartRows.map((row) => toNumber(row?.[series.key])));
     const yUpper =
@@ -1136,7 +1148,8 @@
         stackId: series.stackId,
         showValueLabel: Boolean(series.showValueLabel),
         showSeriesLabel: Boolean(series.showSeriesLabel),
-        seriesLabel: series.seriesLabel || series.name
+        seriesLabel: series.seriesLabel || series.name,
+        metaTeamColorMap: series.metaTeamColorMap
       })),
       colors,
       yUpper,
