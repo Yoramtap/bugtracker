@@ -27,6 +27,7 @@
   const TEAM_CONFIG = [{ key: "api", label: "API" }, { key: "legacy", label: "Legacy FE" }, { key: "react", label: "React FE" }, { key: "bc", label: "BC" }];
   const PRIORITY_CONFIG = [{ key: "highest", label: "Highest" }, { key: "high", label: "High" }, { key: "medium", label: "Medium" }, { key: "low", label: "Low" }, { key: "lowest", label: "Lowest" }];
   const PRIORITY_STACK_ORDER = [...PRIORITY_CONFIG].reverse();
+  const MAX_SPRINT_POINTS = 10;
   const BAR_LAYOUT = { categoryGap: "14%", groupGap: 2, denseMax: 14, normalMax: 20 };
   const CHART_HEIGHTS = { standard: 280, dense: 320 };
   const HORIZONTAL_CATEGORY_AXIS_WIDTH = 190;
@@ -214,7 +215,8 @@
   }
 
   function buildTrendData(snapshot) {
-    const points = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
+    const allPoints = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
+    const points = allPoints.slice(-MAX_SPRINT_POINTS);
     return points.map((point) => {
       const api = point?.api || {};
       const legacy = point?.legacy || {};
@@ -234,7 +236,8 @@
   }
 
   function buildCompositionData(snapshot, scope) {
-    const points = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
+    const allPoints = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
+    const points = allPoints.slice(-MAX_SPRINT_POINTS);
     const selectedTeams =
       scope === "all" ? TEAM_CONFIG : TEAM_CONFIG.filter((team) => team.key === scope);
     const isSingleTeam = scope !== "all";
