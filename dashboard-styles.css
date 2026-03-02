@@ -257,12 +257,15 @@ h2 {
   border: 1px solid rgba(31, 51, 71, 0.26);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
-  min-width: 160px;
+  width: min(100%, 760px);
+  min-width: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   justify-content: center;
+  position: relative;
+  padding-right: 46px;
 }
 
 .radio-group-card legend {
@@ -314,6 +317,32 @@ h2 {
   line-height: 1.25;
 }
 
+.help-wrap--in-toggle {
+  margin-left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  min-height: 34px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.help-wrap--in-toggle .help-tip {
+  width: 26px;
+  height: 26px;
+  font-size: 0.88rem;
+}
+
+.help-wrap--in-toggle .help-popover {
+  left: auto;
+  right: 0;
+  transform: none;
+  top: calc(100% + 6px);
+  max-width: min(92vw, 520px);
+}
+
 @media (max-width: 768px) {
   .radio-control-groups {
     padding: 0 6px;
@@ -321,10 +350,10 @@ h2 {
   }
 
   .radio-group-card {
-    width: min(100%, 440px);
+    width: 100%;
     min-width: 0;
     gap: 6px;
-    padding: 8px;
+    padding: 8px 46px 8px 8px;
   }
 
   .radio-group-card legend {
@@ -344,6 +373,23 @@ h2 {
   .radio-group-card input[type="radio"] {
     inline-size: 16px;
     block-size: 16px;
+  }
+
+  .help-wrap--in-toggle {
+    min-width: 42px;
+    min-height: 42px;
+    top: 6px;
+    right: 6px;
+  }
+
+  .help-wrap--in-toggle .help-tip {
+    width: 30px;
+    height: 30px;
+  }
+
+  .help-wrap--in-toggle .help-popover {
+    right: 2px;
+    max-width: min(94vw, 420px);
   }
 
   .chart-canvas .recharts-default-legend {

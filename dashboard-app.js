@@ -92,6 +92,23 @@ function applyModeVisibility() {
   }
 }
 
+function moveHelpIntoToggleCard(panelId) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const helpWrap = panel.querySelector(".panel-subtitle--with-help .help-wrap");
+  const card = panel.querySelector(".radio-group-card");
+  if (!helpWrap || !card) return;
+  if (helpWrap.classList.contains("help-wrap--in-toggle")) return;
+  helpWrap.classList.add("help-wrap--in-toggle");
+  card.appendChild(helpWrap);
+}
+
+function alignToggleHelpIcons() {
+  moveHelpIntoToggleCard("composition-panel");
+  moveHelpIntoToggleCard("product-cycle-panel");
+  moveHelpIntoToggleCard("lifecycle-days-panel");
+}
+
 function renderBugCompositionByPriorityChart() {
   const scope = state.compositionTeamScope || "bc";
   syncRadioValue("composition-team-scope", scope);
@@ -747,6 +764,7 @@ async function loadSnapshot() {
   setStatusMessageForIds(CHART_STATUS_IDS);
   state.mode = getModeFromUrl();
   applyModeVisibility();
+  alignToggleHelpIcons();
 
   try {
     const [snapshotResponse, productCycleResponse] = await Promise.all([
