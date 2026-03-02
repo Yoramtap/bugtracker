@@ -1120,7 +1120,8 @@
     const prioritySeries = ["medium", "high", "highest"].map((key) => ({
       dataKey: key,
       name: PRIORITY_CONFIG.find((item) => item.key === key)?.label || key,
-      fill: colors.priorities?.[key] || colors.teams.bc
+      fill: colors.priorities?.[key] || colors.teams.bc,
+      stackId: "uat-priority"
     }));
     const yUpper = computeYUpper(
       chartRows.map((row) => toNumber(row?.total)),
