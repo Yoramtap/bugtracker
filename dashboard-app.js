@@ -482,6 +482,61 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
   }
 
   const themeColors = getThemeColors();
+  const nonSignalTeamPalette = [
+    "#6f9fc6",
+    "#8a79bc",
+    "#b88f56",
+    "#5f86ad",
+    "#7f74a8",
+    "#6f7f92",
+    "#8e7f5f",
+    "#6588b3",
+    "#7a6e9f",
+    "#9a855f"
+  ];
+  const hashTeam = (teamName) => {
+    const text = String(teamName || "").trim().toLowerCase();
+    let hash = 0;
+    for (let i = 0; i < text.length; i += 1) hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
+    return hash;
+  };
+  const toRgb = (hex) => {
+    const value = String(hex || "").trim();
+    const full = /^#([0-9a-f]{6})$/i.exec(value);
+    if (!full) return null;
+    const parsed = full[1];
+    return [
+      Number.parseInt(parsed.slice(0, 2), 16),
+      Number.parseInt(parsed.slice(2, 4), 16),
+      Number.parseInt(parsed.slice(4, 6), 16)
+    ];
+  };
+  const blendWithWhite = (hex, factor) => {
+    const rgb = toRgb(hex);
+    if (!rgb) return hex;
+    const clamped = Math.max(0, Math.min(1, Number(factor) || 0));
+    const [r, g, b] = rgb.map((channel) => Math.round(channel + (255 - channel) * clamped));
+    const toHex = (value) => value.toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  };
+  const resolveTeamBaseColor = (teamName, index) => {
+    const raw = String(teamName || "").trim();
+    const key = raw.toLowerCase();
+    if (key === "api" || key.includes("api")) return themeColors.teams.api;
+    if (key === "legacy" || key.includes("legacy") || key.includes("frontend")) return themeColors.teams.legacy;
+    if (key === "react" || key.includes("react")) return themeColors.teams.react;
+    if (key === "broadcast" || key === "bc" || key.includes("broadcast")) return themeColors.teams.bc;
+    return nonSignalTeamPalette[hashTeam(raw || `team-${index}`) % nonSignalTeamPalette.length];
+  };
+  const teamColorMap = Object.fromEntries(
+    teams.map((team, index) => [team, resolveTeamBaseColor(team, index)])
+  );
+  const leadTintByTeam = Object.fromEntries(
+    Object.entries(teamColorMap).map(([team, color]) => [team, blendWithWhite(color, 0.35)])
+  );
+  const cycleTintByTeam = Object.fromEntries(
+    Object.entries(teamColorMap).map(([team, color]) => [team, blendWithWhite(color, 0.02)])
+  );
   const rows = buildProductCycleStackedRowsForYear({ publicAggregates, teams, year: selectedYear });
   const rowsWithCounts = rows.map((row) => {
     const leadN = toCount(row?.meta_lead?.n);
@@ -511,12 +566,14 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
       key: "lead",
       name: "Lead time",
       color: readThemeColor("--product-cycle-lead", "#c58b4e"),
+      categoryColors: leadTintByTeam,
       showValueLabel: false
     },
     {
       key: "cycle",
       name: "Cycle time",
       color: readThemeColor("--product-cycle-cycle", "#4e86b9"),
+      categoryColors: cycleTintByTeam,
       showValueLabel: false
     }
   ];
@@ -537,6 +594,7 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
     showLegend: true,
     timeWindowLabel: "Lead and cycle time",
     orientation: "columns",
+    colorByCategoryKey: "team",
     categoryKey: "team",
     categoryTickTwoLine: true,
     categorySecondaryLabels
