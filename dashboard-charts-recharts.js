@@ -1201,13 +1201,19 @@
           tooltipTitleLine("label", row.label || "", colors),
           ...payload.map((item) => {
             const isDev = item?.dataKey === "devMedian";
-            const count = isDev ? toWhole(row.devCount) : toWhole(row.uatCount);
-            if (count <= 0) return null;
+            const countRaw = Number(isDev ? row.devCount : row.uatCount);
             const avg = isDev ? toNumber(row.devAvg) : toNumber(row.uatAvg);
             return makeTooltipLine(
               item.dataKey,
-              `${item.name}: ${toWhole(item.value)}d, avg ${toWhole(avg)}d, n ${count}`,
-              colors
+              String(item.name || ""),
+              colors,
+              {
+                subItems: [
+                  `median = ${toWhole(item.value)} days`,
+                  `average = ${toWhole(avg)} days`,
+                  `n = ${Number.isFinite(countRaw) && countRaw >= 0 ? toWhole(countRaw) : "-"}`
+                ]
+              }
             );
           }).filter(Boolean)
         ]),
@@ -1355,8 +1361,8 @@
             const meta = row?.[`meta_${key}`] || {};
             const valueDays = toWhole(item?.value);
             if (valueDays <= 0) return;
-            const sample = toWhole(meta.n);
-            if (sample <= 0) return;
+            const sampleRaw = Number(meta.n);
+            const sampleText = Number.isFinite(sampleRaw) && sampleRaw >= 0 ? String(toWhole(sampleRaw)) : "-";
             const medianDays = toWhole(meta.median);
             const avgDays = toWhole(meta.average);
             const seriesName = meta.team || item.name;
@@ -1372,7 +1378,7 @@
                   subItems: [
                     `median = ${medianDays} days`,
                     `average = ${avgDays} days`,
-                    `n = ${sample}`
+                    `n = ${sampleText}`
                   ]
                 }
               )
