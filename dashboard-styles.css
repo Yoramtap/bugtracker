@@ -195,19 +195,24 @@ h2 {
   border: 1px solid rgba(31, 51, 71, 0.2);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.86);
-  padding: 2px 8px 8px;
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 4px 10px 10px;
 }
 
 .series-drawer__summary {
   list-style: none;
   cursor: pointer;
   user-select: none;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: rgba(31, 51, 71, 0.9);
   min-height: 34px;
   display: inline-flex;
   align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0 6px;
 }
 
 .series-drawer__summary::-webkit-details-marker {
@@ -219,6 +224,7 @@ h2 {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  justify-content: center;
 }
 
 .series-drawer__item {
@@ -462,7 +468,8 @@ h2 {
   }
 
   .series-drawer {
-    padding: 2px 6px 8px;
+    width: 100%;
+    padding: 4px 8px 10px;
   }
 
   .series-drawer__summary {
