@@ -90,16 +90,36 @@
     const params = new URLSearchParams(window.location.search);
     const chart = String(params.get("chart") || "").toLowerCase();
     if (chart === "trend") return "trend";
+    if (chart === "composition") return "composition";
+    if (chart === "uat") return "uat";
+    if (chart === "dev-uat-ratio") return "management";
+    if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";
+    if (chart === "lifecycle-days") return "lifecycle-days";
     return "all";
+  }
+
+  function singleChartHeightForMode(modeKey, baseHeight) {
+    if (chartModeFromUrl() !== modeKey) return baseHeight;
+    const width = viewportWidthPx();
+    const viewportHeight = viewportHeightPx();
+    const smallMin = Math.max(300, Math.round(baseHeight * 1.05));
+    const mediumMin = Math.max(340, Math.round(baseHeight * 1.1));
+    const largeMin = Math.max(360, Math.round(baseHeight * 1.15));
+
+    if (width <= 680) {
+      return Math.max(smallMin, Math.min(680, Math.round(viewportHeight * 0.5)));
+    }
+    if (width <= 1024) {
+      return Math.max(mediumMin, Math.min(760, Math.round(viewportHeight * 0.56)));
+    }
+    return Math.max(largeMin, Math.min(920, Math.round(viewportHeight * 0.62)));
   }
 
   function trendLayoutForViewport(pointsCount) {
     const width = viewportWidthPx();
-    const isTrendOnly = chartModeFromUrl() === "trend";
-    const trendOnlyHeight = Math.max(360, Math.min(920, Math.round(viewportHeightPx() * 0.62)));
     if (width <= 680) {
       return {
-        chartHeight: isTrendOnly ? Math.max(300, Math.min(680, Math.round(viewportHeightPx() * 0.5))) : 224,
+        chartHeight: singleChartHeightForMode("trend", 224),
         margin: { top: 10, right: 8, bottom: 24, left: 8 },
         xTickFontSize: 10,
         yTickFontSize: 10,
@@ -111,7 +131,7 @@
     }
     if (width <= 1024) {
       return {
-        chartHeight: isTrendOnly ? Math.max(340, Math.min(760, Math.round(viewportHeightPx() * 0.56))) : 252,
+        chartHeight: singleChartHeightForMode("trend", 252),
         margin: { top: 12, right: 10, bottom: 28, left: 10 },
         xTickFontSize: 11,
         yTickFontSize: 11,
@@ -122,7 +142,7 @@
       };
     }
     return {
-      chartHeight: isTrendOnly ? trendOnlyHeight : CHART_HEIGHTS.standard,
+      chartHeight: singleChartHeightForMode("trend", CHART_HEIGHTS.standard),
       margin: { top: 12, right: 12, bottom: 32, left: 12 },
       xTickFontSize: 11,
       yTickFontSize: 11,
@@ -806,7 +826,7 @@ function renderBarChartShell({
     return renderBarChartShell({
       rows,
       colors,
-      height: CHART_HEIGHTS.dense,
+      height: singleChartHeightForMode("composition", CHART_HEIGHTS.dense),
       margin: { top: 12, right: 12, bottom: 38, left: 12 },
       layout: { categoryGap, maxBarSize: isAllTeams ? BAR_LAYOUT.denseMax : singleTeamMaxBarSize },
       xAxisProps: {
@@ -889,6 +909,7 @@ function renderBarChartShell({
         defs: prioritySeries,
         colors,
         yUpper,
+        height: singleChartHeightForMode("uat", CHART_HEIGHTS.standard),
         showLegend: false,
         colorByCategoryKey: "bucketLabel",
         xAxisProps: {
@@ -938,6 +959,7 @@ function renderBarChartShell({
       ],
       colors,
       yUpper,
+      height: singleChartHeightForMode("management", CHART_HEIGHTS.standard),
       yAxisProps:
         Array.isArray(yTicks) && yTicks.length > 1
           ? { domain: [0, yTicks[yTicks.length - 1]], ticks: yTicks, allowDecimals: false }
@@ -969,6 +991,7 @@ function renderBarChartShell({
 
   function renderMultiSeriesBars({
     kind,
+    modeKey = "all",
     containerId,
     rows,
     defs,
@@ -1033,7 +1056,7 @@ function renderBarChartShell({
       categoryColors,
       overlayDots,
       gridVertical,
-      height: CHART_HEIGHTS.dense,
+      height: singleChartHeightForMode(modeKey, CHART_HEIGHTS.dense),
       margin: { top: 14, right: 12, bottom: 34, left: 12 },
       xAxisProps: {
         ...(isHorizontal
@@ -1118,12 +1141,14 @@ function renderBarChartShell({
     renderCycleTimeParkingLotToDoneChart: ({ seriesDefs, ...rest }) =>
       renderMultiSeriesBars({
         kind: "productCycle",
+        modeKey: "product-cycle",
         defs: seriesDefs,
         ...rest
       }),
     renderLifecycleTimeSpentPerPhaseChart: ({ seriesDefs, ...rest }) =>
       renderMultiSeriesBars({
         kind: "lifecycleDays",
+        modeKey: "lifecycle-days",
         defs: seriesDefs,
         ...rest
       }),
