@@ -576,6 +576,15 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
   const yearLabel = year;
 
   const themeColors = getThemeColors();
+  const hashTeamColor = (teamName) => {
+    const text = String(teamName || "").trim().toLowerCase();
+    let hash = 0;
+    for (let i = 0; i < text.length; i += 1) {
+      hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
+    }
+    const hue = hash % 360;
+    return `hsl(${hue} 45% 52%)`;
+  };
   const bugPaletteFallback = [
     themeColors.teams.api,
     themeColors.teams.legacy,
@@ -589,7 +598,9 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     if (key === "legacy" || key.includes("legacy") || key.includes("frontend")) return themeColors.teams.legacy;
     if (key === "react" || key.includes("react")) return themeColors.teams.react;
     if (key === "broadcast" || key === "bc" || key.includes("broadcast")) return themeColors.teams.bc;
-    return bugPaletteFallback[index % bugPaletteFallback.length];
+    const uniqueFallback = hashTeamColor(raw || `team-${index}`);
+    const clashWithCore = bugPaletteFallback.some((color) => String(color).toLowerCase() === String(uniqueFallback).toLowerCase());
+    return clashWithCore ? hashTeamColor(`${raw}-alt-${index}`) : uniqueFallback;
   };
   const teamColorMap = Object.fromEntries(
     orderProductCycleTeams(teams).map((team, index) => [team, resolveTeamColor(team, index)])
