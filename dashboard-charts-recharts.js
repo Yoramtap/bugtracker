@@ -318,6 +318,41 @@
     };
   }
 
+  function isCoarsePointerDevice() {
+    return (
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: coarse)").matches
+    );
+  }
+
+  function dismissTooltipFromTap(node) {
+    if (!node || typeof node.closest !== "function" || typeof window === "undefined") return;
+    const wrapper = node.closest(".recharts-wrapper");
+    if (!wrapper) return;
+    try {
+      wrapper.dispatchEvent(
+        new MouseEvent("mouseleave", {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        })
+      );
+    } catch {
+      // no-op
+    }
+    try {
+      wrapper.dispatchEvent(
+        new Event("touchend", {
+          bubbles: true,
+          cancelable: true
+        })
+      );
+    } catch {
+      // no-op
+    }
+  }
+
 
   function toggleLegendKey(prevSet, key) {
     const next = new Set(prevSet);
@@ -378,6 +413,14 @@
           borderRadius: "6px",
           padding: "8px 10px",
           boxShadow: "0 4px 14px rgba(0,0,0,0.1)"
+        },
+        onClick: (event) => {
+          if (!isCoarsePointerDevice()) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const node = event.currentTarget;
+          if (node && node.style) node.style.display = "none";
+          dismissTooltipFromTap(node);
         }
       },
       ...lines.map((line, index) => {
