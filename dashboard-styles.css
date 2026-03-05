@@ -81,6 +81,10 @@ main {
   gap: 10px;
 }
 
+.panel[hidden] {
+  display: none !important;
+}
+
 .panel > * {
   min-width: 0;
 }
