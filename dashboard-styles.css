@@ -139,26 +139,8 @@ h2 {
   border: 2px solid rgba(31, 51, 71, 0.6);
   background: rgba(247, 251, 255, 0.96);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.92) inset;
-}
-
-.help-tip-icon {
-  width: 14px;
-  height: 14px;
-  display: block;
-}
-
-.help-tip-icon circle,
-.help-tip-icon line {
-  stroke: rgba(36, 74, 110, 0.95);
-  stroke-width: 1.75;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.help-tip-icon > circle:last-child {
-  fill: rgba(36, 74, 110, 0.95);
-  stroke: none;
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .help-popover {
