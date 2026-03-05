@@ -282,13 +282,9 @@ h2 {
   margin-top: 2px;
 }
 
-body.embed-mode .panel-subtitle,
-body.embed-mode .radio-control-groups,
-body.embed-mode .series-drawer,
 body.embed-mode .panel-status,
 body.embed-mode .panel-note,
-body.embed-mode .panel-summary,
-body.embed-mode .help-wrap {
+body.embed-mode .panel-summary {
   display: none !important;
 }
 
