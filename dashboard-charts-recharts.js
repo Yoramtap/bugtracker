@@ -49,6 +49,7 @@
     composition: null,
     uat: null,
     management: null,
+    managementFacility: null,
     contributors: null,
     productCycle: null,
     lifecycleDays: null
@@ -94,6 +95,7 @@
     if (chart === "composition") return "composition";
     if (chart === "uat") return "uat";
     if (chart === "dev-uat-ratio") return "management";
+    if (chart === "dev-uat-facility") return "management-facility";
     if (chart === "contributors") return "contributors";
     if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";
     if (chart === "lifecycle-days") return "lifecycle-days";
@@ -373,7 +375,16 @@
     const asSubItems = (line) => {
       if (!line || line.isTitle) return [];
       if (Array.isArray(line.subItems) && line.subItems.length > 0) {
-        return line.subItems.map((item) => String(item || "").trim()).filter(Boolean);
+        return line.subItems
+          .map((item) => {
+            if (typeof item === "string") return item.trim();
+            return item;
+          })
+          .filter((item) => {
+            if (item === null || item === undefined) return false;
+            if (typeof item === "string") return item.length > 0;
+            return true;
+          });
       }
       const text = String(line.text || "").trim();
       const colonIndex = text.indexOf(":");
@@ -489,7 +500,7 @@
                           color: "rgba(31,51,71,0.9)"
                         }
                       },
-                      sub
+                      React.isValidElement(sub) ? sub : String(sub)
                     )
                   )
                 )
@@ -578,34 +589,6 @@
       mapped[label] = SHARED_CATEGORY_BLUE_TINTS[index % SHARED_CATEGORY_BLUE_TINTS.length];
     });
     return mapped;
-  }
-
-  function hexToRgb(hex) {
-    const value = String(hex || "").trim();
-    const short = /^#([0-9a-f]{3})$/i.exec(value);
-    if (short) {
-      const chars = short[1].split("");
-      return chars.map((char) => Number.parseInt(char + char, 16));
-    }
-    const full = /^#([0-9a-f]{6})$/i.exec(value);
-    if (!full) return null;
-    const parsed = full[1];
-    return [
-      Number.parseInt(parsed.slice(0, 2), 16),
-      Number.parseInt(parsed.slice(2, 4), 16),
-      Number.parseInt(parsed.slice(4, 6), 16)
-    ];
-  }
-
-  function blendHexWithWhite(hex, factor = 0) {
-    const rgb = hexToRgb(hex);
-    if (!rgb) return String(hex || "");
-    const clamped = Math.max(0, Math.min(1, Number(factor) || 0));
-    const [r, g, b] = rgb.map((channel) =>
-      Math.round(channel + (255 - channel) * clamped)
-    );
-    const toHex = (value) => value.toString(16).padStart(2, "0");
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   }
 
   function twoLineCategoryTickFactory(
@@ -1242,17 +1225,6 @@
 
   function renderDevelopmentTimeVsUatTimeChart({ containerId, rows, colors, devColor, uatColor, yTicks }) {
     const chartRows = Array.isArray(rows) ? rows : [];
-    const priorityBaseByLabel = {
-      Highest: colors.priorities?.highest || "#cc7a73",
-      High: colors.priorities?.high || "#d6a66b",
-      Medium: colors.priorities?.medium || "#8f98a9"
-    };
-    const devTintByLabel = Object.fromEntries(
-      Object.entries(priorityBaseByLabel).map(([label, hex]) => [label, blendHexWithWhite(hex, 0.34)])
-    );
-    const uatTintByLabel = Object.fromEntries(
-      Object.entries(priorityBaseByLabel).map(([label, hex]) => [label, blendHexWithWhite(hex, 0.04)])
-    );
     const yUpper = computeYUpper(
       [
         ...chartRows.map((row) => toNumber(row.devMedian)),
@@ -1263,13 +1235,12 @@
     renderGroupedBars("management", containerId, chartRows.length > 0, {
       rows: chartRows,
       defs: [
-        { dataKey: "devMedian", name: "Days in Development", fill: devColor, categoryColors: devTintByLabel },
-        { dataKey: "uatMedian", name: "Days in UAT", fill: uatColor, categoryColors: uatTintByLabel }
+        { dataKey: "devMedian", name: "Days in Development", fill: devColor },
+        { dataKey: "uatMedian", name: "Days in UAT", fill: uatColor }
       ],
       colors,
       yUpper,
       height: singleChartHeightForMode("management", CHART_HEIGHTS.standard),
-      colorByCategoryKey: "label",
       yAxisProps:
         Array.isArray(yTicks) && yTicks.length > 1
           ? { domain: [0, yTicks[yTicks.length - 1]], ticks: yTicks, allowDecimals: false }
@@ -1277,7 +1248,7 @@
       xAxisProps: {
         dataKey: "label",
         interval: 0,
-        height: 34
+        height: 36
       },
       tooltipProps: {
         content: createTooltipContent(colors, (row, payload) => [
@@ -1298,16 +1269,132 @@
                 ]
               }
             );
-          }).filter(Boolean),
-          ...(Array.isArray(row?.facilityTooltipItems) && row.facilityTooltipItems.length > 0
-            ? [
-                makeTooltipLine("facilities", "Priority · Facility", colors, {
-                  margin: "4px 0 0",
-                  subItems: row.facilityTooltipItems
-                })
-              ]
-            : [])
+          }).filter(Boolean)
         ]),
+        cursor: { fill: BAR_CURSOR_FILL }
+      }
+    });
+  }
+
+  function renderDevelopmentVsUatByFacilityChart({
+    containerId,
+    rows,
+    colors,
+    devColor,
+    uatColor,
+    jiraBrowseBase = "https://nepgroup.atlassian.net/browse/"
+  }) {
+    const chartRows = Array.isArray(rows) ? rows : [];
+    const compactViewport = isCompactViewport();
+    const toWeeks = (days) => toNumber(days) / 7;
+    const toWholeWeeksForChart = (days) => {
+      const rawDays = toNumber(days);
+      if (rawDays <= 0) return 0;
+      if (rawDays < 7) return 1;
+      return Math.max(1, Math.round(toWeeks(rawDays)));
+    };
+    const formatWeeks = (days) => {
+      const rawDays = toNumber(days);
+      if (rawDays > 0 && rawDays < 7) return "<1 week";
+      const weeks = Math.max(1, Math.round(toWeeks(rawDays)));
+      if (weeks === 1) return "1 week";
+      return `${weeks} weeks`;
+    };
+    const weekRows = chartRows.map((row) => ({
+      ...row,
+      devWeeks: toWholeWeeksForChart(row?.devAvg),
+      uatWeeks: toWholeWeeksForChart(row?.uatAvg)
+    }));
+    const categorySecondaryLabels = Object.fromEntries(
+      chartRows.map((row) => [String(row?.label || ""), `n=${toWhole(row?.sampleCount)}`])
+    );
+    const yUpper = computeYUpper(
+      [...weekRows.map((row) => toNumber(row?.devWeeks)), ...weekRows.map((row) => toNumber(row?.uatWeeks))],
+      { min: 1, pad: 1.15 }
+    );
+    const maxWeeks = Math.max(1, Math.ceil(yUpper));
+    const axisWeeks = maxWeeks <= 4 ? maxWeeks : Math.ceil(maxWeeks / 2) * 2;
+    const axisUpper = axisWeeks;
+    const yTicksWeeks = [0, 1, 2, 3, 4, 6, 8, 10, 12, 14]
+      .filter((week) => week <= axisWeeks);
+    for (let week = 16; week <= axisWeeks; week += 2) yTicksWeeks.push(week);
+    const yTicks = yTicksWeeks;
+    const xInterval = compactViewport ? tickIntervalForMobileLabels(chartRows.length) : 0;
+    renderGroupedBars("managementFacility", containerId, chartRows.length > 0, {
+      rows: weekRows,
+      defs: [
+        {
+          dataKey: "devWeeks",
+          name: "Weeks in Development",
+          fill: devColor
+        },
+        {
+          dataKey: "uatWeeks",
+          name: "Weeks in UAT",
+          fill: uatColor
+        }
+      ],
+      colors,
+      yUpper: axisUpper,
+      height: singleChartHeightForMode("management-facility", CHART_HEIGHTS.standard),
+      yAxisProps: {
+        domain: [0, axisUpper],
+        ticks: yTicks,
+        allowDecimals: false,
+        tickFormatter: (value) => String(toWhole(value))
+      },
+      xAxisProps: {
+        dataKey: "label",
+        interval: xInterval,
+        minTickGap: compactViewport ? 10 : 6,
+        height: 56,
+        tick: twoLineCategoryTickFactory(colors, {
+          textAnchor: "middle",
+          secondaryLabels: categorySecondaryLabels
+        })
+      },
+      tooltipProps: {
+        content: createTooltipContent(colors, (row) => {
+          const devAvg = toNumber(row?.devAvg);
+          const uatAvg = toNumber(row?.uatAvg);
+          const issueIds = Array.isArray(row?.issueIds) ? row.issueIds : [];
+          const issueDisplayLimit = 8;
+          const issueSubItems = issueIds
+            .slice(0, issueDisplayLimit)
+            .map((issueId, index) => {
+              const key = String(issueId || "").trim();
+              if (!key) return null;
+              const url = `${String(jiraBrowseBase || "").replace(/\/$/, "")}/${encodeURIComponent(key)}`;
+              return h(
+                "a",
+                {
+                  key: `issue-link-${key}-${index}`,
+                  href: url,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  style: {
+                    color: colors.text,
+                    textDecoration: "underline"
+                  }
+                },
+                key
+              );
+            })
+            .filter(Boolean);
+          if (issueIds.length > issueDisplayLimit) {
+            issueSubItems.push(`+${issueIds.length - issueDisplayLimit} more`);
+          }
+          return [
+            tooltipTitleLine("label", row?.label || "", colors),
+            makeTooltipLine("dev", `Weeks in Development: ${formatWeeks(devAvg)}`, colors),
+            makeTooltipLine("uat", `Weeks in UAT: ${formatWeeks(uatAvg)}`, colors),
+            makeTooltipLine("issues", "Issues", colors, {
+              margin: "6px 0 0",
+              subItems: issueSubItems.length > 0 ? issueSubItems : ["-"]
+            })
+          ];
+        }),
+        wrapperStyle: { pointerEvents: "auto" },
         cursor: { fill: BAR_CURSOR_FILL }
       }
     });
@@ -1551,6 +1638,7 @@
     renderBugCompositionByPriorityChart,
     renderUatPriorityAgingChart,
     renderDevelopmentTimeVsUatTimeChart,
+    renderDevelopmentVsUatByFacilityChart,
     renderTopContributorsChart,
     renderCycleTimeParkingLotToDoneChart: ({ seriesDefs, ...rest }) =>
       renderMultiSeriesBars({

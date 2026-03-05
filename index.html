@@ -67,13 +67,13 @@
       </section>
 
       <section id="uat-panel" class="panel" aria-label="UAT aging by priority">
-        <h2>Interactive chart - UAT open by priority</h2>
+        <h2>Interactive chart - UAT open by priority (ongoing work)</h2>
         <div class="panel-subtitle panel-subtitle--with-help">
           <span id="uat-context">Broadcast, -- currently in UAT</span>
           <span class="help-wrap">
             <span class="help-tip" tabindex="0" role="button" aria-label="UAT aging chart explainer">?</span>
             <div class="help-popover" role="tooltip">
-              <p><strong>UAT aging chart</strong> groups items currently in UAT into time-in-stage buckets.</p>
+              <p><strong>UAT aging chart</strong> groups ongoing items currently in UAT into time-in-stage buckets.</p>
               <ul>
                 <li>Colors split counts by priority in each age bucket.</li>
                 <li>Growth in older buckets signals UAT bottlenecks.</li>
@@ -89,13 +89,13 @@
       </section>
 
       <section id="management-panel" class="panel" aria-label="Broadcast flow by priority">
-        <h2>Interactive chart - Development time vs UAT time</h2>
+        <h2>Interactive chart - Development time vs UAT time (ongoing work)</h2>
         <div class="panel-subtitle panel-subtitle--with-help">
-          <span id="management-context">Broadcast, -- historical flow tickets (sample)</span>
+          <span id="management-context">Broadcast, -- ongoing flow tickets (sample)</span>
           <span class="help-wrap">
             <span class="help-tip" tabindex="0" role="button" aria-label="Development vs UAT chart explainer">?</span>
             <div class="help-popover" role="tooltip">
-              <p><strong>Development vs UAT</strong> compares delivery time by priority.</p>
+              <p><strong>Development vs UAT</strong> compares ongoing delivery time by priority.</p>
               <ul>
                 <li>Bars show median days in Dev and UAT for each priority band.</li>
                 <li>Higher UAT bars usually indicate QA/UAT bottleneck.</li>
@@ -108,6 +108,35 @@
           <div id="development-time-vs-uat-time-chart" class="chart-canvas chart-canvas--standard"></div>
         </div>
         <p id="management-status" class="panel-status" hidden></p>
+      </section>
+
+      <section id="management-facility-panel" class="panel" aria-label="Broadcast flow by facility">
+        <h2>Interactive chart - Development vs UAT by facility</h2>
+        <div class="panel-subtitle panel-subtitle--with-help">
+          <span id="management-facility-context">Broadcast, -- ongoing work (sample)</span>
+          <span class="help-wrap">
+            <span class="help-tip" tabindex="0" role="button" aria-label="Development vs UAT by facility chart explainer">?</span>
+            <div class="help-popover" role="tooltip">
+              <p><strong>Development vs UAT by facility</strong> compares average stage time per facility.</p>
+              <ul>
+                <li>Use the toggle to compare ongoing vs done scope.</li>
+                <li>Tooltip includes issue links for drill-down.</li>
+              </ul>
+            </div>
+          </span>
+        </div>
+        <p id="management-facility-updated" class="panel-subtitle">Last updated: --</p>
+        <div class="radio-control-groups" aria-label="Development vs UAT controls">
+          <fieldset class="radio-group-card">
+            <legend>Scope</legend>
+            <label><input type="radio" name="management-facility-flow-scope" value="ongoing" checked /> Ongoing</label>
+            <label><input type="radio" name="management-facility-flow-scope" value="done" /> Done</label>
+          </fieldset>
+        </div>
+        <div class="chart">
+          <div id="development-vs-uat-by-facility-chart" class="chart-canvas chart-canvas--standard"></div>
+        </div>
+        <p id="management-facility-status" class="panel-status" hidden></p>
       </section>
 
       <section id="contributors-panel" class="panel" aria-label="Top contributors by ticket status">

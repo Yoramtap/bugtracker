@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-03-04T13:18:17.406Z",
+  "updatedAt": "2026-03-05T14:43:16.686Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-04T13:18:17.406Z",
+    "syncedAt": "2026-03-05T14:43:16.686Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps.",
     "trendDates": {
       "source": "sprint_anchor",
@@ -11,7 +11,7 @@
       "firstDate": "2025-06-23",
       "lastDate": "2026-03-02",
       "startBoundary": "2025-06-23",
-      "endBoundary": "2026-03-04",
+      "endBoundary": "2026-03-05",
       "totalResolvedBeforeConstraints": 19,
       "usedFallbackDates": false,
       "fallbackReason": "",
@@ -30,7 +30,7 @@
       "status": "UAT",
       "label": "Broadcast"
     },
-    "generatedAt": "2026-03-04T13:18:15.904Z",
+    "generatedAt": "2026-03-05T14:43:14.311Z",
     "totalIssues": 9,
     "buckets": [
       {
@@ -67,8 +67,8 @@
     "priorities": {
       "highest": {
         "count": 2,
-        "avgDays": 12,
-        "maxDays": 22,
+        "avgDays": 13,
+        "maxDays": 23,
         "buckets": {
           "d0_7": 1,
           "d8_14": 0,
@@ -79,8 +79,8 @@
       },
       "high": {
         "count": 4,
-        "avgDays": 26.5,
-        "maxDays": 77,
+        "avgDays": 27.5,
+        "maxDays": 78,
         "buckets": {
           "d0_7": 1,
           "d8_14": 1,
@@ -91,8 +91,8 @@
       },
       "medium": {
         "count": 3,
-        "avgDays": 52.7,
-        "maxDays": 82,
+        "avgDays": 53.7,
+        "maxDays": 83,
         "buckets": {
           "d0_7": 0,
           "d8_14": 0,
@@ -327,25 +327,25 @@
     "broadcast": {
       "flow_by_priority": {
         "highest": {
-          "avg_dev_days": 7.98,
-          "median_dev_days": 0.47,
-          "avg_uat_days": 16.93,
-          "median_uat_days": 15.23,
-          "n_dev": 8,
-          "n_uat": 8
+          "avg_dev_days": 9.1,
+          "median_dev_days": 0.87,
+          "avg_uat_days": 18.39,
+          "median_uat_days": 21.67,
+          "n_dev": 7,
+          "n_uat": 7
         },
         "high": {
           "avg_dev_days": 24.52,
           "median_dev_days": 0.94,
-          "avg_uat_days": 58.54,
-          "median_uat_days": 52.32,
+          "avg_uat_days": 59.25,
+          "median_uat_days": 53.38,
           "n_dev": 6,
           "n_uat": 6
         },
         "medium": {
           "avg_dev_days": 31.12,
           "median_dev_days": 7,
-          "avg_uat_days": 81.11,
+          "avg_uat_days": 81.4,
           "median_uat_days": 75.17,
           "n_dev": 11,
           "n_uat": 11
@@ -353,10 +353,10 @@
       },
       "flow_by_priority_facility": {
         "highest": {
-          "total": 8,
-          "missing": 5,
+          "total": 7,
+          "missing": 4,
           "by_facility": {
-            "Unspecified": 5,
+            "Unspecified": 4,
             "US ND2": 2,
             "NO OBC": 1
           }
@@ -384,28 +384,135 @@
           }
         }
       },
+      "flow_by_facility": {
+        "Unspecified": {
+          "avg_dev_days": 26.26,
+          "avg_uat_days": 70.6,
+          "n_dev": 13,
+          "n_uat": 13,
+          "n": 13,
+          "issue_ids": [
+            "TFC-11526",
+            "TFC-13842",
+            "TFC-13847",
+            "TFC-13848",
+            "TFC-14540",
+            "TFC-14891",
+            "TFC-14978",
+            "TFC-15120",
+            "TFC-15824",
+            "TFC-15894",
+            "TFC-15958",
+            "TFC-16088",
+            "TFC-16090"
+          ]
+        },
+        "US ND2": {
+          "avg_dev_days": 20.95,
+          "avg_uat_days": 28.68,
+          "n_dev": 3,
+          "n_uat": 3,
+          "n": 3,
+          "issue_ids": [
+            "TFC-15197",
+            "TFC-15822",
+            "TFC-16041"
+          ]
+        },
+        "NL NLCP": {
+          "avg_dev_days": 0.69,
+          "avg_uat_days": 23.05,
+          "n_dev": 2,
+          "n_uat": 2,
+          "n": 2,
+          "issue_ids": [
+            "TFC-15539",
+            "TFC-16029"
+          ]
+        },
+        "AU AHS": {
+          "avg_dev_days": 0.97,
+          "avg_uat_days": 75.17,
+          "n_dev": 1,
+          "n_uat": 1,
+          "n": 1,
+          "issue_ids": [
+            "TFC-15598"
+          ]
+        },
+        "ME MEIP1": {
+          "avg_dev_days": 1.1,
+          "avg_uat_days": 28.26,
+          "n_dev": 1,
+          "n_uat": 1,
+          "n": 1,
+          "issue_ids": [
+            "TFC-15925"
+          ]
+        },
+        "NO OBC": {
+          "avg_dev_days": 0,
+          "avg_uat_days": 5.68,
+          "n_dev": 1,
+          "n_uat": 1,
+          "n": 1,
+          "issue_ids": [
+            "TFC-16084"
+          ]
+        },
+        "NZ NZCP": {
+          "avg_dev_days": 143.66,
+          "avg_uat_days": 112.45,
+          "n_dev": 1,
+          "n_uat": 1,
+          "n": 1,
+          "issue_ids": [
+            "TFC-12976"
+          ]
+        },
+        "US EN1": {
+          "avg_dev_days": 0.88,
+          "avg_uat_days": 78.5,
+          "n_dev": 1,
+          "n_uat": 1,
+          "n": 1,
+          "issue_ids": [
+            "TFC-14425"
+          ]
+        },
+        "US USCP": {
+          "avg_dev_days": 0.98,
+          "avg_uat_days": 29.67,
+          "n_dev": 1,
+          "n_uat": 1,
+          "n": 1,
+          "issue_ids": [
+            "TFC-13224"
+          ]
+        }
+      },
       "flow_by_priority_variants": {
         "all": {
           "highest": {
-            "avg_dev_days": 7.98,
-            "median_dev_days": 0.47,
-            "avg_uat_days": 16.93,
-            "median_uat_days": 15.23,
-            "n_dev": 8,
-            "n_uat": 8
+            "avg_dev_days": 9.1,
+            "median_dev_days": 0.87,
+            "avg_uat_days": 18.39,
+            "median_uat_days": 21.67,
+            "n_dev": 7,
+            "n_uat": 7
           },
           "high": {
             "avg_dev_days": 24.52,
             "median_dev_days": 0.94,
-            "avg_uat_days": 58.54,
-            "median_uat_days": 52.32,
+            "avg_uat_days": 59.25,
+            "median_uat_days": 53.38,
             "n_dev": 6,
             "n_uat": 6
           },
           "medium": {
             "avg_dev_days": 31.12,
             "median_dev_days": 7,
-            "avg_uat_days": 81.11,
+            "avg_uat_days": 81.4,
             "median_uat_days": 75.17,
             "n_dev": 11,
             "n_uat": 11
@@ -413,28 +520,299 @@
         },
         "bugs_only": {
           "highest": {
-            "avg_dev_days": 7.98,
-            "median_dev_days": 0.47,
-            "avg_uat_days": 16.93,
-            "median_uat_days": 15.23,
-            "n_dev": 8,
-            "n_uat": 8
+            "avg_dev_days": 9.1,
+            "median_dev_days": 0.87,
+            "avg_uat_days": 18.39,
+            "median_uat_days": 21.67,
+            "n_dev": 7,
+            "n_uat": 7
           },
           "high": {
             "avg_dev_days": 36.66,
             "median_dev_days": 1.04,
-            "avg_uat_days": 56.41,
-            "median_uat_days": 52.32,
+            "avg_uat_days": 57.21,
+            "median_uat_days": 53.38,
             "n_dev": 4,
             "n_uat": 4
           },
           "medium": {
             "avg_dev_days": 0.72,
             "median_dev_days": 0.94,
-            "avg_uat_days": 48.7,
-            "median_uat_days": 45.52,
+            "avg_uat_days": 49.23,
+            "median_uat_days": 46.05,
             "n_dev": 4,
             "n_uat": 4
+          }
+        },
+        "ongoing": {
+          "highest": {
+            "avg_dev_days": 0.43,
+            "median_dev_days": 0.43,
+            "avg_uat_days": 14.61,
+            "median_uat_days": 14.61,
+            "n_dev": 2,
+            "n_uat": 2
+          },
+          "high": {
+            "avg_dev_days": 0.86,
+            "median_dev_days": 0.94,
+            "avg_uat_days": 30,
+            "median_uat_days": 18.95,
+            "n_dev": 4,
+            "n_uat": 4
+          },
+          "medium": {
+            "avg_dev_days": 9.71,
+            "median_dev_days": 0.98,
+            "avg_uat_days": 78.67,
+            "median_uat_days": 49.59,
+            "n_dev": 3,
+            "n_uat": 3
+          }
+        }
+      },
+      "flow_by_facility_variants": {
+        "all": {
+          "Unspecified": {
+            "avg_dev_days": 26.26,
+            "avg_uat_days": 70.6,
+            "n_dev": 13,
+            "n_uat": 13,
+            "n": 13,
+            "issue_ids": [
+              "TFC-11526",
+              "TFC-13842",
+              "TFC-13847",
+              "TFC-13848",
+              "TFC-14540",
+              "TFC-14891",
+              "TFC-14978",
+              "TFC-15120",
+              "TFC-15824",
+              "TFC-15894",
+              "TFC-15958",
+              "TFC-16088",
+              "TFC-16090"
+            ]
+          },
+          "US ND2": {
+            "avg_dev_days": 20.95,
+            "avg_uat_days": 28.68,
+            "n_dev": 3,
+            "n_uat": 3,
+            "n": 3,
+            "issue_ids": [
+              "TFC-15197",
+              "TFC-15822",
+              "TFC-16041"
+            ]
+          },
+          "NL NLCP": {
+            "avg_dev_days": 0.69,
+            "avg_uat_days": 23.05,
+            "n_dev": 2,
+            "n_uat": 2,
+            "n": 2,
+            "issue_ids": [
+              "TFC-15539",
+              "TFC-16029"
+            ]
+          },
+          "AU AHS": {
+            "avg_dev_days": 0.97,
+            "avg_uat_days": 75.17,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-15598"
+            ]
+          },
+          "ME MEIP1": {
+            "avg_dev_days": 1.1,
+            "avg_uat_days": 28.26,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-15925"
+            ]
+          },
+          "NO OBC": {
+            "avg_dev_days": 0,
+            "avg_uat_days": 5.68,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-16084"
+            ]
+          },
+          "NZ NZCP": {
+            "avg_dev_days": 143.66,
+            "avg_uat_days": 112.45,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-12976"
+            ]
+          },
+          "US EN1": {
+            "avg_dev_days": 0.88,
+            "avg_uat_days": 78.5,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-14425"
+            ]
+          },
+          "US USCP": {
+            "avg_dev_days": 0.98,
+            "avg_uat_days": 29.67,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-13224"
+            ]
+          }
+        },
+        "ongoing": {
+          "Unspecified": {
+            "avg_dev_days": 9.67,
+            "avg_uat_days": 76.62,
+            "n_dev": 3,
+            "n_uat": 3,
+            "n": 3,
+            "issue_ids": [
+              "TFC-11526",
+              "TFC-14540",
+              "TFC-15958"
+            ]
+          },
+          "ME MEIP1": {
+            "avg_dev_days": 1.1,
+            "avg_uat_days": 28.26,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-15925"
+            ]
+          },
+          "NL NLCP": {
+            "avg_dev_days": 0.47,
+            "avg_uat_days": 3.61,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-16029"
+            ]
+          },
+          "NO OBC": {
+            "avg_dev_days": 0,
+            "avg_uat_days": 5.68,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-16084"
+            ]
+          },
+          "US EN1": {
+            "avg_dev_days": 0.88,
+            "avg_uat_days": 78.5,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-14425"
+            ]
+          },
+          "US ND2": {
+            "avg_dev_days": 0.99,
+            "avg_uat_days": 9.63,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-16041"
+            ]
+          },
+          "US USCP": {
+            "avg_dev_days": 0.98,
+            "avg_uat_days": 29.67,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-13224"
+            ]
+          }
+        },
+        "done": {
+          "Unspecified": {
+            "avg_dev_days": 31.24,
+            "avg_uat_days": 68.79,
+            "n_dev": 10,
+            "n_uat": 10,
+            "n": 10,
+            "issue_ids": [
+              "TFC-13842",
+              "TFC-13847",
+              "TFC-13848",
+              "TFC-14891",
+              "TFC-14978",
+              "TFC-15120",
+              "TFC-15824",
+              "TFC-15894",
+              "TFC-16088",
+              "TFC-16090"
+            ]
+          },
+          "US ND2": {
+            "avg_dev_days": 30.92,
+            "avg_uat_days": 38.2,
+            "n_dev": 2,
+            "n_uat": 2,
+            "n": 2,
+            "issue_ids": [
+              "TFC-15197",
+              "TFC-15822"
+            ]
+          },
+          "AU AHS": {
+            "avg_dev_days": 0.97,
+            "avg_uat_days": 75.17,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-15598"
+            ]
+          },
+          "NL NLCP": {
+            "avg_dev_days": 0.9,
+            "avg_uat_days": 42.5,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-15539"
+            ]
+          },
+          "NZ NZCP": {
+            "avg_dev_days": 143.66,
+            "avg_uat_days": 112.45,
+            "n_dev": 1,
+            "n_uat": 1,
+            "n": 1,
+            "issue_ids": [
+              "TFC-12976"
+            ]
           }
         }
       },
@@ -442,38 +820,38 @@
         "current": {
           "all": {
             "count": 9,
-            "oldest_age_days": 184.43,
-            "avg_age_days": 44.73
+            "oldest_age_days": 185.48,
+            "avg_age_days": 45.79
           },
           "bugs_only": {
             "count": 7,
-            "oldest_age_days": 79.52,
-            "avg_age_days": 30.73
+            "oldest_age_days": 80.58,
+            "avg_age_days": 31.79
           }
         }
       }
     },
     "kpi_8": {
       "broadcast": {
-        "dev_time_days_avg": 17.27,
-        "dev_time_days_median": 1,
-        "uat_time_days_avg": 55.16,
-        "uat_time_days_median": 31.26,
+        "dev_time_days_avg": 17.02,
+        "dev_time_days_median": 0.99,
+        "uat_time_days_avg": 57.49,
+        "uat_time_days_median": 36.88,
         "dev_vs_uat_ratio": 0.05,
         "uat_time_by_priority": {
           "highest": {
-            "n_with_uat": 8,
-            "uat_time_days_avg": 16.93,
-            "uat_time_days_median": 15.23
+            "n_with_uat": 7,
+            "uat_time_days_avg": 18.39,
+            "uat_time_days_median": 21.67
           },
           "high": {
             "n_with_uat": 6,
-            "uat_time_days_avg": 58.54,
-            "uat_time_days_median": 52.32
+            "uat_time_days_avg": 59.25,
+            "uat_time_days_median": 53.38
           },
           "medium": {
             "n_with_uat": 11,
-            "uat_time_days_avg": 81.11,
+            "uat_time_days_avg": 81.4,
             "uat_time_days_median": 75.17
           },
           "other": {
@@ -483,35 +861,35 @@
           }
         },
         "high_priority": {
-          "dev_time_days_avg": 18.48,
-          "dev_time_days_median": 0.99,
-          "uat_time_days_avg": 58.54,
-          "uat_time_days_median": 52.32
+          "dev_time_days_avg": 16.65,
+          "dev_time_days_median": 0.94,
+          "uat_time_days_avg": 59.25,
+          "uat_time_days_median": 53.38
         }
       }
     },
     "kpi_9": {
       "broadcast": {
         "uat_over_14d_pct": 66.67,
-        "uat_loop_rate_pct": 40,
+        "uat_loop_rate_pct": 41.67,
         "uat_by_priority": {
           "highest": {
             "uat_current_count": 2,
-            "uat_current_oldest_age_days": 22,
-            "uat_current_age_days_avg": 12,
-            "uat_current_age_days_median": 12
+            "uat_current_oldest_age_days": 23,
+            "uat_current_age_days_avg": 13,
+            "uat_current_age_days_median": 13
           },
           "high": {
             "uat_current_count": 4,
-            "uat_current_oldest_age_days": 77,
-            "uat_current_age_days_avg": 26.5,
-            "uat_current_age_days_median": 13.5
+            "uat_current_oldest_age_days": 78,
+            "uat_current_age_days_avg": 27.5,
+            "uat_current_age_days_median": 14.5
           },
           "medium": {
             "uat_current_count": 3,
-            "uat_current_oldest_age_days": 82,
-            "uat_current_age_days_avg": 52.67,
-            "uat_current_age_days_median": 48
+            "uat_current_oldest_age_days": 83,
+            "uat_current_age_days_avg": 53.67,
+            "uat_current_age_days_median": 49
           },
           "other": {
             "uat_current_count": 0,
@@ -521,9 +899,9 @@
           }
         },
         "high_priority": {
-          "uat_current_age_days_avg": 26.5,
-          "uat_current_age_days_median": 13.5,
-          "uat_current_oldest_age_days": 77
+          "uat_current_age_days_avg": 27.5,
+          "uat_current_age_days_median": 14.5,
+          "uat_current_oldest_age_days": 78
         }
       }
     }
@@ -1331,7 +1709,7 @@
       },
       "bc": {
         "date": "2026-03-02",
-        "highest": 4,
+        "highest": 5,
         "high": 77,
         "medium": 116,
         "low": 8,

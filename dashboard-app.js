@@ -3,6 +3,7 @@
 const UAT_PRIORITY_KEYS = ["medium", "high", "highest"];
 
 const PRODUCT_CYCLE_COMPARE_YEARS = ["2025", "2026"];
+const MANAGEMENT_FLOW_SCOPES = ["ongoing", "done"];
 const PRODUCT_CYCLE_TEAM_ORDER = ["api", "frontend", "broadcast", "orchestration", "titanium", "shift"];
 const LIFECYCLE_STAGE_GROUPS = [
   { keys: ["parking_lot"], label: "Parking" },
@@ -15,12 +16,13 @@ const MODE_PANEL_IDS = {
   composition: "composition-panel",
   uat: "uat-panel",
   management: "management-panel",
+  "management-facility": "management-facility-panel",
   contributors: "contributors-panel",
   "product-cycle": "product-cycle-panel",
   "lifecycle-days": "lifecycle-days-panel"
 };
-const CHART_STATUS_IDS = ["composition-status", "trend-status", "uat-status", "management-status", "contributors-status", "product-cycle-status", "lifecycle-days-status"];
-const LAST_UPDATED_IDS = ["trend-updated", "composition-updated", "uat-updated", "management-updated", "contributors-updated", "product-cycle-updated", "lifecycle-days-updated"];
+const CHART_STATUS_IDS = ["composition-status", "trend-status", "uat-status", "management-status", "management-facility-status", "contributors-status", "product-cycle-status", "lifecycle-days-status"];
+const LAST_UPDATED_IDS = ["trend-updated", "composition-updated", "uat-updated", "management-updated", "management-facility-updated", "contributors-updated", "product-cycle-updated", "lifecycle-days-updated"];
 const PRODUCT_CYCLE_UPDATED_IDS = ["product-cycle-updated", "lifecycle-days-updated"];
 const PUBLIC_AGGREGATE_CHART_CONFIG = {
   productCycle: {
@@ -44,6 +46,7 @@ const state = {
   productCycle: null,
   mode: "all",
   compositionTeamScope: "bc",
+  managementFlowScope: "ongoing",
   productCycleYearScope: "2026",
   lifecycleDaysYearScope: "2026"
 };
@@ -199,24 +202,6 @@ function uatBucketWeekLabel(bucket) {
   if (id === "d31_60") return "2 months";
   if (id === "d61_plus") return "More than 2 months";
   return String(bucket?.label || id || "Unknown");
-}
-
-function buildFacilityTooltipItems(summary, maxItems = 4) {
-  const source = summary && typeof summary === "object" ? summary : {};
-  const counts = source.byFacility && typeof source.byFacility === "object" ? source.byFacility : {};
-  const entries = Object.entries(counts)
-    .map(([facility, count]) => [String(facility || "").trim(), toNumber(count)])
-    .filter(([facility, count]) => facility && count > 0)
-    .sort((left, right) => {
-      if (right[1] !== left[1]) return right[1] - left[1];
-      return left[0].localeCompare(right[0]);
-    });
-  if (entries.length === 0) return [];
-  const top = entries.slice(0, Math.max(1, maxItems));
-  const remaining = entries.slice(top.length).reduce((sum, [, count]) => sum + count, 0);
-  const items = top.map(([facility, count]) => `${facility}: ${count}`);
-  if (remaining > 0) items.push(`Other: ${remaining}`);
-  return items;
 }
 
 function mergePriorityFacilityBreakdown(target, sourceByPriority) {
@@ -873,8 +858,7 @@ function renderDevelopmentTimeVsUatTimeChart() {
   if (!status || !context) return;
 
   status.hidden = true;
-
-  const scope = "all";
+  const scope = "ongoing";
   const flowVariants = state.snapshot?.kpis?.broadcast?.flow_by_priority_variants;
   const scopedFlow = flowVariants && typeof flowVariants === "object" ? flowVariants[scope] : null;
   const flow = scopedFlow || state.snapshot?.kpis?.broadcast?.flow_by_priority;
@@ -886,26 +870,12 @@ function renderDevelopmentTimeVsUatTimeChart() {
 
   const bands = ["medium", "high", "highest"];
   const labels = ["Medium", "High", "Highest"];
-  const themeColors = getThemeColors();
   const devMedian = readFlowMetricByBands(flow, bands, "median_dev_days");
   const uatMedian = readFlowMetricByBands(flow, bands, "median_uat_days");
   const devAvg = readFlowMetricByBands(flow, bands, "avg_dev_days");
   const uatAvg = readFlowMetricByBands(flow, bands, "avg_uat_days");
   const devCounts = bands.map((band) => toNumber(flow?.[band]?.n_dev));
   const uatCounts = bands.map((band) => toNumber(flow?.[band]?.n_uat));
-  const totalFlowTickets = bands.reduce(
-    (sum, band, idx) => sum + Math.max(devCounts[idx], uatCounts[idx]),
-    0
-  );
-  const uat = state.snapshot?.uatAging;
-  const uatScopeLabel = String(uat?.scope?.label || "Broadcast");
-  const flowFacilityByPriority =
-    state.snapshot?.kpis?.broadcast?.flow_by_priority_facility &&
-    typeof state.snapshot.kpis.broadcast.flow_by_priority_facility === "object"
-      ? state.snapshot.kpis.broadcast.flow_by_priority_facility
-      : {};
-  context.textContent = `Development time vs UAT time • ${uatScopeLabel} • sample size: ${totalFlowTickets}`;
-
   const rows = labels.map((label, idx) => ({
     label,
     devMedian: toNumber(devMedian[idx]),
@@ -913,14 +883,17 @@ function renderDevelopmentTimeVsUatTimeChart() {
     devAvg: toNumber(devAvg[idx]),
     uatAvg: toNumber(uatAvg[idx]),
     devCount: devCounts[idx],
-    uatCount: uatCounts[idx],
-    facilityTooltipItems: buildFacilityTooltipItems(flowFacilityByPriority?.[bands[idx]]).map(
-      (item) => `${label} · ${item}`
-    )
+    uatCount: uatCounts[idx]
   }));
+
+  const totalFlowTickets = rows.reduce((sum, row) => sum + Math.max(row.devCount, row.uatCount), 0);
+  const uat = state.snapshot?.uatAging;
+  const uatScopeLabel = String(uat?.scope?.label || "Broadcast");
+  context.textContent = `Development time vs UAT time • ${uatScopeLabel} • ongoing work • sample size: ${totalFlowTickets}`;
 
   const yValues = [...devMedian, ...uatMedian].filter(Number.isFinite);
   const variantCandidates = [
+    flowVariants?.ongoing,
     flowVariants?.all,
     flowVariants?.bugs_only,
     state.snapshot?.kpis?.broadcast?.flow_by_priority
@@ -948,13 +921,94 @@ function renderDevelopmentTimeVsUatTimeChart() {
   renderChart({
     containerId: "development-time-vs-uat-time-chart",
     rows,
-    colors: themeColors,
-    devColor: readThemeColor("--mgmt-dev", "#98a3af"),
-    uatColor: readThemeColor("--mgmt-uat", "#c0c8d1"),
-    yUpper: yUpperNice,
+    colors: getThemeColors(),
+    devColor: readThemeColor("--mgmt-dev", "#2f5f83"),
+    uatColor: readThemeColor("--mgmt-uat", "#7fa8c4"),
     yTicks
   });
 
+}
+
+function renderDevelopmentVsUatByFacilityChart() {
+  const status = document.getElementById("management-facility-status");
+  const context = document.getElementById("management-facility-context");
+  if (!status || !context) return;
+
+  status.hidden = true;
+  const scope = normalizeOption(state.managementFlowScope, MANAGEMENT_FLOW_SCOPES, "ongoing");
+  syncRadioValue("management-facility-flow-scope", scope);
+
+  const flowByFacilityVariants = state.snapshot?.kpis?.broadcast?.flow_by_facility_variants;
+  const scopedFlowByFacility =
+    flowByFacilityVariants && typeof flowByFacilityVariants === "object"
+      ? flowByFacilityVariants[scope]
+      : null;
+  const flowByFacility =
+    scopedFlowByFacility ||
+    state.snapshot?.kpis?.broadcast?.flow_by_facility ||
+    null;
+  if (!flowByFacility || typeof flowByFacility !== "object") {
+    status.hidden = false;
+    status.textContent = "No Broadcast flow_by_facility data found in backlog-snapshot.json.";
+    return;
+  }
+
+  const rows = Object.entries(flowByFacility)
+    .map(([facility, metrics]) => {
+      const node = metrics && typeof metrics === "object" ? metrics : {};
+      const nDev = toNumber(node.n_dev);
+      const nUat = toNumber(node.n_uat);
+      const n = toNumber(node.n || Math.max(nDev, nUat));
+      return {
+        label: String(facility || "Unspecified"),
+        devAvg: toNumber(node.avg_dev_days),
+        uatAvg: toNumber(node.avg_uat_days),
+        devCount: nDev,
+        uatCount: nUat,
+        sampleCount: n,
+        issueIds: Array.isArray(node.issue_ids) ? node.issue_ids : []
+      };
+    })
+    .filter((row) => row.sampleCount > 0)
+    .sort((left, right) => {
+      const leftIsUnspecified = String(left.label || "").trim().toLowerCase() === "unspecified";
+      const rightIsUnspecified = String(right.label || "").trim().toLowerCase() === "unspecified";
+      if (leftIsUnspecified && !rightIsUnspecified) return 1;
+      if (!leftIsUnspecified && rightIsUnspecified) return -1;
+      return left.label.localeCompare(right.label);
+    });
+  if (rows.length === 0) {
+    status.hidden = false;
+    status.textContent = `No ${scope} facility rows found in flow_by_facility data.`;
+    return;
+  }
+
+  const totalFlowTickets = rows.reduce((sum, row) => sum + row.sampleCount, 0);
+  const uat = state.snapshot?.uatAging;
+  const uatScopeLabel = String(uat?.scope?.label || "Broadcast");
+  const scopeLabel = scope === "done" ? "done work" : "ongoing work";
+  context.textContent = `Development vs UAT by facility • ${uatScopeLabel} • ${scopeLabel} • sample size: ${totalFlowTickets}`;
+
+  const renderChart = getRenderer(
+    "management-facility-status",
+    "renderDevelopmentVsUatByFacilityChart",
+    "Facility chart unavailable: Recharts renderer missing."
+  );
+  if (!renderChart) return;
+  renderChart({
+    containerId: "development-vs-uat-by-facility-chart",
+    rows,
+    colors: getThemeColors(),
+    jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
+    devColor:
+      scope === "done"
+        ? readThemeColor("--mgmt-done-dev", "#2f7d4d")
+        : readThemeColor("--mgmt-dev", "#2f5f83"),
+    uatColor:
+      scope === "done"
+        ? readThemeColor("--mgmt-done-uat", "#82bd95")
+        : readThemeColor("--mgmt-uat", "#7fa8c4")
+  });
 }
 
 function renderTopContributorsChart() {
@@ -1062,6 +1116,12 @@ async function loadSnapshot() {
     }
     bindRadioState("composition-team-scope", "compositionTeamScope", (value) => value || "bc", renderBugCompositionByPriorityChart);
     bindRadioState(
+      "management-facility-flow-scope",
+      "managementFlowScope",
+      (value) => normalizeOption(value, MANAGEMENT_FLOW_SCOPES, "ongoing"),
+      renderDevelopmentVsUatByFacilityChart
+    );
+    bindRadioState(
       "product-cycle-year-scope",
       "productCycleYearScope",
       (value) => normalizeOption(value, PRODUCT_CYCLE_COMPARE_YEARS, "2026"),
@@ -1096,6 +1156,7 @@ async function loadSnapshot() {
       { skipMode: "trend", run: renderBugCompositionByPriorityChart },
       { run: renderUatOpenByPriorityChart },
       { run: renderDevelopmentTimeVsUatTimeChart },
+      { run: renderDevelopmentVsUatByFacilityChart },
       { run: renderTopContributorsChart },
       { run: renderCycleTimeParkingLotToDoneChart },
       { run: renderLifecycleTimeSpentPerPhaseChart }

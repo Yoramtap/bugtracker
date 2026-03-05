@@ -18,8 +18,10 @@
   --priority-lowest: #e9eef5;
   --product-cycle-lead: #9ebae3;
   --product-cycle-cycle: #3f73b8;
-  --mgmt-dev: #7f8e9f;
-  --mgmt-uat: #a7b2bf;
+  --mgmt-dev: #2f5f83;
+  --mgmt-uat: #7fa8c4;
+  --mgmt-done-dev: #2f7d4d;
+  --mgmt-done-uat: #82bd95;
   --bar-border: #111111;
   --uat-bucket-0-7: #c4d8ec;
   --uat-bucket-8-14: #abc7e3;
