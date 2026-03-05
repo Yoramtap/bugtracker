@@ -293,7 +293,7 @@ function readMetricStats(source) {
   const average = toFiniteMetric(source?.average);
   const count = toCount(source?.n);
   return {
-    value: toNumber(median),
+    value: toNumber(average),
     n: count,
     median: toNumber(median),
     average: toNumber(average)
@@ -634,7 +634,7 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
     rows: rowsWithSample,
     seriesDefs,
     colors: themeColors,
-    metricLabel: "Median",
+    metricLabel: "Average",
     yUpperOverride: yUpper,
     showLegend: true,
     timeWindowLabel: "Lead and cycle time",
@@ -675,7 +675,7 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     return;
   }
 
-  const chartTitleText = "Lifecycle time spent per stage (Median, weeks)";
+  const chartTitleText = "Lifecycle time spent per stage (weeks)";
   const yearLabel = year;
 
   const themeColors = getThemeColors();
@@ -793,7 +793,7 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     rows,
     seriesDefs: teamDefs,
     colors: themeColors,
-    metricLabel: "Median",
+    metricLabel: "Average",
     yUpperOverride: yUpper,
     categoryKey: "phaseLabel",
     timeWindowLabel: "",

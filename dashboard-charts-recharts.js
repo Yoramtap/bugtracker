@@ -1610,7 +1610,6 @@
             if (valueDays <= 0) return;
             const sampleRaw = Number(meta.n);
             const sampleText = Number.isFinite(sampleRaw) && sampleRaw >= 0 ? String(toWhole(sampleRaw)) : "-";
-            const medianDays = toWhole(meta.median);
             const avgDays = toWhole(meta.average);
             const seriesName = meta.team || item.name;
             lines.push(
@@ -1623,9 +1622,6 @@
                   fontSize: "12px",
                   lineHeight: "1.45",
                   subItems: [
-                    displayInWeeks
-                      ? `median = ${formatWeeksFromDays(meta.median)}`
-                      : `median = ${medianDays} days`,
                     displayInWeeks
                       ? `average = ${formatWeeksFromDays(meta.average)}`
                       : `average = ${avgDays} days`,
