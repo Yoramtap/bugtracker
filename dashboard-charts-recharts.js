@@ -83,10 +83,19 @@
     return weeks === 1 ? "1 week" : `${weeks} weeks`;
   }
 
-  function buildWeekAxis(maxValueWeeks) {
+  function buildWeekAxis(maxValueWeeks, options = {}) {
+    const majorStep = Math.max(1, toWhole(options?.majorStep || 0));
+    const fixedStep = Number.isFinite(majorStep) && majorStep > 0 ? majorStep : null;
     const maxWeeks = Math.max(1, Math.ceil(toNumber(maxValueWeeks)));
-    const axisWeeks = maxWeeks <= 4 ? maxWeeks : Math.ceil(maxWeeks / 2) * 2;
-    const ticks = [0, 1, 2, 3, 4, 6, 8, 10, 12, 14].filter((week) => week <= axisWeeks);
+    const axisWeeks = fixedStep ? Math.max(fixedStep, Math.ceil(maxWeeks / fixedStep) * fixedStep) : maxWeeks <= 4 ? maxWeeks : Math.ceil(maxWeeks / 2) * 2;
+    const ticks = [0];
+    if (fixedStep) {
+      for (let week = fixedStep; week <= axisWeeks; week += fixedStep) ticks.push(week);
+      return { upper: axisWeeks, ticks };
+    }
+    [1, 2, 3, 4, 6, 8, 10, 12, 14].forEach((week) => {
+      if (week <= axisWeeks) ticks.push(week);
+    });
     for (let week = 16; week <= axisWeeks; week += 2) ticks.push(week);
     return { upper: axisWeeks, ticks };
   }
@@ -1485,14 +1494,15 @@
         : computeYUpper(yValues, { min: 1, pad: 1.15 });
     const isHorizontal = orientation === "horizontal";
     const effectiveCategoryTickTwoLine = categoryTickTwoLine && !compactViewport;
+    const weeklyAxis = displayInWeeks ? buildWeekAxis(yUpper, { majorStep: 4 }) : null;
     const niceAxis = isHorizontal
       ? displayInWeeks
-        ? buildWeekAxis(yUpper)
+        ? weeklyAxis
         : buildNiceNumberAxis(yUpper)
       : null;
     const niceYAxis = !isHorizontal
       ? displayInWeeks
-        ? buildWeekAxis(yUpper)
+        ? weeklyAxis
         : buildNiceNumberAxis(yUpper)
       : null;
     const twoLineCategoryTickHorizontal = twoLineCategoryTickFactory(colors, {

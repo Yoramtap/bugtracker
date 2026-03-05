@@ -504,7 +504,7 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
       0
   );
   const sampleCount = Math.max(leadSampleCount, cycleSampleCount);
-  const sampleLabel = `${leadSampleCount}/${cycleSampleCount} (lead/cycle)`;
+  const sampleLabel = `${cycleSampleCount}/${leadSampleCount} (cycle/lead)`;
 
   context.textContent = `Lead and cycle time per team in weeks • ${selectedYear} • Full backlog • sample size: ${sampleLabel} • unmapped excluded`;
 
@@ -608,17 +608,17 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
   );
   const seriesDefs = [
     {
-      key: "lead",
-      name: "Lead time",
-      color: readThemeColor("--product-cycle-lead", "#c58b4e"),
-      categoryColors: leadTintByTeam,
-      showValueLabel: false
-    },
-    {
       key: "cycle",
       name: "Cycle time",
       color: readThemeColor("--product-cycle-cycle", "#4e86b9"),
       categoryColors: cycleTintByTeam,
+      showValueLabel: false
+    },
+    {
+      key: "lead",
+      name: "Lead time",
+      color: readThemeColor("--product-cycle-lead", "#c58b4e"),
+      categoryColors: leadTintByTeam,
       showValueLabel: false
     }
   ];
