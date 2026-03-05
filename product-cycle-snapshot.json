@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-03-05T14:44:02.318Z",
+  "generatedAt": "2026-03-05T14:50:33.474Z",
   "teams": [
     "API",
     "Frontend",
@@ -136,7 +136,7 @@
                     "lead": {
                       "n": 49,
                       "median": 262.3,
-                      "average": 237.72
+                      "average": 237.73
                     },
                     "cycle": {
                       "n": 18,
@@ -217,7 +217,7 @@
                     "cycle": {
                       "n": 17,
                       "median": 95.11,
-                      "average": 107.5
+                      "average": 107.51
                     }
                   }
                 }
@@ -288,12 +288,12 @@
                     "lead": {
                       "n": 30,
                       "median": 146.21,
-                      "average": 166.35
+                      "average": 166.36
                     },
                     "cycle": {
                       "n": 8,
                       "median": 81.51,
-                      "average": 107.99
+                      "average": 108
                     }
                   }
                 }
@@ -368,7 +368,7 @@
                     "lead": {
                       "n": 25,
                       "median": 22.96,
-                      "average": 51.71
+                      "average": 51.72
                     },
                     "cycle": {
                       "n": 21,
@@ -406,7 +406,7 @@
                     "lead": {
                       "n": 49,
                       "median": 262.3,
-                      "average": 237.72
+                      "average": 237.73
                     },
                     "cycle": {
                       "n": 18,
@@ -487,7 +487,7 @@
                     "cycle": {
                       "n": 17,
                       "median": 95.11,
-                      "average": 107.5
+                      "average": 107.51
                     }
                   }
                 }
@@ -558,12 +558,12 @@
                     "lead": {
                       "n": 30,
                       "median": 146.21,
-                      "average": 166.35
+                      "average": 166.36
                     },
                     "cycle": {
                       "n": 8,
                       "median": 81.51,
-                      "average": 107.99
+                      "average": 108
                     }
                   }
                 }
@@ -599,7 +599,7 @@
                   "full_backlog": {
                     "lead": {
                       "n": 85,
-                      "median": 134.49,
+                      "median": 134.5,
                       "average": 172.23
                     },
                     "cycle": {
@@ -637,7 +637,7 @@
                   "full_backlog": {
                     "lead": {
                       "n": 47,
-                      "median": 190.31,
+                      "median": 190.32,
                       "average": 182.26
                     },
                     "cycle": {
@@ -751,8 +751,8 @@
                   "full_backlog": {
                     "lead": {
                       "n": 7,
-                      "median": 206.19,
-                      "average": 201.55
+                      "median": 206.2,
+                      "average": 201.56
                     },
                     "cycle": {
                       "n": 0,
@@ -1100,7 +1100,7 @@
                     "lead": {
                       "n": 11,
                       "median": 8.1,
-                      "average": 21.61
+                      "average": 21.62
                     },
                     "cycle": {
                       "n": 1,
@@ -1142,7 +1142,7 @@
                     "lead": {
                       "n": 3,
                       "median": 35.29,
-                      "average": 37.46
+                      "average": 37.47
                     },
                     "cycle": {
                       "n": 1,
@@ -1370,7 +1370,7 @@
                     "lead": {
                       "n": 11,
                       "median": 8.1,
-                      "average": 21.61
+                      "average": 21.62
                     },
                     "cycle": {
                       "n": 1,
@@ -3363,7 +3363,7 @@
                   "design": {
                     "n": 3,
                     "median": 0.02,
-                    "average": 29.01
+                    "average": 29.02
                   },
                   "ready_for_development": {
                     "n": 4,
@@ -3438,7 +3438,7 @@
                 "Orchestration": {
                   "parking_lot": {
                     "n": 31,
-                    "median": 112.65,
+                    "median": 112.66,
                     "average": 158.77
                   },
                   "design": {
@@ -3493,7 +3493,7 @@
                   "parking_lot": {
                     "n": 26,
                     "median": 130.44,
-                    "average": 150.55
+                    "average": 150.56
                   },
                   "design": {
                     "n": 1,
@@ -3556,7 +3556,7 @@
                       "design": {
                         "n": 3,
                         "median": 0.02,
-                        "average": 29.01
+                        "average": 29.02
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -3631,7 +3631,7 @@
                     "Orchestration": {
                       "parking_lot": {
                         "n": 31,
-                        "median": 112.65,
+                        "median": 112.66,
                         "average": 158.77
                       },
                       "design": {
@@ -3686,7 +3686,7 @@
                       "parking_lot": {
                         "n": 26,
                         "median": 130.44,
-                        "average": 150.55
+                        "average": 150.56
                       },
                       "design": {
                         "n": 1,
@@ -3749,7 +3749,7 @@
                       "design": {
                         "n": 3,
                         "median": 0.02,
-                        "average": 29.01
+                        "average": 29.02
                       },
                       "ready_for_development": {
                         "n": 4,
@@ -3824,7 +3824,7 @@
                     "Orchestration": {
                       "parking_lot": {
                         "n": 31,
-                        "median": 112.65,
+                        "median": 112.66,
                         "average": 158.77
                       },
                       "design": {
@@ -3879,7 +3879,7 @@
                       "parking_lot": {
                         "n": 26,
                         "median": 130.44,
-                        "average": 150.55
+                        "average": 150.56
                       },
                       "design": {
                         "n": 1,
@@ -3936,8 +3936,8 @@
                     "Frontend": {
                       "parking_lot": {
                         "n": 43,
-                        "median": 167.32,
-                        "average": 172.49
+                        "median": 167.33,
+                        "average": 172.5
                       },
                       "design": {
                         "n": 4,
@@ -3963,13 +3963,13 @@
                     "Broadcast": {
                       "parking_lot": {
                         "n": 53,
-                        "median": 134.49,
+                        "median": 134.5,
                         "average": 166.51
                       },
                       "design": {
                         "n": 9,
                         "median": 78.14,
-                        "average": 76.32
+                        "average": 76.33
                       },
                       "ready_for_development": {
                         "n": 6,
@@ -4018,12 +4018,12 @@
                       "parking_lot": {
                         "n": 7,
                         "median": 187.19,
-                        "average": 171.66
+                        "average": 171.67
                       },
                       "design": {
                         "n": 1,
-                        "median": 15.44,
-                        "average": 15.44
+                        "median": 15.45,
+                        "average": 15.45
                       },
                       "ready_for_development": {
                         "n": 2,
@@ -5655,12 +5655,12 @@
                   "parking_lot": {
                     "n": 12,
                     "median": 0,
-                    "average": 2.14
+                    "average": 2.15
                   },
                   "design": {
                     "n": 11,
-                    "median": 17.54,
-                    "average": 21.8
+                    "median": 17.55,
+                    "average": 21.81
                   },
                   "ready_for_development": {
                     "n": 5,
@@ -5736,7 +5736,7 @@
                   "parking_lot": {
                     "n": 3,
                     "median": 3.31,
-                    "average": 6.84
+                    "average": 6.85
                   },
                   "design": {
                     "n": 0,
@@ -5768,7 +5768,7 @@
                   "design": {
                     "n": 3,
                     "median": 35.29,
-                    "average": 37.15
+                    "average": 37.16
                   },
                   "ready_for_development": {
                     "n": 0,
@@ -5817,7 +5817,7 @@
                   "parking_lot": {
                     "n": 10,
                     "median": 4.15,
-                    "average": 20.04
+                    "average": 20.05
                   },
                   "design": {
                     "n": 3,
@@ -5848,12 +5848,12 @@
                       "parking_lot": {
                         "n": 12,
                         "median": 0,
-                        "average": 2.14
+                        "average": 2.15
                       },
                       "design": {
                         "n": 11,
-                        "median": 17.54,
-                        "average": 21.8
+                        "median": 17.55,
+                        "average": 21.81
                       },
                       "ready_for_development": {
                         "n": 5,
@@ -5929,7 +5929,7 @@
                       "parking_lot": {
                         "n": 3,
                         "median": 3.31,
-                        "average": 6.84
+                        "average": 6.85
                       },
                       "design": {
                         "n": 0,
@@ -5961,7 +5961,7 @@
                       "design": {
                         "n": 3,
                         "median": 35.29,
-                        "average": 37.15
+                        "average": 37.16
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6010,7 +6010,7 @@
                       "parking_lot": {
                         "n": 10,
                         "median": 4.15,
-                        "average": 20.04
+                        "average": 20.05
                       },
                       "design": {
                         "n": 3,
@@ -6040,8 +6040,8 @@
                     "API": {
                       "parking_lot": {
                         "n": 1,
-                        "median": 10.63,
-                        "average": 10.63
+                        "median": 10.64,
+                        "average": 10.64
                       },
                       "design": {
                         "n": 2,
@@ -6122,7 +6122,7 @@
                       "parking_lot": {
                         "n": 3,
                         "median": 3.31,
-                        "average": 6.84
+                        "average": 6.85
                       },
                       "design": {
                         "n": 0,
@@ -6154,7 +6154,7 @@
                       "design": {
                         "n": 3,
                         "median": 35.29,
-                        "average": 37.15
+                        "average": 37.16
                       },
                       "ready_for_development": {
                         "n": 0,
@@ -6203,7 +6203,7 @@
                       "parking_lot": {
                         "n": 10,
                         "median": 4.15,
-                        "average": 20.04
+                        "average": 20.05
                       },
                       "design": {
                         "n": 3,
@@ -6249,7 +6249,7 @@
                       "in_development": {
                         "n": 11,
                         "median": 26.2,
-                        "average": 30.98
+                        "average": 30.99
                       },
                       "feedback": {
                         "n": 2,
@@ -6292,7 +6292,7 @@
                       },
                       "design": {
                         "n": 7,
-                        "median": 17.54,
+                        "median": 17.55,
                         "average": 18.39
                       },
                       "ready_for_development": {

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-03-05T14:43:16.686Z",
+  "updatedAt": "2026-03-05T14:49:46.675Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-05T14:43:16.686Z",
+    "syncedAt": "2026-03-05T14:49:46.675Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps.",
     "trendDates": {
       "source": "sprint_anchor",
@@ -30,7 +30,7 @@
       "status": "UAT",
       "label": "Broadcast"
     },
-    "generatedAt": "2026-03-05T14:43:14.311Z",
+    "generatedAt": "2026-03-05T14:49:42.649Z",
     "totalIssues": 9,
     "buckets": [
       {
@@ -329,7 +329,7 @@
         "highest": {
           "avg_dev_days": 9.1,
           "median_dev_days": 0.87,
-          "avg_uat_days": 18.39,
+          "avg_uat_days": 18.4,
           "median_uat_days": 21.67,
           "n_dev": 7,
           "n_uat": 7
@@ -337,7 +337,7 @@
         "high": {
           "avg_dev_days": 24.52,
           "median_dev_days": 0.94,
-          "avg_uat_days": 59.25,
+          "avg_uat_days": 59.26,
           "median_uat_days": 53.38,
           "n_dev": 6,
           "n_uat": 6
@@ -421,7 +421,7 @@
         },
         "NL NLCP": {
           "avg_dev_days": 0.69,
-          "avg_uat_days": 23.05,
+          "avg_uat_days": 23.06,
           "n_dev": 2,
           "n_uat": 2,
           "n": 2,
@@ -452,7 +452,7 @@
         },
         "NO OBC": {
           "avg_dev_days": 0,
-          "avg_uat_days": 5.68,
+          "avg_uat_days": 5.69,
           "n_dev": 1,
           "n_uat": 1,
           "n": 1,
@@ -482,7 +482,7 @@
         },
         "US USCP": {
           "avg_dev_days": 0.98,
-          "avg_uat_days": 29.67,
+          "avg_uat_days": 29.68,
           "n_dev": 1,
           "n_uat": 1,
           "n": 1,
@@ -496,7 +496,7 @@
           "highest": {
             "avg_dev_days": 9.1,
             "median_dev_days": 0.87,
-            "avg_uat_days": 18.39,
+            "avg_uat_days": 18.4,
             "median_uat_days": 21.67,
             "n_dev": 7,
             "n_uat": 7
@@ -504,7 +504,7 @@
           "high": {
             "avg_dev_days": 24.52,
             "median_dev_days": 0.94,
-            "avg_uat_days": 59.25,
+            "avg_uat_days": 59.26,
             "median_uat_days": 53.38,
             "n_dev": 6,
             "n_uat": 6
@@ -522,7 +522,7 @@
           "highest": {
             "avg_dev_days": 9.1,
             "median_dev_days": 0.87,
-            "avg_uat_days": 18.39,
+            "avg_uat_days": 18.4,
             "median_uat_days": 21.67,
             "n_dev": 7,
             "n_uat": 7
@@ -556,7 +556,7 @@
           "high": {
             "avg_dev_days": 0.86,
             "median_dev_days": 0.94,
-            "avg_uat_days": 30,
+            "avg_uat_days": 30.01,
             "median_uat_days": 18.95,
             "n_dev": 4,
             "n_uat": 4
@@ -609,7 +609,7 @@
           },
           "NL NLCP": {
             "avg_dev_days": 0.69,
-            "avg_uat_days": 23.05,
+            "avg_uat_days": 23.06,
             "n_dev": 2,
             "n_uat": 2,
             "n": 2,
@@ -640,7 +640,7 @@
           },
           "NO OBC": {
             "avg_dev_days": 0,
-            "avg_uat_days": 5.68,
+            "avg_uat_days": 5.69,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -670,7 +670,7 @@
           },
           "US USCP": {
             "avg_dev_days": 0.98,
-            "avg_uat_days": 29.67,
+            "avg_uat_days": 29.68,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -704,7 +704,7 @@
           },
           "NL NLCP": {
             "avg_dev_days": 0.47,
-            "avg_uat_days": 3.61,
+            "avg_uat_days": 3.62,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -714,7 +714,7 @@
           },
           "NO OBC": {
             "avg_dev_days": 0,
-            "avg_uat_days": 5.68,
+            "avg_uat_days": 5.69,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -734,7 +734,7 @@
           },
           "US ND2": {
             "avg_dev_days": 0.99,
-            "avg_uat_days": 9.63,
+            "avg_uat_days": 9.64,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -744,7 +744,7 @@
           },
           "US USCP": {
             "avg_dev_days": 0.98,
-            "avg_uat_days": 29.67,
+            "avg_uat_days": 29.68,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -820,13 +820,13 @@
         "current": {
           "all": {
             "count": 9,
-            "oldest_age_days": 185.48,
-            "avg_age_days": 45.79
+            "oldest_age_days": 185.49,
+            "avg_age_days": 45.8
           },
           "bugs_only": {
             "count": 7,
-            "oldest_age_days": 80.58,
-            "avg_age_days": 31.79
+            "oldest_age_days": 80.59,
+            "avg_age_days": 31.8
           }
         }
       }
@@ -841,12 +841,12 @@
         "uat_time_by_priority": {
           "highest": {
             "n_with_uat": 7,
-            "uat_time_days_avg": 18.39,
+            "uat_time_days_avg": 18.4,
             "uat_time_days_median": 21.67
           },
           "high": {
             "n_with_uat": 6,
-            "uat_time_days_avg": 59.25,
+            "uat_time_days_avg": 59.26,
             "uat_time_days_median": 53.38
           },
           "medium": {
@@ -863,7 +863,7 @@
         "high_priority": {
           "dev_time_days_avg": 16.65,
           "dev_time_days_median": 0.94,
-          "uat_time_days_avg": 59.25,
+          "uat_time_days_avg": 59.26,
           "uat_time_days_median": 53.38
         }
       }
