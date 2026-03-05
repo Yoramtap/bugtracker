@@ -64,6 +64,33 @@
     return Math.round(toNumber(value));
   }
 
+  function toWeeks(valueInDays) {
+    return toNumber(valueInDays) / 7;
+  }
+
+  function toWholeWeeksForChart(valueInDays) {
+    const days = toNumber(valueInDays);
+    if (days <= 0) return 0;
+    if (days < 7) return 1;
+    return Math.max(1, Math.round(toWeeks(days)));
+  }
+
+  function formatWeeksFromDays(valueInDays) {
+    const days = toNumber(valueInDays);
+    if (days <= 0) return "0 weeks";
+    if (days < 7) return "<1 week";
+    const weeks = Math.max(1, Math.round(toWeeks(days)));
+    return weeks === 1 ? "1 week" : `${weeks} weeks`;
+  }
+
+  function buildWeekAxis(maxValueWeeks) {
+    const maxWeeks = Math.max(1, Math.ceil(toNumber(maxValueWeeks)));
+    const axisWeeks = maxWeeks <= 4 ? maxWeeks : Math.ceil(maxWeeks / 2) * 2;
+    const ticks = [0, 1, 2, 3, 4, 6, 8, 10, 12, 14].filter((week) => week <= axisWeeks);
+    for (let week = 16; week <= axisWeeks; week += 2) ticks.push(week);
+    return { upper: axisWeeks, ticks };
+  }
+
   function trendTickInterval(pointsCount) {
     const count = Math.max(0, toWhole(pointsCount));
     if (count <= 8) return 0;
@@ -1305,21 +1332,6 @@
   }) {
     const chartRows = Array.isArray(rows) ? rows : [];
     const compactViewport = isCompactViewport();
-    const toWeeks = (days) => toNumber(days) / 7;
-    const toWholeWeeksForChart = (days) => {
-      const rawDays = toNumber(days);
-      if (rawDays <= 0) return 0;
-      if (rawDays < 7) return 1;
-      return Math.max(1, Math.round(toWeeks(rawDays)));
-    };
-    const formatWeeks = (days) => {
-      const rawDays = toNumber(days);
-      if (rawDays <= 0) return "0 weeks";
-      if (rawDays > 0 && rawDays < 7) return "<1 week";
-      const weeks = Math.max(1, Math.round(toWeeks(rawDays)));
-      if (weeks === 1) return "1 week";
-      return `${weeks} weeks`;
-    };
     const weekRows = chartRows.map((row) => ({
       ...row,
       devWeeks: toWholeWeeksForChart(row?.devAvg),
@@ -1332,13 +1344,9 @@
       [...weekRows.map((row) => toNumber(row?.devWeeks)), ...weekRows.map((row) => toNumber(row?.uatWeeks))],
       { min: 1, pad: 1.15 }
     );
-    const maxWeeks = Math.max(1, Math.ceil(yUpper));
-    const axisWeeks = maxWeeks <= 4 ? maxWeeks : Math.ceil(maxWeeks / 2) * 2;
-    const axisUpper = axisWeeks;
-    const yTicksWeeks = [0, 1, 2, 3, 4, 6, 8, 10, 12, 14]
-      .filter((week) => week <= axisWeeks);
-    for (let week = 16; week <= axisWeeks; week += 2) yTicksWeeks.push(week);
-    const yTicks = yTicksWeeks;
+    const weekAxis = buildWeekAxis(yUpper);
+    const axisUpper = weekAxis.upper;
+    const yTicks = weekAxis.ticks;
     const xInterval = compactViewport ? tickIntervalForMobileLabels(chartRows.length) : 0;
     renderGroupedBars("managementFacility", containerId, chartRows.length > 0, {
       rows: weekRows,
@@ -1406,8 +1414,8 @@
           }
           return [
             tooltipTitleLine("label", row?.label || "", colors),
-            makeTooltipLine("dev", `Weeks in Development: ${formatWeeks(devAvg)}`, colors),
-            makeTooltipLine("uat", `Weeks in UAT: ${formatWeeks(uatAvg)}`, colors),
+            makeTooltipLine("dev", `Weeks in Development: ${formatWeeksFromDays(devAvg)}`, colors),
+            makeTooltipLine("uat", `Weeks in UAT: ${formatWeeksFromDays(uatAvg)}`, colors),
             makeTooltipLine("issues", "Issues", colors, {
               margin: "6px 0 0",
               subItems: issueSubItems.length > 0 ? issueSubItems : ["-"]
@@ -1438,9 +1446,10 @@
     colorByCategoryKey = "",
     categoryColors = null,
     gridVertical = false,
-    tooltipCursor = { fill: BAR_CURSOR_FILL }
+    tooltipCursor = { fill: BAR_CURSOR_FILL },
+    valueUnit = "days"
   }) {
-    const chartRows = Array.isArray(rows) ? rows : [];
+    const sourceRows = Array.isArray(rows) ? rows : [];
     const compactViewport = isCompactViewport();
     const seriesDefs = (Array.isArray(defs) ? defs : []).map((def) => ({
       key: def.key,
@@ -1453,15 +1462,39 @@
       seriesLabel: def.seriesLabel || def.name || def.label || def.key,
       metaTeamColorMap: def.metaTeamColorMap
     }));
+    const displayInWeeks = String(valueUnit || "").toLowerCase() === "weeks";
+    const chartRows = displayInWeeks
+      ? sourceRows.map((row) => {
+          const next = { ...row };
+          seriesDefs.forEach((series) => {
+            next[series.key] = toWholeWeeksForChart(row?.[series.key]);
+          });
+          return next;
+        })
+      : sourceRows;
     const yValues = seriesDefs.flatMap((series) => chartRows.map((row) => toNumber(row?.[series.key])));
-    const yUpper =
+    const normalizedYUpperOverride =
       Number.isFinite(yUpperOverride) && yUpperOverride > 0
-        ? Math.ceil(yUpperOverride)
+        ? displayInWeeks
+          ? toWholeWeeksForChart(yUpperOverride)
+          : yUpperOverride
+        : null;
+    const yUpper =
+      Number.isFinite(normalizedYUpperOverride) && normalizedYUpperOverride > 0
+        ? Math.ceil(normalizedYUpperOverride)
         : computeYUpper(yValues, { min: 1, pad: 1.15 });
     const isHorizontal = orientation === "horizontal";
     const effectiveCategoryTickTwoLine = categoryTickTwoLine && !compactViewport;
-    const niceAxis = isHorizontal ? buildNiceNumberAxis(yUpper) : null;
-    const niceYAxis = !isHorizontal ? buildNiceNumberAxis(yUpper) : null;
+    const niceAxis = isHorizontal
+      ? displayInWeeks
+        ? buildWeekAxis(yUpper)
+        : buildNiceNumberAxis(yUpper)
+      : null;
+    const niceYAxis = !isHorizontal
+      ? displayInWeeks
+        ? buildWeekAxis(yUpper)
+        : buildNiceNumberAxis(yUpper)
+      : null;
     const twoLineCategoryTickHorizontal = twoLineCategoryTickFactory(colors, {
       textAnchor: "end",
       dy: 3,
@@ -1501,7 +1534,8 @@
               type: "number",
               domain: [0, niceAxis.upper],
               ticks: niceAxis.ticks,
-              allowDecimals: false
+              allowDecimals: false,
+              tickFormatter: displayInWeeks ? (value) => String(toWhole(value)) : undefined
             }
           : {
               dataKey: categoryKey,
@@ -1522,7 +1556,12 @@
             width: HORIZONTAL_CATEGORY_AXIS_WIDTH,
             tick: effectiveCategoryTickTwoLine ? twoLineCategoryTickHorizontal : undefined
           }
-        : { domain: [0, niceYAxis.upper], ticks: niceYAxis.ticks, allowDecimals: false },
+        : {
+            domain: [0, niceYAxis.upper],
+            ticks: niceYAxis.ticks,
+            allowDecimals: false,
+            tickFormatter: displayInWeeks ? (value) => String(toWhole(value)) : undefined
+          },
       chartLayout: isHorizontal ? "vertical" : "horizontal",
       tooltipProps: {
         content: createTooltipContent(colors, (row, payload) => {
@@ -1574,8 +1613,12 @@
                   fontSize: "12px",
                   lineHeight: "1.45",
                   subItems: [
-                    `median = ${medianDays} days`,
-                    `average = ${avgDays} days`,
+                    displayInWeeks
+                      ? `median = ${formatWeeksFromDays(meta.median)}`
+                      : `median = ${medianDays} days`,
+                    displayInWeeks
+                      ? `average = ${formatWeeksFromDays(meta.average)}`
+                      : `average = ${avgDays} days`,
                     `n = ${sampleText}`
                   ]
                 }
@@ -1665,6 +1708,7 @@
         kind: "productCycle",
         modeKey: "product-cycle",
         defs: seriesDefs,
+        valueUnit: "weeks",
         ...rest
       }),
     renderLifecycleTimeSpentPerPhaseChart: ({ seriesDefs, ...rest }) =>
@@ -1672,6 +1716,7 @@
         kind: "lifecycleDays",
         modeKey: "lifecycle-days",
         defs: seriesDefs,
+        valueUnit: "weeks",
         ...rest
       }),
     clearChart

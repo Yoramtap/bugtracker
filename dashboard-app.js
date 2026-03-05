@@ -506,7 +506,7 @@ function renderCycleTimeParkingLotToDoneChartFromPublicAggregates(publicAggregat
   const sampleCount = Math.max(leadSampleCount, cycleSampleCount);
   const sampleLabel = `${leadSampleCount}/${cycleSampleCount} (lead/cycle)`;
 
-  context.textContent = `Lead and cycle time per team in days • ${selectedYear} • Full backlog • sample size: ${sampleLabel} • unmapped excluded`;
+  context.textContent = `Lead and cycle time per team in weeks • ${selectedYear} • Full backlog • sample size: ${sampleLabel} • unmapped excluded`;
 
   if (sampleCount === 0) {
     status.hidden = false;
@@ -675,7 +675,7 @@ function renderLifecycleTimeSpentPerPhaseChartFromPublicAggregates(publicAggrega
     return;
   }
 
-  const chartTitleText = "Lifecycle time spent per stage (Median)";
+  const chartTitleText = "Lifecycle time spent per stage (Median, weeks)";
   const yearLabel = year;
 
   const themeColors = getThemeColors();
