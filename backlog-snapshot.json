@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-03-05T22:53:18.979Z",
+  "updatedAt": "2026-03-05T22:56:56.647Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-05T22:53:18.979Z",
+    "syncedAt": "2026-03-05T22:56:56.647Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps.",
     "trendDates": {
       "source": "sprint_anchor",
@@ -30,7 +30,7 @@
       "status": "UAT",
       "label": "Broadcast"
     },
-    "generatedAt": "2026-03-05T22:53:17.384Z",
+    "generatedAt": "2026-03-05T22:56:55.126Z",
     "totalIssues": 9,
     "buckets": [
       {
@@ -482,7 +482,7 @@
         },
         "US USCP": {
           "avg_dev_days": 0.98,
-          "avg_uat_days": 30.01,
+          "avg_uat_days": 30.02,
           "n_dev": 1,
           "n_uat": 1,
           "n": 1,
@@ -538,7 +538,7 @@
           "medium": {
             "avg_dev_days": 0.72,
             "median_dev_days": 0.94,
-            "avg_uat_days": 49.4,
+            "avg_uat_days": 49.41,
             "median_uat_days": 46.22,
             "n_dev": 4,
             "n_uat": 4
@@ -670,7 +670,7 @@
           },
           "US USCP": {
             "avg_dev_days": 0.98,
-            "avg_uat_days": 30.01,
+            "avg_uat_days": 30.02,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -744,7 +744,7 @@
           },
           "US USCP": {
             "avg_dev_days": 0.98,
-            "avg_uat_days": 30.01,
+            "avg_uat_days": 30.02,
             "n_dev": 1,
             "n_uat": 1,
             "n": 1,
@@ -820,7 +820,7 @@
         "current": {
           "all": {
             "count": 9,
-            "oldest_age_days": 185.82,
+            "oldest_age_days": 185.83,
             "avg_age_days": 46.13
           },
           "bugs_only": {

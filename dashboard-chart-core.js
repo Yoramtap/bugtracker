@@ -61,7 +61,7 @@
     { key: "medium", label: "Medium" },
     { key: "high", label: "High" },
     { key: "highest", label: "Highest" }
-  ].reverse();
+  ];
   const MAX_SPRINT_POINTS = 10;
   const TREND_TEAM_LINES = [
     ["api", "API", "api"],
