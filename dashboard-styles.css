@@ -136,8 +136,42 @@ h2 {
 }
 
 .help-tip--info {
-  font-size: 0.8rem;
-  font-weight: 800;
+  border-width: 1.5px;
+  border-color: rgba(41, 84, 126, 0.72);
+  background: linear-gradient(180deg, rgba(244, 250, 255, 0.98), rgba(227, 239, 250, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.96) inset,
+    0 2px 5px rgba(17, 40, 64, 0.14);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.help-tip--info:hover,
+.help-tip--info:focus-visible {
+  border-color: rgba(31, 102, 191, 0.86);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.96) inset,
+    0 3px 8px rgba(17, 40, 64, 0.22);
+  transform: translateY(-1px);
+}
+
+.help-tip-icon {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.help-tip-icon circle,
+.help-tip-icon line {
+  stroke: rgba(36, 74, 110, 0.95);
+  stroke-width: 1.75;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.help-tip-icon > circle:last-child {
+  fill: rgba(36, 74, 110, 0.95);
+  stroke: none;
 }
 
 .help-popover {
