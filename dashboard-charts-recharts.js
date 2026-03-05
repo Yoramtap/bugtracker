@@ -1356,7 +1356,7 @@
     const weekAxis = buildWeekAxis(yUpper);
     const axisUpper = weekAxis.upper;
     const yTicks = weekAxis.ticks;
-    const xInterval = compactViewport ? tickIntervalForMobileLabels(chartRows.length) : 0;
+    const xInterval = compactViewport ? 1 : 0;
     renderGroupedBars("managementFacility", containerId, chartRows.length > 0, {
       rows: weekRows,
       defs: [
@@ -1383,12 +1383,16 @@
       xAxisProps: {
         dataKey: "label",
         interval: xInterval,
-        minTickGap: compactViewport ? 10 : 6,
-        height: 56,
-        tick: twoLineCategoryTickFactory(colors, {
-          textAnchor: "middle",
-          secondaryLabels: categorySecondaryLabels
-        })
+        minTickGap: compactViewport ? 14 : 6,
+        height: compactViewport ? 44 : 56,
+        angle: compactViewport ? -28 : 0,
+        textAnchor: compactViewport ? "end" : "middle",
+        tick: compactViewport
+          ? { ...axisTick(colors), fontSize: 11 }
+          : twoLineCategoryTickFactory(colors, {
+              textAnchor: "middle",
+              secondaryLabels: categorySecondaryLabels
+            })
       },
       tooltipProps: {
         content: createTooltipContent(colors, (row) => {
@@ -1423,6 +1427,7 @@
           }
           return [
             tooltipTitleLine("label", row?.label || "", colors),
+            makeTooltipLine("sample", `n = ${toWhole(row?.sampleCount)}`, colors),
             makeTooltipLine("dev", `Weeks in Development: ${formatWeeksFromDays(devAvg)} (avg)`, colors),
             makeTooltipLine("uat", `Weeks in UAT: ${formatWeeksFromDays(uatAvg)} (avg)`, colors),
             makeTooltipLine("issues", "Issues", colors, {
