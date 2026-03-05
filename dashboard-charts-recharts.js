@@ -1644,7 +1644,9 @@
 
   function renderTopContributorsChart({ containerId, rows, colors, barColor }) {
     const chartRows = Array.isArray(rows) ? rows : [];
+    const compactViewport = isCompactViewport();
     const fillColor = String(barColor || "").trim() || colors.teams.react;
+    const contributorAxisWidth = compactViewport ? 132 : HORIZONTAL_CATEGORY_AXIS_WIDTH;
     const contributorMetaLabels = Object.fromEntries(
       chartRows.map((row) => [
         String(row?.contributor || ""),
@@ -1678,7 +1680,7 @@
       yAxisProps: {
         dataKey: "contributor",
         type: "category",
-        width: HORIZONTAL_CATEGORY_AXIS_WIDTH,
+        width: contributorAxisWidth,
         tick: twoLineCategoryTickFactory(colors, {
           textAnchor: "end",
           dy: 3,
