@@ -154,19 +154,21 @@ h2 {
 }
 
 .panel-subtitle--with-help {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 6px 10px;
-  justify-items: center;
-  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 8px;
+  width: fit-content;
+  max-width: min(100%, 62ch + 32px);
+  margin: 0 auto;
 }
 
 .panel-subtitle--with-help > span:first-child {
   display: block;
-  grid-column: 1;
   min-width: 0;
-  width: 100%;
+  width: auto;
+  max-width: 62ch;
   overflow-wrap: anywhere;
 }
 
@@ -175,10 +177,10 @@ h2 {
 }
 
 .help-wrap {
-  grid-column: 2;
   display: block;
   width: 24px;
-  align-self: start;
+  flex: 0 0 auto;
+  align-self: center;
   position: relative;
   z-index: 8;
 }

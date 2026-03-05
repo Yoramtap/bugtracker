@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-03-05T22:03:15.547Z",
+  "updatedAt": "2026-03-05T22:53:18.978Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-05T22:03:15.547Z",
+    "syncedAt": "2026-03-05T22:53:18.978Z",
     "project": "TFC",
     "label": "Contributors",
     "jql": "project = \"TFC\" AND labels = \"Contributors\"",
@@ -46,7 +46,6 @@
     {
       "rank": 1,
       "contributor": {
-        "id": "unassigned",
         "name": "Unassigned"
       },
       "total_issues": 4,
@@ -70,7 +69,6 @@
     {
       "rank": 2,
       "contributor": {
-        "id": "712020:32180b82-a95d-47ff-a890-046895bd6355",
         "name": "Tesoro Fedel"
       },
       "total_issues": 6,
@@ -94,7 +92,6 @@
     {
       "rank": 3,
       "contributor": {
-        "id": "5f5e2a0d42547c0071010b19",
         "name": "Sven Kommers"
       },
       "total_issues": 4,
@@ -118,7 +115,6 @@
     {
       "rank": 4,
       "contributor": {
-        "id": "712020:7693c4b8-0246-4e56-8653-689f6fc953c5",
         "name": "Daniel Davis"
       },
       "total_issues": 7,
@@ -140,7 +136,6 @@
     {
       "rank": 5,
       "contributor": {
-        "id": "712020:ae6789a6-5881-4be4-b921-af04e0349001",
         "name": "David Oxe"
       },
       "total_issues": 2,
@@ -162,7 +157,6 @@
     {
       "rank": 6,
       "contributor": {
-        "id": "62f9773feec8d4a478d3898b",
         "name": "Jack Woodgate"
       },
       "total_issues": 1,
@@ -181,7 +175,6 @@
     {
       "rank": 7,
       "contributor": {
-        "id": "712020:0d91191b-9cdb-4ffc-83e5-7a84cd53e1a1",
         "name": "Mitchell Kalika"
       },
       "total_issues": 1,
@@ -202,7 +195,6 @@
     {
       "rank": 1,
       "contributor": {
-        "id": "unassigned",
         "name": "Unassigned"
       },
       "total_issues": 4,
@@ -226,7 +218,6 @@
     {
       "rank": 2,
       "contributor": {
-        "id": "712020:32180b82-a95d-47ff-a890-046895bd6355",
         "name": "Tesoro Fedel"
       },
       "total_issues": 6,
@@ -250,7 +241,6 @@
     {
       "rank": 3,
       "contributor": {
-        "id": "5f5e2a0d42547c0071010b19",
         "name": "Sven Kommers"
       },
       "total_issues": 4,
@@ -274,7 +264,6 @@
     {
       "rank": 4,
       "contributor": {
-        "id": "712020:7693c4b8-0246-4e56-8653-689f6fc953c5",
         "name": "Daniel Davis"
       },
       "total_issues": 7,
@@ -296,7 +285,6 @@
     {
       "rank": 5,
       "contributor": {
-        "id": "712020:ae6789a6-5881-4be4-b921-af04e0349001",
         "name": "David Oxe"
       },
       "total_issues": 2,
@@ -318,7 +306,6 @@
     {
       "rank": 6,
       "contributor": {
-        "id": "62f9773feec8d4a478d3898b",
         "name": "Jack Woodgate"
       },
       "total_issues": 1,
@@ -337,7 +324,6 @@
     {
       "rank": 7,
       "contributor": {
-        "id": "712020:0d91191b-9cdb-4ffc-83e5-7a84cd53e1a1",
         "name": "Mitchell Kalika"
       },
       "total_issues": 1,

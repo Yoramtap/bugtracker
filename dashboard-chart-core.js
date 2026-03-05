@@ -3,7 +3,6 @@
 
 (function initDashboardChartCore() {
   if (!window.React || !window.ReactDOM || !window.Recharts) {
-    window.DashboardChartCore = null;
     return;
   }
 
@@ -32,19 +31,19 @@
   const SHARED_CATEGORY_BLUE_TINTS = ["#CFE0F8", "#9EBAE3", "#6D95D1", "#3F73B8", "#295996"];
   const BAR_LAYOUT = { categoryGap: "14%", groupGap: 2, denseMax: 14, normalMax: 20 };
   const CHART_HEIGHTS = { standard: 280, dense: 320 };
+  const EMBED_CHART_HEIGHTS = {
+    trend: 520,
+    composition: 560,
+    uat: 460,
+    management: 440,
+    "management-facility": 520,
+    contributors: 520,
+    "product-cycle": 560,
+    "lifecycle-days": 560
+  };
   const HORIZONTAL_CATEGORY_AXIS_WIDTH = 190;
   const BAR_CURSOR_FILL = "rgba(31,51,71,0.04)";
-  const roots = {
-    trend: null,
-    composition: null,
-    uat: null,
-    management: null,
-    managementFacility: null,
-    contributors: null,
-    productCycle: null,
-    lifecycleDays: null
-  };
-  const rootContainerIds = {};
+  const roots = new Map();
   const TEAM_CONFIG = [
     { key: "api", label: "API" },
     { key: "legacy", label: "Legacy FE" },
@@ -137,29 +136,9 @@
     return Number.isFinite(fallback) && fallback > 0 ? fallback : 1280;
   }
 
-  function viewportHeightPx() {
-    if (typeof window === "undefined") return 900;
-    const direct = Number(window.innerHeight);
-    if (Number.isFinite(direct) && direct > 0) return direct;
-    const fallback = Number(document?.documentElement?.clientHeight);
-    return Number.isFinite(fallback) && fallback > 0 ? fallback : 900;
-  }
-
   function singleChartHeightForMode(modeKey, baseHeight) {
     if (getModeFromUrl() !== modeKey) return baseHeight;
-    const width = viewportWidthPx();
-    const viewportHeight = viewportHeightPx();
-    const smallMin = Math.max(300, Math.round(baseHeight * 1.05));
-    const mediumMin = Math.max(340, Math.round(baseHeight * 1.1));
-    const largeMin = Math.max(360, Math.round(baseHeight * 1.15));
-
-    if (width <= 680) {
-      return Math.max(smallMin, Math.min(680, Math.round(viewportHeight * 0.5)));
-    }
-    if (width <= 1024) {
-      return Math.max(mediumMin, Math.min(760, Math.round(viewportHeight * 0.56)));
-    }
-    return Math.max(largeMin, Math.min(920, Math.round(viewportHeight * 0.62)));
+    return EMBED_CHART_HEIGHTS[modeKey] || baseHeight;
   }
 
   function isCompactViewport() {
@@ -652,31 +631,28 @@
     };
   }
 
-  function ensureRoot(kind, containerId) {
+  function ensureRoot(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return null;
-    rootContainerIds[kind] = containerId;
-    if (!roots[kind]) {
-      roots[kind] = ReactDOM.createRoot(container);
+    if (!roots.has(containerId)) {
+      roots.set(containerId, ReactDOM.createRoot(container));
     }
-    return roots[kind];
+    return roots.get(containerId);
   }
 
   function clearChart({ containerId }) {
     if (!containerId) return;
-    for (const [kind, id] of Object.entries(rootContainerIds)) {
-      if (id === containerId && roots[kind]) {
-        roots[kind].render(null);
-        return;
-      }
+    const root = roots.get(containerId);
+    if (root) {
+      root.render(null);
+      return;
     }
-
     const container = document.getElementById(containerId);
     if (container) container.innerHTML = "";
   }
 
-  function renderWithRoot(kind, containerId, canRender, renderFn) {
-    const root = ensureRoot(kind, containerId);
+  function renderWithRoot(containerId, canRender, renderFn) {
+    const root = ensureRoot(containerId);
     if (!root) return;
     if (!canRender) {
       root.render(null);
@@ -929,14 +905,13 @@
     });
   }
 
-  function renderGroupedBars(kind, containerId, canRender, props) {
-    renderWithRoot(kind, containerId, canRender, (root) => {
+  function renderGroupedBars(containerId, canRender, props) {
+    renderWithRoot(containerId, canRender, (root) => {
       root.render(h(GroupedBarChartView, props));
     });
   }
 
   function renderMultiSeriesBars({
-    kind,
     modeKey = "all",
     containerId,
     rows,
@@ -1015,7 +990,7 @@
       line2Dy: 0,
       secondaryLabels: categorySecondaryLabels
     });
-    renderGroupedBars(kind, containerId, chartRows.length > 0 && seriesDefs.length > 0, {
+    renderGroupedBars(containerId, chartRows.length > 0 && seriesDefs.length > 0, {
       rows: chartRows,
       defs: seriesDefs.map((series) => ({
         dataKey: series.key,
@@ -1362,7 +1337,7 @@
 
   function renderBugBacklogTrendByTeamChart({ containerId, snapshot, colors }) {
     const rows = buildTrendData(snapshot);
-    renderWithRoot("trend", containerId, rows.length > 0, (root) => {
+    renderWithRoot(containerId, rows.length > 0, (root) => {
       const yUpper = computeYUpper(
         [
           ...rows.map((row) => row.api),
@@ -1380,7 +1355,7 @@
 
   function renderBugCompositionByPriorityChart({ containerId, snapshot, colors, scope = "bc" }) {
     const rows = buildCompositionData(snapshot, scope);
-    renderWithRoot("composition", containerId, rows.length > 0, (root) => {
+    renderWithRoot(containerId, rows.length > 0, (root) => {
       root.render(h(CompositionChartView, { rows, colors, scope }));
     });
   }
@@ -1401,7 +1376,7 @@
       stackId: "uat-priority"
     }));
     const yUpper = computeYUpper(chartRows.map((row) => toNumber(row?.total)), { min: 1, pad: 1.12 });
-    renderGroupedBars("uat", containerId, chartRows.length > 0 && prioritySeries.length > 0, {
+    renderGroupedBars(containerId, chartRows.length > 0 && prioritySeries.length > 0, {
       rows: chartRows,
       defs: prioritySeries,
       colors,
@@ -1486,7 +1461,7 @@
       ],
       { min: 1, pad: 1.12 }
     );
-    renderGroupedBars("management", containerId, chartRows.length > 0, {
+    renderGroupedBars(containerId, chartRows.length > 0, {
       rows: chartRows,
       defs: [
         { dataKey: "devMedian", name: "Days in Development", fill: devColor },
@@ -1551,7 +1526,7 @@
     );
     const weekAxis = buildWeekAxis(yUpper, { majorStep: yUpper <= 12 ? 2 : 4 });
     const xInterval = compactViewport ? tickIntervalForMobileLabels(chartRows.length) : 0;
-    renderGroupedBars("managementFacility", containerId, chartRows.length > 0, {
+    renderGroupedBars(containerId, chartRows.length > 0, {
       rows: weekRows,
       defs: [
         {
@@ -1649,7 +1624,7 @@
     );
     const yUpper = computeYUpper(chartRows.map((row) => toNumber(row?.totalIssues)), { min: 1, pad: 1.12 });
     const nice = buildNiceNumberAxis(yUpper);
-    renderGroupedBars("contributors", containerId, chartRows.length > 0, {
+    renderGroupedBars(containerId, chartRows.length > 0, {
       rows: chartRows,
       defs: [
         {
@@ -1699,49 +1674,6 @@
     });
   }
 
-  window.DashboardChartCore = {
-    ACTIVE_BAR_STYLE,
-    BAR_CURSOR_FILL,
-    BAR_LAYOUT,
-    CHART_HEIGHTS,
-    HORIZONTAL_CATEGORY_AXIS_WIDTH,
-    ResponsiveContainer,
-    LineChart,
-    Line,
-    Bar,
-    CartesianGrid,
-    XAxis,
-    YAxis,
-    Tooltip,
-    h,
-    activeLineDot,
-    axisTick,
-    barBaseStyle,
-    baseYAxisProps,
-    buildNiceNumberAxis,
-    buildWeekAxis,
-    clearChart,
-    computeYUpper,
-    createTooltipContent,
-    formatDateShort,
-    formatWeeksFromDays,
-    isCompactViewport,
-    makeTooltipLine,
-    renderBarChartShell,
-    renderGroupedBars,
-    renderLegendNode,
-    renderMultiSeriesBars,
-    renderWithRoot,
-    singleChartHeightForMode,
-    tickIntervalForMobileLabels,
-    toNumber,
-    toWhole,
-    toWholeWeeksForChart,
-    tooltipTitleLine,
-    trendLayoutForViewport,
-    twoLineCategoryTickFactory
-  };
-
   window.DashboardCharts = {
     clearChart,
     renderBugBacklogTrendByTeamChart,
@@ -1752,7 +1684,6 @@
     renderTopContributorsChart,
     renderLeadAndCycleTimeByTeamChart: ({ seriesDefs, ...rest }) =>
       renderMultiSeriesBars({
-        kind: "productCycle",
         modeKey: "product-cycle",
         defs: seriesDefs,
         valueUnit: "weeks",
@@ -1760,7 +1691,6 @@
       }),
     renderLifecycleTimeSpentPerStageChart: ({ seriesDefs, ...rest }) =>
       renderMultiSeriesBars({
-        kind: "lifecycleDays",
         modeKey: "lifecycle-days",
         defs: seriesDefs,
         valueUnit: "weeks",
