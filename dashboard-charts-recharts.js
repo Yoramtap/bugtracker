@@ -366,6 +366,15 @@
   }
 
   function renderTooltipCard(colors, blocks) {
+    const suppressHoverPropagation = (event) => {
+      if (!event) return;
+      event.stopPropagation();
+    };
+    const suppressHoverPropagationCapture = (event) => {
+      if (!event) return;
+      event.stopPropagation();
+      if (typeof event.preventDefault === "function") event.preventDefault();
+    };
     const normalizeLine = (entry, index) => {
       if (!entry) return null;
       if (typeof entry === "string") return { key: `line-${index}`, text: entry, subItems: null, isTitle: false, style: {} };
@@ -427,6 +436,16 @@
           padding: "8px 10px",
           boxShadow: "0 4px 14px rgba(0,0,0,0.1)"
         },
+        onMouseEnter: suppressHoverPropagation,
+        onMouseMove: suppressHoverPropagation,
+        onMouseOver: suppressHoverPropagation,
+        onMouseEnterCapture: suppressHoverPropagationCapture,
+        onMouseMoveCapture: suppressHoverPropagationCapture,
+        onMouseOverCapture: suppressHoverPropagationCapture,
+        onPointerEnter: suppressHoverPropagation,
+        onPointerMove: suppressHoverPropagation,
+        onPointerEnterCapture: suppressHoverPropagationCapture,
+        onPointerMoveCapture: suppressHoverPropagationCapture,
         onClick: (event) => {
           if (!isCoarsePointerDevice()) return;
           event.preventDefault();
@@ -1295,6 +1314,7 @@
     };
     const formatWeeks = (days) => {
       const rawDays = toNumber(days);
+      if (rawDays <= 0) return "0 weeks";
       if (rawDays > 0 && rawDays < 7) return "<1 week";
       const weeks = Math.max(1, Math.round(toWeeks(rawDays)));
       if (weeks === 1) return "1 week";
