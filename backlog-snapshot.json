@@ -1718,5 +1718,314 @@
         "longstanding_60d_plus": 165
       }
     }
-  ]
+  ],
+  "chartData": {
+    "uatAging": {
+      "rows": [
+        {
+          "bucketId": "1-2 weeks",
+          "bucketLabel": "1-2 weeks",
+          "total": 3,
+          "medium": 0,
+          "high": 2,
+          "highest": 1,
+          "priorityFacilityCounter": {
+            "NL NLCP": {
+              "High": 1
+            },
+            "NO OBC": {
+              "Highest": 1
+            },
+            "US ND2": {
+              "High": 1
+            }
+          },
+          "facilityPriorityGroups": {
+            "NL NLCP": {
+              "High": 1
+            },
+            "NO OBC": {
+              "Highest": 1
+            },
+            "US ND2": {
+              "High": 1
+            }
+          },
+          "bucketWithSample": "1-2 weeks (n=3)"
+        },
+        {
+          "bucketId": "1 month",
+          "bucketLabel": "1 month",
+          "total": 3,
+          "medium": 1,
+          "high": 1,
+          "highest": 1,
+          "priorityFacilityCounter": {
+            "US USCP": {
+              "Medium": 1
+            },
+            "ME MEIP1": {
+              "High": 1
+            },
+            "Unspecified": {
+              "Highest": 1
+            }
+          },
+          "facilityPriorityGroups": {
+            "US USCP": {
+              "Medium": 1
+            },
+            "ME MEIP1": {
+              "High": 1
+            },
+            "Unspecified": {
+              "Highest": 1
+            }
+          },
+          "bucketWithSample": "1 month (n=3)"
+        },
+        {
+          "bucketId": "2 months",
+          "bucketLabel": "2 months",
+          "total": 1,
+          "medium": 1,
+          "high": 0,
+          "highest": 0,
+          "priorityFacilityCounter": {
+            "Unspecified": {
+              "Medium": 1
+            }
+          },
+          "facilityPriorityGroups": {
+            "Unspecified": {
+              "Medium": 1
+            }
+          },
+          "bucketWithSample": "2 months (n=1)"
+        },
+        {
+          "bucketId": "More than 2 months",
+          "bucketLabel": "More than 2 months",
+          "total": 2,
+          "medium": 1,
+          "high": 1,
+          "highest": 0,
+          "priorityFacilityCounter": {
+            "Unspecified": {
+              "Medium": 1
+            },
+            "US EN1": {
+              "High": 1
+            }
+          },
+          "facilityPriorityGroups": {
+            "Unspecified": {
+              "Medium": 1
+            },
+            "US EN1": {
+              "High": 1
+            }
+          },
+          "bucketWithSample": "More than 2 months (n=2)"
+        }
+      ]
+    },
+    "management": {
+      "ongoing": {
+        "rows": [
+          {
+            "label": "Medium",
+            "devMedian": 0.98,
+            "uatMedian": 49.93,
+            "devAvg": 9.71,
+            "uatAvg": 79.01,
+            "devCount": 3,
+            "uatCount": 3
+          },
+          {
+            "label": "High",
+            "devMedian": 0.94,
+            "uatMedian": 19.29,
+            "devAvg": 0.86,
+            "uatAvg": 30.35,
+            "devCount": 4,
+            "uatCount": 4
+          },
+          {
+            "label": "Highest",
+            "devMedian": 0.43,
+            "uatMedian": 14.96,
+            "devAvg": 0.43,
+            "uatAvg": 14.96,
+            "devCount": 2,
+            "uatCount": 2
+          }
+        ],
+        "yTicks": [
+          0,
+          20,
+          40,
+          60,
+          80,
+          100
+        ]
+      }
+    },
+    "managementFacility": {
+      "byScope": {
+        "ongoing": {
+          "rows": [
+            {
+              "label": "ME MEIP1",
+              "devAvg": 1.1,
+              "uatAvg": 28.6,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-15925"
+              ]
+            },
+            {
+              "label": "NL NLCP",
+              "devAvg": 0.47,
+              "uatAvg": 3.96,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-16029"
+              ]
+            },
+            {
+              "label": "NO OBC",
+              "devAvg": 0,
+              "uatAvg": 6.03,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-16084"
+              ]
+            },
+            {
+              "label": "US EN1",
+              "devAvg": 0.88,
+              "uatAvg": 78.84,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-14425"
+              ]
+            },
+            {
+              "label": "US ND2",
+              "devAvg": 0.99,
+              "uatAvg": 9.98,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-16041"
+              ]
+            },
+            {
+              "label": "US USCP",
+              "devAvg": 0.98,
+              "uatAvg": 30.02,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-13224"
+              ]
+            },
+            {
+              "label": "Unspecified",
+              "devAvg": 9.67,
+              "uatAvg": 76.97,
+              "devCount": 3,
+              "uatCount": 3,
+              "sampleCount": 3,
+              "issueIds": [
+                "TFC-11526",
+                "TFC-14540",
+                "TFC-15958"
+              ]
+            }
+          ]
+        },
+        "done": {
+          "rows": [
+            {
+              "label": "AU AHS",
+              "devAvg": 0.97,
+              "uatAvg": 75.17,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-15598"
+              ]
+            },
+            {
+              "label": "NL NLCP",
+              "devAvg": 0.9,
+              "uatAvg": 42.5,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-15539"
+              ]
+            },
+            {
+              "label": "NZ NZCP",
+              "devAvg": 143.66,
+              "uatAvg": 112.45,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-12976"
+              ]
+            },
+            {
+              "label": "US ND2",
+              "devAvg": 30.92,
+              "uatAvg": 38.2,
+              "devCount": 2,
+              "uatCount": 2,
+              "sampleCount": 2,
+              "issueIds": [
+                "TFC-15197",
+                "TFC-15822"
+              ]
+            },
+            {
+              "label": "Unspecified",
+              "devAvg": 31.24,
+              "uatAvg": 68.79,
+              "devCount": 10,
+              "uatCount": 10,
+              "sampleCount": 10,
+              "issueIds": [
+                "TFC-13842",
+                "TFC-13847",
+                "TFC-13848",
+                "TFC-14891",
+                "TFC-14978",
+                "TFC-15120",
+                "TFC-15824",
+                "TFC-15894",
+                "TFC-16088",
+                "TFC-16090"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
 }

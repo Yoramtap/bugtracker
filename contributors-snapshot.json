@@ -344,5 +344,87 @@
     "missing_assignee_count": 4,
     "missing_team_count": 25,
     "excluded_duplicate_count": 1
+  },
+  "chartData": {
+    "rows": [
+      {
+        "contributor": "Tesoro Fedel",
+        "activeIssues": 2,
+        "doneIssues": 4,
+        "totalIssues": 6,
+        "bugIssues": 3,
+        "linkedIssues": 1,
+        "notDoneIssues": 2,
+        "ticketStateItems": [
+          "Done = 4",
+          "In Progress = 1",
+          "In Review = 1"
+        ]
+      },
+      {
+        "contributor": "Sven Kommers",
+        "activeIssues": 2,
+        "doneIssues": 2,
+        "totalIssues": 4,
+        "bugIssues": 1,
+        "linkedIssues": 6,
+        "notDoneIssues": 2,
+        "ticketStateItems": [
+          "Done = 2",
+          "In Review = 1",
+          "Selected for Development = 1"
+        ]
+      },
+      {
+        "contributor": "Daniel Davis",
+        "activeIssues": 1,
+        "doneIssues": 6,
+        "totalIssues": 7,
+        "bugIssues": 4,
+        "linkedIssues": 4,
+        "notDoneIssues": 1,
+        "ticketStateItems": [
+          "Done = 6",
+          "Selected for Development = 1"
+        ]
+      },
+      {
+        "contributor": "David Oxe",
+        "activeIssues": 1,
+        "doneIssues": 1,
+        "totalIssues": 2,
+        "bugIssues": 0,
+        "linkedIssues": 4,
+        "notDoneIssues": 1,
+        "ticketStateItems": [
+          "Done = 1",
+          "In Review = 1"
+        ]
+      },
+      {
+        "contributor": "Jack Woodgate",
+        "activeIssues": 0,
+        "doneIssues": 1,
+        "totalIssues": 1,
+        "bugIssues": 1,
+        "linkedIssues": 0,
+        "notDoneIssues": 0,
+        "ticketStateItems": [
+          "Done = 1"
+        ]
+      },
+      {
+        "contributor": "Mitchell Kalika",
+        "activeIssues": 0,
+        "doneIssues": 1,
+        "totalIssues": 1,
+        "bugIssues": 0,
+        "linkedIssues": 1,
+        "notDoneIssues": 0,
+        "ticketStateItems": [
+          "Done = 1"
+        ]
+      }
+    ]
   }
 }

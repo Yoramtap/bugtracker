@@ -1,11 +1,9 @@
-/* global React */
 "use strict";
 
 (function initDashboardBacklogCharts() {
-  const chartCore = window.DashboardChartCore;
-  if (!window.React || !chartCore) {
-    window.DashboardBacklogCharts = null;
-    return;
+  const core = window.DashboardChartCore;
+  if (!core) {
+    throw new Error("Dashboard chart core not loaded.");
   }
 
   const {
@@ -13,14 +11,19 @@
     BAR_CURSOR_FILL,
     BAR_LAYOUT,
     CHART_HEIGHTS,
+    PRIORITY_STACK_ORDER,
+    TEAM_CONFIG,
+    TREND_LONG_LINES,
+    TREND_TEAM_LINES,
+    React,
+    ResponsiveContainer,
+    LineChart,
+    Line,
     Bar,
     CartesianGrid,
-    Line,
-    LineChart,
-    ResponsiveContainer,
-    Tooltip,
     XAxis,
     YAxis,
+    Tooltip,
     activeLineDot,
     axisTick,
     barBaseStyle,
@@ -33,46 +36,14 @@
     isCompactViewport,
     makeTooltipLine,
     renderBarChartShell,
-    renderGroupedBars,
     renderLegendNode,
     renderWithRoot,
     singleChartHeightForMode,
     tickIntervalForMobileLabels,
     toNumber,
-    toWhole,
     tooltipTitleLine,
     trendLayoutForViewport
-  } = chartCore;
-
-  const TEAM_CONFIG = [
-    { key: "api", label: "API" },
-    { key: "legacy", label: "Legacy FE" },
-    { key: "react", label: "React FE" },
-    { key: "bc", label: "BC" }
-  ];
-  const PRIORITY_CONFIG = [
-    { key: "highest", label: "Highest" },
-    { key: "high", label: "High" },
-    { key: "medium", label: "Medium" }
-  ];
-  const PRIORITY_STACK_ORDER = [
-    { key: "lowest", label: "Lowest" },
-    { key: "low", label: "Low" },
-    { key: "medium", label: "Medium" },
-    { key: "high", label: "High" },
-    { key: "highest", label: "Highest" }
-  ].reverse();
-  const MAX_SPRINT_POINTS = 10;
-  const TREND_TEAM_LINES = [
-    ["api", "API", "api"],
-    ["legacy", "Legacy FE", "legacy"],
-    ["react", "React FE", "react"],
-    ["bc", "BC", "bc"]
-  ];
-  const TREND_LONG_LINES = [
-    { dataKey: "bcLong30", name: "BC long-standing (30d+)", stroke: "#8e9aaa", strokeDasharray: "4 3" },
-    { dataKey: "bcLong60", name: "BC long-standing (60d+)", stroke: "#6f7f92", strokeDasharray: "7 4" }
-  ];
+  } = core;
 
   function totalForPoint(point) {
     return (
@@ -84,9 +55,24 @@
     );
   }
 
-  function buildTrendData(snapshot) {
+  function buildPriorityMetricsRow(point, teamLabel, metrics) {
+    const safeMetrics = metrics || {};
+    return {
+      bucketLabel: teamLabel ? `${point.date} ${teamLabel}`.trim() : point.date,
+      team: teamLabel,
+      date: point.date,
+      highest: toNumber(safeMetrics.highest),
+      high: toNumber(safeMetrics.high),
+      medium: toNumber(safeMetrics.medium),
+      low: toNumber(safeMetrics.low),
+      lowest: toNumber(safeMetrics.lowest),
+      total: totalForPoint(safeMetrics)
+    };
+  }
+
+  function buildTrendData(snapshot, maxPoints) {
     const allPoints = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
-    const points = allPoints.slice(-MAX_SPRINT_POINTS);
+    const points = allPoints.slice(-maxPoints);
     return points.map((point) => {
       const api = point?.api || {};
       const legacy = point?.legacy || {};
@@ -105,9 +91,9 @@
     });
   }
 
-  function buildCompositionData(snapshot, scope) {
+  function buildCompositionData(snapshot, scope, maxPoints) {
     const allPoints = Array.isArray(snapshot?.combinedPoints) ? snapshot.combinedPoints : [];
-    const points = allPoints.slice(-MAX_SPRINT_POINTS);
+    const points = allPoints.slice(-maxPoints);
 
     if (scope === "all") {
       const rows = [];
@@ -115,38 +101,16 @@
         TEAM_CONFIG.forEach((team) => {
           const metrics = point?.[team.key];
           if (!metrics) return;
-          rows.push({
-            bucketLabel: `${point.date} ${team.label}`.trim(),
-            team: team.label,
-            date: point.date,
-            highest: toNumber(metrics.highest),
-            high: toNumber(metrics.high),
-            medium: toNumber(metrics.medium),
-            low: toNumber(metrics.low),
-            lowest: toNumber(metrics.lowest),
-            total: totalForPoint(metrics)
-          });
+          rows.push(buildPriorityMetricsRow(point, team.label, metrics));
         });
       });
       return rows;
     }
 
-    return points.map((point) => {
-      const metrics = point?.[scope] || {};
-      return {
-        bucketLabel: point.date,
-        team:
-          TEAM_CONFIG.find((team) => team.key === scope)?.label ||
-          String(scope || "").toUpperCase(),
-        date: point.date,
-        highest: toNumber(metrics.highest),
-        high: toNumber(metrics.high),
-        medium: toNumber(metrics.medium),
-        low: toNumber(metrics.low),
-        lowest: toNumber(metrics.lowest),
-        total: totalForPoint(metrics)
-      };
-    });
+    const teamLabel =
+      TEAM_CONFIG.find((team) => team.key === scope)?.label ||
+      String(scope || "").toUpperCase();
+    return points.map((point) => buildPriorityMetricsRow(point, teamLabel, point?.[scope] || {}));
   }
 
   function trendLineDefs(colors) {
@@ -303,8 +267,8 @@
   }
 
   function renderBugBacklogTrendByTeamChart({ containerId, snapshot, colors }) {
-    const rows = buildTrendData(snapshot);
-    renderWithRoot("trend", containerId, rows.length > 0, (root) => {
+    const rows = buildTrendData(snapshot, core.MAX_SPRINT_POINTS);
+    renderWithRoot(containerId, rows.length > 0, (root) => {
       const yUpper = computeYUpper(
         [
           ...rows.map((row) => row.api),
@@ -321,100 +285,14 @@
   }
 
   function renderBugCompositionByPriorityChart({ containerId, snapshot, colors, scope = "bc" }) {
-    const rows = buildCompositionData(snapshot, scope);
-    renderWithRoot("composition", containerId, rows.length > 0, (root) => {
+    const rows = buildCompositionData(snapshot, scope, core.MAX_SPRINT_POINTS);
+    renderWithRoot(containerId, rows.length > 0, (root) => {
       root.render(h(CompositionChartView, { rows, colors, scope }));
     });
   }
 
-  function renderUatPriorityAgingChart({ containerId, rows, buckets: _buckets, colors }) {
-    const chartRows = Array.isArray(rows) ? rows : [];
-    const compactViewport = isCompactViewport();
-    const bucketShortLabels = {
-      "1-2 weeks": "1-2w",
-      "1 month": "1m",
-      "2 months": "2m",
-      "More than 2 months": "2m+"
-    };
-    const prioritySeries = PRIORITY_CONFIG.map((priority) => ({
-      dataKey: priority.key,
-      name: priority.label,
-      fill: colors.priorities?.[priority.key] || colors.teams.bc,
-      stackId: "uat-priority"
-    }));
-    const yUpper = computeYUpper(chartRows.map((row) => toNumber(row?.total)), { min: 1, pad: 1.12 });
-    renderGroupedBars("uat", containerId, chartRows.length > 0 && prioritySeries.length > 0, {
-      rows: chartRows,
-      defs: prioritySeries,
-      colors,
-      yUpper,
-      height: singleChartHeightForMode("uat", CHART_HEIGHTS.standard),
-      showLegend: true,
-      colorByCategoryKey: "bucketLabel",
-      xAxisProps: {
-        dataKey: "bucketLabel",
-        interval: 0,
-        height: compactViewport ? 42 : 52,
-        tick: { ...axisTick(colors), fontSize: compactViewport ? 11 : 12 },
-        tickFormatter: (value) => {
-          const key = String(value || "");
-          if (!compactViewport) return key;
-          return bucketShortLabels[key] || key;
-        }
-      },
-      tooltipProps: {
-        content: createTooltipContent(colors, (row, payload) => {
-          const groups =
-            row?.facilityPriorityGroups && typeof row.facilityPriorityGroups === "object"
-              ? row.facilityPriorityGroups
-              : {};
-          const priorityOrder = ["Highest", "High", "Medium", "Low", "Lowest"];
-          const facilityEntries = Object.entries(groups)
-            .map(([facility, byPriority]) => {
-              const map = byPriority && typeof byPriority === "object" ? byPriority : {};
-              const priorityCounts = priorityOrder
-                .map((priority) => [priority, toWhole(map[priority])])
-                .filter(([, count]) => count > 0);
-              const items = priorityCounts.map(([priority, count]) => `${priority}: ${count}`);
-              const total = priorityCounts.reduce((sum, [, count]) => sum + count, 0);
-              return [String(facility || "").trim(), total, items];
-            })
-            .filter(([facility, total]) => facility && total > 0)
-            .sort((left, right) => {
-              const leftIsUnspecified = left[0] === "Unspecified";
-              const rightIsUnspecified = right[0] === "Unspecified";
-              if (leftIsUnspecified && !rightIsUnspecified) return 1;
-              if (!leftIsUnspecified && rightIsUnspecified) return -1;
-              if (right[1] !== left[1]) return right[1] - left[1];
-              return left[0].localeCompare(right[0]);
-            });
-
-          return [
-            tooltipTitleLine("title", row.bucketLabel || "", colors),
-            tooltipTitleLine("total", `Total: ${toWhole(row.total)}`, colors),
-            ...facilityEntries.map(([facility, _total, items], index) =>
-              makeTooltipLine(`facility-${index}`, facility, colors, {
-                margin: "0 0 4px",
-                subItems: items
-              })
-            ),
-            ...(facilityEntries.length === 0
-              ? payload
-                  .filter((item) => toWhole(item?.value) > 0)
-                  .map((item) =>
-                    makeTooltipLine(item.dataKey, `${item.name}: ${toWhole(item.value)}`, colors)
-                  )
-              : [])
-          ];
-        }),
-        cursor: { fill: "rgba(31,51,71,0.05)" }
-      }
-    });
-  }
-
-  window.DashboardBacklogCharts = {
+  Object.assign(window.DashboardCharts || (window.DashboardCharts = {}), {
     renderBugBacklogTrendByTeamChart,
-    renderBugCompositionByPriorityChart,
-    renderUatPriorityAgingChart
-  };
+    renderBugCompositionByPriorityChart
+  });
 })();
