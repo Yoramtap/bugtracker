@@ -188,7 +188,7 @@
     const chartRows = toChartRows(rows);
     const compactViewport = isCompactViewport();
     const fillColor = String(barColor || "").trim() || colors.teams.react;
-    const overlayDots = compactViewport ? [] : chartRows
+    const overlayDots = chartRows
       .map((row) => {
         const totalContributions = toNumber(row?.totalIssues);
         const doneContributions = toWhole(row?.doneIssues);
@@ -198,7 +198,11 @@
           y: String(row?.contributor || ""),
           labelPrefix: doneContributions > 0 ? "✓" : "",
           accentColor: "rgba(56,161,105,0.95)",
-          labelText: `${doneContributions} ${doneContributions === 1 ? "contribution" : "contributions"} done`
+          labelText: compactViewport
+            ? String(doneContributions)
+            : `${doneContributions} ${doneContributions === 1 ? "contribution" : "contributions"} done`,
+          fontSize: compactViewport ? 10 : 11,
+          labelDx: compactViewport ? 6 : 10
         };
       })
       .filter(Boolean);
@@ -224,7 +228,7 @@
       orientation: "horizontal",
       categoryKey: "contributor",
       chartMargin: compactViewport
-        ? { top: 14, right: 16, bottom: 60, left: 12 }
+        ? { top: 14, right: 44, bottom: 60, left: 12 }
         : { top: 14, right: 180, bottom: 72, left: 12 },
       yAxisProps: compactViewport
         ? {

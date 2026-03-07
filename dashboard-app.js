@@ -418,7 +418,7 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
     compactViewport ? "Cycle time" : "Cycle time: the average time ideas spend in development and UAT.",
     { offset: compactViewport ? 16 : 22 }
   );
-  const overlayDots = compactViewport ? [] : rows.map((row) => {
+  const overlayDots = rows.map((row) => {
     const cycleN = toCount(row?.meta_cycle?.n);
     const hasExplicitCycleDoneCount = Object.prototype.hasOwnProperty.call(row || {}, "cycleDoneCount");
     const cycleDoneCount = Math.min(
@@ -431,7 +431,12 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
       y: String(row?.team || ""),
       labelPrefix: cycleDoneCount > 0 ? "✓" : "",
       accentColor: "rgba(56,161,105,0.95)",
-      labelText: `${cycleDoneCount} ${cycleDoneCount === 1 ? "idea" : "ideas"} shipped`
+      labelText: compactViewport
+        ? String(cycleDoneCount)
+        : `${cycleDoneCount} ${cycleDoneCount === 1 ? "idea" : "ideas"} shipped`,
+      muted: cycleDoneCount <= 0,
+      fontSize: compactViewport ? 10 : 11,
+      labelDx: compactViewport ? 6 : 10
     };
   }).filter(Boolean);
   const seriesDefs = [
@@ -455,7 +460,7 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
       valueTicks,
       valueTickFormatter,
       chartMargin: compactViewport
-        ? { top: 14, right: 14, bottom: 56, left: 12 }
+        ? { top: 14, right: 44, bottom: 56, left: 12 }
         : { top: 14, right: 132, bottom: 72, left: 12 },
       xAxisProps: {
         label: topAxisLabel

@@ -1119,7 +1119,7 @@
               isFront: true,
               ifOverflow: "extendDomain",
               label: ({ viewBox }) => {
-                const labelX = toNumber(viewBox?.x) + 10;
+                const labelX = toNumber(viewBox?.x) + (Number.isFinite(toNumber(dot?.labelDx)) ? toNumber(dot?.labelDx) : 10);
                 const labelY = toNumber(viewBox?.y);
                 const isMuted = Boolean(dot?.muted);
                 const labelPrefix = String(dot?.labelPrefix || "").trim();
@@ -1133,7 +1133,7 @@
                     key: `${keyBase}-label`,
                     x: labelX,
                     y: labelY,
-                    fontSize: 11,
+                    fontSize: Number.isFinite(toNumber(dot?.fontSize)) ? toNumber(dot?.fontSize) : 11,
                     fontWeight: 600,
                     dominantBaseline: "middle",
                     textAnchor: "start"
