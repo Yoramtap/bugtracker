@@ -389,7 +389,7 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
   if (teams.length === 0) return false;
 
   const fallbackCycleSampleCount = rows.reduce((sum, row) => sum + toCount(row?.meta_cycle?.n), 0);
-  const cycleSampleCount = Math.max(toCount(chartScopeData.cycleSampleCount), fallbackCycleSampleCount);
+  const cycleSampleCount = toCount(chartScopeData.cycleSampleCount) || fallbackCycleSampleCount;
   const sampleCount = Math.max(toCount(chartScopeData.sampleCount), cycleSampleCount);
   const scopeLabel = String(chartScopeData.scopeLabel || PRODUCT_CYCLE_SCOPE_LABELS[scope] || "Created in 2026");
   setPanelContext(
@@ -418,7 +418,9 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
     return months === 1 ? "1 month" : `${months} months`;
   };
   const topAxisLabel = buildAxisLabel(
-    compactViewport ? "Cycle time" : "Cycle time: the average time ideas spend in development and UAT.",
+    compactViewport
+      ? "Cycle time"
+      : "Cycle time: the average time it takes teams to ship from development to UAT to done.\nShipped counts include only ideas that reached Done through recorded Development/UAT time and not adminned to Done.",
     { offset: compactViewport ? 16 : 22 }
   );
   const overlayDots = rows.map((row) => {

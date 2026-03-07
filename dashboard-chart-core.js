@@ -837,6 +837,52 @@
     };
   }
 
+  function axisLabelLines(label) {
+    if (!label || typeof label !== "object") return 0;
+    return String(label.value || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean).length;
+  }
+
+  function createMultilineAxisLabelContent(label) {
+    const lines = String(label?.value || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (lines.length <= 1) return null;
+    const lineHeight = Math.max(14, toNumber(label?.lineHeight) || 16);
+    return (props) => {
+      const viewBox = props?.viewBox || {};
+      const width = toNumber(viewBox?.width);
+      const height = toNumber(viewBox?.height);
+      const x = toNumber(viewBox?.x) + width / 2;
+      const y = toNumber(viewBox?.y) + height + Math.max(22, toNumber(label?.offset) || 18);
+      return h(
+        "text",
+        {
+          x,
+          y,
+          fill: label?.fill || "rgba(31, 51, 71, 0.82)",
+          fontSize: label?.fontSize || 12,
+          fontWeight: label?.fontWeight || 700,
+          textAnchor: "middle"
+        },
+        lines.map((line, index) =>
+          h(
+            "tspan",
+            {
+              key: `axis-label-line-${index}`,
+              x,
+              dy: index === 0 ? 0 : lineHeight
+            },
+            line
+          )
+        )
+      );
+    };
+  }
+
   function resolveChartMargin(margin, xAxisProps, yAxisProps) {
     const safeMargin = margin && typeof margin === "object" ? margin : {};
     const compactViewport = isCompactViewport();
@@ -847,7 +893,8 @@
       left: toNumber(safeMargin.left)
     };
     if (xAxisProps?.label && typeof xAxisProps.label === "object") {
-      resolved.bottom = Math.max(resolved.bottom, 64);
+      const lineCount = Math.max(1, axisLabelLines(xAxisProps.label));
+      resolved.bottom = Math.max(resolved.bottom, 48 + lineCount * 18);
     }
     if (yAxisProps?.label && typeof yAxisProps.label === "object") {
       resolved.left = Math.max(resolved.left, compactViewport ? 42 : 58);
@@ -924,11 +971,13 @@
     if (!axisProps || typeof axisProps !== "object") return axisProps;
     const label = axisProps.label;
     if (!label || typeof label !== "object") return axisProps;
+    const multilineContent = createMultilineAxisLabelContent(label);
     return {
       ...axisProps,
       label: {
         ...label,
-        fontWeight: 700
+        fontWeight: 700,
+        content: multilineContent || label.content
       }
     };
   }
@@ -1450,7 +1499,7 @@
                 `${teamLabel}${seriesName ? ` • ${seriesName}` : ""}`,
                 colors
               ),
-              makeTooltipLine("average", `Average time in development and UAT: ${durationText}`, colors, {
+              makeTooltipLine("average", `Team takes on average ${durationText} to ship an idea`, colors, {
                 margin: "2px 0",
                 fontSize: "12px",
                 lineHeight: "1.45"
@@ -1458,7 +1507,7 @@
               makeTooltipLine(
                 "sample",
                 Object.prototype.hasOwnProperty.call(row || {}, "cycleDoneCount")
-                  ? `Ideas shipped = ${toWhole(row?.cycleDoneCount)}`
+                  ? `Ideas shipped through cycle = ${toWhole(row?.cycleDoneCount)}`
                   : `n = ${toWhole(meta.n)}`,
                 colors,
                 {
