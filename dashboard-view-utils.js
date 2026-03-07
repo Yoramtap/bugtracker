@@ -98,20 +98,12 @@
     return "all";
   }
 
-  function isEmbeddedFrame() {
-    try {
-      return window.self !== window.top;
-    } catch {
-      return true;
-    }
-  }
-
   function isEmbedMode() {
     const params = new URLSearchParams(window.location.search);
     const embed = (params.get("embed") || "").toLowerCase();
     if (embed === "0" || embed === "false" || embed === "no") return false;
     if (embed === "1" || embed === "true" || embed === "yes") return true;
-    return getModeFromUrl() !== "all" || isEmbeddedFrame();
+    return getModeFromUrl() !== "all";
   }
 
   globalObject.DashboardViewUtils = {
