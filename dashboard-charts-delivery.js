@@ -49,6 +49,11 @@
     return months === 1 ? "1 month" : `${months} months`;
   }
 
+  function formatFacilityTooltipSummary(valueInDays, sampleCount) {
+    const duration = formatFacilityTooltipAverage(valueInDays);
+    return toWhole(sampleCount) === 1 ? duration : `${duration} average`;
+  }
+
   function buildIssueSubItems(issueIds, jiraBrowseBase, colors) {
     const safeIssueIds = Array.isArray(issueIds) ? issueIds : [];
     const issueDisplayLimit = 8;
@@ -86,10 +91,21 @@
     colors,
     devColor,
     uatColor,
+    highlightLongUat = false,
     jiraBrowseBase = "https://nepgroup.atlassian.net/browse/"
   }) {
-    const chartRows = toChartRows(rows);
+    const chartRows = toChartRows(rows)
+      .slice()
+      .sort((left, right) => {
+        const uatDiff = toNumber(right?.uatAvg) - toNumber(left?.uatAvg);
+        if (uatDiff !== 0) return uatDiff;
+        const devDiff = toNumber(right?.devAvg) - toNumber(left?.devAvg);
+        if (devDiff !== 0) return devDiff;
+        return String(left?.label || "").localeCompare(String(right?.label || ""));
+      });
     const compactViewport = isCompactViewport();
+    const UAT_ALERT_MONTH_THRESHOLD = 1;
+    const relaxedUatAlertFill = "rgba(192, 106, 109, 0.82)";
     const displayRows = chartRows.map((row) => ({
       ...row,
       devTime: toMonthsForChart(row?.devAvg),
@@ -111,7 +127,11 @@
         {
           dataKey: "uatTime",
           name: "Time in UAT",
-          fill: uatColor
+          fill: uatColor,
+          cellFillAccessor: (row) =>
+            highlightLongUat && toNumber(row?.uatTime) >= UAT_ALERT_MONTH_THRESHOLD
+              ? relaxedUatAlertFill
+              : uatColor
         }
       ],
       colors,
@@ -154,7 +174,7 @@
                 margin: "2px 0",
                 preserveSubItems: true,
                 subItems: [
-                  `${formatFacilityTooltipAverage(devAvg)} average`,
+                  formatFacilityTooltipSummary(devAvg, row?.devCount),
                   `n=${toWhole(row?.devCount)}`
                 ]
               }),
@@ -162,7 +182,7 @@
                 margin: "2px 0",
                 preserveSubItems: true,
                 subItems: [
-                  `${formatFacilityTooltipAverage(uatAvg)} average`,
+                  formatFacilityTooltipSummary(uatAvg, row?.uatCount),
                   `n=${toWhole(row?.uatCount)}`
                 ]
               }),

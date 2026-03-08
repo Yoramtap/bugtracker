@@ -1539,6 +1539,11 @@
             def.fill;
           barChildren.push(h(Cell, { key: `cell-${def.dataKey}-${index}`, fill }));
         });
+      } else if (typeof def?.cellFillAccessor === "function") {
+        rows.forEach((row, index) => {
+          const fill = String(def.cellFillAccessor(row, index) || "").trim() || def.fill;
+          barChildren.push(h(Cell, { key: `cell-fill-${def.dataKey}-${index}`, fill }));
+        });
       } else if (def?.metaTeamColorMap && typeof def.metaTeamColorMap === "object") {
         rows.forEach((row, index) => {
           const metaTeam = String(row?.[`meta_${def.dataKey}`]?.team || "");

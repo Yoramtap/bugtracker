@@ -723,6 +723,7 @@ function renderDevelopmentVsUatByFacilityChart() {
       props: {
         rows,
         jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
+        highlightLongUat: !doneScope,
         devColor: doneScope
           ? readThemeColor("--mgmt-done-dev", "#2f7d4d")
           : readThemeColor("--mgmt-dev", "#2f5f83"),
