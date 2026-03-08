@@ -1336,6 +1336,7 @@
     tooltipProps,
     legendDrawerNode,
     barNodes,
+    referenceNodes = [],
     overlayNodes = [],
     gridVertical = false,
     gridHorizontal = true
@@ -1367,6 +1368,7 @@
           }),
           h(XAxis, normalizedXAxisProps),
           h(YAxis, normalizedYAxisProps),
+          ...referenceNodes,
           h(Tooltip, withSafeTooltipProps(tooltipProps)),
           ...barNodes,
           ...overlayNodes
@@ -1420,6 +1422,7 @@
     chartLayout = "horizontal",
     colorByCategoryKey = "",
     categoryColors = null,
+    referenceNodes = [],
     overlayDots = [],
     gridVertical = false,
     gridHorizontal = true,
@@ -1713,6 +1716,7 @@
         ? renderLegendNode({ colors, defs, hiddenKeys, setHiddenKeys })
         : null,
       barNodes,
+      referenceNodes,
       overlayNodes,
       gridVertical,
       gridHorizontal
@@ -2078,6 +2082,7 @@
     LineChart,
     Line,
     Bar,
+    ReferenceLine,
     CartesianGrid,
     XAxis,
     YAxis,
