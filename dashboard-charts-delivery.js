@@ -14,6 +14,7 @@
     buildAxisLabel,
     createTooltipContent,
     formatAverageLabel,
+    formatTooltipDuration,
     h,
     isCompactViewport,
     makeTooltipLine,
@@ -46,8 +47,7 @@
   function formatFacilityTooltipAverage(valueInDays) {
     const days = toNumber(valueInDays);
     if (days < 28) return String(formatAverageLabel(days, "weeks")).replace(/\s+avg$/, "");
-    const months = Math.max(1, Math.round(days / 30.4375));
-    return months === 1 ? "1 month" : `${months} months`;
+    return formatTooltipDuration(days, "months");
   }
 
   function formatFacilityTooltipSummary(valueInDays, sampleCount) {

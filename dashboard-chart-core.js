@@ -143,14 +143,6 @@
     return Number(toMonths(days).toFixed(2));
   }
 
-  function formatWeeksFromDays(valueInDays) {
-    const days = toNumber(valueInDays);
-    if (days <= 0) return "0 weeks";
-    if (days < 7) return "<1 week";
-    const weeks = Math.max(1, Math.round(toWeeks(days)));
-    return weeks === 1 ? "1 week" : `${weeks} weeks`;
-  }
-
   function formatWeekAxisLabel(value) {
     const weeks = toWhole(value);
     if (weeks <= 0) return "0";
@@ -159,12 +151,29 @@
     return months === 1 ? "1 month" : `${months} months`;
   }
 
-  function formatMonthsFromDays(valueInDays) {
+  function formatTooltipDuration(valueInDays, unit = "days") {
     const days = toNumber(valueInDays);
-    if (days <= 0) return "0 months";
-    if (days < 30.4375) return "<1 month";
-    const months = Math.max(1, Math.round(toMonths(days)));
-    return months === 1 ? "1 month" : `${months} months`;
+    if (unit === "weeks") {
+      if (days <= 0) return "0 weeks";
+      if (days < 7) return "< 1 week";
+      const exactWeeks = toWeeks(days);
+      const roundedWeeks = Math.max(1, Math.round(exactWeeks));
+      const prefix = Math.abs(exactWeeks - roundedWeeks) > 0.01 ? "\u2248 " : "";
+      const text = roundedWeeks === 1 ? "1 week" : `${roundedWeeks} weeks`;
+      return `${prefix}${text}`;
+    }
+    if (unit === "months") {
+      if (days <= 0) return "0 months";
+      if (days < 30.4375) return "< 1 month";
+      const exactMonths = toMonths(days);
+      const roundedMonths = Math.max(1, Math.round(exactMonths));
+      const prefix = Math.abs(exactMonths - roundedMonths) > 0.01 ? "\u2248 " : "";
+      const text = roundedMonths === 1 ? "1 month" : `${roundedMonths} months`;
+      return `${prefix}${text}`;
+    }
+    const roundedDays = toWhole(days);
+    const prefix = Math.abs(days - roundedDays) > 0.01 ? "\u2248 " : "";
+    return `${prefix}${roundedDays} ${unit}`;
   }
 
   function formatMonthAxisLabel(value) {
@@ -177,15 +186,7 @@
   }
 
   function formatAverageLabel(value, unit = "days") {
-    if (unit === "weeks") {
-      const text = formatWeeksFromDays(value).replace("<1 week", "< 1 week");
-      return `${text} avg`;
-    }
-    if (unit === "months") {
-      const text = formatMonthsFromDays(value).replace("<1 month", "< 1 month");
-      return `${text} avg`;
-    }
-    return `${toWhole(value)} ${unit} avg`;
+    return `${formatTooltipDuration(value, unit)} avg`;
   }
 
   function buildWeekAxis(maxValueWeeks, options = {}) {
@@ -1950,10 +1951,10 @@
             const meta = row?.[`meta_${key}`] || {};
             const seriesName = String(meta.team || item?.name || "").trim();
             const durationText = displayInWeeks
-              ? formatWeeksFromDays(meta.average).replace("<1 week", "< 1 week")
+              ? formatTooltipDuration(meta.average, "weeks")
               : displayInMonths
-                ? formatMonthsFromDays(meta.average).replace("<1 month", "< 1 month")
-                : `${toWhole(meta.average)} days`;
+                ? formatTooltipDuration(meta.average, "months")
+                : formatTooltipDuration(meta.average, "days");
             return [
               tooltipTitleLine(
                 "team",
@@ -2021,10 +2022,10 @@
                   preserveSubItems: true,
                   subItems: [
                     displayInWeeks
-                      ? `${formatWeeksFromDays(meta.average).replace("<1 week", "< 1 week")} average`
+                      ? `${formatTooltipDuration(meta.average, "weeks")} average`
                       : displayInMonths
-                        ? `${formatMonthsFromDays(meta.average).replace("<1 month", "< 1 month")} average`
-                        : `${toWhole(meta.average)} days average`
+                        ? `${formatTooltipDuration(meta.average, "months")} average`
+                        : `${formatTooltipDuration(meta.average, "days")} average`
                   ]
                 })
               );
@@ -2109,6 +2110,7 @@
     createTooltipContent,
     formatAverageLabel,
     formatDateShort,
+    formatTooltipDuration,
     isCompactViewport,
     makeTooltipLine,
     renderBarChartShell,
