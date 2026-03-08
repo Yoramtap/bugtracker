@@ -733,13 +733,8 @@ function renderDevelopmentVsUatByFacilityChart() {
         rows,
         groupingLabel: "business unit",
         jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
-        highlightLongUat: !doneScope,
-        devColor: doneScope
-          ? readThemeColor("--mgmt-done-dev", "#2f7d4d")
-          : readThemeColor("--mgmt-dev", "#2f5f83"),
-        uatColor: doneScope
-          ? readThemeColor("--mgmt-done-uat", "#82bd95")
-          : readThemeColor("--mgmt-uat", "#7fa8c4")
+        devColor: readThemeColor("--mgmt-dev", "#2f5f83"),
+        uatColor: readThemeColor("--mgmt-done-uat", "#82bd95")
       }
     };
   });

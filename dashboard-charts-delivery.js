@@ -98,7 +98,6 @@
     colors,
     devColor,
     uatColor,
-    highlightLongUat = false,
     jiraBrowseBase = "https://nepgroup.atlassian.net/browse/"
   }) {
     const chartRows = toChartRows(rows)
@@ -112,7 +111,10 @@
       });
     const compactViewport = isCompactViewport();
     const UAT_ALERT_MONTH_THRESHOLD = 1;
-    const relaxedUatAlertFill = "rgba(201, 150, 88, 0.9)";
+    const uatWithinGoalFill = "#82bd95";
+    const uatWatchFill = "rgba(201, 150, 88, 0.9)";
+    const uatRiskFill = "#8d3f38";
+    const UAT_RISK_MONTH_THRESHOLD = 2;
     const displayRows = chartRows.map((row) => ({
       ...row,
       devTime: toMonthsForChart(row?.devAvg),
@@ -134,7 +136,7 @@
           strokeWidth: 1.8,
           ifOverflow: "extendDomain",
           label: {
-            value: "1 month",
+            value: "UAT goal",
             position: "insideTopRight",
             offset: 8,
             fill: "#000000",
@@ -153,17 +155,20 @@
           dataKey: "uatTime",
           name: "Time in UAT",
           fill: uatColor,
-          legendSwatchBackground: `linear-gradient(90deg, ${uatColor} 0 52%, ${relaxedUatAlertFill} 52% 100%)`,
-          cellFillAccessor: (row) =>
-            highlightLongUat && toNumber(row?.uatTime) >= UAT_ALERT_MONTH_THRESHOLD
-              ? relaxedUatAlertFill
-              : uatColor
+          legendSwatchBackground: `linear-gradient(90deg, ${uatWithinGoalFill} 0 33%, ${uatWatchFill} 33% 66%, ${uatRiskFill} 66% 100%)`,
+          cellFillAccessor: (row) => {
+            const uatMonths = toNumber(row?.uatTime);
+            if (uatMonths >= UAT_RISK_MONTH_THRESHOLD) return uatRiskFill;
+            if (uatMonths >= UAT_ALERT_MONTH_THRESHOLD) return uatWatchFill;
+            return uatWithinGoalFill;
+          }
         }
       ],
       colors,
       yUpper: monthAxis.upper,
       height: singleChartHeightForMode("management-facility", CHART_HEIGHTS.standard),
       yAxisProps: {
+        width: 76,
         domain: [0, monthAxis.upper],
         ticks: monthAxis.ticks,
         tickFormatter: (value) => {
@@ -228,7 +233,8 @@
             cardStyle: {
               maxWidth: "240px"
             },
-            interactive: false
+            interactive: false,
+            trackPointer: false
           }
         ),
         cursor: { fill: BAR_CURSOR_FILL }

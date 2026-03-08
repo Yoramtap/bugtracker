@@ -734,6 +734,21 @@
     return next;
   }
 
+  function tooltipRowSignature(row, payload) {
+    const safeRow = row && typeof row === "object" ? row : {};
+    const primaryLabel =
+      safeRow.label ??
+      safeRow.bucketLabel ??
+      safeRow.phaseLabel ??
+      safeRow.team ??
+      safeRow.contributor ??
+      "";
+    const payloadSignature = (Array.isArray(payload) ? payload : [])
+      .map((item) => `${String(item?.dataKey || "")}:${String(item?.value ?? "")}`)
+      .join("|");
+    return `${String(primaryLabel)}::${payloadSignature}`;
+  }
+
   function ViewportTooltipContent({
     active,
     payload,
@@ -753,6 +768,7 @@
     const [position, setPosition] = React.useState(null);
     const coarsePointer = isCoarsePointerDevice();
     const interactive = options?.interactive !== false;
+    const trackPointer = options?.trackPointer !== false;
     const dockedTooltip = coarsePointer || isCompactViewport();
     const hasPayload = active && Array.isArray(payload) && payload.length > 0;
 
@@ -775,6 +791,7 @@
         hideTimerRef.current = 0;
       }
       const row = payload[0]?.payload || {};
+      const rowSignature = tooltipRowSignature(row, payload);
       setSnapshot((previous) => ({
         chartWrapper:
           anchorRef.current?.closest?.(".recharts-wrapper") || previous?.chartWrapper || null,
@@ -784,14 +801,19 @@
           previous?.panelElement ||
           null,
         coordinate:
-          coordinate &&
-          Number.isFinite(toNumber(coordinate.x)) &&
-          Number.isFinite(toNumber(coordinate.y))
-            ? { x: toNumber(coordinate.x), y: toNumber(coordinate.y) }
-            : previous?.coordinate || null,
+          !trackPointer &&
+          previous?.rowSignature === rowSignature &&
+          previous?.coordinate
+            ? previous.coordinate
+            : coordinate &&
+                Number.isFinite(toNumber(coordinate.x)) &&
+                Number.isFinite(toNumber(coordinate.y))
+              ? { x: toNumber(coordinate.x), y: toNumber(coordinate.y) }
+              : previous?.coordinate || null,
+        rowSignature,
         blocks: buildLines(row, payload)
       }));
-    }, [buildLines, coordinate, hasPayload, payload]);
+    }, [buildLines, coordinate, hasPayload, payload, trackPointer]);
 
     React.useEffect(() => {
       if (hideTimerRef.current) {
