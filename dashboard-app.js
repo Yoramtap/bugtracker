@@ -80,6 +80,8 @@ const DATA_SOURCE_CONFIG = {
     clearContainers: ["top-contributors-chart"]
   }
 };
+const PRELOADED_DATA_SOURCE_PROMISES =
+  window.__dashboardDataSourcePromiseCache || Object.create(null);
 const CHART_DATA_SOURCES = {
   trend: ["snapshot"],
   composition: ["snapshot"],
@@ -895,9 +897,15 @@ async function loadDataSource(sourceKey) {
   const source = DATA_SOURCE_CONFIG[sourceKey];
   if (!source) return;
   try {
-    const response = await fetch(source.url, { cache: "no-cache" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    state[source.stateKey] = await response.json();
+    const preloadedPromise = PRELOADED_DATA_SOURCE_PROMISES[sourceKey];
+    const sourceData =
+      preloadedPromise && typeof preloadedPromise.then === "function"
+        ? await preloadedPromise
+        : await fetch(source.url, { cache: "no-cache" }).then(async (response) => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          });
+    state[source.stateKey] = sourceData;
     state.loadedSources[sourceKey] = true;
     delete state.loadErrors[sourceKey];
     renderDashboardRefreshStrip();
