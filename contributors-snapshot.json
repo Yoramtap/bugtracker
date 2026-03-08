@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-03-05T23:04:41.229Z",
+  "updatedAt": "2026-03-08T20:09:22.745Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-05T23:04:41.229Z",
+    "syncedAt": "2026-03-08T20:09:22.745Z",
     "project": "TFC",
     "label": "Contributors",
     "jql": "project = \"TFC\" AND labels = \"Contributors\"",
@@ -23,7 +23,7 @@
     },
     {
       "status": "In Review",
-      "count": 4
+      "count": 3
     },
     {
       "status": "Backlog",
@@ -35,6 +35,10 @@
     },
     {
       "status": "In Progress",
+      "count": 1
+    },
+    {
+      "status": "QA / Lab Testing",
       "count": 1
     },
     {
@@ -146,10 +150,10 @@
       "linked_issues": 4,
       "status_counts": {
         "Done": 1,
-        "In Review": 1
+        "QA / Lab Testing": 1
       },
       "not_done_status_counts": {
-        "In Review": 1
+        "QA / Lab Testing": 1
       },
       "teams": [],
       "linked_teams": []
@@ -295,10 +299,10 @@
       "linked_issues": 4,
       "status_counts": {
         "Done": 1,
-        "In Review": 1
+        "QA / Lab Testing": 1
       },
       "not_done_status_counts": {
-        "In Review": 1
+        "QA / Lab Testing": 1
       },
       "teams": [],
       "linked_teams": []
@@ -340,11 +344,6 @@
       "linked_teams": []
     }
   ],
-  "quality": {
-    "missing_assignee_count": 4,
-    "missing_team_count": 25,
-    "excluded_duplicate_count": 1
-  },
   "chartData": {
     "rows": [
       {
@@ -398,7 +397,7 @@
         "notDoneIssues": 1,
         "ticketStateItems": [
           "Done = 1",
-          "In Review = 1"
+          "QA / Lab Testing = 1"
         ]
       },
       {
@@ -426,5 +425,10 @@
         ]
       }
     ]
+  },
+  "quality": {
+    "missing_assignee_count": 4,
+    "missing_team_count": 25,
+    "excluded_duplicate_count": 1
   }
 }

@@ -146,6 +146,7 @@ if (!dashboardChartCore) {
 const {
   toNumber,
   formatUpdatedAt,
+  getOldestTimestamp,
   setStatusMessage,
   setStatusMessageForIds,
   readThemeColor,
@@ -266,31 +267,22 @@ function setConfigContext(config, text) {
   setPanelContext(document.getElementById(config.contextId), text);
 }
 
-function getLatestDashboardUpdatedAt() {
-  const candidates = [
+function getDashboardRefreshUpdatedAt() {
+  return getOldestTimestamp([
     state.snapshot?.updatedAt,
     state.productCycle?.generatedAt,
     state.contributors?.updatedAt
-  ]
-    .map((value) => {
-      const text = String(value || "").trim();
-      const time = new Date(text).getTime();
-      return Number.isFinite(time) ? { text, time } : null;
-    })
-    .filter(Boolean);
-  if (candidates.length === 0) return "";
-  candidates.sort((left, right) => right.time - left.time);
-  return candidates[0].text;
+  ]);
 }
 
 function renderDashboardRefreshStrip() {
   const panel = document.getElementById("dashboard-refresh-panel");
   const textNode = document.getElementById("dashboard-refresh-text");
   if (!panel || !textNode) return;
-  const latestUpdatedAt = getLatestDashboardUpdatedAt();
-  panel.hidden = latestUpdatedAt.length === 0;
-  textNode.textContent = latestUpdatedAt
-    ? `Last updated ${formatUpdatedAt(latestUpdatedAt)}`
+  const refreshUpdatedAt = getDashboardRefreshUpdatedAt();
+  panel.hidden = refreshUpdatedAt.length === 0;
+  textNode.textContent = refreshUpdatedAt
+    ? `Last updated ${formatUpdatedAt(refreshUpdatedAt)}`
     : "";
 }
 

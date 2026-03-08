@@ -299,7 +299,7 @@
     }
     if (width <= 1024) {
       return {
-        chartHeight: singleChartHeightForMode("trend", 252),
+        chartHeight: singleChartHeightForMode("trend", 300),
         margin: { top: 12, right: 10, bottom: 60, left: 60 },
         xTickFontSize: 11,
         yTickFontSize: 11,
@@ -310,7 +310,7 @@
       };
     }
     return {
-      chartHeight: singleChartHeightForMode("trend", CHART_HEIGHTS.standard),
+      chartHeight: singleChartHeightForMode("trend", 340),
       margin: { top: 12, right: 12, bottom: 64, left: 62 },
       xTickFontSize: 11,
       yTickFontSize: 11,
@@ -871,7 +871,10 @@
 
     React.useEffect(() => {
       if (!dockedTooltip || !snapshot) return undefined;
-      const dismissOnScroll = () => {
+      const dismissOnScroll = (event) => {
+        if (cardRef.current && event?.target instanceof Node && cardRef.current.contains(event.target)) {
+          return;
+        }
         setPortalHovered(false);
         setSnapshot(null);
         setPosition(null);
@@ -910,8 +913,8 @@
                     width: "min(calc(100vw - 24px), 360px)",
                     maxWidth: "min(calc(100vw - 24px), 360px)",
                     maxHeight: position ? `${position.maxHeight}px` : "calc(100vh - 24px)",
-                    overflow: "hidden",
-                    pointerEvents: "none",
+                    overflowX: "hidden",
+                    overflowY: "auto",
                     visibility: position ? "visible" : "hidden"
                   }
                 : {

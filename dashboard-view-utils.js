@@ -23,6 +23,19 @@
     });
   }
 
+  function getOldestTimestamp(values) {
+    const candidates = (Array.isArray(values) ? values : [])
+      .map((value) => {
+        const text = String(value || "").trim();
+        const time = new Date(text).getTime();
+        return Number.isFinite(time) ? { text, time } : null;
+      })
+      .filter(Boolean);
+    if (candidates.length === 0) return "";
+    candidates.sort((left, right) => left.time - right.time);
+    return candidates[0].text;
+  }
+
   function setStatusMessage(statusId, message = "") {
     const node = document.getElementById(statusId);
     if (!node) return null;
@@ -110,6 +123,7 @@
     toNumber,
     formatDateShort,
     formatUpdatedAt,
+    getOldestTimestamp,
     setStatusMessage,
     setStatusMessageForIds,
     readThemeColor,

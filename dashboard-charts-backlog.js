@@ -136,6 +136,7 @@
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
     const lineDefs = trendLineDefs(colors);
     const layout = trendLayoutForViewport(rows.length);
+    const niceYAxis = buildNiceNumberAxis(yUpper);
 
     return h(
       "div",
@@ -169,8 +170,9 @@
           h(YAxis, {
             stroke: colors.text,
             tick: { fill: colors.text, fontSize: layout.yTickFontSize },
-            domain: [0, yUpper],
-            label: buildAxisLabel("Open bugs", { axis: "y", offset: 4 })
+            domain: [0, niceYAxis.upper],
+            ticks: niceYAxis.ticks,
+            label: buildAxisLabel("Open bugs", { axis: "y", offset: 6 })
           }),
           h(
             Tooltip,
