@@ -105,7 +105,7 @@
       });
     const compactViewport = isCompactViewport();
     const UAT_ALERT_MONTH_THRESHOLD = 1;
-    const relaxedUatAlertFill = "rgba(192, 106, 109, 0.82)";
+    const relaxedUatAlertFill = "rgba(201, 150, 88, 0.9)";
     const displayRows = chartRows.map((row) => ({
       ...row,
       devTime: toMonthsForChart(row?.devAvg),
