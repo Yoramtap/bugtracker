@@ -62,6 +62,7 @@ body {
 body.embed-mode {
   min-height: auto;
   background: transparent;
+  touch-action: pan-y pinch-zoom;
 }
 
 main {
@@ -107,6 +108,8 @@ body.embedded-frame-mode main {
   padding: 8px 0 18px;
   gap: 12px;
   overflow-x: clip;
+  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
 }
 
 .panel {
@@ -314,11 +317,13 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
   width: 100%;
   max-width: 100%;
   overflow: visible;
+  touch-action: pan-y pinch-zoom;
 }
 
 .chart-canvas svg {
   max-width: 100%;
   overflow: visible;
+  touch-action: pan-y pinch-zoom;
 }
 
 .chart-series-shell {
@@ -327,6 +332,7 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
   min-width: 0;
   grid-template-columns: minmax(0, 1fr);
   gap: 10px;
+  touch-action: pan-y pinch-zoom;
 }
 
 .chart-series-shell > * {

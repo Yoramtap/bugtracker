@@ -563,7 +563,6 @@
     const suppressHoverPropagationCapture = (event) => {
       if (!event) return;
       event.stopPropagation();
-      if (typeof event.preventDefault === "function") event.preventDefault();
     };
     const lines = (Array.isArray(blocks) ? blocks : []).map(normalizeTooltipLine).filter(Boolean);
     const cardStyle = options && typeof options.cardStyle === "object" ? options.cardStyle : null;
