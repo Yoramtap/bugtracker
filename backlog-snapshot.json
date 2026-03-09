@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-03-09T13:58:52.966Z",
+  "updatedAt": "2026-03-09T23:20:44.429Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-09T13:58:52.966Z"
+    "syncedAt": "2026-03-09T23:20:44.429Z"
   },
   "uatAging": {
     "scope": {
@@ -17,22 +17,17 @@
           "rows": [
             {
               "label": "ANZJ",
-              "devAvg": 0.87,
-              "uatAvg": 27.5,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueItems": [
-                {
-                  "issueId": "TFC-15958",
-                  "facilityLabel": "Facility unmapped"
-                }
-              ]
+              "devAvg": 0,
+              "uatAvg": 0,
+              "devCount": 0,
+              "uatCount": 0,
+              "sampleCount": 0,
+              "issueItems": []
             },
             {
               "label": "EU",
               "devAvg": 0.17,
-              "uatAvg": 23.6,
+              "uatAvg": 23.99,
               "devCount": 3,
               "uatCount": 3,
               "sampleCount": 3,
@@ -54,7 +49,7 @@
             {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 32.22,
+              "uatAvg": 32.61,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -67,11 +62,11 @@
             },
             {
               "label": "US",
-              "devAvg": 0.95,
-              "uatAvg": 43.24,
-              "devCount": 3,
-              "uatCount": 3,
-              "sampleCount": 3,
+              "devAvg": 0.93,
+              "uatAvg": 39.69,
+              "devCount": 4,
+              "uatCount": 4,
+              "sampleCount": 4,
               "issueItems": [
                 {
                   "issueId": "TFC-14425",
@@ -84,13 +79,17 @@
                 {
                   "issueId": "TFC-13224",
                   "facilityLabel": "Facility US USCP"
+                },
+                {
+                  "issueId": "TFC-15958",
+                  "facilityLabel": "Facility unmapped"
                 }
               ]
             },
             {
               "label": "Tech Debt",
               "devAvg": 28.11,
-              "uatAvg": 160.71,
+              "uatAvg": 161.1,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -162,9 +161,18 @@
               ]
             },
             {
+              "label": "MEA",
+              "devAvg": 0,
+              "uatAvg": 0,
+              "devCount": 0,
+              "uatCount": 0,
+              "sampleCount": 0,
+              "issueItems": []
+            },
+            {
               "label": "US",
-              "devAvg": 20.95,
-              "uatAvg": 32.69,
+              "devAvg": 24.6,
+              "uatAvg": 27.33,
               "devCount": 3,
               "uatCount": 3,
               "sampleCount": 3,
@@ -178,29 +186,21 @@
                   "facilityLabel": "Facility US ND2"
                 },
                 {
-                  "issueId": "TFC-15894",
+                  "issueId": "TFC-15824",
                   "facilityLabel": "Facility unmapped"
                 }
               ]
             },
             {
               "label": "Tech Debt",
-              "devAvg": 13.65,
-              "uatAvg": 52.25,
-              "devCount": 3,
-              "uatCount": 3,
-              "sampleCount": 3,
+              "devAvg": 22.01,
+              "uatAvg": 27.29,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
               "issueItems": [
                 {
-                  "issueId": "TFC-14891",
-                  "facilityLabel": "Facility unmapped"
-                },
-                {
                   "issueId": "TFC-14978",
-                  "facilityLabel": "Facility unmapped"
-                },
-                {
-                  "issueId": "TFC-15824",
                   "facilityLabel": "Facility unmapped"
                 }
               ]
