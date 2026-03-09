@@ -185,9 +185,7 @@
         height: compactViewport ? 44 : 56,
         angle: compactViewport ? -28 : 0,
         textAnchor: compactViewport ? "end" : "middle",
-        label: buildAxisLabel(
-          isBusinessUnitGrouping ? "Business unit" : "Facility"
-        ),
+        label: buildAxisLabel(isBusinessUnitGrouping ? "Business Unit" : "Facility"),
         tick: compactViewport
           ? { ...axisTick(colors), fontSize: 11 }
           : twoLineCategoryTickFactory(colors, {
@@ -203,21 +201,18 @@
             const uatAvg = toNumber(row?.uatAvg);
             return [
               tooltipTitleLine("label", row?.label || "", colors),
+              makeTooltipLine("sample", `n=${toWhole(row?.sampleCount)}`, colors, {
+                margin: "0 0 6px"
+              }),
               makeTooltipLine("dev", "Time in Development", colors, {
                 margin: "2px 0",
                 preserveSubItems: true,
-                subItems: [
-                  formatFacilityTooltipSummary(devAvg, row?.devCount),
-                  `n=${toWhole(row?.devCount)}`
-                ]
+                subItems: [formatFacilityTooltipSummary(devAvg, row?.devCount)]
               }),
               makeTooltipLine("uat", "Time in UAT", colors, {
                 margin: "2px 0",
                 preserveSubItems: true,
-                subItems: [
-                  formatFacilityTooltipSummary(uatAvg, row?.uatCount),
-                  `n=${toWhole(row?.uatCount)}`
-                ]
+                subItems: [formatFacilityTooltipSummary(uatAvg, row?.uatCount)]
               }),
               makeTooltipLine("issues", "Issues", colors, {
                 margin: "6px 0 0",

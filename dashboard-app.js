@@ -724,16 +724,16 @@ function renderDevelopmentVsUatByFacilityChart() {
       : [];
     const rows = businessUnitRows;
     if (rows.length === 0) {
-      return { error: `No ${scope} business-unit chart data found in backlog-snapshot.json.` };
+      return { error: `No ${scope} Business Unit chart data found in backlog-snapshot.json.` };
     }
 
     const doneScope = scope === "done";
-    if (titleNode) titleNode.textContent = "Development vs UAT by business unit";
+    if (titleNode) titleNode.textContent = "Development vs UAT by Business Unit";
     return {
-      contextText: `${getBroadcastScopeLabel()} • business unit • ${doneScope ? "done" : "ongoing"} • n=${rows.reduce((sum, row) => sum + row.sampleCount, 0)}`,
+      contextText: `${getBroadcastScopeLabel()} • Business Unit • ${doneScope ? "done" : "ongoing"} • n=${rows.reduce((sum, row) => sum + row.sampleCount, 0)}`,
       props: {
         rows,
-        groupingLabel: "business unit",
+        groupingLabel: "Business Unit",
         jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
         devColor: readThemeColor("--mgmt-dev", "#2f5f83"),
         uatColor: readThemeColor("--mgmt-done-uat", "#82bd95")
