@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-03-09T23:20:44.429Z",
+  "updatedAt": "2026-03-13T23:06:53.382Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-09T23:20:44.429Z"
+    "syncedAt": "2026-03-13T23:06:53.382Z"
   },
   "uatAging": {
     "scope": {
@@ -27,7 +27,7 @@
             {
               "label": "EU",
               "devAvg": 0.17,
-              "uatAvg": 23.99,
+              "uatAvg": 27.98,
               "devCount": 3,
               "uatCount": 3,
               "sampleCount": 3,
@@ -49,7 +49,7 @@
             {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 32.61,
+              "uatAvg": 36.61,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -62,19 +62,15 @@
             },
             {
               "label": "US",
-              "devAvg": 0.93,
-              "uatAvg": 39.69,
-              "devCount": 4,
-              "uatCount": 4,
-              "sampleCount": 4,
+              "devAvg": 0.91,
+              "uatAvg": 52.25,
+              "devCount": 3,
+              "uatCount": 3,
+              "sampleCount": 3,
               "issueItems": [
                 {
                   "issueId": "TFC-14425",
                   "facilityLabel": "Facility US EN1"
-                },
-                {
-                  "issueId": "TFC-16041",
-                  "facilityLabel": "Facility US ND2"
                 },
                 {
                   "issueId": "TFC-13224",
@@ -89,7 +85,7 @@
             {
               "label": "Tech Debt",
               "devAvg": 28.11,
-              "uatAvg": 161.1,
+              "uatAvg": 165.09,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -148,17 +144,12 @@
             },
             {
               "label": "EU",
-              "devAvg": 0.9,
-              "uatAvg": 42.5,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueItems": [
-                {
-                  "issueId": "TFC-15539",
-                  "facilityLabel": "Facility NL NLCP"
-                }
-              ]
+              "devAvg": 0,
+              "uatAvg": 0,
+              "devCount": 0,
+              "uatCount": 0,
+              "sampleCount": 0,
+              "issueItems": []
             },
             {
               "label": "MEA",
@@ -171,11 +162,11 @@
             },
             {
               "label": "US",
-              "devAvg": 24.6,
-              "uatAvg": 27.33,
-              "devCount": 3,
-              "uatCount": 3,
-              "sampleCount": 3,
+              "devAvg": 18.7,
+              "uatAvg": 24.54,
+              "devCount": 4,
+              "uatCount": 4,
+              "sampleCount": 4,
               "issueItems": [
                 {
                   "issueId": "TFC-15197",
@@ -183,6 +174,10 @@
                 },
                 {
                   "issueId": "TFC-15822",
+                  "facilityLabel": "Facility US ND2"
+                },
+                {
+                  "issueId": "TFC-16041",
                   "facilityLabel": "Facility US ND2"
                 },
                 {
@@ -588,7 +583,7 @@
       "bc": {
         "highest": 5,
         "high": 80,
-        "medium": 120,
+        "medium": 122,
         "low": 8,
         "lowest": 0,
         "longstanding_30d_plus": 182,

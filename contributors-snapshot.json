@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-03-09T23:20:44.429Z",
+  "updatedAt": "2026-03-13T23:06:53.380Z",
   "summary": {
-    "total_issues": 25,
+    "total_issues": 26,
     "active_issues": 9,
-    "done_issues": 16,
+    "done_issues": 17,
     "total_contributors": 6,
     "linked_issues": 16
   },
@@ -33,8 +33,7 @@
         "notDoneIssues": 2,
         "ticketStateItems": [
           "Done = 4",
-          "In Progress = 1",
-          "In Review = 1"
+          "In Review = 2"
         ]
       },
       {
@@ -53,15 +52,14 @@
       },
       {
         "contributor": "David Oxe",
-        "activeIssues": 1,
-        "doneIssues": 1,
+        "activeIssues": 0,
+        "doneIssues": 2,
         "totalIssues": 2,
         "bugIssues": 0,
         "linkedIssues": 4,
-        "notDoneIssues": 1,
+        "notDoneIssues": 0,
         "ticketStateItems": [
-          "Done = 1",
-          "QA / Lab Testing = 1"
+          "Done = 2"
         ]
       },
       {
