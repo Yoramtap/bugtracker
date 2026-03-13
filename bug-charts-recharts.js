@@ -89,6 +89,14 @@
     return `${month}/${day}`;
   }
 
+  function isCoarsePointerDevice() {
+    return (
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: coarse)").matches
+    );
+  }
+
   function ensureRoot(kind, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return null;
@@ -166,49 +174,54 @@
     return rows;
   }
 
-  function TrendTooltipContent(colors) {
-    return function renderTrendTooltip({ active, payload }) {
-      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
-      const row = payload[0]?.payload || {};
+  function renderTrendTooltipCard(colors, payload) {
+    if (!Array.isArray(payload) || payload.length === 0) return null;
+    const row = payload[0]?.payload || {};
 
-      const blocks = [
+    const blocks = [
+      h(
+        "p",
+        {
+          key: "date",
+          style: { margin: "0 0 6px", fontWeight: 600, color: colors.text }
+        },
+        row.date || ""
+      )
+    ];
+
+    for (const item of payload) {
+      blocks.push(
         h(
           "p",
           {
-            key: "date",
-            style: { margin: "0 0 6px", fontWeight: 600, color: colors.text }
+            key: item.dataKey,
+            style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
           },
-          row.date || ""
+          `${item.name}: ${toNumber(item.value)}`
         )
-      ];
-
-      for (const item of payload) {
-        blocks.push(
-          h(
-            "p",
-            {
-              key: item.dataKey,
-              style: { margin: "2px 0", color: colors.text, fontSize: "12px" }
-            },
-            `${item.name}: ${toNumber(item.value)}`
-          )
-        );
-      }
-
-      return h(
-        "div",
-        {
-          style: {
-            border: `1px solid ${colors.tooltip.border}`,
-            background: colors.tooltip.bg,
-            color: colors.tooltip.text,
-            borderRadius: "6px",
-            padding: "8px 10px",
-            boxShadow: "0 8px 18px rgba(0,0,0,0.12)"
-          }
-        },
-        blocks
       );
+    }
+
+    return h(
+      "div",
+      {
+        style: {
+          border: `1px solid ${colors.tooltip.border}`,
+          background: colors.tooltip.bg,
+          color: colors.tooltip.text,
+          borderRadius: "6px",
+          padding: "8px 10px",
+          boxShadow: "0 8px 18px rgba(0,0,0,0.12)"
+        }
+      },
+      blocks
+    );
+  }
+
+  function TrendTooltipContent(colors) {
+    return function renderTrendTooltip({ active, payload }) {
+      if (!active || !Array.isArray(payload) || payload.length === 0) return null;
+      return renderTrendTooltipCard(colors, payload);
     };
   }
 
@@ -410,6 +423,9 @@
 
   function TrendChartView({ rows, colors, yUpper }) {
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
+    const [tooltipPayload, setTooltipPayload] = React.useState(null);
+    const coarsePointer = isCoarsePointerDevice();
+    const dockedTooltipHeight = coarsePointer ? 0 : 92;
     const lineDefs = [
       {
         dataKey: "api",
@@ -458,55 +474,111 @@
     ];
 
     return h(
-      ResponsiveContainer,
-      { width: "100%", height: CHART_HEIGHTS.trend },
+      "div",
+      {
+        style: {
+          height: `${CHART_HEIGHTS.trend}px`,
+          display: "flex",
+          flexDirection: "column",
+          gap: coarsePointer ? 0 : "8px"
+        }
+      },
+      !coarsePointer
+        ? h(
+            "div",
+            {
+              "aria-live": "polite",
+              style: {
+                minHeight: `${dockedTooltipHeight}px`,
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-start"
+              }
+            },
+            tooltipPayload
+              ? h(
+                  "div",
+                  {
+                    style: {
+                      width: "min(100%, 280px)"
+                    }
+                  },
+                  renderTrendTooltipCard(colors, tooltipPayload)
+                )
+              : null
+          )
+        : null,
       h(
-        LineChart,
+        "div",
         {
-          data: rows,
-          margin: { top: 18, right: 20, bottom: 42, left: 20 }
+          style: {
+            flex: "1 1 auto",
+            minHeight: 0
+          }
         },
-        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
-        h(XAxis, {
-          dataKey: "dateShort",
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          tickMargin: 8
-        }),
-        h(YAxis, {
-          stroke: colors.text,
-          tick: { fill: colors.text, fontSize: 11 },
-          domain: [0, yUpper]
-        }),
-        h(Tooltip, {
-          content: TrendTooltipContent(colors),
-          cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
-        }),
-        h(Legend, {
-          verticalAlign: "top",
-          height: 36,
-          wrapperStyle: { color: colors.text, cursor: "pointer" },
-          payload: buildLegendPayload(lineDefs, "line"),
-          onClick: (entry) => {
-            const key = getLegendKey(entry);
-            if (!key) return;
-            setHiddenKeys((prev) => toggleLegendKey(prev, key));
-          },
-          formatter: legendFormatter(hiddenKeys)
-        }),
-        lineDefs.map((line) =>
-          h(Line, {
-            key: line.dataKey,
-            type: "monotone",
-            dataKey: line.dataKey,
-            name: line.name,
-            stroke: line.stroke,
-            strokeDasharray: line.strokeDasharray,
-            strokeWidth: line.strokeWidth,
-            dot: line.dot,
-            activeDot: activeLineDot(colors),
-            hide: hiddenKeys.has(line.dataKey)
-          })
+        h(
+          ResponsiveContainer,
+          { width: "100%", height: "100%" },
+          h(
+            LineChart,
+            {
+              data: rows,
+              margin: { top: 18, right: 20, bottom: 42, left: 20 },
+              onMouseMove: coarsePointer
+                ? undefined
+                : (state) => {
+                    const activePayload = Array.isArray(state?.activePayload) ? state.activePayload : [];
+                    if (!state?.isTooltipActive || activePayload.length === 0) {
+                      setTooltipPayload(null);
+                      return;
+                    }
+                    setTooltipPayload(activePayload);
+                  },
+              onMouseLeave: coarsePointer ? undefined : () => setTooltipPayload(null)
+            },
+            h(CartesianGrid, { stroke: colors.grid, vertical: false }),
+            h(XAxis, {
+              dataKey: "dateShort",
+              stroke: colors.text,
+              tick: { fill: colors.text, fontSize: 11 },
+              tickMargin: 8
+            }),
+            h(YAxis, {
+              stroke: colors.text,
+              tick: { fill: colors.text, fontSize: 11 },
+              domain: [0, yUpper]
+            }),
+            h(Tooltip, {
+              content: coarsePointer ? TrendTooltipContent(colors) : () => null,
+              cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
+            }),
+            h(Legend, {
+              verticalAlign: "top",
+              height: 36,
+              wrapperStyle: { color: colors.text, cursor: "pointer" },
+              payload: buildLegendPayload(lineDefs, "line"),
+              onClick: (entry) => {
+                const key = getLegendKey(entry);
+                if (!key) return;
+                setHiddenKeys((prev) => toggleLegendKey(prev, key));
+              },
+              formatter: legendFormatter(hiddenKeys)
+            }),
+            lineDefs.map((line) =>
+              h(Line, {
+                key: line.dataKey,
+                type: "monotone",
+                dataKey: line.dataKey,
+                name: line.name,
+                stroke: line.stroke,
+                strokeDasharray: line.strokeDasharray,
+                strokeWidth: line.strokeWidth,
+                dot: line.dot,
+                activeDot: activeLineDot(colors),
+                hide: hiddenKeys.has(line.dataKey)
+              })
+            )
+          )
         )
       )
     );
