@@ -123,7 +123,7 @@
       referenceNodes: [
         h(ReferenceLine, {
           y: UAT_ALERT_MONTH_THRESHOLD,
-          stroke: "rgba(150, 116, 66, 0.95)",
+          stroke: "rgba(0, 0, 0, 0.9)",
           strokeDasharray: "7 5",
           strokeWidth: 1.8,
           ifOverflow: "extendDomain",
@@ -131,7 +131,7 @@
             value: "UAT goal",
             position: "insideTopRight",
             offset: 8,
-            fill: "#000000",
+            fill: "rgba(0, 0, 0, 0.95)",
             fontSize: 11,
             fontWeight: 600
           }

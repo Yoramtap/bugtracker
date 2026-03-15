@@ -1363,6 +1363,7 @@
     legendDrawerNode,
     barNodes,
     referenceNodes = [],
+    frontReferenceNodes = [],
     overlayNodes = [],
     gridVertical = false,
     gridHorizontal = true
@@ -1397,6 +1398,7 @@
           ...referenceNodes,
           h(Tooltip, withSafeTooltipProps(tooltipProps)),
           ...barNodes,
+          ...frontReferenceNodes,
           ...overlayNodes
         )
       )
@@ -1449,6 +1451,7 @@
     colorByCategoryKey = "",
     categoryColors = null,
     referenceNodes = [],
+    frontReferenceNodes = [],
     overlayDots = [],
     gridVertical = false,
     gridHorizontal = true,
@@ -1743,6 +1746,7 @@
         : null,
       barNodes,
       referenceNodes,
+      frontReferenceNodes,
       overlayNodes,
       gridVertical,
       gridHorizontal
@@ -1768,6 +1772,8 @@
     categoryKey = "team",
     categoryTickTwoLine = false,
     categorySecondaryLabels = null,
+    referenceNodes = [],
+    frontReferenceNodes = [],
     overlayDots = [],
     colorByCategoryKey = "",
     categoryColors = null,
@@ -1906,6 +1912,8 @@
       showLegend,
       colorByCategoryKey,
       categoryColors,
+      referenceNodes,
+      frontReferenceNodes,
       overlayDots,
       gridVertical,
       gridHorizontal,

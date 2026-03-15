@@ -386,14 +386,17 @@ function renderPublicAggregateChart(configKey, scope, onReady) {
 }
 
 function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
+  const chartCore = window.DashboardChartCore;
   const panel = getChartNodes("product-cycle");
   const titleNode = document.getElementById("product-cycle-title");
-  if (!panel || !chartScopeData || typeof chartScopeData !== "object") return false;
+  if (!panel || !chartCore || !chartScopeData || typeof chartScopeData !== "object") return false;
   const { status, context, config } = panel;
+  const { ReferenceLine, h } = chartCore;
   if (titleNode) titleNode.textContent = "Cycle time by team";
 
-  const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : []).sort(
-    (left, right) => {
+  const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
+    .filter((row) => !(String(row?.team || "") === "UNMAPPED" && toCount(row?.meta_cycle?.n) === 0))
+    .sort((left, right) => {
       const leftN = toCount(left?.meta_cycle?.n);
       const rightN = toCount(right?.meta_cycle?.n);
       if (leftN === 0 && rightN > 0) return 1;
@@ -401,18 +404,26 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
       const cycleDiff = toNumber(left?.cycle) - toNumber(right?.cycle);
       if (cycleDiff !== 0) return cycleDiff;
       return String(left?.team || "").localeCompare(String(right?.team || ""));
-    }
-  );
+    });
   const teams = orderProductCycleTeams(rows.map((row) => String(row?.team || "")).filter(Boolean));
   if (teams.length === 0) return false;
 
   const fallbackCycleSampleCount = rows.reduce((sum, row) => sum + toCount(row?.meta_cycle?.n), 0);
   const cycleSampleCount = toCount(chartScopeData.cycleSampleCount) || fallbackCycleSampleCount;
   const sampleCount = Math.max(toCount(chartScopeData.sampleCount), cycleSampleCount);
+  const fetchedCount = Math.max(
+    toCount(state.productCycle?.chartData?.fetchedCount),
+    toCount(state.productCycle?.fetchedCount)
+  );
   const scopeLabel = String(
     chartScopeData.scopeLabel || PRODUCT_CYCLE_SCOPE_LABELS[scope] || "Created in 2026"
   );
-  setPanelContext(context, `${scopeLabel} • n=${cycleSampleCount}`);
+  setPanelContext(
+    context,
+    fetchedCount > 0
+      ? `${scopeLabel} with measurable cycle time • n=${cycleSampleCount} of ${fetchedCount} fetched`
+      : `${scopeLabel} • n=${cycleSampleCount}`
+  );
 
   if (sampleCount === 0) {
     showPanelStatus(status, `No product-cycle items found for ${scopeLabel.toLowerCase()}.`, {
@@ -487,9 +498,27 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
       yUpperOverride: cycleUpperDays,
       valueTicks,
       valueTickFormatter,
+      frontReferenceNodes: [
+        h(ReferenceLine, {
+          x: 1,
+          stroke: "rgba(0, 0, 0, 0.9)",
+          strokeDasharray: "7 5",
+          strokeWidth: 1.8,
+          isFront: true,
+          ifOverflow: "extendDomain",
+          label: {
+            value: "ambition",
+            position: "top",
+            offset: compactViewport ? 8 : 12,
+            fill: "rgba(0, 0, 0, 0.95)",
+            fontSize: compactViewport ? 10 : 11,
+            fontWeight: 700
+          }
+        })
+      ],
       chartMargin: compactViewport
-        ? { top: 14, right: 44, bottom: 56, left: 12 }
-        : { top: 14, right: 132, bottom: 72, left: 12 },
+        ? { top: 36, right: 44, bottom: 56, left: 12 }
+        : { top: 42, right: 132, bottom: 72, left: 12 },
       xAxisProps: {
         label: topAxisLabel
       },
@@ -619,6 +648,10 @@ function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
     return sum + (match ? toCount(match[1]) : 0);
   }, 0);
   const sampleSize = toCount(normalizedChartData.sampleSize) || fallbackSampleSize;
+  const fetchedCount = Math.max(
+    toCount(state.productCycle?.chartData?.fetchedCount),
+    toCount(state.productCycle?.fetchedCount)
+  );
   const yUpper = computeLifecycleChartYUpper(state.productCycle?.chartData);
 
   if (plottedValues.length === 0) {
@@ -655,7 +688,12 @@ function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
     },
     { missingMessage: "Lifecycle chart unavailable: Recharts renderer missing." }
   );
-  setPanelContext(context, `Current snapshot • n=${sampleSize}`);
+  setPanelContext(
+    context,
+    fetchedCount > 0
+      ? `Current open ideas in tracked stages • n=${sampleSize} of ${fetchedCount} fetched`
+      : `Current snapshot • n=${sampleSize}`
+  );
   return true;
 }
 
