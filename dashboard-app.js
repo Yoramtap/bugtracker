@@ -71,7 +71,12 @@ const DATA_SOURCE_CONFIG = {
     stateKey: "snapshot",
     url: "./backlog-snapshot.json",
     errorMessage: "Failed to load backlog-snapshot.json",
-    statusIds: ["trend-status", "composition-status", "management-facility-status", "pr-activity-status"]
+    statusIds: [
+      "trend-status",
+      "composition-status",
+      "management-facility-status",
+      "pr-activity-status"
+    ]
   },
   productCycle: {
     stateKey: "productCycle",
@@ -111,24 +116,28 @@ const CONTROL_BINDINGS = [
   {
     name: "composition-team-scope",
     stateKey: "compositionTeamScope",
+    defaultValue: "bc",
     normalizeValue: (value) => value || "bc",
     onChangeRender: renderBugCompositionByPriorityChart
   },
   {
     name: "management-facility-flow-scope",
     stateKey: "managementFlowScope",
+    defaultValue: "ongoing",
     normalizeValue: (value) => normalizeOption(value, MANAGEMENT_FLOW_SCOPES, "ongoing"),
     onChangeRender: renderDevelopmentVsUatByFacilityChart
   },
   {
     name: "pr-activity-metric",
     stateKey: "prActivityMetric",
+    defaultValue: "offered",
     normalizeValue: (value) => (value === "merged" ? "merged" : "offered"),
     onChangeRender: renderPrActivityCharts
   },
   {
     name: "pr-activity-show-markers",
     stateKey: "showPrActivityMarkers",
+    defaultValue: true,
     normalizeChecked: (checked) => checked !== false,
     onChangeRender: renderPrActivityCharts,
     controlType: "checkbox"
@@ -136,6 +145,7 @@ const CONTROL_BINDINGS = [
   {
     name: "product-cycle-scope",
     stateKey: "productCycleScope",
+    defaultValue: "inception",
     normalizeValue: (value) => normalizeOption(value, PRODUCT_CYCLE_SCOPES, "inception"),
     onChangeRender: () => {
       renderLeadAndCycleTimeByTeamChart();
@@ -236,6 +246,11 @@ const PR_ACTIVITY_REFERENCE_MARKERS = [
     label: "Codex"
   }
 ];
+const chartDateTickFormatter = new Intl.DateTimeFormat(undefined, {
+  month: "short",
+  year: "2-digit",
+  timeZone: "UTC"
+});
 
 function toChartDateValue(dateText) {
   const timestamp = new Date(`${String(dateText || "")}T00:00:00Z`).getTime();
@@ -244,11 +259,7 @@ function toChartDateValue(dateText) {
 
 function formatChartDateTick(value) {
   if (!Number.isFinite(value) || value <= 0) return "";
-  return new Date(value).toLocaleDateString("en-US", {
-    month: "short",
-    year: "2-digit",
-    timeZone: "UTC"
-  });
+  return chartDateTickFormatter.format(new Date(value));
 }
 
 function buildLifecycleMobileTick(colors, secondaryLabels) {
@@ -363,6 +374,7 @@ function setConfigContext(config, text) {
 function getDashboardRefreshUpdatedAt() {
   return getOldestTimestamp([
     state.snapshot?.updatedAt,
+    state.snapshot?.chartData ? state.snapshot?.chartDataUpdatedAt : "",
     state.productCycle?.generatedAt,
     state.contributors?.updatedAt
   ]);
@@ -373,7 +385,8 @@ function renderDashboardRefreshStrip() {
   const textNode = document.getElementById("dashboard-refresh-text");
   if (!panel || !textNode) return;
   const refreshUpdatedAt = getDashboardRefreshUpdatedAt();
-  panel.hidden = refreshUpdatedAt.length === 0;
+  panel.hidden = false;
+  textNode.hidden = refreshUpdatedAt.length === 0;
   textNode.textContent = refreshUpdatedAt
     ? `Last updated ${formatUpdatedAt(refreshUpdatedAt)}`
     : "";
@@ -443,10 +456,7 @@ function renderBugCompositionByPriorityChart() {
     react: "React",
     all: "All"
   };
-  setConfigContext(
-    config,
-    `${scopeLabelMap[scope] || "BC"} • last 10 snapshots`
-  );
+  setConfigContext(config, `${scopeLabelMap[scope] || "BC"} • last 10 snapshots`);
   renderSnapshotChart(config, { scope });
 }
 
@@ -471,7 +481,9 @@ function normalizeDisplayTeamName(name) {
 }
 
 function buildPrActivityRows(metricKey = "offered") {
-  const points = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
+  const points = Array.isArray(state.snapshot?.prActivity?.points)
+    ? state.snapshot.prActivity.points
+    : [];
   return points.map((point) => ({
     date: String(point?.date || ""),
     dateValue: toChartDateValue(point?.date),
@@ -485,7 +497,9 @@ function buildPrActivityRows(metricKey = "offered") {
 }
 
 function buildPrMergeTimeRows() {
-  const points = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
+  const points = Array.isArray(state.snapshot?.prActivity?.points)
+    ? state.snapshot.prActivity.points
+    : [];
   return points.map((point) => ({
     date: String(point?.date || ""),
     dateValue: toChartDateValue(point?.date),
@@ -537,7 +551,10 @@ function getSharedPrCountYUpper() {
   const offeredRows = buildPrActivityRows("offered");
   const mergedRows = buildPrActivityRows("merged");
   const lineDefs = getPrActivityLineDefs(getThemeColors());
-  return Math.max(getPrActivityYUpper(offeredRows, lineDefs), getPrActivityYUpper(mergedRows, lineDefs));
+  return Math.max(
+    getPrActivityYUpper(offeredRows, lineDefs),
+    getPrActivityYUpper(mergedRows, lineDefs)
+  );
 }
 
 function wrapReferenceLabel(text, maxLineLength = 16) {
@@ -577,28 +594,31 @@ function renderPrActivityReferenceLine(marker, compactViewport, showLabel = true
     label: !showLabel
       ? undefined
       : ({ viewBox }) =>
-      h(
-        "text",
-        {
-          x: toNumber(viewBox?.x),
-          y: toNumber(viewBox?.y) - (compactViewport ? 10 : 14) - lineHeight * (lines.length - 1),
-          fill: "rgba(0, 0, 0, 0.95)",
-          fontSize: compactViewport ? 10 : 11,
-          fontWeight: 700,
-          textAnchor: "middle"
-        },
-        lines.map((line, index) =>
           h(
-            "tspan",
+            "text",
             {
-              key: `${marker.date}-${index}`,
               x: toNumber(viewBox?.x),
-              dy: index === 0 ? 0 : lineHeight
+              y:
+                toNumber(viewBox?.y) -
+                (compactViewport ? 10 : 14) -
+                lineHeight * (lines.length - 1),
+              fill: "rgba(0, 0, 0, 0.95)",
+              fontSize: compactViewport ? 10 : 11,
+              fontWeight: 700,
+              textAnchor: "middle"
             },
-            line
+            lines.map((line, index) =>
+              h(
+                "tspan",
+                {
+                  key: `${marker.date}-${index}`,
+                  x: toNumber(viewBox?.x),
+                  dy: index === 0 ? 0 : lineHeight
+                },
+                line
+              )
+            )
           )
-        )
-      )
   });
 }
 
@@ -628,6 +648,10 @@ function PrActivityChartView({
 }) {
   const lineDefs = getPrActivityLineDefs(colors);
   const layout = trendLayoutForViewport(rows.length);
+  const chartMargin = {
+    ...layout.margin,
+    top: Number(layout.margin?.top || 0) + (showLegend ? 28 : 18)
+  };
   const compactViewport = isCompactViewport();
   const yUpper = Math.max(yAxisUpperOverride, getPrActivityYUpper(rows, lineDefs));
   const niceYAxis = buildNiceNumberAxis(yUpper);
@@ -659,13 +683,14 @@ function PrActivityChartView({
         LineChart,
         {
           data: rows,
-          margin: layout.margin
+          margin: chartMargin
         },
         h(CartesianGrid, { stroke: colors.grid, vertical: false }),
         h(XAxis, {
           dataKey: "dateValue",
           type: "number",
-          domain: xTicks.length > 0 ? [xTicks[0], xTicks[xTicks.length - 1]] : ["dataMin", "dataMax"],
+          domain:
+            xTicks.length > 0 ? [xTicks[0], xTicks[xTicks.length - 1]] : ["dataMin", "dataMax"],
           ticks: xTicks,
           stroke: colors.text,
           tick: { fill: colors.text, fontSize: layout.xTickFontSize },
@@ -1181,6 +1206,49 @@ function syncCheckboxValue(name, checked) {
   checkbox.checked = Boolean(checked);
 }
 
+function readDashboardControlStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  CONTROL_BINDINGS.forEach(
+    ({ name, stateKey, normalizeValue, normalizeChecked, controlType, defaultValue }) => {
+      if (!params.has(name)) {
+        state[stateKey] = defaultValue;
+        return;
+      }
+      if (controlType === "checkbox") {
+        const raw = String(params.get(name) || "")
+          .trim()
+          .toLowerCase();
+        const checked = !["0", "false", "off", "no"].includes(raw);
+        state[stateKey] = normalizeChecked(checked);
+        return;
+      }
+      state[stateKey] = normalizeValue(String(params.get(name) || ""));
+    }
+  );
+}
+
+function syncDashboardControlsFromState() {
+  CONTROL_BINDINGS.forEach(({ name, stateKey, controlType }) => {
+    if (controlType === "checkbox") {
+      syncCheckboxValue(name, state[stateKey]);
+      return;
+    }
+    syncRadioValue(name, state[stateKey]);
+  });
+}
+
+function writeDashboardControlStateToUrl() {
+  const nextUrl = new URL(window.location.href);
+  CONTROL_BINDINGS.forEach(({ name, stateKey, controlType }) => {
+    if (controlType === "checkbox") {
+      nextUrl.searchParams.set(name, state[stateKey] ? "true" : "false");
+      return;
+    }
+    nextUrl.searchParams.set(name, String(state[stateKey] || ""));
+  });
+  window.history.replaceState({}, "", nextUrl);
+}
+
 function bindRadioState(name, stateKey, normalizeValue, onChangeRender) {
   const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
   if (radios.length === 0) return;
@@ -1190,6 +1258,7 @@ function bindRadioState(name, stateKey, normalizeValue, onChangeRender) {
     radio.addEventListener("change", () => {
       if (!radio.checked) return;
       state[stateKey] = normalizeValue(radio.value);
+      writeDashboardControlStateToUrl();
       onChangeRender();
     });
   });
@@ -1201,6 +1270,7 @@ function bindCheckboxState(name, stateKey, normalizeChecked, onChangeRender) {
   checkbox.dataset.bound = "1";
   checkbox.addEventListener("change", () => {
     state[stateKey] = normalizeChecked(checkbox.checked);
+    writeDashboardControlStateToUrl();
     onChangeRender();
   });
 }
@@ -1251,15 +1321,11 @@ function getAlignedBusinessUnitRows(scope) {
   const doneRows = Array.isArray(byScope?.done?.rows) ? byScope.done.rows : [];
   const labels = Array.from(
     new Set(
-      [...ongoingRows, ...doneRows]
-        .map((row) => String(row?.label || "").trim())
-        .filter(Boolean)
+      [...ongoingRows, ...doneRows].map((row) => String(row?.label || "").trim()).filter(Boolean)
     )
   ).sort(compareBusinessUnitLabels);
   const targetRows = scope === "done" ? doneRows : ongoingRows;
-  const rowMap = new Map(
-    targetRows.map((row) => [String(row?.label || "").trim(), row])
-  );
+  const rowMap = new Map(targetRows.map((row) => [String(row?.label || "").trim(), row]));
   return labels.map((label) => rowMap.get(label) || buildEmptyBusinessUnitRow(label));
 }
 
@@ -1438,9 +1504,11 @@ async function loadSnapshot() {
   state.loadedSources = {};
   state.loadErrors = {};
   state.mode = getModeFromUrl();
+  readDashboardControlStateFromUrl();
   renderDashboardRefreshStrip();
   applyModeVisibility();
   initChartVisibility();
+  syncDashboardControlsFromState();
   bindDashboardControls();
 
   try {

@@ -1,1231 +1,15 @@
 {
-  "schemaVersion": 3,
-  "updatedAt": "2026-03-19T15:26:53.260Z",
+  "schemaVersion": 2,
+  "updatedAt": "2026-03-15T13:59:27.560Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-19T15:26:53.260Z",
-    "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps. PR activity is derived from Jira dev-status pull request details."
+    "syncedAt": "2026-03-15T13:59:27.560Z"
   },
   "uatAging": {
     "scope": {
-      "project": "TFC",
-      "issueType": "Any",
-      "status": "UAT",
       "label": "Broadcast"
-    },
-    "generatedAt": "2026-03-19T15:24:05.347Z",
-    "totalIssues": 10,
-    "buckets": [
-      {
-        "id": "d0_7",
-        "label": "0-7 days",
-        "minDays": 0,
-        "maxDays": 7
-      },
-      {
-        "id": "d8_14",
-        "label": "8-14 days",
-        "minDays": 8,
-        "maxDays": 14
-      },
-      {
-        "id": "d15_30",
-        "label": "15-30 days",
-        "minDays": 15,
-        "maxDays": 30
-      },
-      {
-        "id": "d31_60",
-        "label": "31-60 days",
-        "minDays": 31,
-        "maxDays": 60
-      },
-      {
-        "id": "d61_plus",
-        "label": "61+ days",
-        "minDays": 61,
-        "maxDays": null
-      }
-    ],
-    "priorities": {
-      "highest": {
-        "count": 2,
-        "avgDays": 8.5,
-        "maxDays": 17,
-        "buckets": {
-          "d0_7": 1,
-          "d8_14": 0,
-          "d15_30": 1,
-          "d31_60": 0,
-          "d61_plus": 0
-        }
-      },
-      "high": {
-        "count": 5,
-        "avgDays": 29.8,
-        "maxDays": 92,
-        "buckets": {
-          "d0_7": 2,
-          "d8_14": 0,
-          "d15_30": 1,
-          "d31_60": 1,
-          "d61_plus": 1
-        }
-      },
-      "medium": {
-        "count": 3,
-        "avgDays": 67.7,
-        "maxDays": 97,
-        "buckets": {
-          "d0_7": 0,
-          "d8_14": 0,
-          "d15_30": 0,
-          "d31_60": 1,
-          "d61_plus": 2
-        }
-      },
-      "low": {
-        "count": 0,
-        "avgDays": 0,
-        "maxDays": 0,
-        "buckets": {
-          "d0_7": 0,
-          "d8_14": 0,
-          "d15_30": 0,
-          "d31_60": 0,
-          "d61_plus": 0
-        }
-      },
-      "lowest": {
-        "count": 0,
-        "avgDays": 0,
-        "maxDays": 0,
-        "buckets": {
-          "d0_7": 0,
-          "d8_14": 0,
-          "d15_30": 0,
-          "d31_60": 0,
-          "d61_plus": 0
-        }
-      }
     }
   },
-  "prActivity": {
-    "since": "2025-01-01",
-    "interval": "month",
-    "source": "jira_dev_status_detail",
-    "candidateIssueCount": 2222,
-    "uniquePrCount": 2710,
-    "conflictCount": 7,
-    "caveat": "Counts are deduped from Jira dev-status pull request records and attributed by Jira team label. Inflow dates use the earliest available PR lastUpdate and source-branch last commit timestamp. Merged dates use Jira PR lastUpdate as a merge proxy. Review-to-merge time is a ticket proxy: first Jira In Review status to linked merged PR proxy date. Multiple done Jira tickets can still map to the same underlying PR.",
-    "points": [
-      {
-        "date": "2025-01-01",
-        "api": {
-          "offered": 39,
-          "merged": 37,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 32
-        },
-        "legacy": {
-          "offered": 9,
-          "merged": 2,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 1
-        },
-        "react": {
-          "offered": 27,
-          "merged": 24,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 23
-        },
-        "bc": {
-          "offered": 26,
-          "merged": 22,
-          "avgReviewToMergeDays": 19,
-          "avgReviewToMergeSampleCount": 10
-        },
-        "workers": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-02-01",
-        "api": {
-          "offered": 20,
-          "merged": 19,
-          "avgReviewToMergeDays": 7,
-          "avgReviewToMergeSampleCount": 16
-        },
-        "legacy": {
-          "offered": 12,
-          "merged": 19,
-          "avgReviewToMergeDays": 47,
-          "avgReviewToMergeSampleCount": 10
-        },
-        "react": {
-          "offered": 19,
-          "merged": 18,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 17
-        },
-        "bc": {
-          "offered": 22,
-          "merged": 15,
-          "avgReviewToMergeDays": 17,
-          "avgReviewToMergeSampleCount": 10
-        },
-        "workers": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-03-01",
-        "api": {
-          "offered": 47,
-          "merged": 45,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 36
-        },
-        "legacy": {
-          "offered": 12,
-          "merged": 11,
-          "avgReviewToMergeDays": 17,
-          "avgReviewToMergeSampleCount": 9
-        },
-        "react": {
-          "offered": 18,
-          "merged": 17,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 16
-        },
-        "bc": {
-          "offered": 66,
-          "merged": 54,
-          "avgReviewToMergeDays": 25,
-          "avgReviewToMergeSampleCount": 29
-        },
-        "workers": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-04-01",
-        "api": {
-          "offered": 47,
-          "merged": 47,
-          "avgReviewToMergeDays": 3,
-          "avgReviewToMergeSampleCount": 43
-        },
-        "legacy": {
-          "offered": 6,
-          "merged": 5,
-          "avgReviewToMergeDays": 8,
-          "avgReviewToMergeSampleCount": 5
-        },
-        "react": {
-          "offered": 24,
-          "merged": 22,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 15
-        },
-        "bc": {
-          "offered": 45,
-          "merged": 32,
-          "avgReviewToMergeDays": 14,
-          "avgReviewToMergeSampleCount": 18
-        },
-        "workers": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-05-01",
-        "api": {
-          "offered": 56,
-          "merged": 56,
-          "avgReviewToMergeDays": 16,
-          "avgReviewToMergeSampleCount": 48
-        },
-        "legacy": {
-          "offered": 7,
-          "merged": 9,
-          "avgReviewToMergeDays": 8,
-          "avgReviewToMergeSampleCount": 9
-        },
-        "react": {
-          "offered": 19,
-          "merged": 16,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 13
-        },
-        "bc": {
-          "offered": 41,
-          "merged": 36,
-          "avgReviewToMergeDays": 15,
-          "avgReviewToMergeSampleCount": 36
-        },
-        "workers": {
-          "offered": 8,
-          "merged": 3,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 1
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-06-01",
-        "api": {
-          "offered": 69,
-          "merged": 67,
-          "avgReviewToMergeDays": 10,
-          "avgReviewToMergeSampleCount": 54
-        },
-        "legacy": {
-          "offered": 19,
-          "merged": 18,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 14
-        },
-        "react": {
-          "offered": 34,
-          "merged": 32,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 23
-        },
-        "bc": {
-          "offered": 54,
-          "merged": 43,
-          "avgReviewToMergeDays": 25,
-          "avgReviewToMergeSampleCount": 39
-        },
-        "workers": {
-          "offered": 20,
-          "merged": 14,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 8
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-07-01",
-        "api": {
-          "offered": 71,
-          "merged": 69,
-          "avgReviewToMergeDays": 3,
-          "avgReviewToMergeSampleCount": 60
-        },
-        "legacy": {
-          "offered": 10,
-          "merged": 10,
-          "avgReviewToMergeDays": 11,
-          "avgReviewToMergeSampleCount": 8
-        },
-        "react": {
-          "offered": 52,
-          "merged": 47,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 45
-        },
-        "bc": {
-          "offered": 64,
-          "merged": 56,
-          "avgReviewToMergeDays": 18,
-          "avgReviewToMergeSampleCount": 41
-        },
-        "workers": {
-          "offered": 6,
-          "merged": 5,
-          "avgReviewToMergeDays": 11,
-          "avgReviewToMergeSampleCount": 3
-        },
-        "titanium": {
-          "offered": 1,
-          "merged": 1,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-08-01",
-        "api": {
-          "offered": 65,
-          "merged": 62,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 52
-        },
-        "legacy": {
-          "offered": 20,
-          "merged": 20,
-          "avgReviewToMergeDays": 24,
-          "avgReviewToMergeSampleCount": 19
-        },
-        "react": {
-          "offered": 56,
-          "merged": 52,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 45
-        },
-        "bc": {
-          "offered": 44,
-          "merged": 37,
-          "avgReviewToMergeDays": 19,
-          "avgReviewToMergeSampleCount": 32
-        },
-        "workers": {
-          "offered": 6,
-          "merged": 4,
-          "avgReviewToMergeDays": 6,
-          "avgReviewToMergeSampleCount": 2
-        },
-        "titanium": {
-          "offered": 0,
-          "merged": 0,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-09-01",
-        "api": {
-          "offered": 103,
-          "merged": 98,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 84
-        },
-        "legacy": {
-          "offered": 25,
-          "merged": 22,
-          "avgReviewToMergeDays": 6,
-          "avgReviewToMergeSampleCount": 21
-        },
-        "react": {
-          "offered": 74,
-          "merged": 68,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 55
-        },
-        "bc": {
-          "offered": 39,
-          "merged": 38,
-          "avgReviewToMergeDays": 7,
-          "avgReviewToMergeSampleCount": 34
-        },
-        "workers": {
-          "offered": 14,
-          "merged": 9,
-          "avgReviewToMergeDays": 23,
-          "avgReviewToMergeSampleCount": 4
-        },
-        "titanium": {
-          "offered": 10,
-          "merged": 8,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 5
-        }
-      },
-      {
-        "date": "2025-10-01",
-        "api": {
-          "offered": 47,
-          "merged": 44,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 37
-        },
-        "legacy": {
-          "offered": 10,
-          "merged": 11,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 10
-        },
-        "react": {
-          "offered": 63,
-          "merged": 60,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 50
-        },
-        "bc": {
-          "offered": 45,
-          "merged": 42,
-          "avgReviewToMergeDays": 18,
-          "avgReviewToMergeSampleCount": 41
-        },
-        "workers": {
-          "offered": 6,
-          "merged": 7,
-          "avgReviewToMergeDays": 12,
-          "avgReviewToMergeSampleCount": 5
-        },
-        "titanium": {
-          "offered": 6,
-          "merged": 2,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 1
-        }
-      },
-      {
-        "date": "2025-11-01",
-        "api": {
-          "offered": 37,
-          "merged": 36,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 32
-        },
-        "legacy": {
-          "offered": 18,
-          "merged": 15,
-          "avgReviewToMergeDays": 3,
-          "avgReviewToMergeSampleCount": 15
-        },
-        "react": {
-          "offered": 61,
-          "merged": 54,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 49
-        },
-        "bc": {
-          "offered": 49,
-          "merged": 43,
-          "avgReviewToMergeDays": 16,
-          "avgReviewToMergeSampleCount": 26
-        },
-        "workers": {
-          "offered": 4,
-          "merged": 4,
-          "avgReviewToMergeDays": 7,
-          "avgReviewToMergeSampleCount": 3
-        },
-        "titanium": {
-          "offered": 3,
-          "merged": 2,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2025-12-01",
-        "api": {
-          "offered": 30,
-          "merged": 30,
-          "avgReviewToMergeDays": 3,
-          "avgReviewToMergeSampleCount": 26
-        },
-        "legacy": {
-          "offered": 6,
-          "merged": 7,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 7
-        },
-        "react": {
-          "offered": 71,
-          "merged": 67,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 62
-        },
-        "bc": {
-          "offered": 81,
-          "merged": 71,
-          "avgReviewToMergeDays": 14,
-          "avgReviewToMergeSampleCount": 59
-        },
-        "workers": {
-          "offered": 3,
-          "merged": 1,
-          "avgReviewToMergeDays": 35,
-          "avgReviewToMergeSampleCount": 3
-        },
-        "titanium": {
-          "offered": 1,
-          "merged": 1,
-          "avgReviewToMergeDays": 0,
-          "avgReviewToMergeSampleCount": 0
-        }
-      },
-      {
-        "date": "2026-01-01",
-        "api": {
-          "offered": 41,
-          "merged": 34,
-          "avgReviewToMergeDays": 11,
-          "avgReviewToMergeSampleCount": 27
-        },
-        "legacy": {
-          "offered": 8,
-          "merged": 8,
-          "avgReviewToMergeDays": 10,
-          "avgReviewToMergeSampleCount": 8
-        },
-        "react": {
-          "offered": 61,
-          "merged": 57,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 51
-        },
-        "bc": {
-          "offered": 36,
-          "merged": 32,
-          "avgReviewToMergeDays": 40,
-          "avgReviewToMergeSampleCount": 26
-        },
-        "workers": {
-          "offered": 21,
-          "merged": 13,
-          "avgReviewToMergeDays": 8,
-          "avgReviewToMergeSampleCount": 11
-        },
-        "titanium": {
-          "offered": 7,
-          "merged": 4,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 8
-        }
-      },
-      {
-        "date": "2026-02-01",
-        "api": {
-          "offered": 62,
-          "merged": 59,
-          "avgReviewToMergeDays": 10,
-          "avgReviewToMergeSampleCount": 37
-        },
-        "legacy": {
-          "offered": 7,
-          "merged": 7,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 6
-        },
-        "react": {
-          "offered": 69,
-          "merged": 60,
-          "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 43
-        },
-        "bc": {
-          "offered": 86,
-          "merged": 72,
-          "avgReviewToMergeDays": 7,
-          "avgReviewToMergeSampleCount": 33
-        },
-        "workers": {
-          "offered": 31,
-          "merged": 20,
-          "avgReviewToMergeDays": 25,
-          "avgReviewToMergeSampleCount": 12
-        },
-        "titanium": {
-          "offered": 24,
-          "merged": 19,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 16
-        }
-      },
-      {
-        "date": "2026-03-01",
-        "api": {
-          "offered": 52,
-          "merged": 26,
-          "avgReviewToMergeDays": 7,
-          "avgReviewToMergeSampleCount": 17
-        },
-        "legacy": {
-          "offered": 11,
-          "merged": 4,
-          "avgReviewToMergeDays": 6,
-          "avgReviewToMergeSampleCount": 4
-        },
-        "react": {
-          "offered": 42,
-          "merged": 24,
-          "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 8
-        },
-        "bc": {
-          "offered": 57,
-          "merged": 41,
-          "avgReviewToMergeDays": 45,
-          "avgReviewToMergeSampleCount": 29
-        },
-        "workers": {
-          "offered": 24,
-          "merged": 20,
-          "avgReviewToMergeDays": 8,
-          "avgReviewToMergeSampleCount": 16
-        },
-        "titanium": {
-          "offered": 12,
-          "merged": 11,
-          "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 3
-        }
-      }
-    ]
-  },
-  "combinedPoints": [
-    {
-      "date": "2025-09-29",
-      "api": {
-        "date": "2025-09-29",
-        "highest": 1,
-        "high": 2,
-        "medium": 7,
-        "low": 2,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-09-29",
-        "highest": 0,
-        "high": 1,
-        "medium": 9,
-        "low": 45,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-09-29",
-        "highest": 0,
-        "high": 0,
-        "medium": 1,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-09-29",
-        "highest": 2,
-        "high": 54,
-        "medium": 95,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 148,
-        "longstanding_60d_plus": 138
-      }
-    },
-    {
-      "date": "2025-10-13",
-      "api": {
-        "date": "2025-10-13",
-        "highest": 1,
-        "high": 2,
-        "medium": 4,
-        "low": 2,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-10-13",
-        "highest": 0,
-        "high": 1,
-        "medium": 12,
-        "low": 45,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-10-13",
-        "highest": 0,
-        "high": 0,
-        "medium": 2,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-10-13",
-        "highest": 1,
-        "high": 58,
-        "medium": 96,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 148,
-        "longstanding_60d_plus": 140
-      }
-    },
-    {
-      "date": "2025-10-27",
-      "api": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 2,
-        "medium": 4,
-        "low": 2,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 1,
-        "medium": 12,
-        "low": 45,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 0,
-        "medium": 4,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-10-27",
-        "highest": 1,
-        "high": 57,
-        "medium": 100,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 148,
-        "longstanding_60d_plus": 141
-      }
-    },
-    {
-      "date": "2025-11-10",
-      "api": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 0,
-        "medium": 4,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 1,
-        "medium": 12,
-        "low": 45,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 1,
-        "medium": 6,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-11-10",
-        "highest": 5,
-        "high": 63,
-        "medium": 104,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 159,
-        "longstanding_60d_plus": 144
-      }
-    },
-    {
-      "date": "2025-11-24",
-      "api": {
-        "date": "2025-11-24",
-        "highest": 0,
-        "high": 0,
-        "medium": 4,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-11-24",
-        "highest": 0,
-        "high": 1,
-        "medium": 9,
-        "low": 46,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-11-24",
-        "highest": 0,
-        "high": 0,
-        "medium": 5,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-11-24",
-        "highest": 5,
-        "high": 66,
-        "medium": 106,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 162,
-        "longstanding_60d_plus": 147
-      }
-    },
-    {
-      "date": "2025-12-08",
-      "api": {
-        "date": "2025-12-08",
-        "highest": 0,
-        "high": 0,
-        "medium": 5,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-12-08",
-        "highest": 0,
-        "high": 1,
-        "medium": 8,
-        "low": 47,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-12-08",
-        "highest": 0,
-        "high": 0,
-        "medium": 8,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-12-08",
-        "highest": 7,
-        "high": 66,
-        "medium": 113,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 172,
-        "longstanding_60d_plus": 153
-      }
-    },
-    {
-      "date": "2025-12-22",
-      "api": {
-        "date": "2025-12-22",
-        "highest": 0,
-        "high": 0,
-        "medium": 5,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-12-22",
-        "highest": 0,
-        "high": 1,
-        "medium": 8,
-        "low": 47,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-12-22",
-        "highest": 0,
-        "high": 0,
-        "medium": 5,
-        "low": 1,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-12-22",
-        "highest": 5,
-        "high": 70,
-        "medium": 112,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 173,
-        "longstanding_60d_plus": 154
-      }
-    },
-    {
-      "date": "2026-01-05",
-      "api": {
-        "date": "2026-01-05",
-        "highest": 0,
-        "high": 1,
-        "medium": 4,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-01-05",
-        "highest": 0,
-        "high": 1,
-        "medium": 6,
-        "low": 47,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2026-01-05",
-        "highest": 0,
-        "high": 0,
-        "medium": 3,
-        "low": 1,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-01-05",
-        "highest": 5,
-        "high": 72,
-        "medium": 114,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 183,
-        "longstanding_60d_plus": 166
-      }
-    },
-    {
-      "date": "2026-01-19",
-      "api": {
-        "date": "2026-01-19",
-        "highest": 0,
-        "high": 0,
-        "medium": 6,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-01-19",
-        "highest": 0,
-        "high": 1,
-        "medium": 6,
-        "low": 47,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2026-01-19",
-        "highest": 0,
-        "high": 0,
-        "medium": 3,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-01-19",
-        "highest": 4,
-        "high": 68,
-        "medium": 113,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 181,
-        "longstanding_60d_plus": 165
-      }
-    },
-    {
-      "date": "2026-02-02",
-      "api": {
-        "date": "2026-02-02",
-        "highest": 0,
-        "high": 0,
-        "medium": 6,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-02-02",
-        "highest": 0,
-        "high": 1,
-        "medium": 4,
-        "low": 35,
-        "lowest": 0
-      },
-      "react": {
-        "date": "2026-02-02",
-        "highest": 0,
-        "high": 0,
-        "medium": 3,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-02-02",
-        "highest": 4,
-        "high": 69,
-        "medium": 112,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 174,
-        "longstanding_60d_plus": 164
-      }
-    },
-    {
-      "date": "2026-02-16",
-      "api": {
-        "date": "2026-02-16",
-        "highest": 0,
-        "high": 1,
-        "medium": 7,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-02-16",
-        "highest": 0,
-        "high": 2,
-        "medium": 6,
-        "low": 32,
-        "lowest": 0
-      },
-      "react": {
-        "date": "2026-02-16",
-        "highest": 0,
-        "high": 0,
-        "medium": 6,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-02-16",
-        "highest": 6,
-        "high": 70,
-        "medium": 113,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 179,
-        "longstanding_60d_plus": 168
-      }
-    },
-    {
-      "date": "2026-03-02",
-      "api": {
-        "date": "2026-03-02",
-        "highest": 0,
-        "high": 1,
-        "medium": 9,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-03-02",
-        "highest": 0,
-        "high": 2,
-        "medium": 6,
-        "low": 31,
-        "lowest": 0
-      },
-      "react": {
-        "date": "2026-03-02",
-        "highest": 0,
-        "high": 1,
-        "medium": 6,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-03-02",
-        "highest": 4,
-        "high": 77,
-        "medium": 116,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 181,
-        "longstanding_60d_plus": 166
-      }
-    },
-    {
-      "date": "2026-03-16",
-      "api": {
-        "date": "2026-03-16",
-        "highest": 0,
-        "high": 1,
-        "medium": 9,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-03-16",
-        "highest": 0,
-        "high": 1,
-        "medium": 5,
-        "low": 26,
-        "lowest": 0
-      },
-      "react": {
-        "date": "2026-03-16",
-        "highest": 0,
-        "high": 0,
-        "medium": 6,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-03-16",
-        "highest": 6,
-        "high": 78,
-        "medium": 121,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 183,
-        "longstanding_60d_plus": 170
-      }
-    },
-    {
-      "date": "2026-03-30",
-      "api": {
-        "date": "2026-03-30",
-        "highest": 0,
-        "high": 2,
-        "medium": 9,
-        "low": 4,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2026-03-30",
-        "highest": 0,
-        "high": 1,
-        "medium": 5,
-        "low": 24,
-        "lowest": 0
-      },
-      "react": {
-        "date": "2026-03-30",
-        "highest": 0,
-        "high": 0,
-        "medium": 6,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2026-03-30",
-        "highest": 7,
-        "high": 80,
-        "medium": 123,
-        "low": 8,
-        "lowest": 0,
-        "longstanding_30d_plus": 196,
-        "longstanding_60d_plus": 178
-      }
-    }
-  ],
   "chartData": {
     "managementBusinessUnit": {
       "byScope": {
@@ -1408,5 +192,391 @@
         }
       }
     }
-  }
+  },
+  "combinedPoints": [
+    {
+      "date": "2025-10-27",
+      "api": {
+        "highest": 0,
+        "high": 0,
+        "medium": 8,
+        "low": 1,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 13,
+        "low": 43,
+        "lowest": 3,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 3,
+        "high": 64,
+        "medium": 106,
+        "low": 9,
+        "lowest": 0,
+        "longstanding_30d_plus": 158,
+        "longstanding_60d_plus": 144
+      }
+    },
+    {
+      "date": "2025-11-10",
+      "api": {
+        "highest": 0,
+        "high": 1,
+        "medium": 3,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 10,
+        "low": 44,
+        "lowest": 3,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 5,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 2,
+        "high": 68,
+        "medium": 109,
+        "low": 9,
+        "lowest": 0,
+        "longstanding_30d_plus": 164,
+        "longstanding_60d_plus": 149
+      }
+    },
+    {
+      "date": "2025-11-24",
+      "api": {
+        "highest": 0,
+        "high": 1,
+        "medium": 5,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 9,
+        "low": 45,
+        "lowest": 3,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 7,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 3,
+        "high": 70,
+        "medium": 113,
+        "low": 9,
+        "lowest": 0,
+        "longstanding_30d_plus": 175,
+        "longstanding_60d_plus": 153
+      }
+    },
+    {
+      "date": "2025-12-08",
+      "api": {
+        "highest": 0,
+        "high": 0,
+        "medium": 5,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 8,
+        "low": 46,
+        "lowest": 3,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 5,
+        "low": 1,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 4,
+        "high": 70,
+        "medium": 112,
+        "low": 8,
+        "lowest": 0,
+        "longstanding_30d_plus": 173,
+        "longstanding_60d_plus": 154
+      }
+    },
+    {
+      "date": "2025-12-22",
+      "api": {
+        "highest": 0,
+        "high": 1,
+        "medium": 5,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 7,
+        "low": 46,
+        "lowest": 3,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 3,
+        "low": 1,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 4,
+        "high": 72,
+        "medium": 112,
+        "low": 8,
+        "lowest": 0,
+        "longstanding_30d_plus": 183,
+        "longstanding_60d_plus": 164
+      }
+    },
+    {
+      "date": "2026-01-05",
+      "api": {
+        "highest": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 6,
+        "low": 46,
+        "lowest": 3,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 3,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 3,
+        "high": 69,
+        "medium": 112,
+        "low": 7,
+        "lowest": 0,
+        "longstanding_30d_plus": 181,
+        "longstanding_60d_plus": 164
+      }
+    },
+    {
+      "date": "2026-01-19",
+      "api": {
+        "highest": 0,
+        "high": 1,
+        "medium": 5,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 4,
+        "low": 35,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 4,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 3,
+        "high": 70,
+        "medium": 112,
+        "low": 7,
+        "lowest": 0,
+        "longstanding_30d_plus": 174,
+        "longstanding_60d_plus": 164
+      }
+    },
+    {
+      "date": "2026-02-02",
+      "api": {
+        "highest": 0,
+        "high": 1,
+        "medium": 5,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 6,
+        "low": 32,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 5,
+        "high": 69,
+        "medium": 113,
+        "low": 7,
+        "lowest": 0,
+        "longstanding_30d_plus": 178,
+        "longstanding_60d_plus": 168
+      }
+    },
+    {
+      "date": "2026-02-16",
+      "api": {
+        "highest": 1,
+        "high": 2,
+        "medium": 8,
+        "low": 5,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 2,
+        "medium": 6,
+        "low": 31,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 1,
+        "medium": 6,
+        "low": 0,
+        "lowest": 0,
+        "longstanding_30d_plus": 0,
+        "longstanding_60d_plus": 0
+      },
+      "bc": {
+        "highest": 5,
+        "high": 78,
+        "medium": 116,
+        "low": 8,
+        "lowest": 0,
+        "longstanding_30d_plus": 182,
+        "longstanding_60d_plus": 167
+      }
+    },
+    {
+      "date": "2026-03-02",
+      "api": {
+        "highest": 0,
+        "high": 1,
+        "medium": 9,
+        "low": 5,
+        "lowest": 0
+      },
+      "legacy": {
+        "highest": 0,
+        "high": 1,
+        "medium": 5,
+        "low": 26,
+        "lowest": 0
+      },
+      "react": {
+        "highest": 0,
+        "high": 0,
+        "medium": 6,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "highest": 5,
+        "high": 79,
+        "medium": 122,
+        "low": 8,
+        "lowest": 0,
+        "longstanding_30d_plus": 183,
+        "longstanding_60d_plus": 169
+      }
+    }
+  ]
 }

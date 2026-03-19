@@ -39,6 +39,7 @@
     const previousRequire = window.require;
     const previousModule = window.module;
     const previousExports = window.exports;
+    const previousProcess = window.process;
     const cjsModule = { exports: {} };
     const React = window.React;
     const ReactDOM = window.ReactDOM;
@@ -65,6 +66,9 @@
 
       if (previousExports === undefined) delete window.exports;
       else window.exports = previousExports;
+
+      if (previousProcess === undefined) delete window.process;
+      else window.process = previousProcess;
     }
 
     window.require = function require(specifier) {

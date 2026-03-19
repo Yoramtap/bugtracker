@@ -801,9 +801,7 @@
           previous?.panelElement ||
           null,
         coordinate:
-          !trackPointer &&
-          previous?.rowSignature === rowSignature &&
-          previous?.coordinate
+          !trackPointer && previous?.rowSignature === rowSignature && previous?.coordinate
             ? previous.coordinate
             : coordinate &&
                 Number.isFinite(toNumber(coordinate.x)) &&
@@ -896,7 +894,11 @@
     React.useEffect(() => {
       if (!dockedTooltip || !snapshot) return undefined;
       const dismissOnScroll = (event) => {
-        if (cardRef.current && event?.target instanceof Node && cardRef.current.contains(event.target)) {
+        if (
+          cardRef.current &&
+          event?.target instanceof Node &&
+          cardRef.current.contains(event.target)
+        ) {
           return;
         }
         setPortalHovered(false);
@@ -1011,7 +1013,8 @@
         defs.map((item) => {
           const key = item?.dataKey || "";
           const hidden = hiddenKeys.has(key);
-          const swatchColor = item?.legendSwatchBackground || item?.stroke || item?.fill || colors.text;
+          const swatchColor =
+            item?.legendSwatchBackground || item?.stroke || item?.fill || colors.text;
           return h(
             "button",
             {
@@ -1456,7 +1459,9 @@
     gridVertical = false,
     gridHorizontal = true,
     height = CHART_HEIGHTS.standard,
-    margin = { top: 12, right: 12, bottom: 34, left: 12 }
+    margin = { top: 12, right: 12, bottom: 34, left: 12 },
+    categoryKey: _categoryKey = "team",
+    valueUnit: _valueUnit = "days"
   }) {
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
     const stackIds = defs.map((def) => String(def?.stackId || "").trim()).filter(Boolean);
@@ -1915,6 +1920,8 @@
       referenceNodes,
       frontReferenceNodes,
       overlayDots,
+      categoryKey,
+      valueUnit,
       gridVertical,
       gridHorizontal,
       height: singleChartHeightForMode(modeKey, CHART_HEIGHTS.dense),

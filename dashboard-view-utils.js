@@ -1,26 +1,32 @@
 "use strict";
 
 (function initDashboardViewUtils(globalObject) {
+  const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
+    month: "2-digit",
+    day: "2-digit"
+  });
+  const updatedAtFormatter = new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+
   function toNumber(value) {
     return typeof value === "number" && Number.isFinite(value) ? value : 0;
   }
 
   function formatDateShort(date) {
-    const [year, month, day] = String(date || "").split("-");
-    if (!year || !month || !day) return String(date || "");
-    return `${month}/${day}`;
+    const parsed = new Date(`${String(date || "")}T00:00:00`);
+    if (!Number.isFinite(parsed.getTime())) return String(date || "");
+    return shortDateFormatter.format(parsed);
   }
 
   function formatUpdatedAt(value) {
     const parsed = new Date(String(value || ""));
     if (!Number.isFinite(parsed.getTime())) return "Unknown";
-    return parsed.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
-    });
+    return updatedAtFormatter.format(parsed);
   }
 
   function getOldestTimestamp(values) {
@@ -105,8 +111,14 @@
     if (chart === "trend") return "trend";
     if (chart === "composition") return "composition";
     if (chart === "uat") return "uat";
-    if (chart === "dev-uat-ratio") return "management";
-    if (chart === "dev-uat-facility" || chart === "management-facility") return "management-facility";
+    if (
+      chart === "dev-uat-ratio" ||
+      chart === "management" ||
+      chart === "dev-uat-facility" ||
+      chart === "management-facility"
+    ) {
+      return "management-facility";
+    }
     if (chart === "pr" || chart === "prs" || chart === "pr-activity") return "pr-activity";
     if (chart === "contributors") return "contributors";
     if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";

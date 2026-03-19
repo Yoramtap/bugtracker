@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7fbff" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
@@ -24,9 +25,88 @@
     <script defer src="./agentation-local-loader.js"></script>
   </head>
   <body>
-    <main>
-      <section id="dashboard-refresh-panel" class="dashboard-refresh-panel" aria-label="Dashboard freshness" hidden>
-        <p id="dashboard-refresh-text" class="dashboard-refresh-text"></p>
+    <a class="skip-link" href="#dashboard-main">Skip to main content</a>
+    <main id="dashboard-main" tabindex="-1">
+      <h1 class="sr-only">Backlog Trends dashboard</h1>
+
+      <section
+        id="dashboard-refresh-panel"
+        class="dashboard-refresh-panel"
+        aria-label="Dashboard freshness"
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+        hidden
+      >
+        <div class="dashboard-refresh-inner">
+          <p id="dashboard-refresh-text" class="dashboard-refresh-text"></p>
+          <nav class="dashboard-jump-links" aria-label="Jump to chart">
+            <a href="#management-facility-panel">UAT</a>
+            <a href="#product-cycle-panel">Cycle time</a>
+            <a href="#lifecycle-days-panel">Stages</a>
+            <a href="#contributors-panel">Contributors</a>
+            <a href="#trend-panel">Bug trend</a>
+            <a href="#composition-panel">Bug composition</a>
+            <a href="#pr-inflow-block">PR inflow</a>
+            <a href="#pr-review-merge-block">Review to merge</a>
+          </nav>
+        </div>
+      </section>
+
+      <section
+        id="management-facility-panel"
+        class="panel"
+        aria-label="Broadcast development vs UAT"
+      >
+        <div class="panel-title-row">
+          <h2 id="management-facility-title">Development vs UAT by Business Unit</h2>
+          <details class="help-wrap">
+            <summary class="help-tip" aria-label="Development vs UAT chart explainer">i</summary>
+            <div class="help-popover" role="tooltip">
+              <p>
+                <strong>Development vs UAT</strong> compares average stage time by Business Unit.
+              </p>
+              <ul>
+                <li>Use the toggle to compare ongoing vs done scope.</li>
+                <li>
+                  Development bars stay blue; UAT bars are green under 1 month, yellow from 1 to 2
+                  months, and red above 2 months.
+                </li>
+                <li>Tooltip includes facility detail and issue links for drill-down.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+        <div class="panel-subtitle">
+          <span id="management-facility-context" class="panel-context"
+            >Broadcast, -- ongoing work (sample)</span
+          >
+        </div>
+        <div class="radio-control-groups" aria-label="Development vs UAT controls">
+          <fieldset class="radio-group-card">
+            <legend>Scope</legend>
+            <label
+              ><input type="radio" name="management-facility-flow-scope" value="ongoing" checked />
+              Ongoing</label
+            >
+            <label
+              ><input type="radio" name="management-facility-flow-scope" value="done" /> Done</label
+            >
+          </fieldset>
+        </div>
+        <div class="chart">
+          <div
+            id="development-vs-uat-by-facility-chart"
+            class="chart-canvas chart-canvas--standard"
+          ></div>
+        </div>
+        <p
+          id="management-facility-status"
+          class="panel-status"
+          aria-live="polite"
+          role="status"
+          hidden
+        ></p>
       </section>
 
       <section id="product-cycle-panel" class="panel" aria-label="Product cycle time by team">
@@ -70,7 +150,13 @@
           ></div>
         </div>
         <p id="product-cycle-totals" class="panel-summary" hidden></p>
-        <p id="product-cycle-status" class="panel-status" hidden></p>
+        <p
+          id="product-cycle-status"
+          class="panel-status"
+          aria-live="polite"
+          role="status"
+          hidden
+        ></p>
       </section>
 
       <section id="lifecycle-days-panel" class="panel" aria-label="Time spent in open ideas">
@@ -102,7 +188,13 @@
             class="chart-canvas chart-canvas--dense"
           ></div>
         </div>
-        <p id="lifecycle-days-status" class="panel-status" hidden></p>
+        <p
+          id="lifecycle-days-status"
+          class="panel-status"
+          aria-live="polite"
+          role="status"
+          hidden
+        ></p>
       </section>
 
       <section id="contributors-panel" class="panel" aria-label="Top contributors by ticket status">
@@ -115,7 +207,9 @@
                 <strong>Top contributors</strong> ranks assigned contributors by total ticket count.
               </p>
               <ul>
-                <li>Bars are single-color totals; hover to see status breakdown details.</li>
+                <li>
+                  Bars are single-color totals across each contributor's included ticket count.
+                </li>
                 <li>Unassigned and Duplicate-status tickets are excluded from this chart.</li>
               </ul>
             </div>
@@ -129,104 +223,18 @@
         <div class="chart">
           <div id="top-contributors-chart" class="chart-canvas chart-canvas--dense"></div>
         </div>
-        <p id="contributors-status" class="panel-status" hidden></p>
-      </section>
-
-      <section id="management-facility-panel" class="panel" aria-label="Broadcast development vs UAT">
-        <div class="panel-title-row">
-          <h2 id="management-facility-title">Development vs UAT by Business Unit</h2>
-          <details class="help-wrap">
-            <summary class="help-tip" aria-label="Development vs UAT chart explainer">
-              i
-            </summary>
-            <div class="help-popover" role="tooltip">
-              <p>
-                <strong>Development vs UAT</strong> compares average stage time by Business Unit.
-              </p>
-              <ul>
-                <li>Use the toggle to compare ongoing vs done scope.</li>
-                <li>Development bars stay blue; UAT bars are green under 1 month, yellow from 1 to 2 months, and red above 2 months.</li>
-                <li>Tooltip includes facility detail and issue links for drill-down.</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-        <div class="panel-subtitle">
-          <span id="management-facility-context" class="panel-context"
-            >Broadcast, -- ongoing work (sample)</span
-          >
-        </div>
-        <div class="radio-control-groups" aria-label="Development vs UAT controls">
-          <fieldset class="radio-group-card">
-            <legend>Scope</legend>
-            <label
-              ><input type="radio" name="management-facility-flow-scope" value="ongoing" checked />
-              Ongoing</label
-            >
-            <label
-              ><input type="radio" name="management-facility-flow-scope" value="done" /> Done</label
-            >
-          </fieldset>
-        </div>
-        <div class="chart">
-          <div
-            id="development-vs-uat-by-facility-chart"
-            class="chart-canvas chart-canvas--standard"
-          ></div>
-        </div>
-        <p id="management-facility-status" class="panel-status" hidden></p>
-      </section>
-
-      <section id="pr-activity-panel" class="panel" aria-label="Jira-linked pull request activity">
-        <div class="panel-title-row">
-          <h2>PR activity by team (Jira proxy)</h2>
-          <details class="help-wrap">
-            <summary class="help-tip" aria-label="PR activity chart explainer">i</summary>
-            <div class="help-popover" role="tooltip">
-              <p><strong>PR inflow</strong>, <strong>Merged PRs</strong>, and <strong>Review to merge time (ticket proxy)</strong> show deduped Jira-linked pull requests over time by team using Jira-derived proxy dates.</p>
-              <ul>
-                <li>Each line is one team.</li>
-                <li>Inflow uses the earliest available PR last update and source-branch last commit. Merged uses Jira PR last update as a merge proxy.</li>
-                <li>Review to merge time uses the first Jira <strong>In Review</strong> status on the ticket to the linked merged PR proxy date.</li>
-                <li>PRs are deduped before counting, but attribution still depends on the Jira ticket label.</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-        <div class="panel-subtitle">
-          <span id="pr-activity-context" class="panel-context">Monthly deduped Jira-linked PR inflow, merged PRs, and review-to-merge time</span>
-        </div>
-        <div class="chart-stack">
-          <div class="chart-block">
-            <div class="radio-control-groups" aria-label="PR activity metric controls">
-              <fieldset class="radio-group-card">
-                <legend>Metric</legend>
-                <label><input type="radio" name="pr-activity-metric" value="offered" checked /> PR inflow</label>
-                <label><input type="radio" name="pr-activity-metric" value="merged" /> Merged PRs</label>
-              </fieldset>
-              <fieldset class="radio-group-card">
-                <legend>Events</legend>
-                <label><input type="checkbox" name="pr-activity-show-markers" checked /> Show event lines</label>
-              </fieldset>
-            </div>
-            <div class="chart">
-              <div id="pr-offered-chart" class="chart-canvas chart-canvas--standard"></div>
-            </div>
-          </div>
-          <div class="chart-block">
-            <p class="chart-section-title">Review to merge time (ticket proxy)</p>
-            <div class="chart">
-              <div id="pr-merge-time-chart" class="chart-canvas chart-canvas--standard"></div>
-            </div>
-          </div>
-        </div>
-        <p id="pr-activity-status" class="panel-status" hidden></p>
-        <p id="pr-activity-note" class="panel-note" hidden></p>
+        <p
+          id="contributors-status"
+          class="panel-status"
+          aria-live="polite"
+          role="status"
+          hidden
+        ></p>
       </section>
 
       <section id="trend-panel" class="panel" aria-label="Bug backlog trend by team">
         <div class="panel-title-row">
-          <h1>Bug backlog trend by team</h1>
+          <h2>Bug backlog trend by team</h2>
           <details class="help-wrap">
             <summary class="help-tip" aria-label="Bug backlog trend chart explainer">i</summary>
             <div class="help-popover" role="tooltip">
@@ -246,7 +254,7 @@
         <div class="chart">
           <div id="bug-trend-chart" class="chart-canvas chart-canvas--standard"></div>
         </div>
-        <p id="trend-status" class="panel-status" hidden></p>
+        <p id="trend-status" class="panel-status" aria-live="polite" role="status" hidden></p>
       </section>
 
       <section id="composition-panel" class="panel" aria-label="Backlog stacked bars">
@@ -291,9 +299,78 @@
             class="chart-canvas chart-canvas--dense bar-chart-wrap"
           ></div>
         </div>
-        <p id="composition-status" class="panel-status" hidden></p>
+        <p id="composition-status" class="panel-status" aria-live="polite" role="status" hidden></p>
+      </section>
+
+      <section id="pr-activity-panel" class="panel" aria-label="Jira-linked pull request activity">
+        <div class="panel-title-row">
+          <h2>PR activity by team (Jira proxy)</h2>
+          <details class="help-wrap">
+            <summary class="help-tip" aria-label="PR activity chart explainer">i</summary>
+            <div class="help-popover" role="tooltip">
+              <p>
+                <strong>PR inflow</strong>, <strong>Merged PRs</strong>, and
+                <strong>Review to merge time (ticket proxy)</strong> show deduped Jira-linked pull
+                requests over time by team using Jira-derived proxy dates.
+              </p>
+              <ul>
+                <li>Each line is one team.</li>
+                <li>
+                  Inflow uses the earliest available PR last update and source-branch last commit.
+                  Merged uses Jira PR last update as a merge proxy.
+                </li>
+                <li>
+                  Review to merge time uses the first Jira <strong>In Review</strong> status on the
+                  ticket to the linked merged PR proxy date.
+                </li>
+                <li>
+                  PRs are deduped before counting, but attribution still depends on the Jira ticket
+                  label.
+                </li>
+              </ul>
+            </div>
+          </details>
+        </div>
+        <div class="panel-subtitle">
+          <span id="pr-activity-context" class="panel-context"
+            >Monthly deduped Jira-linked PR inflow, merged PRs, and review-to-merge time</span
+          >
+        </div>
+        <div class="chart-stack">
+          <div id="pr-inflow-block" class="chart-block">
+            <div class="radio-control-groups" aria-label="PR activity metric controls">
+              <fieldset class="radio-group-card">
+                <legend>Metric</legend>
+                <label
+                  ><input type="radio" name="pr-activity-metric" value="offered" checked /> PR
+                  inflow</label
+                >
+                <label
+                  ><input type="radio" name="pr-activity-metric" value="merged" /> Merged PRs</label
+                >
+              </fieldset>
+              <fieldset class="radio-group-card">
+                <legend>Events</legend>
+                <label
+                  ><input type="checkbox" name="pr-activity-show-markers" checked /> Show event
+                  lines</label
+                >
+              </fieldset>
+            </div>
+            <div class="chart">
+              <div id="pr-offered-chart" class="chart-canvas chart-canvas--standard"></div>
+            </div>
+          </div>
+          <div id="pr-review-merge-block" class="chart-block">
+            <p class="chart-section-title">Review to merge time (ticket proxy)</p>
+            <div class="chart">
+              <div id="pr-merge-time-chart" class="chart-canvas chart-canvas--standard"></div>
+            </div>
+          </div>
+        </div>
+        <p id="pr-activity-status" class="panel-status" aria-live="polite" role="status" hidden></p>
+        <p id="pr-activity-note" class="panel-note" hidden></p>
       </section>
     </main>
-
   </body>
 </html>

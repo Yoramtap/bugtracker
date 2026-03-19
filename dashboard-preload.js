@@ -10,12 +10,18 @@
   function getRequestedMode() {
     try {
       const params = new URLSearchParams(globalObject.location?.search || "");
-      const chart = String(params.get("chart") || "").trim().toLowerCase();
+      const chart = String(params.get("chart") || "")
+        .trim()
+        .toLowerCase();
       if (chart === "trend") return "trend";
       if (chart === "composition") return "composition";
       if (chart === "uat") return "uat";
-      if (chart === "dev-uat-ratio") return "management";
-      if (chart === "dev-uat-facility" || chart === "management-facility") {
+      if (
+        chart === "dev-uat-ratio" ||
+        chart === "management" ||
+        chart === "dev-uat-facility" ||
+        chart === "management-facility"
+      ) {
         return "management-facility";
       }
       if (chart === "pr" || chart === "prs" || chart === "pr-activity") return "pr-activity";
