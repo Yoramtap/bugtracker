@@ -122,12 +122,12 @@
         name,
         stroke: colors.teams[colorKey],
         strokeWidth: 2.5,
-        dot: false
+        dot: true
       })),
       ...TREND_LONG_LINES.map((line) => ({
         ...line,
         strokeWidth: 2,
-        dot: false
+        dot: true
       }))
     ];
   }
@@ -136,6 +136,7 @@
     const [hiddenKeys, setHiddenKeys] = React.useState(() => new Set());
     const lineDefs = trendLineDefs(colors);
     const layout = trendLayoutForViewport(rows.length);
+    const compactViewport = isCompactViewport();
     const niceYAxis = buildNiceNumberAxis(yUpper);
 
     return h(
@@ -195,7 +196,14 @@
               stroke: lineDef.stroke,
               strokeDasharray: lineDef.strokeDasharray,
               strokeWidth: lineDef.strokeWidth,
-              dot: lineDef.dot,
+              dot: lineDef.dot
+                ? {
+                    r: compactViewport ? 2.75 : 3.25,
+                    fill: lineDef.stroke,
+                    stroke: "#ffffff",
+                    strokeWidth: 1.25
+                  }
+                : false,
               activeDot: activeLineDot(colors),
               hide: hiddenKeys.has(lineDef.dataKey),
               isAnimationActive: false

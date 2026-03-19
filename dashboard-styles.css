@@ -307,6 +307,24 @@ h2 {
   margin-top: 2px;
 }
 
+.chart-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.chart-block {
+  display: grid;
+  gap: 4px;
+}
+
+.chart-section-title {
+  margin: 0;
+  text-align: center;
+  color: rgba(31, 51, 71, 0.82);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
 body.embed-mode .panel-status,
 body.embed-mode .panel-note,
 body.embed-mode .panel-summary {
@@ -452,6 +470,26 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 
 .chart-canvas--dense {
   min-height: 320px;
+}
+
+.chart-split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.chart-split-panel {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.chart-split-title {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: rgba(31, 51, 71, 0.8);
 }
 
 .bar-chart-wrap {
@@ -708,6 +746,11 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 
   .chart-canvas .recharts-default-legend .recharts-legend-item {
     min-height: 34px;
+  }
+
+  .chart-split-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .series-drawer {

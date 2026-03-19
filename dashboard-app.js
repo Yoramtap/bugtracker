@@ -32,6 +32,13 @@ const CHART_CONFIG = {
     rendererName: "renderDevelopmentVsUatByFacilityChart",
     missingMessage: "Development vs UAT chart unavailable: Recharts renderer missing."
   },
+  "pr-activity": {
+    panelId: "pr-activity-panel",
+    statusId: "pr-activity-status",
+    contextId: "pr-activity-context",
+    containerId: "pr-offered-chart",
+    missingMessage: "No Jira-linked PR activity found in backlog-snapshot.json."
+  },
   contributors: {
     panelId: "contributors-panel",
     statusId: "contributors-status",
@@ -64,7 +71,7 @@ const DATA_SOURCE_CONFIG = {
     stateKey: "snapshot",
     url: "./backlog-snapshot.json",
     errorMessage: "Failed to load backlog-snapshot.json",
-    statusIds: ["trend-status", "composition-status", "management-facility-status"]
+    statusIds: ["trend-status", "composition-status", "management-facility-status", "pr-activity-status"]
   },
   productCycle: {
     stateKey: "productCycle",
@@ -86,6 +93,7 @@ const CHART_DATA_SOURCES = {
   trend: ["snapshot"],
   composition: ["snapshot"],
   "management-facility": ["snapshot"],
+  "pr-activity": ["snapshot"],
   contributors: ["contributors"],
   "product-cycle": ["productCycle"],
   "lifecycle-days": ["productCycle"]
@@ -94,6 +102,7 @@ const CHART_RENDERERS = {
   trend: renderTrendChart,
   composition: renderBugCompositionByPriorityChart,
   "management-facility": renderDevelopmentVsUatByFacilityChart,
+  "pr-activity": renderPrActivityCharts,
   contributors: renderTopContributorsChart,
   "product-cycle": renderLeadAndCycleTimeByTeamChart,
   "lifecycle-days": renderLifecycleTimeSpentPerStageChart
@@ -110,6 +119,19 @@ const CONTROL_BINDINGS = [
     stateKey: "managementFlowScope",
     normalizeValue: (value) => normalizeOption(value, MANAGEMENT_FLOW_SCOPES, "ongoing"),
     onChangeRender: renderDevelopmentVsUatByFacilityChart
+  },
+  {
+    name: "pr-activity-metric",
+    stateKey: "prActivityMetric",
+    normalizeValue: (value) => (value === "merged" ? "merged" : "offered"),
+    onChangeRender: renderPrActivityCharts
+  },
+  {
+    name: "pr-activity-show-markers",
+    stateKey: "showPrActivityMarkers",
+    normalizeChecked: (checked) => checked !== false,
+    onChangeRender: renderPrActivityCharts,
+    controlType: "checkbox"
   },
   {
     name: "product-cycle-scope",
@@ -130,6 +152,9 @@ const state = {
   loadErrors: {},
   mode: "all",
   compositionTeamScope: "bc",
+  prActivityMetric: "offered",
+  prActivityHiddenKeys: [],
+  showPrActivityMarkers: true,
   managementFlowScope: "ongoing",
   productCycleScope: "inception"
 };
@@ -164,7 +189,65 @@ const {
   isEmbedMode
 } = dashboardUiUtils;
 const { buildTeamColorMap, buildTintMap, orderProductCycleTeams, toCount } = dashboardDataUtils;
-const { buildAxisLabel, h, isCompactViewport } = dashboardChartCore;
+const {
+  React,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  ReferenceLine,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  activeLineDot,
+  buildAxisLabel,
+  buildNiceNumberAxis,
+  createTooltipContent,
+  formatDateShort,
+  h,
+  isCompactViewport,
+  makeTooltipLine,
+  renderLegendNode,
+  renderWithRoot,
+  tooltipTitleLine,
+  trendLayoutForViewport,
+  withSafeTooltipProps
+} = dashboardChartCore;
+
+const PR_ACTIVITY_LINE_DEFS = [
+  { dataKey: "api", name: "API", colorKey: "api" },
+  { dataKey: "legacy", name: "Legacy FE", colorKey: "legacy" },
+  { dataKey: "react", name: "React FE", colorKey: "react" },
+  { dataKey: "bc", name: "BC", colorKey: "bc" }
+];
+const PR_ACTIVITY_REFERENCE_MARKERS = [
+  {
+    date: "2025-04-01",
+    label: "NAB"
+  },
+  {
+    date: "2025-09-01",
+    label: "IBC"
+  },
+  {
+    date: "2026-01-01",
+    label: "Codex"
+  }
+];
+
+function toChartDateValue(dateText) {
+  const timestamp = new Date(`${String(dateText || "")}T00:00:00Z`).getTime();
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function formatChartDateTick(value) {
+  if (!Number.isFinite(value) || value <= 0) return "";
+  return new Date(value).toLocaleDateString("en-US", {
+    month: "short",
+    year: "2-digit",
+    timeZone: "UTC"
+  });
+}
 
 function buildLifecycleMobileTick(colors, secondaryLabels) {
   const stageLabelMap = {
@@ -369,6 +452,344 @@ function renderTrendChart() {
   const config = getConfig("trend");
   setConfigContext(config, "Open bugs across tracked teams plus BC aging overlays");
   renderSnapshotChart(config);
+}
+
+function setPrActivityNote(text = "") {
+  const note = document.getElementById("pr-activity-note");
+  if (!note) return;
+  const safeText = String(text || "").trim();
+  note.hidden = safeText.length === 0;
+  note.textContent = safeText;
+}
+
+function buildPrActivityRows(metricKey = "offered") {
+  const points = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
+  return points.map((point) => ({
+    date: String(point?.date || ""),
+    dateValue: toChartDateValue(point?.date),
+    api: toNumber(point?.api?.[metricKey]),
+    legacy: toNumber(point?.legacy?.[metricKey]),
+    react: toNumber(point?.react?.[metricKey]),
+    bc: toNumber(point?.bc?.[metricKey])
+  }));
+}
+
+function buildPrMergeTimeRows() {
+  const points = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
+  return points.map((point) => ({
+    date: String(point?.date || ""),
+    dateValue: toChartDateValue(point?.date),
+    api:
+      toNumber(point?.api?.avgReviewToMergeSampleCount) > 0
+        ? toNumber(point?.api?.avgReviewToMergeDays)
+        : null,
+    legacy:
+      toNumber(point?.legacy?.avgReviewToMergeSampleCount) > 0
+        ? toNumber(point?.legacy?.avgReviewToMergeDays)
+        : null,
+    react:
+      toNumber(point?.react?.avgReviewToMergeSampleCount) > 0
+        ? toNumber(point?.react?.avgReviewToMergeDays)
+        : null,
+    bc:
+      toNumber(point?.bc?.avgReviewToMergeSampleCount) > 0
+        ? toNumber(point?.bc?.avgReviewToMergeDays)
+        : null
+  }));
+}
+
+function getPrActivityLineDefs(colors) {
+  return PR_ACTIVITY_LINE_DEFS.map((line) => ({
+    ...line,
+    stroke: colors.teams[line.colorKey]
+  }));
+}
+
+function getPrActivityYUpper(rows, lineDefs) {
+  return rows.reduce((highest, row) => {
+    const rowMax = lineDefs.reduce(
+      (lineHighest, lineDef) => Math.max(lineHighest, toNumber(row?.[lineDef.dataKey])),
+      0
+    );
+    return Math.max(highest, rowMax);
+  }, 0);
+}
+
+function getSharedPrCountYUpper() {
+  const offeredRows = buildPrActivityRows("offered");
+  const mergedRows = buildPrActivityRows("merged");
+  const lineDefs = getPrActivityLineDefs(getThemeColors());
+  return Math.max(getPrActivityYUpper(offeredRows, lineDefs), getPrActivityYUpper(mergedRows, lineDefs));
+}
+
+function wrapReferenceLabel(text, maxLineLength = 16) {
+  const words = String(text || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0) return [];
+
+  const lines = [];
+  let currentLine = words[0];
+
+  for (const word of words.slice(1)) {
+    const nextLine = `${currentLine} ${word}`;
+    if (nextLine.length <= maxLineLength) {
+      currentLine = nextLine;
+      continue;
+    }
+    lines.push(currentLine);
+    currentLine = word;
+  }
+
+  lines.push(currentLine);
+  return lines;
+}
+
+function renderPrActivityReferenceLine(marker, compactViewport, showLabel = true) {
+  const lines = wrapReferenceLabel(marker.label, compactViewport ? 12 : 16);
+  const lineHeight = compactViewport ? 12 : 14;
+  return h(ReferenceLine, {
+    key: marker.date,
+    x: toChartDateValue(marker.date),
+    stroke: "rgba(0, 0, 0, 0.9)",
+    strokeDasharray: "7 5",
+    strokeWidth: 1.8,
+    ifOverflow: "extendDomain",
+    label: !showLabel
+      ? undefined
+      : ({ viewBox }) =>
+      h(
+        "text",
+        {
+          x: toNumber(viewBox?.x),
+          y: toNumber(viewBox?.y) - (compactViewport ? 10 : 14) - lineHeight * (lines.length - 1),
+          fill: "rgba(0, 0, 0, 0.95)",
+          fontSize: compactViewport ? 10 : 11,
+          fontWeight: 700,
+          textAnchor: "middle"
+        },
+        lines.map((line, index) =>
+          h(
+            "tspan",
+            {
+              key: `${marker.date}-${index}`,
+              x: toNumber(viewBox?.x),
+              dy: index === 0 ? 0 : lineHeight
+            },
+            line
+          )
+        )
+      )
+  });
+}
+
+function getSharedPrActivityHiddenKeys() {
+  return new Set(Array.isArray(state.prActivityHiddenKeys) ? state.prActivityHiddenKeys : []);
+}
+
+function setSharedPrActivityHiddenKeys(updater) {
+  const previous = getSharedPrActivityHiddenKeys();
+  const nextValue = typeof updater === "function" ? updater(previous) : updater;
+  const nextSet = nextValue instanceof Set ? nextValue : new Set(nextValue || []);
+  state.prActivityHiddenKeys = Array.from(nextSet);
+  renderPrActivityCharts();
+}
+
+function PrActivityChartView({
+  rows,
+  colors,
+  yAxisLabel,
+  tooltipLabel,
+  tooltipValueFormatter,
+  yAxisUpperOverride = 0,
+  hiddenKeys,
+  setHiddenKeys,
+  showLegend = true,
+  hideReferenceLabelsOnCompact = false
+}) {
+  const lineDefs = getPrActivityLineDefs(colors);
+  const layout = trendLayoutForViewport(rows.length);
+  const compactViewport = isCompactViewport();
+  const yUpper = Math.max(yAxisUpperOverride, getPrActivityYUpper(rows, lineDefs));
+  const niceYAxis = buildNiceNumberAxis(yUpper);
+  const xTicks = rows.map((row) => row.dateValue).filter((value) => value > 0);
+  const visibleReferenceMarkers =
+    state.showPrActivityMarkers && xTicks.length > 0
+      ? PR_ACTIVITY_REFERENCE_MARKERS.filter((marker) => {
+          const markerValue = toChartDateValue(marker.date);
+          return markerValue >= xTicks[0] && markerValue <= xTicks[xTicks.length - 1];
+        })
+      : [];
+
+  return h(
+    "div",
+    { className: "chart-series-shell" },
+    showLegend
+      ? renderLegendNode({
+          colors,
+          defs: lineDefs,
+          hiddenKeys,
+          setHiddenKeys,
+          compact: layout.legendCompact
+        })
+      : null,
+    h(
+      ResponsiveContainer,
+      { width: "100%", height: layout.chartHeight },
+      h(
+        LineChart,
+        {
+          data: rows,
+          margin: layout.margin
+        },
+        h(CartesianGrid, { stroke: colors.grid, vertical: false }),
+        h(XAxis, {
+          dataKey: "dateValue",
+          type: "number",
+          domain: xTicks.length > 0 ? [xTicks[0], xTicks[xTicks.length - 1]] : ["dataMin", "dataMax"],
+          ticks: xTicks,
+          stroke: colors.text,
+          tick: { fill: colors.text, fontSize: layout.xTickFontSize },
+          tickMargin: layout.xTickMargin,
+          interval: layout.xAxisInterval,
+          minTickGap: layout.minTickGap,
+          tickFormatter: formatChartDateTick,
+          label: buildAxisLabel("Month")
+        }),
+        h(YAxis, {
+          stroke: colors.text,
+          tick: { fill: colors.text, fontSize: layout.yTickFontSize },
+          domain: [0, niceYAxis.upper],
+          ticks: niceYAxis.ticks,
+          allowDecimals: false,
+          label: buildAxisLabel(yAxisLabel, { axis: "y", offset: 6 })
+        }),
+        ...visibleReferenceMarkers.map((marker) =>
+          renderPrActivityReferenceLine(
+            marker,
+            compactViewport,
+            !(hideReferenceLabelsOnCompact && compactViewport)
+          )
+        ),
+        h(
+          Tooltip,
+          withSafeTooltipProps({
+            content: createTooltipContent(colors, (row, payload) => [
+              tooltipTitleLine("month", formatChartDateTick(row.dateValue), colors),
+              tooltipTitleLine("metric", tooltipLabel, colors),
+              ...payload.map((item) =>
+                makeTooltipLine(
+                  item.dataKey,
+                  `${item.name}: ${tooltipValueFormatter(toNumber(item.value), item)}`,
+                  colors
+                )
+              )
+            ]),
+            cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
+          })
+        ),
+        lineDefs.map((lineDef) =>
+          h(Line, {
+            key: lineDef.dataKey,
+            type: "monotone",
+            dataKey: lineDef.dataKey,
+            name: lineDef.name,
+            stroke: lineDef.stroke,
+            strokeWidth: 2.5,
+            dot: {
+              r: compactViewport ? 2.75 : 3.25,
+              fill: lineDef.stroke,
+              stroke: "#ffffff",
+              strokeWidth: 1.25
+            },
+            activeDot: activeLineDot(colors),
+            hide: hiddenKeys.has(lineDef.dataKey),
+            isAnimationActive: false
+          })
+        )
+      )
+    )
+  );
+}
+
+function renderPrActivityChart(containerId) {
+  const metricKey = state.prActivityMetric === "merged" ? "merged" : "offered";
+  const rows = buildPrActivityRows(metricKey);
+  const colors = getThemeColors();
+  const yAxisLabel = metricKey === "merged" ? "Merged PRs" : "PR inflow";
+  const tooltipLabel = yAxisLabel;
+  const yAxisUpperOverride = getSharedPrCountYUpper();
+  const hiddenKeys = getSharedPrActivityHiddenKeys();
+  renderWithRoot(containerId, rows.length > 0, (root) => {
+    root.render(
+      h(PrActivityChartView, {
+        rows,
+        colors,
+        yAxisLabel,
+        tooltipLabel,
+        tooltipValueFormatter: (value) => `${value} ${tooltipLabel.toLowerCase()}`,
+        yAxisUpperOverride,
+        hiddenKeys,
+        setHiddenKeys: setSharedPrActivityHiddenKeys,
+        showLegend: true
+      })
+    );
+  });
+}
+
+function renderPrMergeTimeChart(containerId) {
+  const rows = buildPrMergeTimeRows();
+  const colors = getThemeColors();
+  const hiddenKeys = getSharedPrActivityHiddenKeys();
+  renderWithRoot(containerId, rows.length > 0, (root) => {
+    root.render(
+      h(PrActivityChartView, {
+        rows,
+        colors,
+        yAxisLabel: "Avg days to merge",
+        tooltipLabel: "Average review-to-merge time",
+        tooltipValueFormatter: (value) => {
+          const roundedDays = Math.max(0, Math.round(Number(value) || 0));
+          return `~${roundedDays} day${roundedDays === 1 ? "" : "s"}`;
+        },
+        hiddenKeys,
+        setHiddenKeys: setSharedPrActivityHiddenKeys,
+        showLegend: false,
+        hideReferenceLabelsOnCompact: true
+      })
+    );
+  });
+}
+
+function renderPrActivityCharts() {
+  withChart("pr-activity", ({ status, context }) => {
+    const prActivity = state.snapshot?.prActivity;
+    const points = Array.isArray(prActivity?.points) ? prActivity.points : [];
+    if (points.length === 0) {
+      clearChartContainer("pr-offered-chart");
+      clearChartContainer("pr-merge-time-chart");
+      setPrActivityNote("");
+      showPanelStatus(status, "No Jira-linked PR activity found in backlog-snapshot.json.");
+      return;
+    }
+
+    status.hidden = true;
+    const since = String(prActivity?.since || "2025-01-01");
+    const caveat = String(prActivity?.caveat || "").trim();
+    const metricKey = state.prActivityMetric === "merged" ? "merged" : "offered";
+    syncRadioValue("pr-activity-metric", metricKey);
+    syncCheckboxValue("pr-activity-show-markers", state.showPrActivityMarkers);
+    setPanelContext(
+      context,
+      metricKey === "merged"
+        ? `Monthly deduped Jira-linked merged PRs and review-to-merge time since ${since}`
+        : `Monthly deduped Jira-linked PR inflow and review-to-merge time since ${since}`
+    );
+    setPrActivityNote(caveat);
+    renderPrActivityChart("pr-offered-chart");
+    renderPrMergeTimeChart("pr-merge-time-chart");
+  });
 }
 
 function renderPublicAggregateChart(configKey, scope, onReady) {
@@ -720,6 +1141,12 @@ function syncRadioValue(name, value) {
   });
 }
 
+function syncCheckboxValue(name, checked) {
+  const checkbox = document.querySelector(`input[name="${name}"]`);
+  if (!checkbox) return;
+  checkbox.checked = Boolean(checked);
+}
+
 function bindRadioState(name, stateKey, normalizeValue, onChangeRender) {
   const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
   if (radios.length === 0) return;
@@ -731,6 +1158,16 @@ function bindRadioState(name, stateKey, normalizeValue, onChangeRender) {
       state[stateKey] = normalizeValue(radio.value);
       onChangeRender();
     });
+  });
+}
+
+function bindCheckboxState(name, stateKey, normalizeChecked, onChangeRender) {
+  const checkbox = document.querySelector(`input[name="${name}"]`);
+  if (!checkbox || checkbox.dataset.bound === "1") return;
+  checkbox.dataset.bound = "1";
+  checkbox.addEventListener("change", () => {
+    state[stateKey] = normalizeChecked(checkbox.checked);
+    onChangeRender();
   });
 }
 
@@ -850,9 +1287,15 @@ function renderTopContributorsChart() {
 }
 
 function bindDashboardControls() {
-  CONTROL_BINDINGS.forEach(({ name, stateKey, normalizeValue, onChangeRender }) => {
-    bindRadioState(name, stateKey, normalizeValue, onChangeRender);
-  });
+  CONTROL_BINDINGS.forEach(
+    ({ name, stateKey, normalizeValue, normalizeChecked, onChangeRender, controlType }) => {
+      if (controlType === "checkbox") {
+        bindCheckboxState(name, stateKey, normalizeChecked, onChangeRender);
+        return;
+      }
+      bindRadioState(name, stateKey, normalizeValue, onChangeRender);
+    }
+  );
 }
 
 function renderVisibleCharts() {

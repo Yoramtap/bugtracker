@@ -132,6 +132,53 @@
         <p id="contributors-status" class="panel-status" hidden></p>
       </section>
 
+      <section id="pr-activity-panel" class="panel" aria-label="Jira-linked pull request activity">
+        <div class="panel-title-row">
+          <h2>PR activity by team (Jira proxy)</h2>
+          <details class="help-wrap">
+            <summary class="help-tip" aria-label="PR activity chart explainer">i</summary>
+            <div class="help-popover" role="tooltip">
+              <p><strong>PR inflow</strong>, <strong>Merged PRs</strong>, and <strong>Review to merge time (ticket proxy)</strong> show deduped Jira-linked pull requests over time by team using Jira-derived proxy dates.</p>
+              <ul>
+                <li>Each line is one team.</li>
+                <li>Inflow uses the earliest available PR last update and source-branch last commit. Merged uses Jira PR last update as a merge proxy.</li>
+                <li>Review to merge time uses the first Jira <strong>In Review</strong> status on the ticket to the linked merged PR proxy date.</li>
+                <li>PRs are deduped before counting, but attribution still depends on the Jira ticket label.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+        <div class="panel-subtitle">
+          <span id="pr-activity-context" class="panel-context">Monthly deduped Jira-linked PR inflow, merged PRs, and review-to-merge time</span>
+        </div>
+        <div class="chart-stack">
+          <div class="chart-block">
+            <div class="radio-control-groups" aria-label="PR activity metric controls">
+              <fieldset class="radio-group-card">
+                <legend>Metric</legend>
+                <label><input type="radio" name="pr-activity-metric" value="offered" checked /> PR inflow</label>
+                <label><input type="radio" name="pr-activity-metric" value="merged" /> Merged PRs</label>
+              </fieldset>
+              <fieldset class="radio-group-card">
+                <legend>Events</legend>
+                <label><input type="checkbox" name="pr-activity-show-markers" checked /> Show event lines</label>
+              </fieldset>
+            </div>
+            <div class="chart">
+              <div id="pr-offered-chart" class="chart-canvas chart-canvas--standard"></div>
+            </div>
+          </div>
+          <div class="chart-block">
+            <p class="chart-section-title">Review to merge time (ticket proxy)</p>
+            <div class="chart">
+              <div id="pr-merge-time-chart" class="chart-canvas chart-canvas--standard"></div>
+            </div>
+          </div>
+        </div>
+        <p id="pr-activity-status" class="panel-status" hidden></p>
+        <p id="pr-activity-note" class="panel-note" hidden></p>
+      </section>
+
       <section id="management-facility-panel" class="panel" aria-label="Broadcast development vs UAT">
         <div class="panel-title-row">
           <h2 id="management-facility-title">Development vs UAT by Business Unit</h2>

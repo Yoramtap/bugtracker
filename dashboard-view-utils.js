@@ -105,6 +105,7 @@
     if (chart === "uat") return "uat";
     if (chart === "dev-uat-ratio") return "management";
     if (chart === "dev-uat-facility" || chart === "management-facility") return "management-facility";
+    if (chart === "pr" || chart === "prs" || chart === "pr-activity") return "pr-activity";
     if (chart === "contributors") return "contributors";
     if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";
     if (chart === "lifecycle-days") return "lifecycle-days";
