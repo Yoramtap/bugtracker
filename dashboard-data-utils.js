@@ -6,7 +6,7 @@
     throw new Error("Dashboard UI helpers not loaded.");
   }
 
-  const PRODUCT_CYCLE_TEAM_ORDER = ["api", "frontend", "broadcast", "orchestration", "titanium", "shift"];
+  const PRODUCT_CYCLE_TEAM_ORDER = ["api", "frontend", "broadcast", "workers", "titanium", "shift"];
   const TEAM_FALLBACK_PALETTE = [
     "#4f8fcb",
     "#c78b2e",
@@ -26,6 +26,7 @@
     broadcast: "#7b63c7",
     bc: "#7b63c7",
     orchestration: "#5e6b84",
+    workers: "#5e6b84",
     titanium: "#b07aa1",
     shift: "#8a6a4a",
     unmapped: "#4a758e"
@@ -88,6 +89,9 @@
     if (key.includes("legacy") || key.includes("frontend")) return DASHBOARD_TEAM_BASE_COLORS.frontend;
     if (key.includes("react")) return DASHBOARD_TEAM_BASE_COLORS.react;
     if (key.includes("broadcast")) return DASHBOARD_TEAM_BASE_COLORS.broadcast;
+    if (key.includes("worker")) return DASHBOARD_TEAM_BASE_COLORS.workers;
+    if (key.includes("orchestration")) return DASHBOARD_TEAM_BASE_COLORS.orchestration;
+    if (key.includes("titanium") || key.includes("media")) return DASHBOARD_TEAM_BASE_COLORS.titanium;
     return TEAM_FALLBACK_PALETTE[hashTeamName(raw || `team-${index}`) % TEAM_FALLBACK_PALETTE.length];
   }
 

@@ -218,7 +218,9 @@ const PR_ACTIVITY_LINE_DEFS = [
   { dataKey: "api", name: "API", colorKey: "api" },
   { dataKey: "legacy", name: "Legacy FE", colorKey: "legacy" },
   { dataKey: "react", name: "React FE", colorKey: "react" },
-  { dataKey: "bc", name: "BC", colorKey: "bc" }
+  { dataKey: "bc", name: "BC", colorKey: "bc" },
+  { dataKey: "workers", name: "Workers", colorKey: "workers" },
+  { dataKey: "titanium", name: "Titanium", colorKey: "titanium" }
 ];
 const PR_ACTIVITY_REFERENCE_MARKERS = [
   {
@@ -462,6 +464,12 @@ function setPrActivityNote(text = "") {
   note.textContent = safeText;
 }
 
+function normalizeDisplayTeamName(name) {
+  const raw = String(name || "").trim();
+  if (raw.toLowerCase() === "orchestration") return "Workers";
+  return raw;
+}
+
 function buildPrActivityRows(metricKey = "offered") {
   const points = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
   return points.map((point) => ({
@@ -470,7 +478,9 @@ function buildPrActivityRows(metricKey = "offered") {
     api: toNumber(point?.api?.[metricKey]),
     legacy: toNumber(point?.legacy?.[metricKey]),
     react: toNumber(point?.react?.[metricKey]),
-    bc: toNumber(point?.bc?.[metricKey])
+    bc: toNumber(point?.bc?.[metricKey]),
+    workers: toNumber(point?.workers?.[metricKey]),
+    titanium: toNumber(point?.titanium?.[metricKey])
   }));
 }
 
@@ -494,6 +504,14 @@ function buildPrMergeTimeRows() {
     bc:
       toNumber(point?.bc?.avgReviewToMergeSampleCount) > 0
         ? toNumber(point?.bc?.avgReviewToMergeDays)
+        : null,
+    workers:
+      toNumber(point?.workers?.avgReviewToMergeSampleCount) > 0
+        ? toNumber(point?.workers?.avgReviewToMergeDays)
+        : null,
+    titanium:
+      toNumber(point?.titanium?.avgReviewToMergeSampleCount) > 0
+        ? toNumber(point?.titanium?.avgReviewToMergeDays)
         : null
   }));
 }
@@ -816,6 +834,10 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
   if (titleNode) titleNode.textContent = "Cycle time by team";
 
   const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
+    .map((row) => ({
+      ...row,
+      team: normalizeDisplayTeamName(row?.team)
+    }))
     .filter((row) => !(String(row?.team || "") === "UNMAPPED" && toCount(row?.meta_cycle?.n) === 0))
     .sort((left, right) => {
       const leftN = toCount(left?.meta_cycle?.n);
@@ -1004,6 +1026,16 @@ function normalizeCurrentStageChartData(chartSnapshotData) {
     }
     return row;
   });
+  const teams = Array.isArray(chartSnapshotData.teams)
+    ? chartSnapshotData.teams.map((team) => normalizeDisplayTeamName(team)).filter(Boolean)
+    : [];
+  const teamDefs = Array.isArray(chartSnapshotData.teamDefs)
+    ? chartSnapshotData.teamDefs.map((teamDef) => ({
+        ...teamDef,
+        name: normalizeDisplayTeamName(teamDef?.name),
+        team: normalizeDisplayTeamName(teamDef?.team)
+      }))
+    : [];
   const rawSecondaryLabels =
     chartSnapshotData.categorySecondaryLabels &&
     typeof chartSnapshotData.categorySecondaryLabels === "object"
@@ -1026,6 +1058,8 @@ function normalizeCurrentStageChartData(chartSnapshotData) {
   }
   return {
     ...chartSnapshotData,
+    teams,
+    teamDefs,
     rows,
     categorySecondaryLabels
   };

@@ -63,7 +63,9 @@
         api: readThemeColor("--team-api", "#2f6ea8"),
         legacy: readThemeColor("--team-legacy", "#8d6f3f"),
         react: readThemeColor("--team-react", "#3f7f75"),
-        bc: readThemeColor("--team-bc", "#76649a")
+        bc: readThemeColor("--team-bc", "#76649a"),
+        workers: readThemeColor("--team-workers", "#5e6b84"),
+        titanium: readThemeColor("--team-titanium", "#b07aa1")
       },
       priorities: {
         highest: readThemeColor("--priority-highest", "#3f638f"),
