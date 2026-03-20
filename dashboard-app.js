@@ -1345,9 +1345,6 @@ function renderPrCycleExperimentCard(containerId, team, snapshot) {
   const rowsMarkup = stages
     .map((stage) => {
       const width = Math.max(12, Math.round((toNumber(stage?.days) / maxDays) * 100));
-      const tone = ["amber", "blue", "stone"].includes(String(stage?.tone || ""))
-        ? String(stage.tone)
-        : "amber";
       const sampleCount = toCount(stage?.sampleCount);
       return `
         <div class="pr-cycle-stage-row" data-stage="${escapeHtml(String(stage?.key || ""))}">
@@ -1356,7 +1353,7 @@ function renderPrCycleExperimentCard(containerId, team, snapshot) {
             <span class="pr-cycle-stage-row__sample">${sampleCount > 0 ? `n=${sampleCount}` : "n=0"}</span>
           </div>
           <div class="pr-cycle-stage-row__track" aria-hidden="true">
-            <div class="pr-cycle-stage-row__fill pr-cycle-stage-row__fill--${tone}" style="width:${width}%"></div>
+            <div class="pr-cycle-stage-row__fill" style="width:${width}%"></div>
           </div>
           <div class="pr-cycle-stage-row__value">${formatStageDuration(stage?.days)}</div>
         </div>
