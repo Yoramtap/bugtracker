@@ -1,7 +1,7 @@
 # Report Refresh + Publish Cadence
 
 ## Purpose
-Run private Jira-backed refreshes in `bugtracker-workshop`, then publish only aggregate/static output to the public `bugtracker` repo.
+Run private Jira-backed refreshes in `bugtracker-workshop`, then publish only aggregate/static output to the public `tracker` repo.
 
 This keeps credentials and private access in the workshop repo while exposing only safe report artifacts publicly.
 
@@ -21,14 +21,14 @@ This keeps credentials and private access in the workshop repo while exposing on
      - `reports/latest-analysis.md`
      - `reports/history/analysis-<timestamp>.md`
 3. If analysis succeeds, export approved files for public consumption:
-   - `npm run export:public -- --target /Users/yoramtap/Documents/AI/bugtracker`
-4. In `bugtracker`, commit and push:
+   - `npm run export:public -- --target /Users/yoramtap/Documents/AI/tracker`
+4. In `tracker`, commit and push:
    - Commit includes updated aggregate report data/UI artifacts
    - Push to GitHub so reports are live
 
 ## Security Rationale
 - Jira authentication stays in `bugtracker-workshop` via `.env.backlog` / `.env.local`.
-- `bugtracker` receives only aggregate/static outputs (for example: `snapshot.json`, `index.html`, `app.js`, `styles.css`).
+- `tracker` receives only aggregate/static outputs (for example: `backlog-snapshot.json`, `product-cycle-snapshot.json`, `contributors-snapshot.json`, `index.html`, and the dashboard bundle files).
 - No issue-level secrets or credentials are published.
 
 ## Automation Requirements
@@ -36,7 +36,7 @@ Automation should:
 1. Run on the biweekly Sunday 23:00 cadence.
 2. Stop immediately on refresh failure (do not publish partial/failed data).
 3. Stop immediately on analysis failure.
-4. Export only approved files to `bugtracker`.
+4. Export only approved files to `tracker`.
 5. Commit only when there are actual file changes.
 6. Push to GitHub automatically.
 7. Log run status and failure reason.
@@ -65,8 +65,8 @@ Because this workflow runs locally, use Codex automation as the scheduler/orches
    - Verify `reports/latest-analysis.md` exists
    - Capture newest `reports/history/analysis-*.md` as `analysis_history_file`
 3. In `/Users/yoramtap/Documents/AI/bugtracker-workshop`:
-   - Run `npm run export:public -- --target /Users/yoramtap/Documents/AI/bugtracker`
-4. In `/Users/yoramtap/Documents/AI/bugtracker`:
+   - Run `npm run export:public -- --target /Users/yoramtap/Documents/AI/tracker`
+4. In `/Users/yoramtap/Documents/AI/tracker`:
    - Check for file changes
    - If no changes: report "no changes"
    - If changes: commit and push to GitHub

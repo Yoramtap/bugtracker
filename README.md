@@ -1,24 +1,28 @@
 # Bugtracker Workshop
 
-This is the private/local workshop repo for building and validating bugtracker graphs.
+This is the private/local workshop repo for building and validating tracker graphs.
 
-The UI should stay aligned with the public `bugtracker` repo (`index.html`, `app.js`, `styles.css`), while Jira credentials and refresh scripts stay only here.
+The live UI is the dashboard bundle rooted at `index.html`, with `dashboard-*.js`, `dashboard-styles.css`, vendored browser dependencies, and three published data snapshots. Jira credentials and refresh scripts stay only here.
 
 ## Included
 
 - `index.html`
-- `app.js`
-- `styles.css`
-- `snapshot.json` (generated aggregate counts only)
-- `scripts/refresh-report-data.mjs` (Jira -> snapshot pipeline)
-- `scripts/export-public.mjs` (safe export to public repo)
+- `dashboard-app.js` plus `dashboard-*.js` helpers
+- `dashboard-styles.css`
+- `backlog-snapshot.json` (live backlog dashboard data)
+- `product-cycle-snapshot.json` (product cycle dashboard data)
+- `contributors-snapshot.json` (contributors dashboard data)
+- `pr-cycle-snapshot.json` (PR cycle stage breakdown experiment data)
+- `snapshot.json` (refresh output mirror used for analysis/archive flows)
+- `scripts/refresh-report-data.mjs` (Jira -> backlog snapshot pipeline)
+- `scripts/export-public.mjs` (safe export to the `tracker` repo)
 
 ## Security Model
 
 - Keep this repository private/local.
 - Credentials are loaded from `.env.backlog` or `.env.local`.
 - Never publish `.env.*` files.
-- Publish only aggregate `snapshot.json` and approved static UI files to the public repo.
+- Publish only the approved dashboard bundle and aggregate snapshot files to the `tracker` repo.
 
 ## Setup
 
@@ -41,9 +45,10 @@ npm run refresh:full
 ```
 
 This regenerates `snapshot.json` in the repo root.
-It also archives a timestamped copy to `snapshots/` on each successful run.
+It also writes `backlog-snapshot.json` for the live dashboard and archives a timestamped copy to `snapshots/` on each successful run.
 
 Trend dates are resolved automatically from Jira sprints (Agile API), then used as historical "as-of" dates for backlog snapshots.
+Jira Development PR activity is also included, derived from the Jira Development summary field on issues and grouped monthly from `2025-01-01`.
 
 Default sprint-date behavior:
 
@@ -71,20 +76,35 @@ cd /Users/yoramtap/Documents/AI/bugtracker-workshop
 npm run export:public
 ```
 
-Default target is `/Users/yoramtap/Documents/AI/bugtracker`.
+Default target is `/Users/yoramtap/Documents/AI/tracker`.
 
 Optional explicit target:
 
 ```bash
-npm run export:public -- --target /Users/yoramtap/Documents/AI/bugtracker
+npm run export:public -- --target /Users/yoramtap/Documents/AI/tracker
 ```
 
 The export command only copies:
 
-- `snapshot.json`
+- `backlog-snapshot.json`
+- `contributors-snapshot.json`
+- `product-cycle-snapshot.json`
+- `pr-cycle-snapshot.json`
 - `index.html`
-- `app.js`
-- `styles.css`
+- `dashboard-styles.css`
+- `dashboard-preload.js`
+- `dashboard-view-utils.js`
+- `dashboard-data-utils.js`
+- `dashboard-chart-core.js`
+- `dashboard-charts-backlog.js`
+- `dashboard-charts-delivery.js`
+- `dashboard-charts-product.js`
+- `dashboard-app.js`
+- `agentation-local-loader.js`
+- `vendor/react.production.min.js`
+- `vendor/react-dom.production.min.js`
+- `vendor/prop-types.min.js`
+- `vendor/recharts.umd.js`
 
 ## Analysis Brief
 
@@ -112,7 +132,8 @@ The report includes:
 
 Each `npm run refresh:full` run writes:
 
-- latest snapshot: `snapshot.json`
+- latest dashboard snapshot: `backlog-snapshot.json`
+- latest analysis/input mirror: `snapshot.json`
 - historical copy: `snapshots/snapshot-<timestamp>.json`
 
 This archive enables longitudinal UAT analysis across runs without exposing private Jira credentials.
@@ -122,7 +143,7 @@ A similar archive is kept for analysis output in `reports/history/` so each run 
 ## UAT Aging (Third Chart)
 
 The third chart shows anonymized aging for UAT work (default label filter: `Broadcast`), split by priority.
-No issue-level keys, links, assignees, or per-ticket labels are written to `snapshot.json`.
+No issue-level keys, links, assignees, or per-ticket labels are written to `snapshot.json` or the top-level UAT aging payload in `backlog-snapshot.json`.
 
 Default Jira filter:
 
@@ -137,32 +158,80 @@ Optional overrides in `.env.backlog`:
 - `UAT_STATUS` (default: `UAT`)
 - `UAT_LABEL` (default: `Broadcast`)
 
+## PR Cycle Experiment
+
+The PR cycle experiment reads Jira status-history aggregates from `pr-cycle-snapshot.json`.
+The tracked stages are:
+
+- `In Progress`
+- `In Review`
+- `QA`
+
+Default refresh behavior:
+
+- projects: `TFC,TFO,MESO`
+- window: last `90` days
+
+Optional overrides in `.env.backlog`:
+
+- `PR_CYCLE_PROJECT_KEYS` (comma-separated, default: `TFC,TFO,MESO`)
+- `PR_CYCLE_WINDOW_DAYS` (default: `90`)
+- `PR_CYCLE_CODING_STATUS` (default: `In Progress`)
+- `PR_CYCLE_REVIEW_STATUS` (default: `In Review`)
+- `PR_CYCLE_MERGE_STATUS` (default: `QA`)
+
 ## Local Preview
 
-Serve this directory with any static server, for example:
+Serve the workshop files locally:
 
 ```bash
-cd /Users/yoramtap/Documents/AI/bugtracker-workshop
-python3 -m http.server 4173
+cd /Users/yoramtap/.codex/worktrees/6935/bugtracker-workshop
+npm run dev
 ```
 
 Then open [http://127.0.0.1:4173](http://127.0.0.1:4173).
+
+If you want an explicit workshop alias, this still works:
+
+```bash
+npm run dev:workshop
+```
+
+If you explicitly need to preview the public `tracker` repo instead, use:
+
+```bash
+npm run dev:tracker
+```
 
 ## Publish Flow
 
 1. Iterate charts and data in `bugtracker-workshop`.
 2. Run `npm run refresh:full`.
 3. Run `npm run export:public`.
-4. Commit/push from `/Users/yoramtap/Documents/AI/bugtracker`.
+4. Commit/push from `/Users/yoramtap/Documents/AI/tracker`.
 
-## Data Contract (`snapshot.json`)
+## Live Dashboard Files
+
+- `index.html` loads `dashboard-preload.js`, the vendored React/Recharts files, the `dashboard-*.js` modules, and `agentation-local-loader.js`.
+- The live dashboard reads:
+  - `backlog-snapshot.json`
+  - `product-cycle-snapshot.json`
+  - `contributors-snapshot.json`
+  - `pr-cycle-snapshot.json`
+- The old `app.js` / `styles.css` path has been removed; `index.html` is the only supported UI entrypoint.
+
+## Data Contract (`backlog-snapshot.json`)
 
 Top-level shape:
 
 - `schemaVersion`: number
 - `updatedAt`: ISO datetime string
 - `source`: object (metadata)
+- `uatAging`: object
+- `prActivity`: object (Jira Development PR activity summary)
 - `combinedPoints`: array of dated snapshots
+- `chartData`: optional object with manually-preserved chart payloads
+- `chartDataUpdatedAt`: optional ISO datetime string when preserved chart data is older than the latest refresh
 
 Each `combinedPoints[]` item:
 
@@ -173,3 +242,21 @@ Each team object:
 
 - `date`: `YYYY-MM-DD`
 - `highest`, `high`, `medium`, `low`, `lowest`: numeric counts
+
+`prActivity` shape:
+
+- `since`: `YYYY-MM-DD`
+- `interval`: currently `month`
+- `source`: generation mode
+- `candidateIssueCount`, `uniquePrCount`, `conflictCount`: numeric metadata
+- `caveat`: explanation of Jira-based limitations
+- `points`: array of month buckets
+
+Each `prActivity.points[]` item:
+
+- `date`: first day of month, `YYYY-MM-DD`
+- `api`, `legacy`, `react`, `bc`, `workers`, `titanium`: objects with `offered`, `merged`, `avgReviewToMergeDays`, and `avgReviewToMergeSampleCount`
+
+## Analysis Contract (`snapshot.json`)
+
+`snapshot.json` is still written by refresh for archive and analysis tooling. Today it mirrors the generated backlog trend / UAT / PR data without the preserved `chartData` payload used by the live dashboard.

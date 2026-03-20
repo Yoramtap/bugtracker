@@ -226,10 +226,8 @@ function summarizeUatHistory(historyPoints) {
     deltaLongAgedPct: numberOrZero(last.longAgedPct) - numberOrZero(first.longAgedPct),
     deltaTotalIssues: numberOrZero(last.totalIssues) - numberOrZero(first.totalIssues),
     deltaLongAgedCount: numberOrZero(last.longAged) - numberOrZero(first.longAged),
-    latestDeltaLongAgedPct:
-      numberOrZero(last.longAgedPct) - numberOrZero(prev.longAgedPct),
-    latestDeltaTotalIssues:
-      numberOrZero(last.totalIssues) - numberOrZero(prev.totalIssues),
+    latestDeltaLongAgedPct: numberOrZero(last.longAgedPct) - numberOrZero(prev.longAgedPct),
+    latestDeltaTotalIssues: numberOrZero(last.totalIssues) - numberOrZero(prev.totalIssues),
     worst
   };
 }
@@ -431,13 +429,7 @@ async function main() {
   const uatSummary = summarizeUat(snapshot?.uatAging || {});
   const uatHistoryPoints = await readUatHistory(historyDirPath);
   const uatHistorySummary = summarizeUatHistory(uatHistoryPoints);
-  const report = buildMarkdown(
-    snapshot,
-    bugSummary,
-    uatSummary,
-    points.length,
-    uatHistorySummary
-  );
+  const report = buildMarkdown(snapshot, bugSummary, uatSummary, points.length, uatHistorySummary);
   const generatedAtIso = new Date().toISOString();
   const archivedReportPath = path.join(
     reportHistoryDirPath,
