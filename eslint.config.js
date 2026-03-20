@@ -3,7 +3,14 @@ import globals from "globals";
 
 export default [
   {
-    ignores: ["node_modules/**", "tasks/**"]
+    ignores: [
+      "node_modules/**",
+      "tasks/**",
+      "vendor/**",
+      "snapshots/**",
+      ".cache/**",
+      ".codex-artifacts/**"
+    ]
   },
   js.configs.recommended,
   {

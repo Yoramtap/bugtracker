@@ -3,3 +3,17 @@
 .env.local
 node_modules
 snapshot.json.tmp
+.cache/
+.codex-artifacts/
+snapshots/
+vendor/
+agentation-local-loader.js
+backlog-snapshot.json
+contributors-snapshot.json
+dashboard-*.js
+dashboard-styles.css
+dashboard-view-utils.js
+dashboard-data-utils.js
+dashboard-preload.js
+pr-cycle-snapshot.json
+product-cycle-snapshot.json
