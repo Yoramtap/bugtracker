@@ -23,24 +23,34 @@ const FALLBACK_DATES = [
 const BOARDS = [
   {
     constName: "BOARD_38_TREND",
-    label: "API",
+    baseJql: "project = TFC AND type = Bug AND labels = API",
     doneStatuses: '(Done, "Won\'t Fix", Duplicate)'
   },
   {
     constName: "BOARD_39_TREND",
-    label: "Frontend",
+    baseJql: "project = TFC AND type = Bug AND labels = Frontend",
     doneStatuses: '(Done, "Won\'t Fix")'
   },
   {
     constName: "BOARD_46_TREND",
-    label: "NewFrontend",
+    baseJql: "project = TFC AND type = Bug AND labels = NewFrontend",
     doneStatuses: '(Done, "Won\'t Fix")'
   },
   {
     constName: "BOARD_40_TREND",
-    label: "Broadcast",
+    baseJql: "project = TFC AND type = Bug AND labels = Broadcast",
     doneStatuses: '(Done, "Won\'t Fix")',
     includeLongstandingCounts: true
+  },
+  {
+    constName: "BOARD_333_TREND",
+    baseJql: "project = TFO AND type = Bug AND labels = Workers",
+    doneStatuses: '(Done, "Won\'t Fix")'
+  },
+  {
+    constName: "BOARD_399_TREND",
+    baseJql: 'project = MESO AND type = Bug AND labels = "READY"',
+    doneStatuses: "(Done)"
   }
 ];
 
@@ -1297,9 +1307,7 @@ function buildUatAging(rows, config) {
 
 async function countFor(board, date, site, email, token) {
   const baseJqlClauses = [
-    "project = TFC",
-    "AND type = Bug",
-    `AND labels = ${board.label}`,
+    board.baseJql,
     `AND created <= "${asOfDateTime(date)}"`,
     `AND status WAS NOT IN ${board.doneStatuses} ON "${date}"`
   ];
@@ -1386,18 +1394,24 @@ function buildCombinedSnapshot(computed, syncedAt, uatAging, prActivity) {
   const legacy = computed.BOARD_39_TREND ?? [];
   const react = computed.BOARD_46_TREND ?? [];
   const bc = computed.BOARD_40_TREND ?? [];
+  const workers = computed.BOARD_333_TREND ?? [];
+  const titanium = computed.BOARD_399_TREND ?? [];
 
   const apiByDate = new Map(api.map((point) => [point.date, point]));
   const legacyByDate = new Map(legacy.map((point) => [point.date, point]));
   const reactByDate = new Map(react.map((point) => [point.date, point]));
   const bcByDate = new Map(bc.map((point) => [point.date, point]));
+  const workersByDate = new Map(workers.map((point) => [point.date, point]));
+  const titaniumByDate = new Map(titanium.map((point) => [point.date, point]));
 
   const allDates = Array.from(
     new Set([
       ...api.map((point) => point.date),
       ...legacy.map((point) => point.date),
       ...react.map((point) => point.date),
-      ...bc.map((point) => point.date)
+      ...bc.map((point) => point.date),
+      ...workers.map((point) => point.date),
+      ...titanium.map((point) => point.date)
     ])
   ).sort();
 
@@ -1416,7 +1430,9 @@ function buildCombinedSnapshot(computed, syncedAt, uatAging, prActivity) {
       api: apiByDate.get(date) ?? emptyPoint(date),
       legacy: legacyByDate.get(date) ?? emptyPoint(date),
       react: reactByDate.get(date) ?? emptyPoint(date),
-      bc: bcByDate.get(date) ?? emptyPoint(date)
+      bc: bcByDate.get(date) ?? emptyPoint(date),
+      workers: workersByDate.get(date) ?? emptyPoint(date),
+      titanium: titaniumByDate.get(date) ?? emptyPoint(date)
     }))
   };
 }
@@ -1693,7 +1709,7 @@ async function main() {
   const prunedSnapshots = await pruneArchivedSnapshots(snapshotRetentionCount);
 
   console.log(
-    "Updated snapshot.json for BOARD_38_TREND, BOARD_39_TREND, BOARD_46_TREND, and BOARD_40_TREND."
+    "Updated snapshot.json for BOARD_38_TREND, BOARD_39_TREND, BOARD_46_TREND, BOARD_40_TREND, BOARD_333_TREND, and BOARD_399_TREND."
   );
   console.log(`Archived snapshot history copy: ${archivedPath}`);
   if (prunedSnapshots.length > 0) {
