@@ -180,7 +180,8 @@ const el = {
   nextBtn: document.getElementById("next-btn"),
   speedSelect: document.getElementById("speed-select"),
   slider: document.getElementById("timeline-slider"),
-  indexLabel: document.getElementById("index-label")
+  indexLabel: document.getElementById("index-label"),
+  playbackStatus: document.getElementById("playback-status")
 };
 
 function getMotionOverride() {
@@ -246,12 +247,22 @@ function cardHeaderColor(column, dwell) {
 
 function setPlaybackLabel(isPlaying) {
   el.playBtn.textContent = isPlaying ? "Pause" : "Play";
+  el.playBtn.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+  el.playBtn.setAttribute("aria-label", isPlaying ? "Pause replay" : "Play replay");
+}
+
+function announcePlayback(view, index) {
+  if (!el.playbackStatus || !view) return;
+  el.playbackStatus.textContent =
+    `Showing ${formatTs(view.ts)}. Step ${index + 1} of ${state.views.length}. ` +
+    `${state.cardIds.length} total cards.`;
 }
 
 function showFatalError(message) {
   el.sprintLabel.textContent = "Failed to load timelapse";
   el.timestampLabel.textContent = "";
   el.indexLabel.textContent = message;
+  if (el.playbackStatus) el.playbackStatus.textContent = message;
   el.board.innerHTML = "";
 
   const error = document.createElement("p");
@@ -468,6 +479,7 @@ function render(index, animateMoves) {
   el.slider.value = String(index);
   el.timestampLabel.textContent = formatTs(view.ts);
   el.indexLabel.textContent = `Step ${index + 1} of ${state.views.length} (working days) · Total cards: ${state.cardIds.length}`;
+  announcePlayback(view, index);
 
   if (shouldAnimate && prevRects && previousIndex !== index) {
     const prevCards = state.views[previousIndex].cards;

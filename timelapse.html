@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f2e7" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
@@ -11,12 +12,14 @@
     <link rel="stylesheet" href="./timelapse.css" />
   </head>
   <body>
-    <main class="layout" aria-live="polite">
+    <a class="skip-link" href="#timelapse-main">Skip to main content</a>
+    <main id="timelapse-main" class="layout" tabindex="-1">
       <header class="hero">
         <p class="eyebrow">Sprint Flow Viewer</p>
         <h1>Sprint Flow Timelapse</h1>
         <p class="subtitle" id="sprint-label"></p>
       </header>
+      <p id="playback-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
 
       <section class="panel" aria-label="Board state">
         <div class="panel-head">
