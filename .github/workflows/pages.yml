@@ -36,10 +36,13 @@ jobs:
             dashboard-charts-delivery.js \
             dashboard-charts-product.js \
             dashboard-data-utils.js \
+            dashboard-preload.js \
             dashboard-styles.css \
             dashboard-view-utils.js \
+            agentation-local-loader.js \
             backlog-snapshot.json \
             contributors-snapshot.json \
+            pr-cycle-snapshot.json \
             product-cycle-snapshot.json \
             dist/
           cp vendor/react.production.min.js vendor/react-dom.production.min.js vendor/prop-types.min.js vendor/recharts.umd.js dist/vendor/
