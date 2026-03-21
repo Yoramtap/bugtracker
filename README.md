@@ -205,10 +205,20 @@ npm run dev:tracker
 
 ## Publish Flow
 
+Read [RELEASE.md](/Users/yoramtap/.codex/worktrees/6935/bugtracker-workshop/RELEASE.md) before any publish or release action.
+
+Short version:
+
 1. Iterate charts and data in `bugtracker-workshop`.
 2. Run `npm run refresh:full`.
 3. Run `npm run export:public`.
 4. Commit/push from `/Users/yoramtap/Documents/AI/tracker`.
+
+Important:
+
+- Do not treat `git push` from this repo as the release step.
+- This repo is the private workshop; `tracker` is the public publish target.
+- Before any release, first ask whether the dataset should be updated: `yes` or `no`.
 
 ## Live Dashboard Files
 
