@@ -48,7 +48,7 @@ This regenerates `snapshot.json` in the repo root.
 It also writes `backlog-snapshot.json` for the live dashboard and archives a timestamped copy to `snapshots/` on each successful run.
 
 Trend dates are resolved automatically from Jira sprints (Agile API), then used as historical "as-of" dates for backlog snapshots.
-Jira Development PR activity is also included, derived from the Jira Development summary field on issues and grouped monthly from `2025-01-01`.
+Jira Development PR activity is also included, derived from the Jira Development summary field on issues and grouped per sprint across the rolling last-year lookback used by the dashboard.
 
 Default sprint-date behavior:
 
@@ -246,16 +246,16 @@ Each team object:
 `prActivity` shape:
 
 - `since`: `YYYY-MM-DD`
-- `interval`: currently `month`
+- `interval`: currently `sprint`
 - `source`: generation mode
 - `candidateIssueCount`, `uniquePrCount`, `conflictCount`: numeric metadata
 - `caveat`: explanation of Jira-based limitations
-- `points`: array of month buckets
+- `points`: array of sprint buckets
 
 Each `prActivity.points[]` item:
 
-- `date`: first day of month, `YYYY-MM-DD`
-- `api`, `legacy`, `react`, `bc`, `workers`, `titanium`: objects with `offered`, `merged`, `avgReviewToMergeDays`, and `avgReviewToMergeSampleCount`
+- `date`: sprint point date, `YYYY-MM-DD`
+- `api`, `legacy`, `react`, `bc`, `workers`, `titanium`: objects with `offered`, `merged`, `avgReviewDays`, and `avgReviewSampleCount`
 
 ## Analysis Contract (`snapshot.json`)
 
