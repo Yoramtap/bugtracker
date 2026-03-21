@@ -171,12 +171,11 @@ The tracked stages are:
 Default refresh behavior:
 
 - projects: `TFC,TFO,MESO`
-- window: last `90` days
+- windows: `Last 90 days`, `Last 6 months`, `Last year`
 
 Optional overrides in `.env.backlog`:
 
 - `PR_CYCLE_PROJECT_KEYS` (comma-separated, default: `TFC,TFO,MESO`)
-- `PR_CYCLE_WINDOW_DAYS` (default: `90`)
 - `PR_CYCLE_CODING_STATUS` (default: `In Progress`)
 - `PR_CYCLE_REVIEW_STATUS` (default: `In Review`)
 - `PR_CYCLE_MERGE_STATUS` (default: `QA`)
@@ -233,41 +232,38 @@ Important:
 
 ## Data Contract (`backlog-snapshot.json`)
 
+`backlog-snapshot.json` is the slim, app-facing payload. The richer analysis/archive data still lives in `snapshot.json`.
+
 Top-level shape:
 
-- `schemaVersion`: number
 - `updatedAt`: ISO datetime string
-- `source`: object (metadata)
-- `uatAging`: object
+- `uatAging.scope.label`: string
 - `prActivity`: object (Jira Development PR activity summary)
 - `combinedPoints`: array of dated snapshots
-- `chartData`: optional object with manually-preserved chart payloads
+- `chartData.managementBusinessUnit.byScope`: optional preserved chart payload used by the UAT business-unit card
 - `chartDataUpdatedAt`: optional ISO datetime string when preserved chart data is older than the latest refresh
 
 Each `combinedPoints[]` item:
 
 - `date`: `YYYY-MM-DD`
-- `api`, `legacy`, `react`, `bc`: team objects
+- `api`, `legacy`, `react`, `bc`, `workers`, `titanium`: team objects
 
 Each team object:
 
-- `date`: `YYYY-MM-DD`
 - `highest`, `high`, `medium`, `low`, `lowest`: numeric counts
 
 `prActivity` shape:
 
 - `since`: `YYYY-MM-DD`
 - `interval`: currently `sprint`
-- `source`: generation mode
-- `candidateIssueCount`, `uniquePrCount`, `conflictCount`: numeric metadata
 - `caveat`: explanation of Jira-based limitations
 - `points`: array of sprint buckets
 
 Each `prActivity.points[]` item:
 
 - `date`: sprint point date, `YYYY-MM-DD`
-- `api`, `legacy`, `react`, `bc`, `workers`, `titanium`: objects with `offered`, `merged`, `avgReviewDays`, and `avgReviewSampleCount`
+- `api`, `legacy`, `react`, `bc`, `workers`, `titanium`: objects with `offered`, `merged`, `avgReviewToMergeDays`, and `avgReviewToMergeSampleCount`
 
 ## Analysis Contract (`snapshot.json`)
 
-`snapshot.json` is still written by refresh for archive and analysis tooling. Today it mirrors the generated backlog trend / UAT / PR data without the preserved `chartData` payload used by the live dashboard.
+`snapshot.json` is still written by refresh for archive and analysis tooling. It keeps the fuller backlog/UAT/PR metadata that is intentionally omitted from the lighter dashboard payloads.

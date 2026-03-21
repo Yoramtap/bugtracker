@@ -3,6 +3,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { SNAPSHOT_SANITIZERS } from "./snapshot-sanitizers.mjs";
+
 const DEFAULT_TARGET = "/Users/yoramtap/Documents/AI/tracker";
 const SAFE_FILES = [
   "backlog-snapshot.json",
@@ -27,56 +29,6 @@ const SAFE_FILES = [
   "vendor/recharts.umd.js"
 ];
 
-function sanitizePrCycleStage(stage) {
-  return {
-    key: String(stage?.key || "").trim(),
-    label: String(stage?.label || "").trim(),
-    days: Number.isFinite(stage?.days) ? stage.days : 0,
-    sampleCount: Number.isFinite(stage?.sampleCount) ? stage.sampleCount : 0
-  };
-}
-
-function sanitizePrCycleTeam(team) {
-  return {
-    key: String(team?.key || "").trim(),
-    label: String(team?.label || "").trim(),
-    issueCount: Number.isFinite(team?.issueCount) ? team.issueCount : 0,
-    totalCycleDays: Number.isFinite(team?.totalCycleDays) ? team.totalCycleDays : 0,
-    bottleneckLabel: String(team?.bottleneckLabel || "").trim(),
-    stages: Array.isArray(team?.stages) ? team.stages.map(sanitizePrCycleStage) : []
-  };
-}
-
-function sanitizePrCycleWindow(windowSnapshot) {
-  return {
-    windowLabel: String(windowSnapshot?.windowLabel || "").trim(),
-    teams: Array.isArray(windowSnapshot?.teams) ? windowSnapshot.teams.map(sanitizePrCycleTeam) : []
-  };
-}
-
-function sanitizePrCycleSnapshot(snapshot) {
-  const windows =
-    snapshot?.windows && typeof snapshot.windows === "object"
-      ? Object.fromEntries(
-          Object.entries(snapshot.windows).map(([key, windowSnapshot]) => [
-            key,
-            sanitizePrCycleWindow(windowSnapshot)
-          ])
-        )
-      : undefined;
-
-  return {
-    updatedAt: String(snapshot?.updatedAt || "").trim(),
-    defaultTeam: String(snapshot?.defaultTeam || "").trim(),
-    defaultWindow: String(snapshot?.defaultWindow || "").trim(),
-    ...(windows ? { windows } : {}),
-    ...(Array.isArray(snapshot?.teams) ? { teams: snapshot.teams.map(sanitizePrCycleTeam) } : {}),
-    ...(String(snapshot?.windowLabel || "").trim()
-      ? { windowLabel: String(snapshot?.windowLabel || "").trim() }
-      : {})
-  };
-}
-
 function getArg(flag) {
   const index = process.argv.indexOf(flag);
   if (index === -1) return "";
@@ -94,11 +46,12 @@ async function copySafeFiles(sourceDir, targetDir) {
   for (const fileName of SAFE_FILES) {
     const sourcePath = path.join(sourceDir, fileName);
     const targetPath = path.join(targetDir, fileName);
+    const sanitize = SNAPSHOT_SANITIZERS[fileName];
 
     await fs.mkdir(path.dirname(targetPath), { recursive: true });
-    if (fileName === "pr-cycle-snapshot.json") {
+    if (sanitize) {
       const raw = await fs.readFile(sourcePath, "utf8");
-      const sanitized = sanitizePrCycleSnapshot(JSON.parse(raw));
+      const sanitized = sanitize(JSON.parse(raw));
       await fs.writeFile(targetPath, `${JSON.stringify(sanitized, null, 2)}\n`, "utf8");
     } else {
       await fs.copyFile(sourcePath, targetPath);

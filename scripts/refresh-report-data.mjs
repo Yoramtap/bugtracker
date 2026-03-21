@@ -3,6 +3,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { sanitizeBacklogSnapshot, sanitizePrCycleSnapshot } from "./snapshot-sanitizers.mjs";
+
 const FALLBACK_DATES = [
   "2025-06-23",
   "2025-07-07",
@@ -989,50 +991,37 @@ function buildPrCycleWindowSnapshot(rows, config) {
   });
 
   return {
-    windowKey: config.key,
-    windowDays: config.windowDays,
     windowLabel: config.windowLabel,
     teams
   };
 }
 
 function buildPrCycleSnapshot(rows, config) {
-  const windowSnapshots = Object.fromEntries(
-    (Array.isArray(config.windows) ? config.windows : []).map((windowConfig) => [
+  const windowEntries = (Array.isArray(config.windows) ? config.windows : []).map(
+    (windowConfig) => [
       windowConfig.key,
       buildPrCycleWindowSnapshot(rows, {
         ...config,
         ...windowConfig
       })
-    ])
+    ]
   );
+  const windowSnapshots = Object.fromEntries(windowEntries);
   const defaultWindow = String(config.defaultWindow || PR_CYCLE_WINDOW_DEFAULT_KEY)
     .trim()
     .toLowerCase();
-  const fallbackWindow = windowSnapshots[defaultWindow] ||
-    windowSnapshots[PR_CYCLE_WINDOW_DEFAULT_KEY] ||
-    Object.values(windowSnapshots)[0] || { windowDays: 0, windowLabel: "", teams: [] };
+  const fallbackEntry = windowEntries.find(([key]) => key === defaultWindow) ||
+    windowEntries.find(([key]) => key === PR_CYCLE_WINDOW_DEFAULT_KEY) ||
+    windowEntries[0] || ["", { windowLabel: "", teams: [] }];
+  const [fallbackWindowKey, fallbackWindow] = fallbackEntry;
   const defaultTeam = fallbackWindow.teams.some((team) => team.key === "bc")
     ? "bc"
     : String(fallbackWindow.teams[0]?.key || "");
 
   return {
     updatedAt: new Date().toISOString(),
-    defaultWindow: fallbackWindow.windowKey || defaultWindow,
-    windowDays: fallbackWindow.windowDays,
-    windowLabel: fallbackWindow.windowLabel,
+    defaultWindow: fallbackWindowKey || defaultWindow,
     defaultTeam,
-    source: {
-      type: "jira_status_history",
-      projectKeys: config.projectKeys,
-      statuses: {
-        coding: config.codingStatuses,
-        review: config.reviewStatuses,
-        merge: config.mergeStatuses
-      },
-      teamOverrides: PR_CYCLE_TEAM_STATUS_OVERRIDES
-    },
-    teams: fallbackWindow.teams,
     windows: windowSnapshots
   };
 }
@@ -1557,12 +1546,12 @@ async function writeSnapshotAtomic(snapshot) {
       ).trim()
     : "";
   const backlogSnapshot = shouldPreserveChartData
-    ? {
+    ? sanitizeBacklogSnapshot({
         ...snapshot,
         chartData: existingBacklogSnapshot.chartData,
         ...(preservedChartDataUpdatedAt ? { chartDataUpdatedAt: preservedChartDataUpdatedAt } : {})
-      }
-    : snapshot;
+      })
+    : sanitizeBacklogSnapshot(snapshot);
 
   const serialized = `${JSON.stringify(snapshot, null, 2)}\n`;
   const backlogSerialized = `${JSON.stringify(backlogSnapshot, null, 2)}\n`;
@@ -1606,7 +1595,7 @@ function updateExistingSnapshotPrActivity(existingSnapshot, prActivity, syncedAt
 }
 
 async function writePrCycleSnapshotAtomic(snapshot) {
-  const serialized = `${JSON.stringify(snapshot, null, 2)}\n`;
+  const serialized = `${JSON.stringify(sanitizePrCycleSnapshot(snapshot), null, 2)}\n`;
   try {
     await fs.writeFile(PR_CYCLE_SNAPSHOT_TMP_PATH, serialized, "utf8");
     await fs.rename(PR_CYCLE_SNAPSHOT_TMP_PATH, PR_CYCLE_SNAPSHOT_PATH);
@@ -1757,10 +1746,6 @@ async function main() {
       mergeStatuses: prCycleMergeStatuses
     });
     prCycleSnapshot = buildPrCycleSnapshot(prCycleRows, {
-      projectKeys: prCycleProjectKeys,
-      codingStatuses: prCycleCodingStatuses,
-      reviewStatuses: prCycleReviewStatuses,
-      mergeStatuses: prCycleMergeStatuses,
       windows: prCycleWindows,
       defaultWindow: PR_CYCLE_WINDOW_DEFAULT_KEY
     });
