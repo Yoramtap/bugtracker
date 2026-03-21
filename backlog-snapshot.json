@@ -1,122 +1,113 @@
 {
-  "schemaVersion": 3,
   "updatedAt": "2026-03-21T18:56:01.021Z",
-  "source": {
-    "mode": "mcp_snapshot",
-    "syncedAt": "2026-03-21T18:56:01.021Z",
-    "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). UAT aging is generated from current UAT issues and changelog-derived status entry timestamps. PR activity is derived from Jira dev-status pull request details."
+  "chartDataUpdatedAt": "2026-03-19T15:26:53.260Z",
+  "chartData": {
+    "managementBusinessUnit": {
+      "byScope": {
+        "ongoing": {
+          "rows": [
+            {
+              "label": "ANZJ",
+              "sampleCount": 0,
+              "uatAvg": 0,
+              "issueItems": []
+            },
+            {
+              "label": "EU",
+              "sampleCount": 3,
+              "uatAvg": 29.6,
+              "issueItems": [
+                "TFC-16029",
+                "TFC-16084",
+                "TFC-11526"
+              ]
+            },
+            {
+              "label": "MEA",
+              "sampleCount": 1,
+              "uatAvg": 38.22,
+              "issueItems": [
+                "TFC-15925"
+              ]
+            },
+            {
+              "label": "US",
+              "sampleCount": 4,
+              "uatAvg": 40.53,
+              "issueItems": [
+                "TFC-14425",
+                "TFC-16087",
+                "TFC-13224",
+                "TFC-15958"
+              ]
+            },
+            {
+              "label": "Tech Debt",
+              "sampleCount": 1,
+              "uatAvg": 93,
+              "issueItems": [
+                "TFC-14540"
+              ]
+            }
+          ]
+        },
+        "done": {
+          "rows": [
+            {
+              "label": "ANZJ",
+              "sampleCount": 7,
+              "uatAvg": 99.51,
+              "issueItems": [
+                "TFC-15598",
+                "TFC-12976",
+                "TFC-13842",
+                "TFC-13847",
+                "TFC-13848",
+                "TFC-15120",
+                "TFC-16088"
+              ]
+            },
+            {
+              "label": "EU",
+              "sampleCount": 0,
+              "uatAvg": 0,
+              "issueItems": []
+            },
+            {
+              "label": "MEA",
+              "sampleCount": 0,
+              "uatAvg": 0,
+              "issueItems": []
+            },
+            {
+              "label": "US",
+              "sampleCount": 1,
+              "uatAvg": 16.16,
+              "issueItems": [
+                "TFC-16041"
+              ]
+            },
+            {
+              "label": "Tech Debt",
+              "sampleCount": 1,
+              "uatAvg": 27.29,
+              "issueItems": [
+                "TFC-14978"
+              ]
+            }
+          ]
+        }
+      }
+    }
   },
   "uatAging": {
     "scope": {
-      "project": "TFC",
-      "issueType": "Any",
-      "status": "UAT",
       "label": "Broadcast"
-    },
-    "generatedAt": "2026-03-21T18:34:01.259Z",
-    "totalIssues": 10,
-    "buckets": [
-      {
-        "id": "d0_7",
-        "label": "0-7 days",
-        "minDays": 0,
-        "maxDays": 7
-      },
-      {
-        "id": "d8_14",
-        "label": "8-14 days",
-        "minDays": 8,
-        "maxDays": 14
-      },
-      {
-        "id": "d15_30",
-        "label": "15-30 days",
-        "minDays": 15,
-        "maxDays": 30
-      },
-      {
-        "id": "d31_60",
-        "label": "31-60 days",
-        "minDays": 31,
-        "maxDays": 60
-      },
-      {
-        "id": "d61_plus",
-        "label": "61+ days",
-        "minDays": 61,
-        "maxDays": null
-      }
-    ],
-    "priorities": {
-      "highest": {
-        "count": 2,
-        "avgDays": 10.5,
-        "maxDays": 19,
-        "buckets": {
-          "d0_7": 1,
-          "d8_14": 0,
-          "d15_30": 1,
-          "d31_60": 0,
-          "d61_plus": 0
-        }
-      },
-      "high": {
-        "count": 5,
-        "avgDays": 31.8,
-        "maxDays": 94,
-        "buckets": {
-          "d0_7": 2,
-          "d8_14": 0,
-          "d15_30": 1,
-          "d31_60": 1,
-          "d61_plus": 1
-        }
-      },
-      "medium": {
-        "count": 3,
-        "avgDays": 69.7,
-        "maxDays": 99,
-        "buckets": {
-          "d0_7": 0,
-          "d8_14": 0,
-          "d15_30": 0,
-          "d31_60": 1,
-          "d61_plus": 2
-        }
-      },
-      "low": {
-        "count": 0,
-        "avgDays": 0,
-        "maxDays": 0,
-        "buckets": {
-          "d0_7": 0,
-          "d8_14": 0,
-          "d15_30": 0,
-          "d31_60": 0,
-          "d61_plus": 0
-        }
-      },
-      "lowest": {
-        "count": 0,
-        "avgDays": 0,
-        "maxDays": 0,
-        "buckets": {
-          "d0_7": 0,
-          "d8_14": 0,
-          "d15_30": 0,
-          "d31_60": 0,
-          "d61_plus": 0
-        }
-      }
     }
   },
   "prActivity": {
     "since": "2025-03-21",
     "interval": "sprint",
-    "source": "jira_dev_status_detail",
-    "candidateIssueCount": 2032,
-    "uniquePrCount": 2479,
-    "conflictCount": 5,
     "caveat": "Counts are deduped from Jira dev-status pull request records and attributed by Jira team label. Inflow dates use the earliest available PR lastUpdate and source-branch last commit timestamp, then are bucketed to Jira sprint points. Merged dates use Jira PR lastUpdate as a merge proxy and are bucketed to the corresponding sprint point. Review-to-merge time is a ticket proxy: first Jira In Review status to linked merged PR proxy date. Multiple done Jira tickets can still map to the same underlying PR.",
     "points": [
       {
@@ -1178,7 +1169,6 @@
     {
       "date": "2025-09-29",
       "api": {
-        "date": "2025-09-29",
         "highest": 1,
         "high": 2,
         "medium": 7,
@@ -1186,7 +1176,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-09-29",
         "highest": 0,
         "high": 1,
         "medium": 9,
@@ -1194,7 +1183,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-09-29",
         "highest": 0,
         "high": 0,
         "medium": 1,
@@ -1202,7 +1190,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-09-29",
         "highest": 2,
         "high": 54,
         "medium": 95,
@@ -1212,7 +1199,6 @@
         "longstanding_60d_plus": 138
       },
       "workers": {
-        "date": "2025-09-29",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1220,7 +1206,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-09-29",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1231,7 +1216,6 @@
     {
       "date": "2025-10-13",
       "api": {
-        "date": "2025-10-13",
         "highest": 1,
         "high": 2,
         "medium": 4,
@@ -1239,7 +1223,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-10-13",
         "highest": 0,
         "high": 1,
         "medium": 12,
@@ -1247,7 +1230,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-10-13",
         "highest": 0,
         "high": 0,
         "medium": 2,
@@ -1255,7 +1237,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-10-13",
         "highest": 1,
         "high": 58,
         "medium": 96,
@@ -1265,7 +1246,6 @@
         "longstanding_60d_plus": 140
       },
       "workers": {
-        "date": "2025-10-13",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1273,7 +1253,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-10-13",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1284,7 +1263,6 @@
     {
       "date": "2025-10-27",
       "api": {
-        "date": "2025-10-27",
         "highest": 0,
         "high": 2,
         "medium": 4,
@@ -1292,7 +1270,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-10-27",
         "highest": 0,
         "high": 1,
         "medium": 12,
@@ -1300,7 +1277,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-10-27",
         "highest": 0,
         "high": 0,
         "medium": 4,
@@ -1308,7 +1284,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-10-27",
         "highest": 1,
         "high": 57,
         "medium": 100,
@@ -1318,7 +1293,6 @@
         "longstanding_60d_plus": 141
       },
       "workers": {
-        "date": "2025-10-27",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1326,7 +1300,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-10-27",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1337,7 +1310,6 @@
     {
       "date": "2025-11-10",
       "api": {
-        "date": "2025-11-10",
         "highest": 0,
         "high": 0,
         "medium": 4,
@@ -1345,7 +1317,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-11-10",
         "highest": 0,
         "high": 1,
         "medium": 12,
@@ -1353,7 +1324,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-11-10",
         "highest": 0,
         "high": 1,
         "medium": 6,
@@ -1361,7 +1331,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-11-10",
         "highest": 5,
         "high": 63,
         "medium": 104,
@@ -1371,7 +1340,6 @@
         "longstanding_60d_plus": 144
       },
       "workers": {
-        "date": "2025-11-10",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1379,7 +1347,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-11-10",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1390,7 +1357,6 @@
     {
       "date": "2025-11-24",
       "api": {
-        "date": "2025-11-24",
         "highest": 0,
         "high": 0,
         "medium": 4,
@@ -1398,7 +1364,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-11-24",
         "highest": 0,
         "high": 1,
         "medium": 9,
@@ -1406,7 +1371,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-11-24",
         "highest": 0,
         "high": 0,
         "medium": 5,
@@ -1414,7 +1378,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-11-24",
         "highest": 5,
         "high": 66,
         "medium": 106,
@@ -1424,7 +1387,6 @@
         "longstanding_60d_plus": 147
       },
       "workers": {
-        "date": "2025-11-24",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1432,7 +1394,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-11-24",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1443,7 +1404,6 @@
     {
       "date": "2025-12-08",
       "api": {
-        "date": "2025-12-08",
         "highest": 0,
         "high": 0,
         "medium": 5,
@@ -1451,7 +1411,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-12-08",
         "highest": 0,
         "high": 1,
         "medium": 8,
@@ -1459,7 +1418,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-12-08",
         "highest": 0,
         "high": 0,
         "medium": 8,
@@ -1467,7 +1425,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-12-08",
         "highest": 7,
         "high": 66,
         "medium": 113,
@@ -1477,7 +1434,6 @@
         "longstanding_60d_plus": 153
       },
       "workers": {
-        "date": "2025-12-08",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1485,7 +1441,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-12-08",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1496,7 +1451,6 @@
     {
       "date": "2025-12-22",
       "api": {
-        "date": "2025-12-22",
         "highest": 0,
         "high": 0,
         "medium": 5,
@@ -1504,7 +1458,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2025-12-22",
         "highest": 0,
         "high": 1,
         "medium": 8,
@@ -1512,7 +1465,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2025-12-22",
         "highest": 0,
         "high": 0,
         "medium": 5,
@@ -1520,7 +1472,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2025-12-22",
         "highest": 5,
         "high": 70,
         "medium": 112,
@@ -1530,7 +1481,6 @@
         "longstanding_60d_plus": 154
       },
       "workers": {
-        "date": "2025-12-22",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1538,7 +1488,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2025-12-22",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1549,7 +1498,6 @@
     {
       "date": "2026-01-05",
       "api": {
-        "date": "2026-01-05",
         "highest": 0,
         "high": 1,
         "medium": 4,
@@ -1557,7 +1505,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-01-05",
         "highest": 0,
         "high": 1,
         "medium": 6,
@@ -1565,7 +1512,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2026-01-05",
         "highest": 0,
         "high": 0,
         "medium": 3,
@@ -1573,7 +1519,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-01-05",
         "highest": 5,
         "high": 72,
         "medium": 114,
@@ -1583,7 +1528,6 @@
         "longstanding_60d_plus": 166
       },
       "workers": {
-        "date": "2026-01-05",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1591,7 +1535,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-01-05",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1602,7 +1545,6 @@
     {
       "date": "2026-01-19",
       "api": {
-        "date": "2026-01-19",
         "highest": 0,
         "high": 0,
         "medium": 6,
@@ -1610,7 +1552,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-01-19",
         "highest": 0,
         "high": 1,
         "medium": 6,
@@ -1618,7 +1559,6 @@
         "lowest": 2
       },
       "react": {
-        "date": "2026-01-19",
         "highest": 0,
         "high": 0,
         "medium": 3,
@@ -1626,7 +1566,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-01-19",
         "highest": 4,
         "high": 68,
         "medium": 113,
@@ -1636,7 +1575,6 @@
         "longstanding_60d_plus": 165
       },
       "workers": {
-        "date": "2026-01-19",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1644,7 +1582,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-01-19",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1655,7 +1592,6 @@
     {
       "date": "2026-02-02",
       "api": {
-        "date": "2026-02-02",
         "highest": 0,
         "high": 0,
         "medium": 6,
@@ -1663,7 +1599,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-02-02",
         "highest": 0,
         "high": 1,
         "medium": 4,
@@ -1671,7 +1606,6 @@
         "lowest": 0
       },
       "react": {
-        "date": "2026-02-02",
         "highest": 0,
         "high": 0,
         "medium": 3,
@@ -1679,7 +1613,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-02-02",
         "highest": 4,
         "high": 69,
         "medium": 112,
@@ -1689,7 +1622,6 @@
         "longstanding_60d_plus": 164
       },
       "workers": {
-        "date": "2026-02-02",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1697,7 +1629,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-02-02",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1708,7 +1639,6 @@
     {
       "date": "2026-02-16",
       "api": {
-        "date": "2026-02-16",
         "highest": 0,
         "high": 1,
         "medium": 7,
@@ -1716,7 +1646,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-02-16",
         "highest": 0,
         "high": 2,
         "medium": 6,
@@ -1724,7 +1653,6 @@
         "lowest": 0
       },
       "react": {
-        "date": "2026-02-16",
         "highest": 0,
         "high": 0,
         "medium": 6,
@@ -1732,7 +1660,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-02-16",
         "highest": 6,
         "high": 70,
         "medium": 113,
@@ -1742,7 +1669,6 @@
         "longstanding_60d_plus": 168
       },
       "workers": {
-        "date": "2026-02-16",
         "highest": 0,
         "high": 0,
         "medium": 0,
@@ -1750,7 +1676,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-02-16",
         "highest": 2,
         "high": 0,
         "medium": 0,
@@ -1761,7 +1686,6 @@
     {
       "date": "2026-03-02",
       "api": {
-        "date": "2026-03-02",
         "highest": 0,
         "high": 1,
         "medium": 9,
@@ -1769,7 +1693,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-03-02",
         "highest": 0,
         "high": 2,
         "medium": 6,
@@ -1777,7 +1700,6 @@
         "lowest": 0
       },
       "react": {
-        "date": "2026-03-02",
         "highest": 0,
         "high": 1,
         "medium": 6,
@@ -1785,7 +1707,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-03-02",
         "highest": 4,
         "high": 77,
         "medium": 116,
@@ -1795,7 +1716,6 @@
         "longstanding_60d_plus": 166
       },
       "workers": {
-        "date": "2026-03-02",
         "highest": 0,
         "high": 0,
         "medium": 1,
@@ -1803,7 +1723,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-03-02",
         "highest": 1,
         "high": 2,
         "medium": 0,
@@ -1814,7 +1733,6 @@
     {
       "date": "2026-03-16",
       "api": {
-        "date": "2026-03-16",
         "highest": 0,
         "high": 1,
         "medium": 9,
@@ -1822,7 +1740,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-03-16",
         "highest": 0,
         "high": 1,
         "medium": 5,
@@ -1830,7 +1747,6 @@
         "lowest": 0
       },
       "react": {
-        "date": "2026-03-16",
         "highest": 0,
         "high": 0,
         "medium": 6,
@@ -1838,7 +1754,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-03-16",
         "highest": 6,
         "high": 78,
         "medium": 121,
@@ -1848,7 +1763,6 @@
         "longstanding_60d_plus": 170
       },
       "workers": {
-        "date": "2026-03-16",
         "highest": 0,
         "high": 2,
         "medium": 0,
@@ -1856,7 +1770,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-03-16",
         "highest": 1,
         "high": 2,
         "medium": 0,
@@ -1867,7 +1780,6 @@
     {
       "date": "2026-03-30",
       "api": {
-        "date": "2026-03-30",
         "highest": 0,
         "high": 2,
         "medium": 9,
@@ -1875,7 +1787,6 @@
         "lowest": 0
       },
       "legacy": {
-        "date": "2026-03-30",
         "highest": 0,
         "high": 1,
         "medium": 6,
@@ -1883,7 +1794,6 @@
         "lowest": 0
       },
       "react": {
-        "date": "2026-03-30",
         "highest": 0,
         "high": 0,
         "medium": 6,
@@ -1891,7 +1801,6 @@
         "lowest": 0
       },
       "bc": {
-        "date": "2026-03-30",
         "highest": 7,
         "high": 79,
         "medium": 123,
@@ -1901,7 +1810,6 @@
         "longstanding_60d_plus": 178
       },
       "workers": {
-        "date": "2026-03-30",
         "highest": 0,
         "high": 1,
         "medium": 0,
@@ -1909,7 +1817,6 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-03-30",
         "highest": 1,
         "high": 1,
         "medium": 0,
@@ -1917,189 +1824,5 @@
         "lowest": 0
       }
     }
-  ],
-  "chartData": {
-    "managementBusinessUnit": {
-      "byScope": {
-        "ongoing": {
-          "rows": [
-            {
-              "label": "ANZJ",
-              "devAvg": 0,
-              "uatAvg": 0,
-              "devCount": 0,
-              "uatCount": 0,
-              "sampleCount": 0,
-              "issueItems": []
-            },
-            {
-              "label": "EU",
-              "devAvg": 0.17,
-              "uatAvg": 29.6,
-              "devCount": 3,
-              "uatCount": 3,
-              "sampleCount": 3,
-              "issueItems": [
-                {
-                  "issueId": "TFC-16029",
-                  "facilityLabel": "Facility NL NLCP"
-                },
-                {
-                  "issueId": "TFC-16084",
-                  "facilityLabel": "Facility NO OBC"
-                },
-                {
-                  "issueId": "TFC-11526",
-                  "facilityLabel": "Facility unmapped"
-                }
-              ]
-            },
-            {
-              "label": "MEA",
-              "devAvg": 1.1,
-              "uatAvg": 38.22,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueItems": [
-                {
-                  "issueId": "TFC-15925",
-                  "facilityLabel": "Facility ME MEIP1"
-                }
-              ]
-            },
-            {
-              "label": "US",
-              "devAvg": 2.67,
-              "uatAvg": 40.53,
-              "devCount": 4,
-              "uatCount": 4,
-              "sampleCount": 4,
-              "issueItems": [
-                {
-                  "issueId": "TFC-14425",
-                  "facilityLabel": "Facility US EN1"
-                },
-                {
-                  "issueId": "TFC-16087",
-                  "facilityLabel": "Facility US ND2"
-                },
-                {
-                  "issueId": "TFC-13224",
-                  "facilityLabel": "Facility US USCP"
-                },
-                {
-                  "issueId": "TFC-15958",
-                  "facilityLabel": "Facility unmapped"
-                }
-              ]
-            },
-            {
-              "label": "Tech Debt",
-              "devAvg": 28.11,
-              "uatAvg": 93,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueItems": [
-                {
-                  "issueId": "TFC-14540",
-                  "facilityLabel": "Facility unmapped"
-                }
-              ]
-            }
-          ]
-        },
-        "done": {
-          "rows": [
-            {
-              "label": "ANZJ",
-              "devAvg": 59.29,
-              "uatAvg": 99.51,
-              "devCount": 7,
-              "uatCount": 7,
-              "sampleCount": 7,
-              "issueItems": [
-                {
-                  "issueId": "TFC-15598",
-                  "facilityLabel": "Facility AU AHS"
-                },
-                {
-                  "issueId": "TFC-12976",
-                  "facilityLabel": "Facility NZ NZCP"
-                },
-                {
-                  "issueId": "TFC-13842",
-                  "facilityLabel": "Facility unmapped"
-                },
-                {
-                  "issueId": "TFC-13847",
-                  "facilityLabel": "Facility unmapped"
-                },
-                {
-                  "issueId": "TFC-13848",
-                  "facilityLabel": "Facility unmapped"
-                },
-                {
-                  "issueId": "TFC-15120",
-                  "facilityLabel": "Facility unmapped"
-                },
-                {
-                  "issueId": "TFC-16088",
-                  "facilityLabel": "Facility unmapped"
-                }
-              ]
-            },
-            {
-              "label": "EU",
-              "devAvg": 0,
-              "uatAvg": 0,
-              "devCount": 0,
-              "uatCount": 0,
-              "sampleCount": 0,
-              "issueItems": []
-            },
-            {
-              "label": "MEA",
-              "devAvg": 0,
-              "uatAvg": 0,
-              "devCount": 0,
-              "uatCount": 0,
-              "sampleCount": 0,
-              "issueItems": []
-            },
-            {
-              "label": "US",
-              "devAvg": 0.99,
-              "uatAvg": 16.16,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueItems": [
-                {
-                  "issueId": "TFC-16041",
-                  "facilityLabel": "Facility US ND2"
-                }
-              ]
-            },
-            {
-              "label": "Tech Debt",
-              "devAvg": 22.01,
-              "uatAvg": 27.29,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueItems": [
-                {
-                  "issueId": "TFC-14978",
-                  "facilityLabel": "Facility unmapped"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    }
-  },
-  "chartDataUpdatedAt": "2026-03-19T15:26:53.260Z"
+  ]
 }

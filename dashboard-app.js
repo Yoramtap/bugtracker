@@ -49,7 +49,6 @@ const CHART_CONFIG = {
     statusId: "contributors-status",
     contextId: "contributors-context",
     containerId: "top-contributors-chart",
-    rendererName: "renderTopContributorsChart",
     missingMessage: "Contributors chart unavailable: Recharts renderer missing."
   },
   "product-cycle": {
@@ -57,7 +56,6 @@ const CHART_CONFIG = {
     statusId: "product-cycle-status",
     contextId: "product-cycle-context",
     containerId: "cycle-time-parking-lot-to-done-chart",
-    rendererName: "renderLeadAndCycleTimeByTeamChart",
     missingMessage: "No product cycle aggregates found in product-cycle-snapshot.json."
   },
   "pr-cycle-experiment": {
@@ -231,7 +229,6 @@ const {
   getOldestTimestamp,
   setStatusMessage,
   setStatusMessageForIds,
-  readThemeColor,
   getThemeColors,
   clearChartContainer,
   getModeFromUrl,
@@ -268,11 +265,6 @@ const PR_ACTIVITY_LINE_DEFS = [
   { dataKey: "workers", name: "Workers", colorKey: "workers" },
   { dataKey: "titanium", name: "Titanium", colorKey: "titanium" }
 ];
-const chartDateTickFormatter = new Intl.DateTimeFormat(undefined, {
-  month: "short",
-  year: "2-digit",
-  timeZone: "UTC"
-});
 const chartMonthRangeShortFormatter = new Intl.DateTimeFormat(undefined, {
   month: "short",
   year: "numeric",
@@ -282,18 +274,6 @@ const chartMonthRangeShortFormatter = new Intl.DateTimeFormat(undefined, {
 function toChartDateValue(dateText) {
   const timestamp = new Date(`${String(dateText || "")}T00:00:00Z`).getTime();
   return Number.isFinite(timestamp) ? timestamp : 0;
-}
-
-function formatChartDateTick(value) {
-  if (!Number.isFinite(value) || value <= 0) return "";
-  return chartDateTickFormatter.format(new Date(value));
-}
-
-function formatChartMonthRangeShort(startDateText, endDateText) {
-  const startValue = toChartDateValue(startDateText);
-  const endValue = toChartDateValue(endDateText);
-  if (!startValue || !endValue) return "All-time avg";
-  return `All-time avg • ${chartMonthRangeShortFormatter.format(new Date(startValue))} to ${chartMonthRangeShortFormatter.format(new Date(endValue))}`;
 }
 
 function normalizePrActivityInterval(interval) {
@@ -955,13 +935,13 @@ function renderPublicAggregateChart(configKey, scope, onReady) {
   });
 }
 
-function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
+function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData) {
   const chartCore = window.DashboardChartCore;
   const panel = getChartNodes("product-cycle");
   const titleNode = document.getElementById("product-cycle-title");
   if (!panel || !chartCore || !chartScopeData || typeof chartScopeData !== "object") return false;
   const { status, context, config } = panel;
-  if (titleNode) titleNode.textContent = "How long ideas take to ship";
+  if (titleNode) titleNode.textContent = "How long product ideas take to ship";
 
   const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
     .map((row) => ({
@@ -989,7 +969,7 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
     toCount(state.productCycle?.fetchedCount)
   );
   const scopeLabel = String(
-    chartScopeData.scopeLabel || PRODUCT_CYCLE_SCOPE_LABELS[scope] || PRODUCT_CYCLE_SCOPE_LABEL
+    chartScopeData.scopeLabel || PRODUCT_CYCLE_SCOPE_LABEL
   );
 
   if (sampleCount === 0) {
@@ -1028,7 +1008,7 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, scope) {
 
   const selectedRow = rows.find((row) => productCycleTeamKey(row?.team) === selectedTeamKey) || rows[0];
   const selectedSampleCount = toCount(selectedRow?.meta_cycle?.n);
-  renderProductCycleSingleTeamCard(config.containerId, selectedRow, rows, scopeLabel);
+  renderProductCycleSingleTeamCard(config.containerId, selectedRow, rows);
   setPanelContext(
     context,
     fetchedCount > 0
@@ -1074,9 +1054,6 @@ function normalizeCurrentStageChartData(chartSnapshotData) {
     }
     return row;
   });
-  const teams = Array.isArray(chartSnapshotData.teams)
-    ? chartSnapshotData.teams.map((team) => normalizeDisplayTeamName(team)).filter(Boolean)
-    : [];
   const teamDefs = Array.isArray(chartSnapshotData.teamDefs)
     ? chartSnapshotData.teamDefs.map((teamDef) => ({
         ...teamDef,
@@ -1106,7 +1083,6 @@ function normalizeCurrentStageChartData(chartSnapshotData) {
   }
   return {
     ...chartSnapshotData,
-    teams,
     teamDefs,
     rows,
     categorySecondaryLabels
@@ -1361,7 +1337,7 @@ function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
 function renderLeadAndCycleTimeByTeamChart() {
   renderPublicAggregateChart("product-cycle", PRODUCT_CYCLE_SCOPE, ({ chartData }) => {
     const chartScopeData = chartData?.leadCycleByScope?.[PRODUCT_CYCLE_SCOPE];
-    if (renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, PRODUCT_CYCLE_SCOPE)) return;
+    if (renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData)) return;
     const config = getConfig("product-cycle");
     if (config) {
       setStatusMessage(
@@ -1403,15 +1379,11 @@ function productCycleTeamKey(value) {
   );
 }
 
-function formatCycleMonths(valueInDays) {
+function formatCycleMonthsValueMarkup(valueInDays) {
   const months = Math.max(0, toNumber(valueInDays) / 30.4375);
-  if (months === 0) return "0 months";
-  return months === 1 ? "1.0 month" : `${months.toFixed(1)} months`;
-}
-
-function formatCycleMonthsValue(valueInDays) {
-  const months = Math.max(0, toNumber(valueInDays) / 30.4375);
-  return months === 0 ? "0" : months.toFixed(1);
+  const rounded = months === 0 ? "0" : months.toFixed(1);
+  const unit = Math.abs(months - 1) < 0.05 ? "month" : "months";
+  return `<span class="metric-duration__value">${rounded}</span><span class="metric-duration__unit">${unit}</span>`;
 }
 
 function getCycleFillWidth(value, upperBound) {
@@ -1421,7 +1393,7 @@ function getCycleFillWidth(value, upperBound) {
   return Math.max(12, Math.round((safeValue / safeUpper) * 100));
 }
 
-function renderProductCycleSingleTeamCard(containerId, row, allRows, scopeLabel) {
+function renderProductCycleSingleTeamCard(containerId, row, allRows) {
   const container = document.getElementById(containerId);
   if (!container || !row) return;
   const teamColor = getPrCycleTeamColor(row?.team);
@@ -1443,10 +1415,6 @@ function renderProductCycleSingleTeamCard(containerId, row, allRows, scopeLabel)
         <div class="pr-cycle-stage-card__header">
           <div class="pr-cycle-stage-card__meta">
             <div class="pr-cycle-stage-card__team">${escapeHtml(normalizeDisplayTeamName(row?.team || ""))}</div>
-            <div class="pr-cycle-stage-card__total">${escapeHtml(formatCycleMonths(row?.cycle))}</div>
-            <div class="pr-cycle-stage-card__submeta">${escapeHtml(
-              scopeLabel || PRODUCT_CYCLE_SCOPE_LABEL
-            )} • Measured in months • Target: 1 month</div>
           </div>
         </div>
         <div class="pr-cycle-stage-list">
@@ -1458,7 +1426,7 @@ function renderProductCycleSingleTeamCard(containerId, row, allRows, scopeLabel)
             <div class="pr-cycle-stage-row__track" aria-hidden="true">
               <div class="pr-cycle-stage-row__fill" style="width:${cycleWidth}%"></div>
             </div>
-            <div class="pr-cycle-stage-row__value">${escapeHtml(formatCycleMonthsValue(row?.cycle))}</div>
+            <div class="pr-cycle-stage-row__value">${formatCycleMonthsValueMarkup(row?.cycle)}</div>
           </div>
           <div class="pr-cycle-stage-row product-cycle-team-card__row" data-stage="shipped">
             <div class="pr-cycle-stage-row__label">
@@ -1513,7 +1481,7 @@ function renderProductCycleComparisonCard(containerId, rows, scopeLabel) {
               teamColor
             )};"></div>
           </div>
-          <div class="pr-cycle-stage-row__value">${escapeHtml(formatCycleMonthsValue(row?.cycle))}</div>
+          <div class="pr-cycle-stage-row__value">${formatCycleMonthsValueMarkup(row?.cycle)}</div>
         </div>
       `;
     })
@@ -1527,7 +1495,7 @@ function renderProductCycleComparisonCard(containerId, rows, scopeLabel) {
             <div class="pr-cycle-stage-card__team">All teams</div>
             <div class="pr-cycle-stage-card__submeta">${
               scopeLabel ? `${escapeHtml(scopeLabel)} • ` : ""
-            }Measured in months • Target: 1 month</div>
+            }Target: 1 month</div>
           </div>
         </div>
         <div class="pr-cycle-stage-list">${rowsMarkup}</div>
@@ -1640,8 +1608,11 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
-function formatStageDuration(value) {
-  return `${toNumber(value).toFixed(1)}d`;
+function formatStageDurationValueMarkup(value) {
+  const safeValue = toNumber(value);
+  const rounded = safeValue.toFixed(1);
+  const unit = Math.abs(safeValue - 1) < 0.05 ? "day" : "days";
+  return `<span class="metric-duration__value">${rounded}</span><span class="metric-duration__unit">${unit}</span>`;
 }
 
 function getPrCycleStageDisplayLabel(stage) {
@@ -1680,7 +1651,7 @@ function renderPrCycleExperimentCard(containerId, team, snapshot) {
           <div class="pr-cycle-stage-row__track" aria-hidden="true">
             <div class="pr-cycle-stage-row__fill" style="width:${width}%"></div>
           </div>
-          <div class="pr-cycle-stage-row__value">${formatStageDuration(stage?.days)}</div>
+          <div class="pr-cycle-stage-row__value">${formatStageDurationValueMarkup(stage?.days)}</div>
         </div>
       `;
     })
@@ -1691,13 +1662,12 @@ function renderPrCycleExperimentCard(containerId, team, snapshot) {
 
   container.innerHTML = `
     <article class="pr-cycle-stage-card workflow-breakdown-card" data-team="${escapeHtml(String(team?.key || ""))}" style="--pr-cycle-accent:${escapeHtml(teamColor)};">
-      <div class="pr-cycle-stage-card__header">
-        <div class="pr-cycle-stage-card__meta">
-          <div class="pr-cycle-stage-card__team">${escapeHtml(team?.label || "")}</div>
-          <div class="pr-cycle-stage-card__total">${formatStageDuration(team?.totalCycleDays)}</div>
-          <div class="pr-cycle-stage-card__submeta">${escapeHtml(snapshot?.windowLabel || "")}</div>
+        <div class="pr-cycle-stage-card__header">
+          <div class="pr-cycle-stage-card__meta">
+            <div class="pr-cycle-stage-card__team">${escapeHtml(team?.label || "")}</div>
+          <div class="pr-cycle-stage-card__total metric-duration">${formatStageDurationValueMarkup(team?.totalCycleDays)}</div>
+          </div>
         </div>
-      </div>
       <div class="pr-cycle-stage-list">${rowsMarkup}</div>
       <div class="pr-cycle-stage-card__footer">
         <span><strong>${escapeHtml(footerPrimary)}</strong>${footerSecondary ? ` • ${escapeHtml(footerSecondary)}` : ""}</span>
@@ -1727,7 +1697,10 @@ function renderPrCycleExperiment() {
     const selectedWindowSnapshot =
       windows?.[selectedWindowKey] && typeof windows[selectedWindowKey] === "object"
         ? windows[selectedWindowKey]
-        : state.prCycle;
+        : windows?.[fallbackWindowKey] && typeof windows[fallbackWindowKey] === "object"
+          ? windows[fallbackWindowKey]
+          : Object.values(windows || {}).find((windowSnapshot) => windowSnapshot && typeof windowSnapshot === "object") ||
+            null;
     const teams = Array.isArray(selectedWindowSnapshot?.teams) ? selectedWindowSnapshot.teams : [];
     if (teams.length === 0) {
       clearChartContainer(config.containerId);
@@ -1839,9 +1812,7 @@ function renderDevelopmentVsUatByFacilityChart() {
         rows,
         groupingLabel: "Business Unit",
         jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
-        scope,
-        devColor: readThemeColor("--mgmt-dev", "#2f5f83"),
-        uatColor: readThemeColor("--mgmt-done-uat", "#82bd95")
+        scope
       }
     };
   });
