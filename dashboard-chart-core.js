@@ -16,10 +16,13 @@
     ResponsiveContainer,
     LineChart,
     Line,
+    ScatterChart,
+    Scatter,
     BarChart,
     Bar,
     ReferenceDot,
     ReferenceLine,
+    ReferenceArea,
     Cell,
     LabelList,
     CartesianGrid,
@@ -1820,7 +1823,8 @@
     valueTickFormatter = null,
     tooltipCursor = { fill: BAR_CURSOR_FILL },
     valueUnit = "days",
-    tooltipLayout = "default"
+    tooltipLayout = "default",
+    chartHeight = null
   }) {
     const sourceRows = Array.isArray(rows) ? rows : [];
     const compactViewport = isCompactViewport();
@@ -1952,7 +1956,10 @@
       valueUnit,
       gridVertical,
       gridHorizontal,
-      height: singleChartHeightForMode(modeKey, CHART_HEIGHTS.dense),
+      height:
+        Number.isFinite(chartHeight) && chartHeight > 0
+          ? chartHeight
+          : singleChartHeightForMode(modeKey, CHART_HEIGHTS.dense),
       margin: resolvedChartMargin,
       xAxisProps: {
         ...providedXAxisProps,
@@ -2151,8 +2158,11 @@
     BarChart,
     LineChart,
     Line,
+    ScatterChart,
+    Scatter,
     Bar,
     Cell,
+    ReferenceArea,
     ReferenceLine,
     CartesianGrid,
     XAxis,

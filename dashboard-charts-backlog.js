@@ -43,6 +43,14 @@
     { key: "low", label: "Low" },
     { key: "lowest", label: "Lowest" }
   ];
+  const TEAM_BUG_JQL = {
+    api: "project = TFC AND type = Bug AND labels = API",
+    legacy: "project = TFC AND type = Bug AND labels = Frontend",
+    react: 'project = TFC AND type = Bug AND labels = "NewFrontend"',
+    bc: "project = TFC AND type = Bug AND labels = Broadcast",
+    workers: "project = TFO AND type = Bug AND labels = Workers",
+    titanium: 'project = MESO AND type = Bug AND labels = "READY"'
+  };
 
   function totalForPoint(point) {
     return (
@@ -261,7 +269,7 @@
   }
 
   function formatPercent(value, { blankZero = false } = {}) {
-    if (!Number.isFinite(value) || value <= 0) return blankZero ? "-" : "0%";
+    if (!Number.isFinite(value) || value <= 0) return blankZero ? "" : "0%";
     return `${Math.round(value)}%`;
   }
 
@@ -271,35 +279,173 @@
     return String(safeValue);
   }
 
-  function formatSignedPercent(value, previousTotal, currentTotal) {
-    if (!Number.isFinite(value)) {
-      if (previousTotal <= 0 && currentTotal > 0) return "new";
-      return "0%";
-    }
-    const rounded = Math.round(value);
-    const prefix = rounded > 0 ? "+" : "";
-    return `${prefix}${String(rounded)}%`;
+  function buildBugTeamSearchUrl(teamKey) {
+    const jql = TEAM_BUG_JQL[String(teamKey || "").trim().toLowerCase()];
+    if (!jql) return "";
+    return `https://nepgroup.atlassian.net/issues/?jql=${encodeURIComponent(`${jql} ORDER BY priority DESC, updated DESC`)}`;
   }
 
-  function formatUrgentBreakdown(row) {
-    const highestShare = toNumber(
-      row?.segments?.find((segment) => segment.key === "highest")?.share
-    );
-    const highShare = toNumber(row?.segments?.find((segment) => segment.key === "high")?.share);
-    const hasHigh = highShare > 0;
-    const hasHighest = highestShare > 0;
-    if (hasHigh && hasHighest) {
-      return `${formatPercent(highShare)} high • ${formatPercent(highestShare)} highest`;
+  function getPriorityShare(row, priorityKey) {
+    return toNumber(row?.segments?.find((segment) => segment.key === priorityKey)?.share);
+  }
+
+  function getPriorityActionTone(row, priorityKey) {
+    const share = getPriorityShare(row, priorityKey);
+    if (priorityKey === "highest") {
+      if (share <= 0) return "";
+      return share >= 10 ? "critical" : "warning";
     }
-    if (hasHigh) return "high";
-    if (hasHighest) return "highest";
+    if (priorityKey === "high" && share > 30) {
+      return share >= 50 ? "critical" : "warning";
+    }
     return "";
   }
 
+  function shouldShowPriorityAction(row, priorityKey) {
+    const share = getPriorityShare(row, priorityKey);
+    if (priorityKey === "highest") return share > 0;
+    if (priorityKey === "high") return share > 30;
+    return false;
+  }
+
   function CompositionTableView({ rows }) {
+    function renderChangeItems(row) {
+      return [
+        ["30d", row.change30d],
+        ["90d", row.change90d],
+        ["6m", row.change180d]
+      ].map(([label, change]) =>
+        h(
+          "div",
+          {
+            key: label,
+            className: `composition-table__change-item ${
+              change.delta > 0
+                ? "composition-table__change-item--up"
+                : change.delta < 0
+                  ? "composition-table__change-item--down"
+                  : "composition-table__change-item--flat"
+            }`
+          },
+          h("span", { className: "composition-table__change-label" }, label),
+          h("span", { className: "composition-table__change-value" }, formatSignedCount(change.delta))
+        )
+      );
+    }
+
+    function renderPriorityPrimary(row, priorityKey) {
+      const alertLevel = getPriorityActionTone(row, priorityKey);
+      const priorityShare = getPriorityShare(row, priorityKey);
+      const showAction = shouldShowPriorityAction(row, priorityKey);
+      const href = showAction ? buildBugTeamSearchUrl(row.teamKey) : "";
+      return h(
+        "span",
+        {
+          className: `composition-table__urgent-primary${
+            showAction ? " composition-table__urgent-primary--actionable" : ""
+          }`
+        },
+        alertLevel
+          ? h("span", {
+              className: `composition-table__alert composition-table__alert--${alertLevel}`,
+              "aria-hidden": "true"
+            })
+          : null,
+        formatPercent(priorityShare, { blankZero: true }),
+        href
+          ? h(
+              "a",
+              {
+                className: "composition-table__urgent-link",
+                href,
+                target: "_blank",
+                rel: "noopener noreferrer",
+                "aria-label": `Open ${row.teamLabel} bug backlog in Jira`,
+                title: "Open Jira search in new tab"
+              },
+              h(
+                "svg",
+                {
+                  viewBox: "0 0 16 16",
+                  width: 13,
+                  height: 13,
+                  "aria-hidden": "true",
+                  fill: "none",
+                  stroke: "currentColor",
+                  strokeWidth: 1.6,
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round"
+                },
+                h("path", { d: "M9.5 2.5h4v4" }),
+                h("path", { d: "M13.5 2.5L7.75 8.25" }),
+                h("path", { d: "M6 4.5H3.5v8h8V10" })
+              )
+            )
+          : null
+      );
+    }
+
     return h(
       "div",
       { className: "composition-table-shell" },
+      h(
+        "div",
+        { className: "composition-cards" },
+        rows.map((row) =>
+          h(
+            "article",
+            { key: `${row.teamKey}-card`, className: "composition-card" },
+            h(
+              "div",
+              { className: "composition-card__top" },
+              h(
+                "div",
+                { className: "composition-card__team" },
+                h("span", { className: "composition-card__team-label composition-table__team-name" }, row.teamLabel)
+              ),
+              h(
+                "div",
+                { className: "composition-card__total" },
+                h("span", { className: "composition-card__eyebrow" }, "Total"),
+                h("strong", null, String(row.total))
+              )
+            ),
+            h(
+              "div",
+              { className: "composition-card__primary" },
+              h(
+                "div",
+                {
+                  className: `composition-card__block composition-card__block--urgent${
+                    getPriorityActionTone(row, "highest")
+                      ? ` composition-card__block--${getPriorityActionTone(row, "highest")}`
+                      : ""
+                  }`
+                },
+                h("span", { className: "composition-card__eyebrow" }, "Highest"),
+                renderPriorityPrimary(row, "highest")
+              ),
+              h(
+                "div",
+                { className: "composition-card__block" },
+                h("span", { className: "composition-card__eyebrow" }, "High"),
+                renderPriorityPrimary(row, "high")
+              ),
+              h(
+                "div",
+                { className: "composition-card__block composition-card__block--change" },
+                h("span", { className: "composition-card__eyebrow" }, "Change"),
+                ...renderChangeItems(row)
+              )
+            ),
+            h(
+              "div",
+              { className: "composition-card__secondary" },
+              null
+            )
+          )
+        )
+      ),
       h(
         "div",
         { className: "composition-table-scroll" },
@@ -312,15 +458,13 @@
             h(
               "tr",
               null,
-              h("th", { className: "composition-table__team-header", scope: "col" }, "Team"),
-              h("th", { className: "composition-table__header", scope: "col" }, "Total"),
-              h("th", { className: "composition-table__header", scope: "col" }, "Change"),
-              h("th", { className: "composition-table__header", scope: "col" }, "High + Highest"),
-              h("th", { className: "composition-table__header", key: "medium", scope: "col" }, "Medium"),
-              h("th", { className: "composition-table__header", key: "low", scope: "col" }, "Low"),
-              h("th", { className: "composition-table__header", key: "lowest", scope: "col" }, "Lowest")
-            )
-          ),
+                h("th", { className: "composition-table__team-header", scope: "col" }, "Team"),
+                h("th", { className: "composition-table__header", scope: "col" }, "Total"),
+                h("th", { className: "composition-table__header", scope: "col" }, "Highest"),
+                h("th", { className: "composition-table__header", scope: "col" }, "High"),
+                h("th", { className: "composition-table__header", scope: "col" }, "Change")
+              )
+            ),
           h(
             "tbody",
             null,
@@ -335,15 +479,7 @@
                     className: "composition-table__team-cell",
                     "data-label": "Team"
                   },
-                  h(
-                    "span",
-                    {
-                      className: "composition-table__team-dot",
-                      style: { backgroundColor: row.teamColor }
-                    },
-                    ""
-                  ),
-                  h("span", null, row.teamLabel)
+                  h("span", { className: "composition-table__team-name" }, row.teamLabel)
                 ),
                 h(
                   "td",
@@ -352,77 +488,32 @@
                 ),
                 h(
                   "td",
-                  { className: "composition-table__change-cell", "data-label": "Change" },
-                  [
-                    ["30d", row.change30d],
-                    ["90d", row.change90d],
-                    ["6m", row.change180d]
-                  ].map(([label, change]) =>
-                    h(
-                      "div",
-                      {
-                        key: label,
-                        className: `composition-table__change-item ${
-                          change.delta > 0
-                            ? "composition-table__change-item--up"
-                            : change.delta < 0
-                              ? "composition-table__change-item--down"
-                              : "composition-table__change-item--flat"
-                        }`
-                      },
-                      h("span", { className: "composition-table__change-label" }, label),
-                      h("span", { className: "composition-table__change-value" }, formatSignedCount(change.delta)),
-                      h(
-                        "span",
-                        { className: "composition-table__change-meta" },
-                        `(${formatSignedPercent(change.deltaPercent, change.previousTotal, row.total)})`
-                      )
-                    )
-                  )
+                  {
+                    className: `composition-table__urgent-cell${
+                      getPriorityActionTone(row, "highest")
+                        ? ` composition-table__urgent-cell--${getPriorityActionTone(row, "highest")}`
+                        : ""
+                    }`,
+                    "data-label": "Highest"
+                  },
+                  renderPriorityPrimary(row, "highest")
                 ),
                 h(
                   "td",
                   {
-                    className: "composition-table__urgent-cell",
-                    "data-label": "High + Highest"
+                    className: `composition-table__metric-cell composition-table__metric-cell--high${
+                      getPriorityActionTone(row, "high")
+                        ? ` composition-table__metric-cell--${getPriorityActionTone(row, "high")}`
+                        : ""
+                    }`,
+                    "data-label": "High"
                   },
-                  h(
-                    "span",
-                    { className: "composition-table__urgent-primary" },
-                    formatPercent(row.urgentShare, { blankZero: true })
-                  ),
-                  h(
-                    "span",
-                    { className: "composition-table__urgent-meta" },
-                    formatUrgentBreakdown(row)
-                  )
+                  renderPriorityPrimary(row, "high")
                 ),
-                ...row.segments
-                  .filter((segment) => segment.key !== "highest" && segment.key !== "high")
-                  .map((segment) =>
-                  h(
-                    "td",
-                    {
-                      key: segment.key,
-                      className: `composition-table__metric-cell composition-table__metric-cell--${segment.key}`,
-                      "data-label": segment.label
-                    },
-                    formatPercent(segment.share, { blankZero: true })
-                      ? h(
-                          "span",
-                          {
-                            className: "composition-table__metric-value",
-                            style: {
-                              color:
-                                segment.share >= 18
-                                  ? "rgba(31, 51, 71, 0.96)"
-                                  : "rgba(31, 51, 71, 0.82)"
-                            }
-                          },
-                          formatPercent(segment.share, { blankZero: true })
-                        )
-                      : ""
-                  )
+                h(
+                  "td",
+                  { className: "composition-table__change-cell", "data-label": "Change" },
+                  ...renderChangeItems(row)
                 )
               )
             )
