@@ -32,6 +32,7 @@ jobs:
           cp index.html \
             dashboard-app.js \
             dashboard-chart-core.js \
+            dashboard-svg-core.js \
             dashboard-charts-backlog.js \
             dashboard-charts-delivery.js \
             dashboard-charts-product.js \
