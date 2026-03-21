@@ -574,6 +574,7 @@ function setPrActivityHelpDetails({ since = "", until = "", caveat = "", interva
 
 function normalizeDisplayTeamName(name) {
   const raw = String(name || "").trim();
+  if (raw.toLowerCase() === "bc") return "Broadcast";
   if (raw.toLowerCase() === "orchestration") return "Workers";
   return raw;
 }
