@@ -96,6 +96,7 @@ The export command only copies:
 - `dashboard-view-utils.js`
 - `dashboard-data-utils.js`
 - `dashboard-chart-core.js`
+- `dashboard-svg-core.js`
 - `dashboard-charts-backlog.js`
 - `dashboard-charts-delivery.js`
 - `dashboard-charts-product.js`

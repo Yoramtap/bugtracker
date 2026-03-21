@@ -87,15 +87,15 @@
         ></p>
       </section>
 
-      <section id="pr-cycle-experiment-panel" class="panel" aria-label="Workflow breakdown">
+      <section id="pr-cycle-experiment-panel" class="panel" aria-label="Sprint workflow breakdown">
         <div class="panel-title-row">
-          <h2>Workflow breakdown</h2>
+          <h2>Sprint workflow breakdown</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="Workflow breakdown explainer">i</summary>
+            <summary class="help-tip" aria-label="Sprint workflow breakdown explainer">i</summary>
             <div class="help-popover" role="tooltip">
               <p>
-                <strong>Workflow breakdown</strong> shows average time spent in the tracked board
-                workflow stages for each team.
+                <strong>Sprint workflow breakdown</strong> shows average time spent in the tracked
+                board workflow stages for each team.
               </p>
               <ul>
                 <li>This shows average days spent in each tracked Jira workflow stage.</li>
@@ -111,7 +111,7 @@
             </div>
           </details>
         </div>
-        <div class="radio-control-groups" aria-label="Workflow breakdown time range">
+        <div class="radio-control-groups" aria-label="Sprint workflow breakdown time range">
           <fieldset class="radio-group-card radio-group-card--primary">
             <legend>Time range</legend>
             <label
@@ -121,7 +121,11 @@
             <label><input type="radio" name="pr-cycle-window" value="1y" /> Last year</label>
           </fieldset>
         </div>
-        <div class="pr-cycle-team-switch" role="radiogroup" aria-label="Workflow breakdown team">
+        <div
+          class="pr-cycle-team-switch"
+          role="radiogroup"
+          aria-label="Sprint workflow breakdown team"
+        >
           <label class="pr-cycle-team-pill">
             <input type="radio" name="pr-cycle-team" value="api" />
             <span>API</span>
@@ -166,12 +170,14 @@
       <section
         id="product-cycle-panel"
         class="panel panel--frame-fill"
-        aria-label="How long ideas take to ship"
+        aria-label="How long product ideas take to ship"
       >
         <div class="panel-title-row">
-          <h2 id="product-cycle-title">How long ideas take to ship</h2>
+          <h2 id="product-cycle-title">How long product ideas take to ship</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="How long ideas take to ship explainer">i</summary>
+            <summary class="help-tip" aria-label="How long product ideas take to ship explainer">
+              i
+            </summary>
             <div class="help-popover" role="tooltip">
               <p><strong>Cycle time per team</strong> is computed from lifecycle timestamps.</p>
               <ul>
