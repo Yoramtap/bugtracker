@@ -401,7 +401,14 @@
               h(
                 "div",
                 { className: "composition-card__team" },
-                h("span", { className: "composition-card__team-label composition-table__team-name" }, row.teamLabel)
+                h(
+                  "span",
+                  {
+                    className: "composition-card__team-label composition-table__team-name",
+                    style: { color: row.teamColor || undefined }
+                  },
+                  row.teamLabel
+                )
               ),
               h(
                 "div",
@@ -458,10 +465,22 @@
             h(
               "tr",
               null,
-                h("th", { className: "composition-table__team-header", scope: "col" }, "Team"),
-                h("th", { className: "composition-table__header", scope: "col" }, "Total"),
+                h(
+                  "th",
+                  { className: "composition-table__team-header composition-table__cell-divider", scope: "col" },
+                  "Team"
+                ),
+                h(
+                  "th",
+                  { className: "composition-table__header composition-table__cell-divider", scope: "col" },
+                  "Total"
+                ),
                 h("th", { className: "composition-table__header", scope: "col" }, "Highest"),
-                h("th", { className: "composition-table__header", scope: "col" }, "High"),
+                h(
+                  "th",
+                  { className: "composition-table__header composition-table__cell-divider", scope: "col" },
+                  "High"
+                ),
                 h("th", { className: "composition-table__header", scope: "col" }, "Change")
               )
             ),
@@ -476,14 +495,24 @@
                   "th",
                   {
                     scope: "row",
-                    className: "composition-table__team-cell",
+                    className: "composition-table__team-cell composition-table__cell-divider",
                     "data-label": "Team"
                   },
-                  h("span", { className: "composition-table__team-name" }, row.teamLabel)
+                  h(
+                    "span",
+                    {
+                      className: "composition-table__team-name",
+                      style: { color: row.teamColor || undefined }
+                    },
+                    row.teamLabel
+                  )
                 ),
                 h(
                   "td",
-                  { className: "composition-table__total-cell", "data-label": "Total" },
+                  {
+                    className: "composition-table__total-cell composition-table__cell-divider",
+                    "data-label": "Total"
+                  },
                   String(row.total)
                 ),
                 h(
@@ -505,7 +534,7 @@
                       getPriorityActionTone(row, "high")
                         ? ` composition-table__metric-cell--${getPriorityActionTone(row, "high")}`
                         : ""
-                    }`,
+                    } composition-table__cell-divider`,
                     "data-label": "High"
                   },
                   renderPriorityPrimary(row, "high")

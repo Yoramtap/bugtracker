@@ -418,37 +418,35 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   padding: 0;
-  border: 1px solid rgba(72, 114, 167, 0.18);
+  border: 0;
   border-radius: 999px;
-  background: rgba(72, 114, 167, 0.05);
-  color: rgba(31, 51, 71, 0.58);
-  font-size: 0.73rem;
-  font-weight: 650;
+  background: rgba(31, 51, 71, 0.74);
+  color: #fff;
+  font-size: 0.69rem;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
   flex: 0 0 auto;
   transition:
-    color 140ms ease,
+    background 140ms ease,
     transform 140ms ease,
-    background 140ms ease;
+    box-shadow 140ms ease;
 }
 
 .help-tip:hover,
 .help-tip:focus-visible {
-  color: rgba(31, 51, 71, 0.82);
-  border-color: rgba(72, 114, 167, 0.28);
-  background: rgba(72, 114, 167, 0.1);
+  color: #fff;
+  background: rgba(31, 51, 71, 0.88);
   transform: translateY(-1px);
-  box-shadow: 0 0 0 3px rgba(72, 114, 167, 0.12);
+  box-shadow: 0 0 0 3px rgba(31, 51, 71, 0.14);
 }
 
 .help-wrap[open] .help-tip {
-  color: rgba(31, 51, 71, 0.84);
-  border-color: rgba(72, 114, 167, 0.32);
-  background: rgba(72, 114, 167, 0.12);
+  color: #fff;
+  background: rgba(31, 51, 71, 0.9);
 }
 
 .help-popover {
@@ -830,8 +828,8 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 .composition-table {
   width: 100%;
   min-width: 760px;
-  border-collapse: separate;
-  border-spacing: 0 8px;
+  border-collapse: collapse;
+  border-spacing: 0;
   font-size: 0.84rem;
   color: rgba(31, 51, 71, 0.9);
 }
@@ -847,7 +845,7 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 .composition-table thead th {
   padding-top: 4px;
   padding-bottom: 11px;
-  border-bottom: 1px solid rgba(72, 114, 167, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.85);
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -858,19 +856,8 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 
 .composition-table tbody th,
 .composition-table tbody td {
-  background: rgba(248, 251, 255, 0.72);
-}
-
-.composition-table tbody th:first-child,
-.composition-table tbody td:first-child {
-  border-top-left-radius: 14px;
-  border-bottom-left-radius: 14px;
-}
-
-.composition-table tbody th:last-child,
-.composition-table tbody td:last-child {
-  border-top-right-radius: 14px;
-  border-bottom-right-radius: 14px;
+  background: transparent;
+  border-bottom: 1px solid rgba(72, 114, 167, 0.12);
 }
 
 .composition-table__team-header,
@@ -890,9 +877,11 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 
 .composition-table__team-name {
   display: inline-block;
-  padding-bottom: 1px;
-  border-bottom: 1px solid rgba(31, 51, 71, 0.12);
   letter-spacing: -0.01em;
+}
+
+.composition-table__cell-divider {
+  border-right: 1px solid rgba(0, 0, 0, 0.82);
 }
 
 .composition-table__metric-cell {
@@ -1022,7 +1011,7 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
 
 .composition-table tbody tr:hover th,
 .composition-table tbody tr:hover td {
-  background: rgba(243, 248, 254, 0.92);
+  background: rgba(243, 248, 254, 0.56);
 }
 
 .panel-status {
