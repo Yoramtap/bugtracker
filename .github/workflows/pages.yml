@@ -43,17 +43,6 @@ jobs:
             dist/
           mkdir -p dist/vendor
           cp vendor/react.production.min.js vendor/react-dom.production.min.js vendor/prop-types.min.js vendor/recharts.umd.js dist/vendor/
-          mkdir -p dist/node_modules/@fontsource/inter/files
-          cp node_modules/@fontsource/inter/latin-400.css node_modules/@fontsource/inter/latin-500.css node_modules/@fontsource/inter/latin-600.css node_modules/@fontsource/inter/latin-700.css dist/node_modules/@fontsource/inter/
-          cp node_modules/@fontsource/inter/files/inter-latin-400-normal.woff node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2 dist/node_modules/@fontsource/inter/files/
-          cp node_modules/@fontsource/inter/files/inter-latin-500-normal.woff node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2 dist/node_modules/@fontsource/inter/files/
-          cp node_modules/@fontsource/inter/files/inter-latin-600-normal.woff node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2 dist/node_modules/@fontsource/inter/files/
-          cp node_modules/@fontsource/inter/files/inter-latin-700-normal.woff node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2 dist/node_modules/@fontsource/inter/files/
-          mkdir -p dist/node_modules/@fontsource/ibm-plex-serif/files
-          cp node_modules/@fontsource/ibm-plex-serif/latin-500.css node_modules/@fontsource/ibm-plex-serif/latin-600.css node_modules/@fontsource/ibm-plex-serif/latin-700.css dist/node_modules/@fontsource/ibm-plex-serif/
-          cp node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-500-normal.woff node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-500-normal.woff2 dist/node_modules/@fontsource/ibm-plex-serif/files/
-          cp node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-600-normal.woff node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-600-normal.woff2 dist/node_modules/@fontsource/ibm-plex-serif/files/
-          cp node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-700-normal.woff node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-700-normal.woff2 dist/node_modules/@fontsource/ibm-plex-serif/files/
           touch dist/.nojekyll
 
       - name: Upload static files
