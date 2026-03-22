@@ -1,5 +1,105 @@
 {
   "updatedAt": "2026-03-22T14:34:18.787Z",
+  "chartDataUpdatedAt": "2026-03-19T15:26:53.260Z",
+  "chartData": {
+    "managementBusinessUnit": {
+      "byScope": {
+        "ongoing": {
+          "rows": [
+            {
+              "label": "ANZJ",
+              "sampleCount": 0,
+              "uatAvg": 0,
+              "issueItems": []
+            },
+            {
+              "label": "EU",
+              "sampleCount": 3,
+              "uatAvg": 29.6,
+              "issueItems": [
+                "TFC-16029",
+                "TFC-16084",
+                "TFC-11526"
+              ]
+            },
+            {
+              "label": "MEA",
+              "sampleCount": 1,
+              "uatAvg": 38.22,
+              "issueItems": [
+                "TFC-15925"
+              ]
+            },
+            {
+              "label": "US",
+              "sampleCount": 4,
+              "uatAvg": 40.53,
+              "issueItems": [
+                "TFC-14425",
+                "TFC-16087",
+                "TFC-13224",
+                "TFC-15958"
+              ]
+            },
+            {
+              "label": "Tech Debt",
+              "sampleCount": 1,
+              "uatAvg": 93,
+              "issueItems": [
+                "TFC-14540"
+              ]
+            }
+          ]
+        },
+        "done": {
+          "rows": [
+            {
+              "label": "ANZJ",
+              "sampleCount": 7,
+              "uatAvg": 99.51,
+              "issueItems": [
+                "TFC-15598",
+                "TFC-12976",
+                "TFC-13842",
+                "TFC-13847",
+                "TFC-13848",
+                "TFC-15120",
+                "TFC-16088"
+              ]
+            },
+            {
+              "label": "EU",
+              "sampleCount": 0,
+              "uatAvg": 0,
+              "issueItems": []
+            },
+            {
+              "label": "MEA",
+              "sampleCount": 0,
+              "uatAvg": 0,
+              "issueItems": []
+            },
+            {
+              "label": "US",
+              "sampleCount": 1,
+              "uatAvg": 16.16,
+              "issueItems": [
+                "TFC-16041"
+              ]
+            },
+            {
+              "label": "Tech Debt",
+              "sampleCount": 1,
+              "uatAvg": 27.29,
+              "issueItems": [
+                "TFC-14978"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
   "uatAging": {
     "scope": {
       "label": "Broadcast"
