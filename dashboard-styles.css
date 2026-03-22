@@ -357,6 +357,10 @@ body.embedded-frame-mode .panel {
   order: 0;
 }
 
+#contributors-panel {
+  order: 1;
+}
+
 #management-facility-panel {
   order: 2;
 }
@@ -391,10 +395,6 @@ body.embedded-frame-mode .panel {
 
 #composition-panel {
   order: 10;
-}
-
-#contributors-panel {
-  order: 11;
 }
 
 body.embed-mode.single-chart-mode .panel {

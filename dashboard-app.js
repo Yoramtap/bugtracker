@@ -1321,6 +1321,13 @@ function buildLegacyPrActivityDisplayedXTicks(rows, compactViewport) {
   return Array.from(new Set(ticks));
 }
 
+function roundLegacyPrActivityUpper(yUpper) {
+  const safeUpper = Math.max(1, Math.ceil(toNumber(yUpper)));
+  if (safeUpper <= 10) return safeUpper;
+  const step = safeUpper <= 40 ? 5 : 10;
+  return Math.ceil(safeUpper / step) * step;
+}
+
 function LegacyPrActivitySvgChart({
   rows,
   colors,
@@ -1341,7 +1348,7 @@ function LegacyPrActivitySvgChart({
   const rawYUpper = Math.max(yAxisUpperOverride, getLegacyPrActivityYUpper(rows, lineDefs));
   const yUpper = Number.isFinite(yAxisFixedUpper) && yAxisFixedUpper > 0
     ? yAxisFixedUpper
-    : Math.max(1, Math.ceil(rawYUpper * Math.max(1, toNumber(yAxisPadRatio))));
+    : roundLegacyPrActivityUpper(rawYUpper * Math.max(1, toNumber(yAxisPadRatio)));
   const width = 960;
   const height = compactViewport ? 320 : 360;
   const margin = compactViewport
