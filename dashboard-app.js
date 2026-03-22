@@ -860,6 +860,11 @@ function monthBucketDate(isoDate) {
 }
 
 function buildLegacyPrActivityMonthlyPoints() {
+  const monthlyPoints = Array.isArray(state.snapshot?.prActivity?.monthlyPoints)
+    ? state.snapshot.prActivity.monthlyPoints
+    : [];
+  if (monthlyPoints.length > 0) return monthlyPoints;
+
   const points = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
   const teamKeys = PR_ACTIVITY_LINE_DEFS.map((lineDef) => lineDef.dataKey);
   const byMonth = new Map();
@@ -1308,7 +1313,7 @@ function buildLegacyPrActivityPath(points) {
 function buildLegacyPrActivityDisplayedXTicks(rows, compactViewport) {
   const safeRows = Array.isArray(rows) ? rows.filter(Boolean) : [];
   if (safeRows.length <= 3) return safeRows.map((row) => row.dateValue).filter((value) => value > 0);
-  const step = compactViewport ? 2 : 1;
+  const step = compactViewport ? 3 : 2;
   const ticks = safeRows
     .filter((_, index) => index % step === 0 || index === safeRows.length - 1)
     .map((row) => row.dateValue)
@@ -1323,6 +1328,7 @@ function LegacyPrActivitySvgChart({
   tooltipLabel,
   tooltipValueFormatter,
   yAxisUpperOverride = 0,
+  yAxisFixedUpper = null,
   yAxisPadRatio = 1,
   hiddenKeys,
   setHiddenKeys,
@@ -1333,7 +1339,9 @@ function LegacyPrActivitySvgChart({
   const lineDefs = getPrActivityLineDefs(colors);
   const compactViewport = isCompactViewport();
   const rawYUpper = Math.max(yAxisUpperOverride, getLegacyPrActivityYUpper(rows, lineDefs));
-  const yUpper = Math.max(1, Math.ceil(rawYUpper * Math.max(1, toNumber(yAxisPadRatio))));
+  const yUpper = Number.isFinite(yAxisFixedUpper) && yAxisFixedUpper > 0
+    ? yAxisFixedUpper
+    : Math.max(1, Math.ceil(rawYUpper * Math.max(1, toNumber(yAxisPadRatio))));
   const width = 960;
   const height = compactViewport ? 320 : 360;
   const margin = compactViewport
@@ -1592,7 +1600,7 @@ function renderLegacyPrMergeTimeChart(containerId) {
         },
         hiddenKeys,
         setHiddenKeys: setLegacyPrActivityHiddenKeys,
-        yAxisPadRatio: 1.12,
+        yAxisFixedUpper: 50,
         showLegend: false,
         hideReferenceLabelsOnCompact: true,
         xAxisLabel: "Month"
@@ -1814,7 +1822,7 @@ function renderLegacyPrActivityCharts() {
     }
 
     status.hidden = true;
-    const since = String(points[0]?.date || prActivity?.since || "");
+    const since = String(points[0]?.date || prActivity?.monthlySince || prActivity?.since || "");
     const metricKey = state.prActivityLegacyMetric === "merged" ? "merged" : "offered";
     syncRadioValue("pr-activity-legacy-metric", metricKey);
     syncCheckboxValue("pr-activity-legacy-show-markers", state.showLegacyPrActivityMarkers);
