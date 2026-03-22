@@ -6,10 +6,13 @@ const PRODUCT_CYCLE_SCOPE = "inception";
 const PRODUCT_CYCLE_SCOPE_LABEL = "All ideas";
 const PR_ACTIVITY_INFLOW_SPLIT = 15;
 const PR_ACTIVITY_INFLOW_AXIS_MIN_UPPER = 30;
+const PR_ACTIVITY_INFLOW_AXIS_STEP = 5;
 const PR_ACTIVITY_REVIEW_SPLIT = 7;
 const PR_ACTIVITY_REVIEW_AXIS_UPPER = 30;
-const PR_CYCLE_WINDOWS = ["90d", "6m", "1y"];
-const PR_ACTIVITY_WINDOWS = ["90d", "6m", "1y"];
+const PR_ACTIVITY_REVIEW_AXIS_STEP = 5;
+const THIRTY_DAY_WINDOW_KEY = "30d";
+const PR_CYCLE_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
+const PR_ACTIVITY_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const MANAGEMENT_FLOW_SCOPES = ["ongoing", "done"];
 const LIFECYCLE_TEAM_SCOPE_DEFAULT = "all";
 const PRODUCT_CYCLE_TEAM_DEFAULT = "frontend";
@@ -160,15 +163,15 @@ const CONTROL_BINDINGS = [
   {
     name: "pr-cycle-window",
     stateKey: "prCycleWindow",
-    defaultValue: "90d",
-    normalizeValue: (value) => normalizeOption(value, PR_CYCLE_WINDOWS, "90d"),
+    defaultValue: THIRTY_DAY_WINDOW_KEY,
+    normalizeValue: (value) => normalizeOption(value, PR_CYCLE_WINDOWS, THIRTY_DAY_WINDOW_KEY),
     onChangeRender: renderPrCycleExperiment
   },
   {
     name: "pr-activity-window",
     stateKey: "prActivityWindow",
-    defaultValue: "1y",
-    normalizeValue: (value) => normalizeOption(value, PR_ACTIVITY_WINDOWS, "1y"),
+    defaultValue: THIRTY_DAY_WINDOW_KEY,
+    normalizeValue: (value) => normalizeOption(value, PR_ACTIVITY_WINDOWS, THIRTY_DAY_WINDOW_KEY),
     onChangeRender: renderPrActivityCharts
   },
   {
@@ -200,11 +203,11 @@ const state = {
   mode: "all",
   compositionTeamScope: "bc",
   prActivityHiddenKeys: [],
-  prActivityWindow: "1y",
+  prActivityWindow: THIRTY_DAY_WINDOW_KEY,
   productCycleTeam: PRODUCT_CYCLE_TEAM_DEFAULT,
   managementFlowScope: "ongoing",
   prCycleTeam: "bc",
-  prCycleWindow: "90d",
+  prCycleWindow: THIRTY_DAY_WINDOW_KEY,
   lifecycleTeamScope: LIFECYCLE_TEAM_SCOPE_DEFAULT
 };
 
@@ -247,7 +250,6 @@ const {
   YAxis,
   Tooltip,
   buildAxisLabel,
-  buildNiceNumberAxis,
   createTooltipContent,
   h,
   isCompactViewport,
@@ -304,6 +306,8 @@ function shiftChartIsoMonths(dateText, deltaMonths) {
 
 function getPrActivityWindowLabel(windowKey) {
   switch (windowKey) {
+    case THIRTY_DAY_WINDOW_KEY:
+      return "Last 30 days";
     case "90d":
       return "Last 90 days";
     case "6m":
@@ -326,7 +330,8 @@ function getPrActivityWindowedPoints(points, selectedWindowKey) {
   const latestPoint = safePoints[safePoints.length - 1];
   const latestDate = String(latestPoint?.date || "").trim();
   let startDate = latestDate;
-  if (selectedWindowKey === "90d") startDate = shiftChartIsoDate(latestDate, -89);
+  if (selectedWindowKey === THIRTY_DAY_WINDOW_KEY) startDate = shiftChartIsoDate(latestDate, -29);
+  else if (selectedWindowKey === "90d") startDate = shiftChartIsoDate(latestDate, -89);
   else if (selectedWindowKey === "6m") startDate = shiftChartIsoMonths(latestDate, -6);
   else startDate = shiftChartIsoMonths(latestDate, -12);
   const filteredPoints = safePoints.filter((point) => String(point?.date || "") >= startDate);
@@ -480,11 +485,25 @@ function renderDashboardRefreshStrip() {
     : "";
 }
 
+function formatCompactMonths(value) {
+  const safeValue = Math.max(0, toNumber(value));
+  return `${safeValue.toFixed(1)} mo`;
+}
+
 function buildBugActionItem() {
   const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
   if (points.length === 0) return null;
   const latestPoint = points[points.length - 1];
-  const previousPoint = points.length > 1 ? points[points.length - 2] : null;
+  const latestMs = new Date(`${String(latestPoint?.date || "")}T00:00:00Z`).getTime();
+  const previousPoint =
+    Number.isFinite(latestMs) && points.length > 1
+      ? points.find((point) => {
+          const pointMs = new Date(`${String(point?.date || "")}T00:00:00Z`).getTime();
+          return Number.isFinite(pointMs) && pointMs >= latestMs - 29 * 86400000;
+        }) || points[0] || null
+      : points.length > 1
+        ? points[points.length - 2]
+        : null;
   const teamDefs = [
     { key: "api", label: "API" },
     { key: "legacy", label: "Legacy FE" },
@@ -544,10 +563,7 @@ function buildBugActionItem() {
   return {
     key: "bug-pressure",
     score: leadTeam.score,
-    title:
-      leadTeam.key === "bc" && leadTeam.aged30 > 0
-        ? "Address Broadcast bugs"
-        : `Address ${leadTeam.label} bugs`,
+    title: `${leadTeam.label} bug backlog`,
     href: "#composition-panel",
     linkLabel: "Open bug graph"
   };
@@ -572,15 +588,15 @@ function buildUatActionItem() {
   return {
     key: "uat-pressure",
     score: leadRow.score,
-    title: "Address UAT",
+    title: `${leadRow.label} UAT backlog`,
     href: "#management-facility-panel",
     linkLabel: "Open UAT graph"
   };
 }
 
 function buildFlowActionItem() {
-  const teams = Array.isArray(state.prCycle?.windows?.["90d"]?.teams)
-    ? state.prCycle.windows["90d"].teams
+  const teams = Array.isArray(state.prCycle?.windows?.[THIRTY_DAY_WINDOW_KEY]?.teams)
+    ? state.prCycle.windows[THIRTY_DAY_WINDOW_KEY].teams
     : [];
   const rankedTeams = teams
     .map((team) => ({
@@ -600,17 +616,16 @@ function buildFlowActionItem() {
     score: leadTeam.score,
     title:
       leadTeam.key === "workers"
-        ? "Address Workers team in review bottleneck"
-        : `Address ${leadTeam.label} team in ${leadTeam.bottleneckLabel.toLowerCase()} bottleneck`,
+        ? "Workflow bottleneck in Workers"
+        : `Workflow bottleneck in ${leadTeam.label}`,
     href: "#pr-cycle-experiment-panel",
     linkLabel: "Open workflow graph"
   };
 }
 
 function buildActionsRequiredItems() {
-  return [buildBugActionItem(), buildUatActionItem(), buildFlowActionItem()]
+  return [buildUatActionItem(), buildFlowActionItem(), buildBugActionItem()]
     .filter(Boolean)
-    .sort((left, right) => right.score - left.score)
     .slice(0, 3);
 }
 
@@ -630,9 +645,14 @@ function renderActionsRequiredFrame() {
   const actionItems = buildActionsRequiredItems();
   const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
   const latestSnapshotDate = points.length > 0 ? String(points[points.length - 1]?.date || "") : "";
+  const actionWindowStart = latestSnapshotDate
+    ? shiftChartIsoDate(latestSnapshotDate, -29)
+    : "";
   setPanelContext(
     contextNode,
-    latestSnapshotDate ? `Latest snapshot • ${latestSnapshotDate} • ranked by current pressure` : ""
+    latestSnapshotDate
+      ? `Last 30 days • ${actionWindowStart} to ${latestSnapshotDate} • ranked by current pressure`
+      : ""
   );
 
   if (actionItems.length === 0) {
@@ -760,11 +780,35 @@ function normalizeDisplayTeamName(name) {
   return raw;
 }
 
-function buildPrActivityScatterSeries(points, selectedWindowKey) {
+function getPrCycleTeamMetric(windowSnapshot, teamKey) {
+  const teams = Array.isArray(windowSnapshot?.teams) ? windowSnapshot.teams : [];
+  return (
+    teams.find(
+      (team) =>
+        String(team?.key || "")
+          .trim()
+          .toLowerCase() === String(teamKey || "").trim().toLowerCase()
+    ) || null
+  );
+}
+
+function getPrCycleStageMetric(teamSnapshot, stageKey) {
+  const stages = Array.isArray(teamSnapshot?.stages) ? teamSnapshot.stages : [];
+  return (
+    stages.find(
+      (stage) =>
+        String(stage?.key || "")
+          .trim()
+          .toLowerCase() === String(stageKey || "").trim().toLowerCase()
+    ) || null
+  );
+}
+
+function buildPrActivityScatterSeries(points, selectedWindowKey, prCycleWindowSnapshot) {
   const safePoints = Array.isArray(points) ? points : [];
   const periodStart = safePoints.length > 0 ? String(safePoints[0]?.date || "") : "";
   const periodEnd = safePoints.length > 0 ? String(safePoints[safePoints.length - 1]?.date || "") : "";
-  return PR_ACTIVITY_LINE_DEFS.map((lineDef, seriesIndex) => {
+  return PR_ACTIVITY_LINE_DEFS.map((lineDef) => {
     const values = safePoints
       .map((point) => {
         const teamMetrics =
@@ -777,26 +821,28 @@ function buildPrActivityScatterSeries(points, selectedWindowKey) {
     if (values.length === 0) return null;
     const averageInflow =
       values.reduce((sum, value) => sum + toNumber(value?.offered), 0) / Math.max(1, values.length);
-    const totalMergeSamples = values.reduce(
-      (sum, value) => sum + toNumber(value?.avgReviewToMergeSampleCount),
-      0
-    );
-    if (totalMergeSamples <= 0) return null;
-    const weightedMergeDays =
-      values.reduce(
-        (sum, value) =>
-          sum + toNumber(value?.avgReviewToMergeDays) * toNumber(value?.avgReviewToMergeSampleCount),
-        0
-      ) / totalMergeSamples;
+    const teamSnapshot = getPrCycleTeamMetric(prCycleWindowSnapshot, lineDef.dataKey);
+    if (!teamSnapshot) return null;
+    const reviewStage = getPrCycleStageMetric(teamSnapshot, "review");
+    const qaStage = getPrCycleStageMetric(teamSnapshot, "merge");
+    const reviewDays = toNumber(reviewStage?.days);
+    const qaDays = toNumber(qaStage?.days);
+    const reviewSampleCount = toCount(reviewStage?.sampleCount);
+    const qaSampleCount = toCount(qaStage?.sampleCount);
+    const workflowSampleCount = toCount(teamSnapshot?.issueCount);
+    if (reviewSampleCount <= 0 && qaSampleCount <= 0) return null;
     const averageRow = {
       teamKey: lineDef.dataKey,
       teamLabel: lineDef.name,
       teamColorKey: lineDef.colorKey,
       x: Number(averageInflow.toFixed(1)),
-      y: Number(weightedMergeDays.toFixed(1)),
-      mergeSampleCount: totalMergeSamples,
-      tooltipScopeLabel: formatPrActivityScopeLabel(periodStart, periodEnd, selectedWindowKey),
-      labelDy: seriesIndex % 2 === 0 ? -14 : 18
+      y: Number((reviewDays + qaDays).toFixed(1)),
+      workflowSampleCount,
+      reviewSampleCount,
+      qaSampleCount,
+      reviewDays: Number(reviewDays.toFixed(1)),
+      qaDays: Number(qaDays.toFixed(1)),
+      tooltipScopeLabel: formatPrActivityScopeLabel(periodStart, periodEnd, selectedWindowKey)
     };
     return {
       ...lineDef,
@@ -822,13 +868,46 @@ function formatMergeTimeLabel(value) {
   return roundedDays === 1 ? "1 day" : `${roundedDays} days`;
 }
 
+function buildPrActivityReviewAxis() {
+  const ticks = [];
+  for (let value = 0; value <= PR_ACTIVITY_REVIEW_AXIS_UPPER; value += PR_ACTIVITY_REVIEW_AXIS_STEP) {
+    ticks.push(value);
+  }
+  return { upper: PR_ACTIVITY_REVIEW_AXIS_UPPER, ticks };
+}
+
+function buildPrActivityInflowAxis(rows) {
+  const maxInflow = (Array.isArray(rows) ? rows : []).reduce(
+    (highest, row) => Math.max(highest, toNumber(row?.x)),
+    0
+  );
+  const upper = Math.max(
+    PR_ACTIVITY_INFLOW_AXIS_MIN_UPPER,
+    Math.ceil(maxInflow / PR_ACTIVITY_INFLOW_AXIS_STEP) * PR_ACTIVITY_INFLOW_AXIS_STEP
+  );
+  const ticks = [];
+  for (let value = 0; value <= upper; value += PR_ACTIVITY_INFLOW_AXIS_STEP) ticks.push(value);
+  return { upper, ticks };
+}
+
+function buildPrActivityAxisRowsForAllWindows(allPoints, prCycleWindows) {
+  const safePoints = Array.isArray(allPoints) ? allPoints : [];
+  const safeWindows = prCycleWindows && typeof prCycleWindows === "object" ? prCycleWindows : {};
+  return PR_ACTIVITY_WINDOWS.flatMap((windowKey) => {
+    const windowSnapshot = safeWindows[windowKey];
+    if (!windowSnapshot) return [];
+    const { points } = getPrActivityWindowedPoints(safePoints, windowKey);
+    return buildPrActivityScatterSeries(points, windowKey, windowSnapshot).flatMap((item) => item.rows);
+  });
+}
+
 function createPrActivityScatterShape(compactViewport) {
   return function prActivityScatterShape(props) {
     const { cx, cy, fill, payload } = props || {};
     if (!Number.isFinite(cx) || !Number.isFinite(cy) || !payload) return null;
     const dotRadius = compactViewport ? 5.5 : 6.5;
     const labelX = cx + (compactViewport ? 10 : 12);
-    const labelY = cy + toNumber(payload?.labelDy);
+    const labelY = cy - (compactViewport ? 10 : 12);
 
     return h(
       "g",
@@ -852,7 +931,7 @@ function createPrActivityScatterShape(compactViewport) {
           fontSize: compactViewport ? 10 : 11,
           fontWeight: 700,
           textAnchor: "start",
-          dominantBaseline: "central",
+          dominantBaseline: "auto",
           stroke: "rgba(255,255,255,0.96)",
           strokeWidth: 4,
           paintOrder: "stroke"
@@ -923,28 +1002,22 @@ function setSharedPrActivityHiddenKeys(updater) {
   renderPrActivityCharts();
 }
 
-function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, interval }) {
+function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, interval, axisRows }) {
   const visibleSeries = series.filter((item) => !hiddenKeys.has(item.dataKey));
   const compactViewport = isCompactViewport();
-  const allRows = visibleSeries.flatMap((item) => item.rows);
+  const fixedAxisRows = Array.isArray(axisRows) && axisRows.length > 0 ? axisRows : visibleSeries.flatMap((item) => item.rows);
   const inflowAxisLabel = prActivityInflowLabel(interval);
   const inflowTooltipLabel = prActivityInflowLabel(interval, { short: true });
-  const xAxis = buildNiceNumberAxis(
-    Math.max(
-      PR_ACTIVITY_INFLOW_AXIS_MIN_UPPER,
-      PR_ACTIVITY_INFLOW_SPLIT,
-      allRows.reduce((highest, row) => Math.max(highest, row.x), 0)
-    )
-  );
-  const yAxis = buildNiceNumberAxis(PR_ACTIVITY_REVIEW_AXIS_UPPER);
+  const xAxis = buildPrActivityInflowAxis(fixedAxisRows);
+  const yAxis = buildPrActivityReviewAxis(fixedAxisRows);
   const splitX = PR_ACTIVITY_INFLOW_SPLIT;
   const splitY = PR_ACTIVITY_REVIEW_SPLIT;
   const chartHeight = compactViewport
     ? singleChartHeightForMode("trend", 420)
     : singleChartHeightForMode("trend", 500);
   const chartMargin = compactViewport
-    ? { top: 12, right: 18, bottom: 28, left: 8 }
-    : { top: 20, right: 28, bottom: 36, left: 18 };
+    ? { top: 24, right: 48, bottom: 28, left: 8 }
+    : { top: 28, right: 72, bottom: 36, left: 18 };
 
   return h(
     "div",
@@ -1014,13 +1087,23 @@ function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, inte
               tooltipTitleLine("scope", row?.tooltipScopeLabel || "All-time avg", colors),
               makeTooltipLine("count", `${inflowTooltipLabel}: ${formatWholeCountLabel(row?.x)}`, colors),
               makeTooltipLine(
-                "merge",
-                `Avg. time for review & QA process: ${formatMergeTimeLabel(row?.y)}`,
+                "duration",
+                `Avg. review + QA stage time: ${formatMergeTimeLabel(row?.y)}`,
                 colors
               ),
               makeTooltipLine(
-                "sample",
-                `Merge sample: ${formatWholeCountLabel(row?.mergeSampleCount)} tickets`,
+                "review",
+                `Review sample: ${formatWholeCountLabel(row?.reviewSampleCount)} tickets`,
+                colors
+              ),
+              makeTooltipLine(
+                "qa",
+                `QA sample: ${formatWholeCountLabel(row?.qaSampleCount)} tickets`,
+                colors
+              ),
+              makeTooltipLine(
+                "workflow",
+                `Workflow sample: ${formatWholeCountLabel(row?.workflowSampleCount)} issues`,
                 colors
               )
             ]),
@@ -1047,9 +1130,19 @@ function renderPrActivityPositionChart(containerId) {
   const hiddenKeys = getSharedPrActivityHiddenKeys();
   const interval = normalizePrActivityInterval(state.snapshot?.prActivity?.interval);
   const allPoints = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
-  const selectedWindowKey = normalizeOption(state.prActivityWindow, PR_ACTIVITY_WINDOWS, "1y");
+  const selectedWindowKey = normalizeOption(
+    state.prActivityWindow,
+    PR_ACTIVITY_WINDOWS,
+    THIRTY_DAY_WINDOW_KEY
+  );
   const { points } = getPrActivityWindowedPoints(allPoints, selectedWindowKey);
-  const series = buildPrActivityScatterSeries(points, selectedWindowKey).map((item) => ({
+  const prCycleWindowSnapshot =
+    state.prCycle?.windows && typeof state.prCycle.windows === "object"
+      ? state.prCycle.windows[selectedWindowKey] || null
+      : null;
+  const allAxisRows = buildPrActivityAxisRowsForAllWindows(allPoints, state.prCycle?.windows);
+  const baseSeries = buildPrActivityScatterSeries(points, selectedWindowKey, prCycleWindowSnapshot);
+  const series = baseSeries.map((item) => ({
     ...item,
     stroke: colors.teams[item.colorKey]
   }));
@@ -1060,7 +1153,8 @@ function renderPrActivityPositionChart(containerId) {
         colors,
         hiddenKeys,
         setHiddenKeys: setSharedPrActivityHiddenKeys,
-        interval
+        interval,
+        axisRows: allAxisRows
       })
     );
   });
@@ -1070,10 +1164,12 @@ function renderPrActivityCharts() {
   withChart("pr-activity", ({ status, context }) => {
     const prActivity = state.snapshot?.prActivity;
     const allPoints = Array.isArray(prActivity?.points) ? prActivity.points : [];
-    if (allPoints.length === 0) {
+    const prCycleWindows =
+      state.prCycle?.windows && typeof state.prCycle.windows === "object" ? state.prCycle.windows : null;
+    if (allPoints.length === 0 || !prCycleWindows) {
       clearChartContainer("pr-position-chart");
       setPrActivityHelpDetails({});
-      showPanelStatus(status, "No Jira-linked PR activity found in backlog-snapshot.json.");
+      showPanelStatus(status, "No PR activity or workflow breakdown data found for this chart.");
       return;
     }
 
@@ -1081,7 +1177,11 @@ function renderPrActivityCharts() {
     const since = String(prActivity?.since || "");
     const interval = String(prActivity?.interval || "").trim();
     const caveat = String(prActivity?.caveat || "").trim();
-    const selectedWindowKey = normalizeOption(state.prActivityWindow, PR_ACTIVITY_WINDOWS, "1y");
+    const selectedWindowKey = normalizeOption(
+      state.prActivityWindow,
+      PR_ACTIVITY_WINDOWS,
+      THIRTY_DAY_WINDOW_KEY
+    );
     const { points, windowLabel } = getPrActivityWindowedPoints(allPoints, selectedWindowKey);
     const windowStart = points.length > 0 ? String(points[0]?.date || since) : since;
     const latestPoint = points.length > 0 ? points[points.length - 1] : null;
@@ -1895,16 +1995,17 @@ function renderPrCycleExperiment() {
         ? state.prCycle.windows
         : null;
     const availableWindowKeys = Object.keys(windows || {});
-    const effectiveWindowKeys = availableWindowKeys.length > 0 ? availableWindowKeys : ["90d"];
+    const effectiveWindowKeys =
+      availableWindowKeys.length > 0 ? availableWindowKeys : [THIRTY_DAY_WINDOW_KEY];
     const fallbackWindowKey =
       String(state.prCycle?.defaultWindow || "")
         .trim()
-        .toLowerCase() || "90d";
+        .toLowerCase() || THIRTY_DAY_WINDOW_KEY;
     const selectedWindowKey = effectiveWindowKeys.includes(state.prCycleWindow)
       ? state.prCycleWindow
       : effectiveWindowKeys.includes(fallbackWindowKey)
         ? fallbackWindowKey
-        : "90d";
+        : THIRTY_DAY_WINDOW_KEY;
     const selectedWindowSnapshot =
       windows?.[selectedWindowKey] && typeof windows[selectedWindowKey] === "object"
         ? windows[selectedWindowKey]

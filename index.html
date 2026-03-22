@@ -45,8 +45,8 @@
         <div class="panel-title-row">
           <h2>Actions required</h2>
         </div>
-        <p id="actions-required-context" class="panel-summary panel-summary--meta" hidden></p>
         <div id="actions-required-list" class="actions-required-grid"></div>
+        <p id="actions-required-context" class="panel-summary panel-summary--meta" hidden></p>
         <p
           id="actions-required-status"
           class="panel-status"
@@ -134,7 +134,10 @@
           <fieldset class="radio-group-card radio-group-card--primary">
             <legend>Time range</legend>
             <label
-              ><input type="radio" name="pr-cycle-window" value="90d" checked /> Last 90 days</label
+              ><input type="radio" name="pr-cycle-window" value="30d" checked /> Last 30 days</label
+            >
+            <label
+              ><input type="radio" name="pr-cycle-window" value="90d" /> Last 90 days</label
             >
             <label><input type="radio" name="pr-cycle-window" value="6m" /> Last 6 months</label>
             <label><input type="radio" name="pr-cycle-window" value="1y" /> Last year</label>
@@ -308,16 +311,16 @@
             <div class="help-popover" role="tooltip">
               <p>
                 <strong>PR quality checks</strong> maps PR inflow against
-                <strong>avg review + QA time (days)</strong> so it is easier to compare teams at a
-                glance.
+                <strong>avg review + QA stage time (days)</strong> so it is easier to compare teams
+                at a glance.
               </p>
               <ul>
                 <li>Each color is one team.</li>
                 <li>Each point shows the team average within the selected lookback window.</li>
                 <li>`PR inflow` reflects linked PR work volume in each sprint bucket.</li>
                 <li>
-                  `Avg review + QA time (days)` uses the linked Jira review-to-merge proxy, so it
-                  includes both review and QA checks before ship.
+                  `Avg review + QA stage time (days)` uses the same workflow-stage dataset as the
+                  Sprint workflow breakdown card, so the numbers align.
                 </li>
                 <li>UAT work is tracked separately elsewhere on the dashboard.</li>
               </ul>
@@ -329,11 +332,10 @@
         <div class="radio-control-groups" aria-label="PR quality checks time range">
           <fieldset class="radio-group-card radio-group-card--primary">
             <legend>Time range</legend>
+            <label><input type="radio" name="pr-activity-window" value="30d" checked /> Last 30 days</label>
             <label><input type="radio" name="pr-activity-window" value="90d" /> Last 90 days</label>
             <label><input type="radio" name="pr-activity-window" value="6m" /> Last 6 months</label>
-            <label
-              ><input type="radio" name="pr-activity-window" value="1y" checked /> Last year</label
-            >
+            <label><input type="radio" name="pr-activity-window" value="1y" /> Last year</label>
           </fieldset>
         </div>
         <div class="chart-stack">
