@@ -1,6 +1,88 @@
 "use strict";
 
 (function initDashboardViewUtils(globalObject) {
+  const DATA_SOURCE_URLS = {
+    snapshot: "./backlog-snapshot.json",
+    productCycle: "./product-cycle-snapshot.json",
+    contributors: "./contributors-snapshot.json",
+    prCycle: "./pr-cycle-snapshot.json"
+  };
+
+  function createDashboardRuntimeContract() {
+    function getModeFromUrl(search = globalObject.location?.search || "") {
+      try {
+        const params = new URLSearchParams(search);
+        const chart = String(params.get("chart") || "")
+          .trim()
+          .toLowerCase();
+        if (chart === "trend") return "trend";
+        if (chart === "composition") return "composition";
+        if (chart === "uat") return "uat";
+        if (
+          chart === "dev-uat-ratio" ||
+          chart === "management" ||
+          chart === "dev-uat-facility" ||
+          chart === "management-facility"
+        ) {
+          return "management-facility";
+        }
+        if (chart === "pr" || chart === "prs" || chart === "pr-activity") return "pr-activity";
+        if (chart === "pr-cycle" || chart === "pr-cycle-experiment") return "pr-cycle-experiment";
+        if (chart === "contributors") return "contributors";
+        if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";
+        if (chart === "lifecycle-days") return "lifecycle-days";
+        return "all";
+      } catch {
+        return "all";
+      }
+    }
+
+    function getRequiredSourceKeys(mode, availableSourceKeys = []) {
+      if (mode === "all") return availableSourceKeys.slice();
+      if (mode === "contributors") return ["contributors"];
+      if (mode === "pr-activity") return ["snapshot", "prCycle"];
+      if (mode === "pr-cycle-experiment") return ["prCycle"];
+      if (mode === "product-cycle" || mode === "lifecycle-days") return ["productCycle"];
+      return ["snapshot"];
+    }
+
+    return Object.freeze({
+      getModeFromUrl,
+      getRequiredSourceKeys
+    });
+  }
+
+  const dashboardRuntimeContract =
+    globalObject.DashboardRuntimeContract || createDashboardRuntimeContract();
+  globalObject.DashboardRuntimeContract = dashboardRuntimeContract;
+
+  function getRequestedMode() {
+    return dashboardRuntimeContract.getModeFromUrl();
+  }
+
+  function getNeededSourceKeys() {
+    try {
+      return dashboardRuntimeContract.getRequiredSourceKeys(
+        getRequestedMode(),
+        Object.keys(DATA_SOURCE_URLS)
+      );
+    } catch {
+      return ["snapshot"];
+    }
+  }
+
+  const cache = {};
+  for (const sourceKey of getNeededSourceKeys()) {
+    const url = DATA_SOURCE_URLS[sourceKey];
+    if (!url) continue;
+    cache[sourceKey] = fetch(url, { cache: "no-cache" }).then(async (response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    });
+  }
+
+  globalObject.__dashboardDataSourcePromiseCache = cache;
+
   const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
     month: "2-digit",
     day: "2-digit"
@@ -55,6 +137,174 @@
     for (const id of ids) setStatusMessage(id, message);
   }
 
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function getDashboardControlElements(name, controlType = "radio") {
+    if (controlType === "checkbox") {
+      const checkbox = globalObject.document.querySelector(`input[name="${name}"]`);
+      return checkbox ? [checkbox] : [];
+    }
+    return Array.from(globalObject.document.querySelectorAll(`input[name="${name}"]`));
+  }
+
+  function syncControlValue(name, value, controlType = "radio") {
+    const controls = getDashboardControlElements(name, controlType);
+    if (controls.length === 0) return;
+    if (controlType === "checkbox") {
+      controls[0].checked = Boolean(value);
+      return;
+    }
+    controls.forEach((control) => {
+      control.checked = control.value === value;
+    });
+  }
+
+  function syncRadioAvailability(name, allowedValues) {
+    const allowed = new Set((Array.isArray(allowedValues) ? allowedValues : []).map((value) => String(value)));
+    const radios = Array.from(globalObject.document.querySelectorAll(`input[name="${name}"]`));
+    radios.forEach((radio) => {
+      const isAllowed = allowed.has(String(radio.value || ""));
+      radio.disabled = !isAllowed;
+      const label = radio.closest("label");
+      if (label) {
+        label.setAttribute("aria-disabled", isAllowed ? "false" : "true");
+        label.classList.toggle("is-disabled", !isAllowed);
+      }
+    });
+  }
+
+  function readDashboardControlStateFromUrl(bindings, state) {
+    const params = new URLSearchParams(globalObject.location.search);
+    (Array.isArray(bindings) ? bindings : []).forEach(
+      ({ name, stateKey, normalizeValue, normalizeChecked, controlType, defaultValue }) => {
+        if (!params.has(name)) {
+          state[stateKey] = defaultValue;
+          return;
+        }
+        const raw = String(params.get(name) || "");
+        if (controlType === "checkbox") {
+          const checked = !["0", "false", "off", "no"].includes(raw.trim().toLowerCase());
+          state[stateKey] = normalizeChecked(checked);
+          return;
+        }
+        state[stateKey] = normalizeValue(raw);
+      }
+    );
+  }
+
+  function syncDashboardControlsFromState(bindings, state) {
+    (Array.isArray(bindings) ? bindings : []).forEach(({ name, stateKey, controlType }) => {
+      syncControlValue(name, state[stateKey], controlType);
+    });
+  }
+
+  function bindDashboardControlState(bindings, state) {
+    (Array.isArray(bindings) ? bindings : []).forEach(
+      ({
+        name,
+        stateKey,
+        normalizeValue,
+        normalizeChecked,
+        onChangeRender,
+        controlType
+      }) => {
+        const controls = getDashboardControlElements(name, controlType);
+        if (controls.length === 0) return;
+        controls.forEach((control) => {
+          if (control.dataset.bound === "1") return;
+          control.dataset.bound = "1";
+          control.addEventListener("change", () => {
+            state[stateKey] =
+              controlType === "checkbox"
+                ? (normalizeChecked ? normalizeChecked(control.checked) : Boolean(control.checked))
+                : normalizeValue(control.value);
+            const nextUrl = new URL(globalObject.location.href);
+            (Array.isArray(bindings) ? bindings : []).forEach(({ name: bindingName, stateKey: bindingStateKey, controlType: bindingControlType }) => {
+              if (bindingControlType === "checkbox") {
+                nextUrl.searchParams.set(bindingName, state[bindingStateKey] ? "true" : "false");
+                return;
+              }
+              nextUrl.searchParams.set(bindingName, String(state[bindingStateKey] || ""));
+            });
+            globalObject.history.replaceState({}, "", nextUrl);
+            onChangeRender();
+          });
+        });
+      }
+    );
+  }
+
+  function renderRadioPillSwitch(containerId, name, options, selectedValue) {
+    const container = globalObject.document.getElementById(containerId);
+    if (!container) return;
+    const safeOptions = Array.isArray(options) ? options.filter(Boolean) : [];
+    container.hidden = safeOptions.length === 0;
+    container.innerHTML = safeOptions
+      .map(
+        (option) => `
+        <label class="pr-cycle-team-pill">
+          <input type="radio" name="${escapeHtml(name)}" value="${escapeHtml(option.value)}"${
+            option.value === selectedValue ? " checked" : ""
+          } />
+          <span>${escapeHtml(option.label)}</span>
+        </label>
+      `
+      )
+      .join("");
+  }
+
+  function renderDashboardRadioControlGroup({
+    containerId,
+    name,
+    options,
+    selectedValue,
+    bindings,
+    state
+  }) {
+    renderRadioPillSwitch(containerId, name, options, selectedValue);
+    bindDashboardControlState(bindings, state);
+    syncControlValue(name, selectedValue);
+  }
+
+  function showPanelStatus(status, message, { containerId = "" } = {}) {
+    if (!status) return;
+    status.hidden = false;
+    status.textContent = message;
+    if (containerId) clearChartContainer(containerId);
+  }
+
+  function withChart(configKey, getConfig, onReady, { resetStatus = true } = {}) {
+    const config = typeof getConfig === "function" ? getConfig(configKey) : null;
+    if (!config) return;
+    const status = document.getElementById(config.statusId);
+    const context = document.getElementById(config.contextId);
+    if (!status || !context) return;
+    if (resetStatus) status.hidden = true;
+    onReady({ config, status, context });
+  }
+
+  function renderDashboardChartState(configKey, getConfig, buildResult) {
+    withChart(configKey, getConfig, ({ status, context, config }) => {
+      const result = buildResult({ status, context, config });
+      if (!result) return;
+      if (result.error) {
+        showPanelStatus(status, result.error, result.clearContainer ? { containerId: config.containerId } : {});
+        return;
+      }
+      if (result.controlGroup) renderDashboardRadioControlGroup(result.controlGroup);
+      if (Object.prototype.hasOwnProperty.call(result, "contextText")) {
+        setPanelContext(context, result.contextText);
+      }
+      if (typeof result.render === "function") result.render({ status, context, config });
+    });
+  }
+
   function readThemeColor(name, fallback) {
     const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     return value || fallback;
@@ -105,26 +355,57 @@
     if (root) root.innerHTML = "";
   }
 
-  function getModeFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const chart = (params.get("chart") || "").toLowerCase();
-    if (chart === "trend") return "trend";
-    if (chart === "composition") return "composition";
-    if (chart === "uat") return "uat";
-    if (
-      chart === "dev-uat-ratio" ||
-      chart === "management" ||
-      chart === "dev-uat-facility" ||
-      chart === "management-facility"
-    ) {
-      return "management-facility";
+  function setPanelContext(node, text) {
+    if (!node) return;
+    const safeText = String(text || "").trim();
+    node.hidden = safeText.length === 0;
+    node.textContent = safeText;
+  }
+
+  function setConfigContext(config, text) {
+    if (!config) return;
+    setPanelContext(document.getElementById(config.contextId), text);
+  }
+
+  function formatContextWithFreshness(text, timestamp, label = "updated") {
+    const safeText = String(text || "").trim();
+    const safeTimestamp = String(timestamp || "").trim();
+    if (!safeTimestamp) return safeText;
+    const freshnessText = `${label} ${formatUpdatedAt(safeTimestamp)}`;
+    return safeText ? `${safeText} • ${freshnessText}` : freshnessText;
+  }
+
+  function getSnapshotContextTimestamp(state, { preferChartData = false } = {}) {
+    if (preferChartData) {
+      return String(state?.snapshot?.chartDataUpdatedAt || state?.snapshot?.updatedAt || "").trim();
     }
-    if (chart === "pr" || chart === "prs" || chart === "pr-activity") return "pr-activity";
-    if (chart === "pr-cycle" || chart === "pr-cycle-experiment") return "pr-cycle-experiment";
-    if (chart === "contributors") return "contributors";
-    if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";
-    if (chart === "lifecycle-days") return "lifecycle-days";
-    return "all";
+    return String(state?.snapshot?.updatedAt || "").trim();
+  }
+
+  function renderDashboardRefreshStrip(state) {
+    const panel = document.getElementById("dashboard-refresh-panel");
+    const textNode = document.getElementById("dashboard-refresh-text");
+    if (!panel || !textNode) return;
+    const refreshUpdatedAt = getOldestTimestamp([
+      state?.snapshot?.updatedAt,
+      state?.snapshot?.chartData ? state?.snapshot?.chartDataUpdatedAt : "",
+      state?.productCycle?.generatedAt,
+      state?.contributors?.updatedAt,
+      state?.prCycle?.updatedAt
+    ]);
+    panel.hidden = false;
+    textNode.hidden = refreshUpdatedAt.length === 0;
+    textNode.textContent = refreshUpdatedAt
+      ? `Oldest panel data updated ${formatUpdatedAt(refreshUpdatedAt)}`
+      : "";
+  }
+
+  function getModeFromUrl() {
+    return dashboardRuntimeContract.getModeFromUrl(window.location.search);
+  }
+
+  function getRequiredSourceKeys(mode, availableSourceKeys = []) {
+    return dashboardRuntimeContract.getRequiredSourceKeys(mode, availableSourceKeys);
   }
 
   function isEmbedMode() {
@@ -142,10 +423,24 @@
     getOldestTimestamp,
     setStatusMessage,
     setStatusMessageForIds,
-    readThemeColor,
+    escapeHtml,
+    syncControlValue,
+    syncRadioAvailability,
+    readDashboardControlStateFromUrl,
+    syncDashboardControlsFromState,
+    bindDashboardControlState,
+    setPanelContext,
+    setConfigContext,
+    formatContextWithFreshness,
+    getSnapshotContextTimestamp,
+    renderDashboardRefreshStrip,
+    showPanelStatus,
+    withChart,
+    renderDashboardChartState,
     getThemeColors,
     clearChartContainer,
     getModeFromUrl,
+    getRequiredSourceKeys,
     isEmbedMode
   };
 })(window);

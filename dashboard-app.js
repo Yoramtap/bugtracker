@@ -276,45 +276,51 @@ const dashboardSvgCore = window.DashboardSvgCore;
 if (!dashboardSvgCore) {
   throw new Error("Dashboard SVG core not loaded.");
 }
-const {
-  toNumber,
-  formatUpdatedAt,
-  getOldestTimestamp,
-  setStatusMessage,
+  const {
+    toNumber,
+    getOldestTimestamp,
+    setStatusMessage,
   setStatusMessageForIds,
   getThemeColors,
   clearChartContainer,
   getModeFromUrl,
+  getRequiredSourceKeys,
+  syncControlValue,
+  syncRadioAvailability,
+  readDashboardControlStateFromUrl,
+  syncDashboardControlsFromState,
+  bindDashboardControlState,
+  setPanelContext,
+  setConfigContext,
+  formatContextWithFreshness,
+  getSnapshotContextTimestamp,
+  renderDashboardRefreshStrip,
+  renderDashboardChartState,
+  showPanelStatus,
+  withChart,
+  escapeHtml,
   isEmbedMode
 } = dashboardUiUtils;
 const { buildTeamColorMap, buildTintMap, orderProductCycleTeams, toCount } = dashboardDataUtils;
 const {
   React,
   ResponsiveContainer,
-  LineChart,
-  Line,
   ScatterChart,
   Scatter,
   ReferenceArea,
   ReferenceLine,
-  CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
-  activeLineDot,
   buildAxisLabel,
-  buildNiceNumberAxis,
   createTooltipContent,
-  formatDateShort,
   h,
   isCompactViewport,
   makeTooltipLine,
   renderLegendNode,
   renderWithRoot,
   singleChartHeightForMode,
-  tooltipTitleLine,
-  trendLayoutForViewport,
-  withSafeTooltipProps
+  tooltipTitleLine
 } = dashboardChartCore;
 const { SvgChartShell, linearScale, withAlpha } = dashboardSvgCore;
 
@@ -340,15 +346,6 @@ const chartMonthRangeShortFormatter = new Intl.DateTimeFormat(undefined, {
 function toChartDateValue(dateText) {
   const timestamp = new Date(`${String(dateText || "")}T00:00:00Z`).getTime();
   return Number.isFinite(timestamp) ? timestamp : 0;
-}
-
-function formatChartDateTick(value) {
-  if (!Number.isFinite(value) || value <= 0) return "";
-  return new Date(value).toLocaleDateString("en-US", {
-    month: "short",
-    year: "2-digit",
-    timeZone: "UTC"
-  });
 }
 
 function formatCompactChartDateTick(value) {
@@ -399,7 +396,7 @@ function capChartDateToTimestamp(dateText, timestamp) {
 }
 
 function getSnapshotDisplayDate(dateText, { preferChartData = false } = {}) {
-  return capChartDateToTimestamp(dateText, getSnapshotContextTimestamp({ preferChartData }));
+  return capChartDateToTimestamp(dateText, getSnapshotContextTimestamp(state, { preferChartData }));
 }
 
 function getPrActivityDisplayDate(dateText) {
@@ -574,59 +571,6 @@ function applyModeVisibility() {
   }
 }
 
-function setPanelContext(node, text) {
-  if (!node) return;
-  const safeText = String(text || "").trim();
-  node.hidden = safeText.length === 0;
-  node.textContent = safeText;
-}
-
-function setConfigContext(config, text) {
-  setPanelContext(document.getElementById(config.contextId), text);
-}
-
-function getDashboardRefreshUpdatedAt() {
-  return getOldestTimestamp([
-    state.snapshot?.updatedAt,
-    state.snapshot?.chartData ? state.snapshot?.chartDataUpdatedAt : "",
-    state.productCycle?.generatedAt,
-    state.contributors?.updatedAt,
-    state.prCycle?.updatedAt
-  ]);
-}
-
-function renderDashboardRefreshStrip() {
-  const panel = document.getElementById("dashboard-refresh-panel");
-  const textNode = document.getElementById("dashboard-refresh-text");
-  if (!panel || !textNode) return;
-  const refreshUpdatedAt = getDashboardRefreshUpdatedAt();
-  panel.hidden = false;
-  textNode.hidden = refreshUpdatedAt.length === 0;
-  textNode.textContent = refreshUpdatedAt
-    ? `Oldest panel data updated ${formatUpdatedAt(refreshUpdatedAt)}`
-    : "";
-}
-
-function formatContextWithFreshness(text, timestamp, label = "updated") {
-  const safeText = String(text || "").trim();
-  const safeTimestamp = String(timestamp || "").trim();
-  if (!safeTimestamp) return safeText;
-  const freshnessText = `${label} ${formatUpdatedAt(safeTimestamp)}`;
-  return safeText ? `${safeText} • ${freshnessText}` : freshnessText;
-}
-
-function getSnapshotContextTimestamp({ preferChartData = false } = {}) {
-  if (preferChartData) {
-    return String(state.snapshot?.chartDataUpdatedAt || state.snapshot?.updatedAt || "").trim();
-  }
-  return String(state.snapshot?.updatedAt || "").trim();
-}
-
-function formatCompactMonths(value) {
-  const safeValue = Math.max(0, toNumber(value));
-  return `${safeValue.toFixed(1)} mo`;
-}
-
 function buildBugActionItem() {
   const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
   if (points.length === 0) return null;
@@ -785,20 +729,9 @@ function renderActionsRequiredFrame() {
 
   panel.hidden = false;
   const actionItems = buildActionsRequiredItems();
-  const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
-  const latestSnapshotDate =
-    points.length > 0 ? getSnapshotDisplayDate(points[points.length - 1]?.date || "") : "";
-  const actionWindowStart = latestSnapshotDate
-    ? shiftChartIsoDate(latestSnapshotDate, -29)
-    : "";
   setPanelContext(
     contextNode,
-    formatContextWithFreshness(
-      latestSnapshotDate
-        ? `Last 30 days • ${actionWindowStart} to ${latestSnapshotDate} • ranked by current pressure`
-        : "",
-      getSnapshotContextTimestamp()
-    )
+    formatContextWithFreshness("", getSnapshotContextTimestamp(state))
   );
 
   if (actionItems.length === 0) {
@@ -828,55 +761,6 @@ function getBroadcastScopeLabel() {
   return String(state.snapshot?.uatAging?.scope?.label || "Broadcast");
 }
 
-function getChartNodes(configKey) {
-  const config = getConfig(configKey);
-  if (!config) return null;
-  const status = document.getElementById(config.statusId);
-  const context = document.getElementById(config.contextId);
-  return status ? { config, status, context } : null;
-}
-
-function withChart(configKey, onReady, { resetStatus = true } = {}) {
-  const chart = getChartNodes(configKey);
-  if (!chart) return;
-  if (resetStatus) chart.status.hidden = true;
-  onReady(chart);
-}
-
-function showPanelStatus(status, message, { containerId = "" } = {}) {
-  if (!status) return;
-  status.hidden = false;
-  status.textContent = message;
-  if (containerId) clearChartContainer(containerId);
-}
-
-function renderChartWithState(configKey, buildResult) {
-  withChart(configKey, ({ status, context, config }) => {
-    const result = buildResult({ status, context, config });
-    if (!result) return;
-    if (result.error) {
-      showPanelStatus(
-        status,
-        result.error,
-        result.clearContainer ? { containerId: config.containerId } : {}
-      );
-      return;
-    }
-    if (Object.prototype.hasOwnProperty.call(result, "contextText")) {
-      setPanelContext(context, result.contextText);
-    }
-    renderNamedChart(
-      config,
-      {
-        containerId: config.containerId,
-        colors: getThemeColors(),
-        ...(result.props || {})
-      },
-      result.options || {}
-    );
-  });
-}
-
 function renderBugCompositionByPriorityChart() {
   const config = getConfig("composition");
   const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
@@ -886,7 +770,7 @@ function renderBugCompositionByPriorityChart() {
     config,
     formatContextWithFreshness(
       latestDisplayDate ? `Latest backlog bucket • ${latestDisplayDate}` : "",
-      getSnapshotContextTimestamp()
+      getSnapshotContextTimestamp(state)
     )
   );
   renderSnapshotChart(config);
@@ -906,7 +790,7 @@ function renderTrendChart() {
       : "Last 10 sprint buckets";
   setConfigContext(
     config,
-    formatContextWithFreshness(contextText, getSnapshotContextTimestamp())
+    formatContextWithFreshness(contextText, getSnapshotContextTimestamp(state))
   );
   renderSnapshotChart(config);
 }
@@ -935,20 +819,6 @@ function setPrActivityHelpDetails({ since = "", until = "", caveat = "", interva
     noteNode.hidden = safeCaveat.length === 0;
     noteNode.textContent = safeCaveat;
   }
-}
-
-function buildLegacyPrActivityRows(metricKey = "offered") {
-  const points = buildLegacyPrActivitySourcePoints();
-  return points.map((point) => ({
-    date: String(point?.date || ""),
-    dateValue: toChartDateValue(point?.date),
-    api: toNumber(point?.api?.[metricKey]),
-    legacy: toNumber(point?.legacy?.[metricKey]),
-    react: toNumber(point?.react?.[metricKey]),
-    bc: toNumber(point?.bc?.[metricKey]),
-    workers: toNumber(point?.workers?.[metricKey]),
-    titanium: toNumber(point?.titanium?.[metricKey])
-  }));
 }
 
 function monthBucketDate(isoDate) {
@@ -1025,42 +895,6 @@ function buildLegacyPrActivityMonthlyPoints() {
   legacyPrActivityMonthlyCache.source = prActivitySource;
   legacyPrActivityMonthlyCache.points = derivedPoints;
   return derivedPoints;
-}
-
-function buildLegacyPrActivitySourcePoints() {
-  return buildLegacyPrActivityMonthlyPoints();
-}
-
-function buildLegacyPrMergeTimeRows() {
-  const points = buildLegacyPrActivitySourcePoints();
-  return points.map((point) => ({
-    date: String(point?.date || ""),
-    dateValue: toChartDateValue(point?.date),
-    api:
-      toCount(point?.api?.avgReviewToMergeSampleCount) > 0
-        ? toNumber(point?.api?.avgReviewToMergeDays)
-        : null,
-    legacy:
-      toCount(point?.legacy?.avgReviewToMergeSampleCount) > 0
-        ? toNumber(point?.legacy?.avgReviewToMergeDays)
-        : null,
-    react:
-      toCount(point?.react?.avgReviewToMergeSampleCount) > 0
-        ? toNumber(point?.react?.avgReviewToMergeDays)
-        : null,
-    bc:
-      toCount(point?.bc?.avgReviewToMergeSampleCount) > 0
-        ? toNumber(point?.bc?.avgReviewToMergeDays)
-        : null,
-    workers:
-      toCount(point?.workers?.avgReviewToMergeSampleCount) > 0
-        ? toNumber(point?.workers?.avgReviewToMergeDays)
-        : null,
-    titanium:
-      toCount(point?.titanium?.avgReviewToMergeSampleCount) > 0
-        ? toNumber(point?.titanium?.avgReviewToMergeDays)
-        : null
-  }));
 }
 
 function normalizeDisplayTeamName(name) {
@@ -1160,81 +994,6 @@ function getLegacyPrActivityYUpper(rows, lineDefs) {
     );
     return Math.max(highest, rowMax);
   }, 0);
-}
-
-function getLegacySharedPrCountYUpper() {
-  const offeredRows = buildLegacyPrActivityRows("offered");
-  const mergedRows = buildLegacyPrActivityRows("merged");
-  const lineDefs = getPrActivityLineDefs(getThemeColors());
-  return Math.max(
-    getLegacyPrActivityYUpper(offeredRows, lineDefs),
-    getLegacyPrActivityYUpper(mergedRows, lineDefs)
-  );
-}
-
-function wrapReferenceLabel(text, maxLineLength = 16) {
-  const words = String(text || "")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  if (words.length === 0) return [];
-
-  const lines = [];
-  let currentLine = words[0];
-
-  for (const word of words.slice(1)) {
-    const nextLine = `${currentLine} ${word}`;
-    if (nextLine.length <= maxLineLength) {
-      currentLine = nextLine;
-      continue;
-    }
-    lines.push(currentLine);
-    currentLine = word;
-  }
-
-  lines.push(currentLine);
-  return lines;
-}
-
-function renderPrActivityReferenceLine(marker, compactViewport, showLabel = true) {
-  const lines = wrapReferenceLabel(marker.label, compactViewport ? 12 : 16);
-  const lineHeight = compactViewport ? 12 : 14;
-  return h(ReferenceLine, {
-    key: marker.date,
-    x: toChartDateValue(marker.date),
-    stroke: "rgba(0, 0, 0, 0.9)",
-    strokeDasharray: "7 5",
-    strokeWidth: 1.8,
-    ifOverflow: "extendDomain",
-    label: !showLabel
-      ? undefined
-      : ({ viewBox }) =>
-          h(
-            "text",
-            {
-              x: toNumber(viewBox?.x),
-              y:
-                toNumber(viewBox?.y) -
-                (compactViewport ? 10 : 14) -
-                lineHeight * (lines.length - 1),
-              fill: "rgba(0, 0, 0, 0.95)",
-              fontSize: compactViewport ? 10 : 11,
-              fontWeight: 700,
-              textAnchor: "middle"
-            },
-            lines.map((line, index) =>
-              h(
-                "tspan",
-                {
-                  key: `${marker.date}-${index}`,
-                  x: toNumber(viewBox?.x),
-                  dy: index === 0 ? 0 : lineHeight
-                },
-                line
-              )
-            )
-          )
-  });
 }
 
 function formatWholeCountLabel(value) {
@@ -1407,16 +1166,56 @@ function buildLegacyPrActivityTicks(yUpper) {
 function buildLegacyPrActivityPath(points) {
   if (!Array.isArray(points) || points.length === 0) return "";
   if (points.length === 1) return `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
+  if (points.length === 2) {
+    return points
+      .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+      .join(" ");
+  }
+
+  const deltas = [];
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const dx = points[index + 1].x - points[index].x;
+    const dy = points[index + 1].y - points[index].y;
+    deltas.push(dx > 0 ? dy / dx : 0);
+  }
+
+  const tangents = new Array(points.length).fill(0);
+  tangents[0] = deltas[0];
+  tangents[tangents.length - 1] = deltas[deltas.length - 1];
+  for (let index = 1; index < points.length - 1; index += 1) {
+    const previousDelta = deltas[index - 1];
+    const nextDelta = deltas[index];
+    tangents[index] =
+      previousDelta === 0 || nextDelta === 0 || previousDelta * nextDelta < 0
+        ? 0
+        : (previousDelta + nextDelta) / 2;
+  }
+
+  for (let index = 0; index < deltas.length; index += 1) {
+    const delta = deltas[index];
+    if (delta === 0) {
+      tangents[index] = 0;
+      tangents[index + 1] = 0;
+      continue;
+    }
+    const leftRatio = tangents[index] / delta;
+    const rightRatio = tangents[index + 1] / delta;
+    const magnitude = Math.hypot(leftRatio, rightRatio);
+    if (magnitude <= 3) continue;
+    const scale = 3 / magnitude;
+    tangents[index] = scale * leftRatio * delta;
+    tangents[index + 1] = scale * rightRatio * delta;
+  }
+
   let path = `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
   for (let index = 0; index < points.length - 1; index += 1) {
-    const previous = points[index - 1] || points[index];
     const current = points[index];
     const next = points[index + 1];
-    const afterNext = points[index + 2] || next;
-    const control1X = current.x + (next.x - previous.x) / 6;
-    const control1Y = current.y + (next.y - previous.y) / 6;
-    const control2X = next.x - (afterNext.x - current.x) / 6;
-    const control2Y = next.y - (afterNext.y - current.y) / 6;
+    const dx = next.x - current.x;
+    const control1X = current.x + dx / 3;
+    const control1Y = current.y + (tangents[index] * dx) / 3;
+    const control2X = next.x - dx / 3;
+    const control2Y = next.y - (tangents[index + 1] * dx) / 3;
     path += ` C ${control1X.toFixed(2)} ${control1Y.toFixed(2)} ${control2X.toFixed(2)} ${control2Y.toFixed(2)} ${next.x.toFixed(2)} ${next.y.toFixed(2)}`;
   }
   return path;
@@ -1683,56 +1482,6 @@ function LegacyPrActivitySvgChart({
   );
 }
 
-function renderLegacyPrActivityCountChart(containerId) {
-  const metricKey = state.prActivityLegacyMetric === "merged" ? "merged" : "offered";
-  const rows = buildLegacyPrActivityRows(metricKey);
-  const colors = getThemeColors();
-  const yAxisLabel = metricKey === "merged" ? "Merged PRs" : "PR inflow";
-  const hiddenKeys = getLegacyPrActivityHiddenKeys();
-  renderWithRoot(containerId, rows.length > 0, (root) => {
-    root.render(
-      h(LegacyPrActivitySvgChart, {
-        rows,
-        colors,
-        yAxisLabel,
-        tooltipLabel: yAxisLabel,
-        tooltipValueFormatter: (value) => `${value} ${yAxisLabel.toLowerCase()}`,
-        yAxisUpperOverride: getLegacySharedPrCountYUpper(),
-        hiddenKeys,
-        setHiddenKeys: setLegacyPrActivityHiddenKeys,
-        showLegend: true,
-        xAxisLabel: "Month"
-      })
-    );
-  });
-}
-
-function renderLegacyPrMergeTimeChart(containerId) {
-  const rows = buildLegacyPrMergeTimeRows();
-  const colors = getThemeColors();
-  const hiddenKeys = getLegacyPrActivityHiddenKeys();
-  renderWithRoot(containerId, rows.length > 0, (root) => {
-    root.render(
-      h(LegacyPrActivitySvgChart, {
-        rows,
-        colors,
-        yAxisLabel: "Avg days to merge",
-        tooltipLabel: "Average review-to-merge time",
-        tooltipValueFormatter: (value) => {
-          const roundedDays = Math.max(0, Math.round(Number(value) || 0));
-          return `~${roundedDays} day${roundedDays === 1 ? "" : "s"}`;
-        },
-        hiddenKeys,
-        setHiddenKeys: setLegacyPrActivityHiddenKeys,
-        yAxisFixedUpper: 50,
-        showLegend: false,
-        hideReferenceLabelsOnCompact: true,
-        xAxisLabel: "Month"
-      })
-    );
-  });
-}
-
 function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, interval, axisRows }) {
   const visibleSeries = series.filter((item) => !hiddenKeys.has(item.dataKey));
   const compactViewport = isCompactViewport();
@@ -1817,7 +1566,7 @@ function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, inte
         }),
         h(
           Tooltip,
-          withSafeTooltipProps({
+          {
             content: createTooltipContent(colors, (row) => [
               tooltipTitleLine("team", row?.teamLabel || "", colors),
               tooltipTitleLine("scope", row?.tooltipScopeLabel || "All-time avg", colors),
@@ -1844,7 +1593,7 @@ function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, inte
               )
             ]),
             cursor: { stroke: colors.active, strokeWidth: 1.5, strokeDasharray: "3 3" }
-          })
+          }
         ),
         visibleSeries.map((item) =>
           h(Scatter, {
@@ -1861,43 +1610,8 @@ function PrActivityScatterView({ series, colors, hiddenKeys, setHiddenKeys, inte
   );
 }
 
-function renderPrActivityPositionChart(containerId) {
-  const colors = getThemeColors();
-  const hiddenKeys = getSharedPrActivityHiddenKeys();
-  const interval = normalizePrActivityInterval(state.snapshot?.prActivity?.interval);
-  const allPoints = Array.isArray(state.snapshot?.prActivity?.points) ? state.snapshot.prActivity.points : [];
-  const selectedWindowKey = normalizeOption(
-    state.prActivityWindow,
-    PR_ACTIVITY_WINDOWS,
-    THIRTY_DAY_WINDOW_KEY
-  );
-  const { points } = getPrActivityWindowedPoints(allPoints, selectedWindowKey);
-  const prCycleWindowSnapshot =
-    state.prCycle?.windows && typeof state.prCycle.windows === "object"
-      ? state.prCycle.windows[selectedWindowKey] || null
-      : null;
-  const allAxisRows = buildPrActivityAxisRowsForAllWindows(allPoints, state.prCycle?.windows);
-  const baseSeries = buildPrActivityScatterSeries(points, selectedWindowKey, prCycleWindowSnapshot);
-  const series = baseSeries.map((item) => ({
-    ...item,
-    stroke: colors.teams[item.colorKey]
-  }));
-  renderWithRoot(containerId, series.length > 0, (root) => {
-    root.render(
-      h(PrActivityScatterView, {
-        series,
-        colors,
-        hiddenKeys,
-        setHiddenKeys: setSharedPrActivityHiddenKeys,
-        interval,
-        axisRows: allAxisRows
-      })
-    );
-  });
-}
-
 function renderPrActivityCharts() {
-  withChart("pr-activity", ({ status, context }) => {
+  renderDashboardChartState("pr-activity", getConfig, () => {
     const prActivity = state.snapshot?.prActivity;
     const allPoints = Array.isArray(prActivity?.points) ? prActivity.points : [];
     const prCycleWindows =
@@ -1905,11 +1619,11 @@ function renderPrActivityCharts() {
     if (allPoints.length === 0 || !prCycleWindows) {
       clearChartContainer("pr-position-chart");
       setPrActivityHelpDetails({});
-      showPanelStatus(status, "No PR activity or workflow breakdown data found for this chart.");
-      return;
+      return {
+        error: "No PR activity or workflow breakdown data found for this chart."
+      };
     }
 
-    status.hidden = true;
     const since = String(prActivity?.since || "");
     const interval = String(prActivity?.interval || "").trim();
     const caveat = String(prActivity?.caveat || "").trim();
@@ -1925,32 +1639,56 @@ function renderPrActivityCharts() {
     const latestPoint = points.length > 0 ? points[points.length - 1] : null;
     const latestPointDate = getPrActivityDisplayDate(latestPoint?.date || "");
     state.prActivityWindow = selectedWindowKey;
-    syncRadioValue("pr-activity-window", selectedWindowKey);
-    setPanelContext(
-      context,
-      formatContextWithFreshness(
+    syncControlValue("pr-activity-window", selectedWindowKey);
+    return {
+      contextText: formatContextWithFreshness(
         latestPointDate
           ? compactViewport
             ? `${windowLabel} • ${windowStart} to ${latestPointDate}`
             : `${windowLabel} team averages • ${windowStart} to ${latestPointDate}`
           : "",
         getOldestTimestamp([state.snapshot?.updatedAt, state.prCycle?.updatedAt])
-      )
-    );
-    setPrActivityHelpDetails({
-      since: windowStart || since,
-      until: latestPointDate,
-      caveat,
-      interval
-    });
-    renderPrActivityPositionChart("pr-position-chart");
+      ),
+      render: () => {
+        setPrActivityHelpDetails({
+          since: windowStart || since,
+          until: latestPointDate,
+          caveat,
+          interval
+        });
+        const colors = getThemeColors();
+        const hiddenKeys = getSharedPrActivityHiddenKeys();
+        const allAxisRows = buildPrActivityAxisRowsForAllWindows(allPoints, state.prCycle?.windows);
+        const prCycleWindowSnapshot =
+          state.prCycle?.windows && typeof state.prCycle.windows === "object"
+            ? state.prCycle.windows[selectedWindowKey] || null
+            : null;
+        const baseSeries = buildPrActivityScatterSeries(points, selectedWindowKey, prCycleWindowSnapshot);
+        const series = baseSeries.map((item) => ({
+          ...item,
+          stroke: colors.teams[item.colorKey]
+        }));
+        renderWithRoot("pr-position-chart", series.length > 0, (root) => {
+          root.render(
+            h(PrActivityScatterView, {
+              series,
+              colors,
+              hiddenKeys,
+              setHiddenKeys: setSharedPrActivityHiddenKeys,
+              interval,
+              axisRows: allAxisRows
+            })
+          );
+        });
+      }
+    };
   });
 }
 
 function renderLegacyPrActivityCharts() {
-  withChart("pr-activity-legacy", ({ status, context }) => {
+  withChart("pr-activity-legacy", getConfig, ({ status, context }) => {
     const prActivity = state.snapshot?.prActivity;
-    const points = buildLegacyPrActivitySourcePoints();
+    const points = buildLegacyPrActivityMonthlyPoints();
     if (points.length === 0) {
       clearChartContainer("pr-activity-legacy-count-chart");
       clearChartContainer("pr-activity-legacy-merge-time-chart");
@@ -1958,129 +1696,198 @@ function renderLegacyPrActivityCharts() {
       return;
     }
 
-    status.hidden = true;
     const compactViewport = isCompactViewport();
     const since = String(points[0]?.date || prActivity?.monthlySince || prActivity?.since || "");
     const metricKey = state.prActivityLegacyMetric === "merged" ? "merged" : "offered";
-    syncRadioValue("pr-activity-legacy-metric", metricKey);
-    syncCheckboxValue("pr-activity-legacy-show-markers", state.showLegacyPrActivityMarkers);
+    syncControlValue("pr-activity-legacy-metric", metricKey);
+    syncControlValue("pr-activity-legacy-show-markers", state.showLegacyPrActivityMarkers, "checkbox");
     setPanelContext(
       context,
       formatContextWithFreshness(
         compactViewport
           ? `Monthly Jira-linked PR activity • ${since || points[0]?.date || ""}`
           : `Monthly Jira-linked PR activity since ${since || points[0]?.date || ""}`,
-        getSnapshotContextTimestamp()
+        getSnapshotContextTimestamp(state)
       )
     );
-    renderLegacyPrActivityCountChart("pr-activity-legacy-count-chart");
-    renderLegacyPrMergeTimeChart("pr-activity-legacy-merge-time-chart");
-  });
-}
-
-function renderPublicAggregateChart(configKey, scope, onReady) {
-  const config = getConfig(configKey);
-  if (config?.radioName) syncRadioValue(config.radioName, scope);
-  withChart(configKey, ({ status, context, config }) => {
-    const chartDataValue = state.productCycle?.chartData;
-    const chartData = chartDataValue && typeof chartDataValue === "object" ? chartDataValue : null;
-    if (!chartData) {
-      showPanelStatus(status, config.missingMessage, { containerId: config.containerId });
-      return;
-    }
-    onReady({ status, context, chartData, config, scope });
+    const colors = getThemeColors();
+    const hiddenKeys = getLegacyPrActivityHiddenKeys();
+    const buildLegacyRows = (valueAccessor) =>
+      points.map((point) => ({
+        date: String(point?.date || ""),
+        dateValue: toChartDateValue(point?.date),
+        api: toNumber(valueAccessor(point?.api)),
+        legacy: toNumber(valueAccessor(point?.legacy)),
+        react: toNumber(valueAccessor(point?.react)),
+        bc: toNumber(valueAccessor(point?.bc)),
+        workers: toNumber(valueAccessor(point?.workers)),
+        titanium: toNumber(valueAccessor(point?.titanium))
+      }));
+    const lineDefs = getPrActivityLineDefs(colors);
+    const offeredRows = buildLegacyRows((teamMetrics) => teamMetrics?.[metricKey]);
+    const mergedCountRows = buildLegacyRows((teamMetrics) => teamMetrics?.merged);
+    const mergeTimeRows = buildLegacyRows((teamMetrics) => teamMetrics?.avgReviewToMergeDays);
+    const yAxisUpperOverride = Math.max(
+      getLegacyPrActivityYUpper(offeredRows, lineDefs),
+      getLegacyPrActivityYUpper(mergedCountRows, lineDefs)
+    );
+    const renderLegacyChart = (containerId, rows, options) => {
+      renderWithRoot(containerId, rows.length > 0, (root) => {
+        root.render(
+          h(LegacyPrActivitySvgChart, {
+            rows,
+            colors,
+            hiddenKeys,
+            setHiddenKeys: setLegacyPrActivityHiddenKeys,
+            ...options
+          })
+        );
+      });
+    };
+    renderLegacyChart("pr-activity-legacy-count-chart", offeredRows, {
+      yAxisLabel: metricKey === "merged" ? "Merged PRs" : "PR inflow",
+      tooltipLabel: metricKey === "merged" ? "Merged PRs" : "PR inflow",
+      tooltipValueFormatter: (value) => `${value} ${metricKey === "merged" ? "merged prs" : "pr inflow"}`,
+      yAxisUpperOverride,
+      showLegend: true,
+      xAxisLabel: "Month"
+    });
+    renderLegacyChart("pr-activity-legacy-merge-time-chart", mergeTimeRows, {
+      yAxisLabel: "Avg days to merge",
+      tooltipLabel: "Average review-to-merge time",
+      tooltipValueFormatter: (value) => {
+        const roundedDays = Math.max(0, Math.round(Number(value) || 0));
+        return `~${roundedDays} day${roundedDays === 1 ? "" : "s"}`;
+      },
+      yAxisUpperOverride: getLegacyPrActivityYUpper(mergeTimeRows, lineDefs),
+      showLegend: false,
+      hideReferenceLabelsOnCompact: true,
+      xAxisLabel: "Month"
+    });
   });
 }
 
 function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData) {
-  const chartCore = window.DashboardChartCore;
-  const panel = getChartNodes("product-cycle");
   const titleNode = document.getElementById("product-cycle-title");
-  if (!panel || !chartCore || !chartScopeData || typeof chartScopeData !== "object") return false;
-  const { status, context, config } = panel;
-  if (titleNode) titleNode.textContent = "Product idea cycle time by team";
+  if (!chartScopeData || typeof chartScopeData !== "object") return;
+  renderDashboardChartState("product-cycle", getConfig, ({ config }) => {
+    if (titleNode) titleNode.textContent = "Product idea cycle time by team";
 
-  const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
-    .map((row) => ({
-      ...row,
-      team: normalizeDisplayTeamName(row?.team)
-    }))
-    .filter((row) => !(String(row?.team || "") === "UNMAPPED" && toCount(row?.meta_cycle?.n) === 0))
-    .sort((left, right) => {
-      const leftN = toCount(left?.meta_cycle?.n);
-      const rightN = toCount(right?.meta_cycle?.n);
-      if (leftN === 0 && rightN > 0) return 1;
-      if (rightN === 0 && leftN > 0) return -1;
-      const cycleDiff = toNumber(left?.cycle) - toNumber(right?.cycle);
-      if (cycleDiff !== 0) return cycleDiff;
-      return String(left?.team || "").localeCompare(String(right?.team || ""));
-    });
-  const teams = orderProductCycleTeams(rows.map((row) => String(row?.team || "")).filter(Boolean));
-  if (teams.length === 0) return false;
+    const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
+      .map((row) => ({
+        ...row,
+        team: normalizeDisplayTeamName(row?.team)
+      }))
+      .filter((row) => !(String(row?.team || "") === "UNMAPPED" && toCount(row?.meta_cycle?.n) === 0))
+      .sort((left, right) => {
+        const leftN = toCount(left?.meta_cycle?.n);
+        const rightN = toCount(right?.meta_cycle?.n);
+        if (leftN === 0 && rightN > 0) return 1;
+        if (rightN === 0 && leftN > 0) return -1;
+        const cycleDiff = toNumber(left?.cycle) - toNumber(right?.cycle);
+        if (cycleDiff !== 0) return cycleDiff;
+        return String(left?.team || "").localeCompare(String(right?.team || ""));
+      });
+    const teams = orderProductCycleTeams(rows.map((row) => String(row?.team || "")).filter(Boolean));
+    if (teams.length === 0) {
+      return {
+        error: `No product-cycle items found for ${PRODUCT_CYCLE_SCOPE_LABEL.toLowerCase()}.`,
+        clearContainer: true
+      };
+    }
 
-  const fallbackCycleSampleCount = rows.reduce((sum, row) => sum + toCount(row?.meta_cycle?.n), 0);
-  const cycleSampleCount = toCount(chartScopeData.cycleSampleCount) || fallbackCycleSampleCount;
-  const sampleCount = Math.max(toCount(chartScopeData.sampleCount), cycleSampleCount);
-  const fetchedCount = Math.max(
-    toCount(state.productCycle?.chartData?.fetchedCount),
-    toCount(state.productCycle?.fetchedCount)
-  );
-  const scopeLabel = String(
-    chartScopeData.scopeLabel || PRODUCT_CYCLE_SCOPE_LABEL
-  );
-
-  if (sampleCount === 0) {
-    showPanelStatus(status, `No product-cycle items found for ${scopeLabel.toLowerCase()}.`, {
-      containerId: config.containerId
-    });
-    return true;
-  }
-
-  const allowedTeamKeys = ["all", ...teams.map(productCycleTeamKey)];
-  const selectedTeamKey = allowedTeamKeys.includes(productCycleTeamKey(state.productCycleTeam))
-    ? productCycleTeamKey(state.productCycleTeam)
-    : productCycleTeamKey(teams[0]);
-  state.productCycleTeam = selectedTeamKey;
-
-  renderProductCycleTeamControls(teams);
-  bindRadioState(
-    "product-cycle-team",
-    "productCycleTeam",
-    productCycleTeamKey,
-    renderLeadAndCycleTimeByTeamChart
-  );
-  syncRadioValue("product-cycle-team", selectedTeamKey);
-
-  clearChartContainer(config.containerId);
-  if (selectedTeamKey === "all") {
-    renderProductCycleComparisonCard(config.containerId, rows, scopeLabel);
-    setPanelContext(
-      context,
-      formatContextWithFreshness(
-        fetchedCount > 0
-          ? `${scopeLabel} • ${cycleSampleCount} ideas with cycle data from ${fetchedCount} fetched ideas`
-          : `${scopeLabel} • ${cycleSampleCount} ideas with cycle data`,
-        state.productCycle?.generatedAt,
-        "generated"
-      )
+    const fallbackCycleSampleCount = rows.reduce((sum, row) => sum + toCount(row?.meta_cycle?.n), 0);
+    const cycleSampleCount = toCount(chartScopeData.cycleSampleCount) || fallbackCycleSampleCount;
+    const sampleCount = Math.max(toCount(chartScopeData.sampleCount), cycleSampleCount);
+    const fetchedCount = Math.max(
+      toCount(state.productCycle?.chartData?.fetchedCount),
+      toCount(state.productCycle?.fetchedCount)
     );
-    return true;
-  }
+    const scopeLabel = String(chartScopeData.scopeLabel || PRODUCT_CYCLE_SCOPE_LABEL);
 
-  const selectedRow = rows.find((row) => productCycleTeamKey(row?.team) === selectedTeamKey) || rows[0];
-  const selectedSampleCount = toCount(selectedRow?.meta_cycle?.n);
-  renderProductCycleSingleTeamCard(config.containerId, selectedRow, rows);
-  setPanelContext(
-    context,
-    formatContextWithFreshness(
-      fetchedCount > 0
-        ? `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${scopeLabel} • ${selectedSampleCount} ideas with cycle data from ${fetchedCount} fetched ideas`
-        : `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${scopeLabel} • ${selectedSampleCount} ideas with cycle data`,
-      state.productCycle?.generatedAt,
-      "generated"
-    )
-  );
-  return true;
+    if (sampleCount === 0) {
+      return {
+        error: `No product-cycle items found for ${scopeLabel.toLowerCase()}.`,
+        clearContainer: true
+      };
+    }
+
+    const allowedTeamKeys = ["all", ...teams.map(productCycleTeamKey)];
+    const selectedTeamKey = allowedTeamKeys.includes(productCycleTeamKey(state.productCycleTeam))
+      ? productCycleTeamKey(state.productCycleTeam)
+      : productCycleTeamKey(teams[0]);
+    state.productCycleTeam = selectedTeamKey;
+    const selectedRow = rows.find((row) => productCycleTeamKey(row?.team) === selectedTeamKey) || rows[0];
+    const selectedSampleCount = toCount(selectedRow?.meta_cycle?.n);
+
+    return buildRadioChartStateResult({
+      containerId: "product-cycle-team-switch",
+      name: "product-cycle-team",
+      options: ["all", ...teams.map(productCycleTeamKey)].map((key) => ({
+        value: key,
+        label:
+          key === "all"
+            ? "All teams"
+            : normalizeDisplayTeamName(teams.find((team) => productCycleTeamKey(team) === key) || key)
+      })),
+      selectedValue: selectedTeamKey,
+      stateKey: "productCycleTeam",
+      normalizeValue: productCycleTeamKey,
+      onChangeRender: renderLeadAndCycleTimeByTeamChart,
+      state,
+      contextText: formatContextWithFreshness(
+        selectedTeamKey === "all"
+          ? fetchedCount > 0
+            ? `${scopeLabel} • ${cycleSampleCount} ideas with cycle data from ${fetchedCount} fetched ideas`
+            : `${scopeLabel} • ${cycleSampleCount} ideas with cycle data`
+          : fetchedCount > 0
+            ? `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${scopeLabel} • ${selectedSampleCount} ideas with cycle data from ${fetchedCount} fetched ideas`
+            : `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${scopeLabel} • ${selectedSampleCount} ideas with cycle data`,
+        getSnapshotContextTimestamp(state),
+        "generated"
+      ),
+      render: () => {
+        clearChartContainer(config.containerId);
+        if (selectedTeamKey === "all") {
+          window.DashboardCharts?.renderProductCycleComparisonCard?.(config.containerId, rows, scopeLabel);
+          return;
+        }
+
+        window.DashboardCharts?.renderProductCycleSingleTeamCard?.(config.containerId, selectedRow, rows);
+      }
+    });
+  });
+}
+
+function buildRadioChartStateResult({
+  containerId,
+  name,
+  options,
+  selectedValue,
+  stateKey,
+  normalizeValue,
+  onChangeRender,
+  state,
+  contextText,
+  render,
+  error,
+  clearContainer = false
+}) {
+  if (error) {
+    return clearContainer ? { error, clearContainer: true } : { error };
+  }
+  return {
+    controlGroup: {
+      containerId,
+      name,
+      options,
+      selectedValue,
+      bindings: [{ name, stateKey, normalizeValue, onChangeRender }],
+      state
+    },
+    contextText,
+    render
+  };
 }
 
 function computeLifecycleChartYUpper(chartData) {
@@ -2196,19 +2003,6 @@ function getLifecycleTeamOptions(normalizedChartData) {
   return [{ key: LIFECYCLE_TEAM_SCOPE_DEFAULT, label: "All teams avg", sampleCount: 0 }, ...options];
 }
 
-function renderLifecycleTeamControls(options) {
-  const selectedKey = lifecycleTeamScopeKey(state.lifecycleTeamScope);
-  renderRadioPillSwitch(
-    "lifecycle-team-switch",
-    "lifecycle-team",
-    (Array.isArray(options) ? options : []).map((option) => ({
-      value: option.key,
-      label: option.label
-    })),
-    selectedKey
-  );
-}
-
 function buildLifecycleFilteredView(normalizedChartData, selectedTeamKey) {
   const rows = Array.isArray(normalizedChartData?.rows) ? normalizedChartData.rows : [];
   const teamDefs = Array.isArray(normalizedChartData?.teamDefs) ? normalizedChartData.teamDefs : [];
@@ -2292,133 +2086,128 @@ function buildLifecycleFilteredView(normalizedChartData, selectedTeamKey) {
 }
 
 function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
-  const panel = getChartNodes("lifecycle-days");
   const normalizedChartData = normalizeCurrentStageChartData(chartSnapshotData);
-  if (!panel || !normalizedChartData) return false;
-  const { status, context, config } = panel;
+  if (!normalizedChartData) return;
+  renderDashboardChartState("lifecycle-days", getConfig, ({ config }) => {
+    const lifecycleTeamOptions = getLifecycleTeamOptions(normalizedChartData);
+    const validTeamKeys = new Set(lifecycleTeamOptions.map((option) => option.key));
+    const selectedTeamKey = validTeamKeys.has(lifecycleTeamScopeKey(state.lifecycleTeamScope))
+      ? lifecycleTeamScopeKey(state.lifecycleTeamScope)
+      : LIFECYCLE_TEAM_SCOPE_DEFAULT;
+    state.lifecycleTeamScope = selectedTeamKey;
 
-  const lifecycleTeamOptions = getLifecycleTeamOptions(normalizedChartData);
-  const validTeamKeys = new Set(lifecycleTeamOptions.map((option) => option.key));
-  const selectedTeamKey = validTeamKeys.has(lifecycleTeamScopeKey(state.lifecycleTeamScope))
-    ? lifecycleTeamScopeKey(state.lifecycleTeamScope)
-    : LIFECYCLE_TEAM_SCOPE_DEFAULT;
-  state.lifecycleTeamScope = selectedTeamKey;
-  renderLifecycleTeamControls(lifecycleTeamOptions);
-  bindRadioState(
-    "lifecycle-team",
-    "lifecycleTeamScope",
-    lifecycleTeamScopeKey,
-    renderLifecycleTimeSpentPerStageChart
-  );
-  syncRadioValue("lifecycle-team", selectedTeamKey);
-
-  const filteredView = buildLifecycleFilteredView(normalizedChartData, selectedTeamKey);
-  if (!filteredView) return false;
-  const teams = orderProductCycleTeams(filteredView.teamDefs.map((teamDef) => String(teamDef?.team || "")).filter(Boolean));
-  const rows = Array.isArray(filteredView.rows) ? filteredView.rows : [];
-  const teamDefsBase = Array.isArray(filteredView.teamDefs) ? filteredView.teamDefs : [];
-  if (teams.length === 0 || teamDefsBase.length === 0) return false;
-
-  const themeColors = getThemeColors();
-  const compactViewport = isCompactViewport();
-  const lifecycleTintByTeam = buildTintMap(buildTeamColorMap(teams), 0.02);
-  const teamDefs = teamDefsBase.map((teamDef, index) => ({
-    key: String(teamDef?.slot || `slot_${index}`),
-    ...teamDef,
-    color: themeColors.teams.api,
-    showSeriesLabel: false,
-    metaTeamColorMap: lifecycleTintByTeam
-  }));
-  const plottedValues = teamDefs
-    .flatMap((teamDef) => rows.map((row) => row[teamDef.key]))
-    .filter((value) => Number.isFinite(value) && value > 0);
-  const categorySecondaryLabels =
-    filteredView.categorySecondaryLabels &&
-    typeof filteredView.categorySecondaryLabels === "object"
-      ? filteredView.categorySecondaryLabels
-      : Object.fromEntries(rows.map((row) => [String(row.phaseLabel || ""), ""]));
-  const sampleSize = toCount(filteredView.sampleSize);
-  const yUpper = computeLifecycleChartYUpper(state.productCycle?.chartData);
-
-  if (plottedValues.length === 0) {
-    showPanelStatus(status, "No current lifecycle stage counts found.", {
-      containerId: config.containerId
-    });
-    return true;
-  }
-
-  renderNamedChart(
-    config,
-    {
-      containerId: config.containerId,
-      rows,
-      seriesDefs: teamDefs,
-      colors: themeColors,
-      chartHeight: compactViewport
-        ? singleChartHeightForMode("lifecycle-days", 360)
-        : singleChartHeightForMode("lifecycle-days", 490),
-      yUpperOverride: yUpper,
-      categoryKey: "phaseLabel",
-      categoryAxisHeight: compactViewport ? 52 : 72,
-      chartMargin: compactViewport
-        ? { top: 12, right: 4, bottom: 34, left: 4 }
-        : { top: 18, right: 14, bottom: 46, left: 8 },
-      xAxisProps: {
-        tick: compactViewport
-          ? buildLifecycleMobileTick(themeColors, categorySecondaryLabels)
-          : undefined
-      },
-      yAxisProps: {
-        label: compactViewport ? null : buildAxisLabel("Average time (months)", { axis: "y", offset: 6 })
-      },
-      categoryTickTwoLine: !compactViewport,
-      categorySecondaryLabels,
-      timeWindowLabel: "",
-      orientation: "columns",
-      showLegend: false,
-      tooltipLayout: "stage_team_breakdown"
-    },
-    { missingMessage: "Lifecycle chart unavailable: Recharts renderer missing." }
-  );
-  setPanelContext(
-    context,
-    formatContextWithFreshness(
-      `${filteredView.selectionLabel} • ${sampleSize} open ideas sampled`,
-      state.productCycle?.generatedAt,
-      "generated"
-    )
-  );
-  return true;
-}
-
-function renderLeadAndCycleTimeByTeamChart() {
-  renderPublicAggregateChart("product-cycle", PRODUCT_CYCLE_SCOPE, ({ chartData }) => {
-    const chartScopeData = chartData?.leadCycleByScope?.[PRODUCT_CYCLE_SCOPE];
-    if (renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData)) return;
-    const config = getConfig("product-cycle");
-    if (config) {
-      setStatusMessage(
-        config.statusId,
-        `No product cycle chart data found for ${PRODUCT_CYCLE_SCOPE_LABEL}.`
-      );
-      clearChartContainer(config.containerId);
+    const filteredView = buildLifecycleFilteredView(normalizedChartData, selectedTeamKey);
+    if (!filteredView) {
+      return { error: "No current lifecycle stage counts found.", clearContainer: true };
     }
+    const teams = orderProductCycleTeams(filteredView.teamDefs.map((teamDef) => String(teamDef?.team || "")).filter(Boolean));
+    const rows = Array.isArray(filteredView.rows) ? filteredView.rows : [];
+    const teamDefsBase = Array.isArray(filteredView.teamDefs) ? filteredView.teamDefs : [];
+    if (teams.length === 0 || teamDefsBase.length === 0) {
+      return { error: "No current lifecycle stage counts found.", clearContainer: true };
+    }
+
+    const themeColors = getThemeColors();
+    const compactViewport = isCompactViewport();
+    const lifecycleTintByTeam = buildTintMap(buildTeamColorMap(teams), 0.02);
+    const teamDefs = teamDefsBase.map((teamDef, index) => ({
+      key: String(teamDef?.slot || `slot_${index}`),
+      ...teamDef,
+      color: themeColors.teams.api,
+      showSeriesLabel: false,
+      metaTeamColorMap: lifecycleTintByTeam
+    }));
+    const plottedValues = teamDefs
+      .flatMap((teamDef) => rows.map((row) => row[teamDef.key]))
+      .filter((value) => Number.isFinite(value) && value > 0);
+    const categorySecondaryLabels =
+      filteredView.categorySecondaryLabels &&
+      typeof filteredView.categorySecondaryLabels === "object"
+        ? filteredView.categorySecondaryLabels
+        : Object.fromEntries(rows.map((row) => [String(row.phaseLabel || ""), ""]));
+    const sampleSize = toCount(filteredView.sampleSize);
+    const yUpper = computeLifecycleChartYUpper(state.productCycle?.chartData);
+
+    if (plottedValues.length === 0) {
+      return { error: "No current lifecycle stage counts found.", clearContainer: true };
+    }
+
+    return buildRadioChartStateResult({
+      containerId: "lifecycle-team-switch",
+      name: "lifecycle-team",
+      options: lifecycleTeamOptions.map((option) => ({
+        value: option.key,
+        label: option.label
+      })),
+      selectedValue: selectedTeamKey,
+      stateKey: "lifecycleTeamScope",
+      normalizeValue: lifecycleTeamScopeKey,
+      onChangeRender: renderLifecycleTimeSpentPerStageChart,
+      state,
+      contextText: formatContextWithFreshness(
+        `${filteredView.selectionLabel} • ${sampleSize} open ideas sampled`,
+        getSnapshotContextTimestamp(state),
+        "generated"
+      ),
+      render: () => {
+        renderNamedChart(
+          config,
+          {
+            containerId: config.containerId,
+            rows,
+            seriesDefs: teamDefs,
+            colors: themeColors,
+            chartHeight: compactViewport
+              ? singleChartHeightForMode("lifecycle-days", 360)
+              : singleChartHeightForMode("lifecycle-days", 490),
+            yUpperOverride: yUpper,
+            categoryKey: "phaseLabel",
+            categoryAxisHeight: compactViewport ? 52 : 72,
+            chartMargin: compactViewport
+              ? { top: 12, right: 4, bottom: 34, left: 4 }
+              : { top: 18, right: 14, bottom: 46, left: 8 },
+            xAxisProps: {
+              tick: compactViewport
+                ? buildLifecycleMobileTick(themeColors, categorySecondaryLabels)
+                : undefined
+            },
+            yAxisProps: {
+              label: compactViewport ? null : buildAxisLabel("Average time (months)", { axis: "y", offset: 6 })
+            },
+            categoryTickTwoLine: !compactViewport,
+            categorySecondaryLabels,
+            timeWindowLabel: "",
+            orientation: "columns",
+            showLegend: false,
+            tooltipLayout: "stage_team_breakdown"
+          },
+          { missingMessage: "Lifecycle chart unavailable: Recharts renderer missing." }
+        );
+      }
+    });
   });
 }
 
-function renderProductCycleTeamControls(teams) {
-  const safeTeams = orderProductCycleTeams(Array.isArray(teams) ? teams.filter(Boolean) : []);
-  const options = ["all", ...safeTeams.map((team) => productCycleTeamKey(team))];
-  const teamByKey = new Map(safeTeams.map((team) => [productCycleTeamKey(team), team]));
-  renderRadioPillSwitch(
-    "product-cycle-team-switch",
-    "product-cycle-team",
-    options.map((key) => ({
-      value: key,
-      label: key === "all" ? "All teams" : normalizeDisplayTeamName(teamByKey.get(key) || key)
-    })),
-    productCycleTeamKey(state.productCycleTeam)
-  );
+function renderLeadAndCycleTimeByTeamChart() {
+  renderDashboardChartState("product-cycle", getConfig, ({ config }) => {
+    const chartDataValue = state.productCycle?.chartData;
+    const chartData = chartDataValue && typeof chartDataValue === "object" ? chartDataValue : null;
+    if (!chartData) {
+      return {
+        error: config.missingMessage,
+        clearContainer: true
+      };
+    }
+
+    const chartScopeData = chartData.leadCycleByScope?.[PRODUCT_CYCLE_SCOPE];
+    if (!chartScopeData) {
+      return {
+        error: `No product cycle chart data found for ${PRODUCT_CYCLE_SCOPE_LABEL}.`,
+        clearContainer: true
+      };
+    }
+    renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData);
+  });
 }
 
 function productCycleTeamKey(value) {
@@ -2429,365 +2218,8 @@ function productCycleTeamKey(value) {
   );
 }
 
-function formatCycleMonthsValueMarkup(valueInDays) {
-  const months = Math.max(0, toNumber(valueInDays) / 30.4375);
-  const rounded = months === 0 ? "0" : months.toFixed(1);
-  const unit = Math.abs(months - 1) < 0.05 ? "month" : "months";
-  return `<span class="metric-duration__value">${rounded}</span><span class="metric-duration__unit">${unit}</span>`;
-}
-
-function formatStackedCycleMonthsValueMarkup(valueInDays) {
-  const months = Math.max(0, toNumber(valueInDays) / 30.4375);
-  const rounded = months === 0 ? "0" : months.toFixed(1);
-  const unit = Math.abs(months - 1) < 0.05 ? "month" : "months";
-  return `<span class="stacked-duration"><span class="stacked-duration__value">${rounded}</span><span class="stacked-duration__unit">${unit}</span></span>`;
-}
-
-function getAlertLevelFromMonths(valueInMonths) {
-  const safeValue = Math.max(0, toNumber(valueInMonths));
-  if (safeValue >= 2) return "critical";
-  return "";
-}
-
-function formatStageValueFrame(markup, className = "") {
-  const modifier = String(className || "").trim();
-  return `<span class="pr-cycle-stage-row__value-frame${modifier ? ` ${modifier}` : ""}">${markup}</span>`;
-}
-
-function getCycleFillWidth(value, upperBound) {
-  const safeUpper = Math.max(1, toNumber(upperBound));
-  const safeValue = Math.max(0, toNumber(value));
-  if (safeValue <= 0) return 0;
-  return Math.max(12, Math.round((safeValue / safeUpper) * 100));
-}
-
-function renderProductCycleSingleTeamCard(containerId, row, allRows) {
-  const container = document.getElementById(containerId);
-  if (!container || !row) return;
-  const compactViewport = isCompactViewport();
-  const teamColor = getPrCycleTeamColor(row?.team);
-  const cycleSample = toCount(row?.meta_cycle?.n);
-  const shippedCount = toCount(row?.cycleDoneCount);
-  const ongoingCount = toCount(row?.cycleOngoingCount);
-  const maxCycleDays = 5 * 30.4375;
-  const maxShipped = Math.max(1, ...allRows.map((item) => toCount(item?.cycleDoneCount)));
-  const maxOngoing = Math.max(1, ...allRows.map((item) => toCount(item?.cycleOngoingCount)));
-  const cycleWidth = cycleSample > 0 ? getCycleFillWidth(row?.cycle, maxCycleDays) : 0;
-  const shippedWidth = shippedCount > 0 ? getCycleFillWidth(shippedCount, maxShipped) : 0;
-  const ongoingWidth = ongoingCount > 0 ? getCycleFillWidth(ongoingCount, maxOngoing) : 0;
-
-  container.innerHTML = `
-    <div class="product-cycle-team-card-wrap">
-      <article class="pr-cycle-stage-card product-cycle-team-card" data-team="${escapeHtml(
-        String(row?.team || "")
-      )}" style="--pr-cycle-accent:${escapeHtml(teamColor)};">
-        <div class="pr-cycle-stage-card__header">
-          <div class="pr-cycle-stage-card__meta">
-            <div class="pr-cycle-stage-card__team">${escapeHtml(normalizeDisplayTeamName(row?.team || ""))}</div>
-          </div>
-        </div>
-        <div class="pr-cycle-stage-list">
-          <div class="pr-cycle-stage-row product-cycle-team-card__row" data-stage="cycle">
-            <div class="pr-cycle-stage-row__label">
-              <span class="pr-cycle-stage-row__label-text">${compactViewport ? "Cycle" : "Cycle time"}</span>
-              <span class="pr-cycle-stage-row__sample">${cycleSample > 0 ? `n=${cycleSample}` : "n=0"}</span>
-            </div>
-            <div class="pr-cycle-stage-row__track" aria-hidden="true">
-              <div class="pr-cycle-stage-row__fill" style="width:${cycleWidth}%"></div>
-            </div>
-            <div class="pr-cycle-stage-row__value">${formatStageValueFrame(formatStackedCycleMonthsValueMarkup(row?.cycle))}</div>
-          </div>
-          <div class="pr-cycle-stage-row product-cycle-team-card__row" data-stage="shipped">
-            <div class="pr-cycle-stage-row__label">
-              <span class="pr-cycle-stage-row__label-text">${compactViewport ? "Done" : "Shipped"}</span>
-              <span class="pr-cycle-stage-row__sample">${compactViewport ? "finished ideas" : "done ideas"}</span>
-            </div>
-            <div class="pr-cycle-stage-row__track" aria-hidden="true">
-              <div class="pr-cycle-stage-row__fill" style="width:${shippedWidth}%"></div>
-            </div>
-            <div class="pr-cycle-stage-row__value">${formatStageValueFrame(String(shippedCount))}</div>
-          </div>
-          <div class="pr-cycle-stage-row product-cycle-team-card__row" data-stage="ongoing">
-            <div class="pr-cycle-stage-row__label">
-              <span class="pr-cycle-stage-row__label-text">${compactViewport ? "Open" : "Ongoing"}</span>
-              <span class="pr-cycle-stage-row__sample">${compactViewport ? "still in cycle" : "ideas still in cycle"}</span>
-            </div>
-            <div class="pr-cycle-stage-row__track" aria-hidden="true">
-              <div class="pr-cycle-stage-row__fill" style="width:${ongoingWidth}%"></div>
-            </div>
-            <div class="pr-cycle-stage-row__value">${formatStageValueFrame(String(ongoingCount))}</div>
-          </div>
-        </div>
-        <div class="pr-cycle-stage-card__footer">
-          <span><strong>${shippedCount} ${compactViewport ? "done" : "shipped"}</strong>${
-            ongoingCount > 0 ? ` • ${ongoingCount} ${compactViewport ? "open" : "still in cycle"}` : ""
-          }</span>
-        </div>
-      </article>
-    </div>
-  `;
-}
-
-function renderProductCycleComparisonCard(containerId, rows, scopeLabel) {
-  const container = document.getElementById(containerId);
-  if (!container || !Array.isArray(rows) || rows.length === 0) return;
-  const compactViewport = isCompactViewport();
-  const maxCycleDays = 5 * 30.4375;
-  const rowsMarkup = rows
-    .map((row) => {
-      const cycleSample = toCount(row?.meta_cycle?.n);
-      const teamColor = getPrCycleTeamColor(row?.team);
-      const cycleWidth = cycleSample > 0 ? getCycleFillWidth(row?.cycle, maxCycleDays) : 0;
-      const cycleAlertLevel = getAlertLevelFromMonths(toNumber(row?.cycle) / 30.4375);
-      return `
-        <div class="pr-cycle-stage-row product-cycle-compare-row" data-stage="cycle">
-          <div class="pr-cycle-stage-row__label">
-            <span class="pr-cycle-stage-row__label-text">${escapeHtml(
-              normalizeDisplayTeamName(row?.team || "")
-            )}</span>
-            <span class="pr-cycle-stage-row__sample">${cycleSample > 0 ? `n=${cycleSample}` : "n=0"}</span>
-          </div>
-          <div class="pr-cycle-stage-row__track" aria-hidden="true">
-            <div class="pr-cycle-stage-row__fill" style="width:${cycleWidth}%;background:${escapeHtml(
-              teamColor
-            )};"></div>
-          </div>
-          <div class="pr-cycle-stage-row__value">${formatStageValueFrame(
-            formatStackedCycleMonthsValueMarkup(row?.cycle),
-            cycleAlertLevel ? `pr-cycle-stage-row__value-frame--${cycleAlertLevel}` : ""
-          )}</div>
-        </div>
-      `;
-    })
-    .join("");
-
-  container.innerHTML = `
-    <div class="product-cycle-team-card-wrap">
-      <article class="pr-cycle-stage-card product-cycle-compare-card">
-        <div class="pr-cycle-stage-card__header">
-          <div class="pr-cycle-stage-card__meta">
-            <div class="pr-cycle-stage-card__team">All teams</div>
-            <div class="pr-cycle-stage-card__submeta">${
-              scopeLabel ? `${escapeHtml(scopeLabel)} • ` : ""
-            }${compactViewport ? "Target: 1 mo" : "Target: 1 month"}</div>
-          </div>
-        </div>
-        <div class="pr-cycle-stage-list">${rowsMarkup}</div>
-      </article>
-    </div>
-  `;
-}
-
-function syncRadioValue(name, value) {
-  const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
-  radios.forEach((radio) => {
-    radio.checked = radio.value === value;
-  });
-}
-
-function syncCheckboxValue(name, checked) {
-  const checkbox = document.querySelector(`input[name="${name}"]`);
-  if (!checkbox) return;
-  checkbox.checked = Boolean(checked);
-}
-
-function syncRadioAvailability(name, allowedValues) {
-  const allowed = new Set((Array.isArray(allowedValues) ? allowedValues : []).map((value) => String(value)));
-  const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
-  radios.forEach((radio) => {
-    const isAllowed = allowed.has(String(radio.value || ""));
-    radio.disabled = !isAllowed;
-    const label = radio.closest("label");
-    if (label) {
-      label.setAttribute("aria-disabled", isAllowed ? "false" : "true");
-      label.classList.toggle("is-disabled", !isAllowed);
-    }
-  });
-}
-
-function readDashboardControlStateFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  CONTROL_BINDINGS.forEach(
-    ({ name, stateKey, normalizeValue, normalizeChecked, controlType, defaultValue }) => {
-      if (!params.has(name)) {
-        state[stateKey] = defaultValue;
-        return;
-      }
-      if (controlType === "checkbox") {
-        const raw = String(params.get(name) || "")
-          .trim()
-          .toLowerCase();
-        const checked = !["0", "false", "off", "no"].includes(raw);
-        state[stateKey] = normalizeChecked(checked);
-        return;
-      }
-      state[stateKey] = normalizeValue(String(params.get(name) || ""));
-    }
-  );
-}
-
-function syncDashboardControlsFromState() {
-  CONTROL_BINDINGS.forEach(({ name, stateKey, controlType }) => {
-    if (controlType === "checkbox") {
-      syncCheckboxValue(name, state[stateKey]);
-      return;
-    }
-    syncRadioValue(name, state[stateKey]);
-  });
-}
-
-function writeDashboardControlStateToUrl() {
-  const nextUrl = new URL(window.location.href);
-  CONTROL_BINDINGS.forEach(({ name, stateKey, controlType }) => {
-    if (controlType === "checkbox") {
-      nextUrl.searchParams.set(name, state[stateKey] ? "true" : "false");
-      return;
-    }
-    nextUrl.searchParams.set(name, String(state[stateKey] || ""));
-  });
-  window.history.replaceState({}, "", nextUrl);
-}
-
-function bindRadioState(name, stateKey, normalizeValue, onChangeRender) {
-  const radios = Array.from(document.querySelectorAll(`input[name="${name}"]`));
-  if (radios.length === 0) return;
-  radios.forEach((radio) => {
-    if (radio.dataset.bound === "1") return;
-    radio.dataset.bound = "1";
-    radio.addEventListener("change", () => {
-      if (!radio.checked) return;
-      state[stateKey] = normalizeValue(radio.value);
-      writeDashboardControlStateToUrl();
-      onChangeRender();
-    });
-  });
-}
-
-function bindCheckboxState(name, stateKey, normalizeChecked, onChangeRender) {
-  const checkbox = document.querySelector(`input[name="${name}"]`);
-  if (!checkbox || checkbox.dataset.bound === "1") return;
-  checkbox.dataset.bound = "1";
-  checkbox.addEventListener("change", () => {
-    state[stateKey] = normalizeChecked(checkbox.checked);
-    writeDashboardControlStateToUrl();
-    onChangeRender();
-  });
-}
-
-function escapeHtml(value) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function renderRadioPillSwitch(containerId, name, options, selectedValue) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const safeOptions = Array.isArray(options) ? options.filter(Boolean) : [];
-  container.hidden = safeOptions.length === 0;
-  container.innerHTML = safeOptions
-    .map(
-      (option) => `
-        <label class="pr-cycle-team-pill">
-          <input type="radio" name="${escapeHtml(name)}" value="${escapeHtml(option.value)}"${
-            option.value === selectedValue ? " checked" : ""
-          } />
-          <span>${escapeHtml(option.label)}</span>
-        </label>
-      `
-    )
-    .join("");
-}
-
-function formatStageDurationValueMarkup(value) {
-  const safeValue = toNumber(value);
-  const rounded = safeValue.toFixed(1);
-  const unit = Math.abs(safeValue - 1) < 0.05 ? "day" : "days";
-  return `<span class="metric-duration__value">${rounded}</span><span class="metric-duration__unit">${unit}</span>`;
-}
-
-function formatStackedStageDurationValueMarkup(value) {
-  const safeValue = toNumber(value);
-  const rounded = safeValue.toFixed(1);
-  const unit = Math.abs(safeValue - 1) < 0.05 ? "day" : "days";
-  return `<span class="stacked-duration"><span class="stacked-duration__value">${rounded}</span><span class="stacked-duration__unit">${unit}</span></span>`;
-}
-
-function getPrCycleStageDisplayLabel(stage) {
-  const key = String(stage?.key || "").trim();
-  if (key === "coding") return "Progress";
-  if (key === "review") return "Review";
-  if (key === "merge") return "QA";
-  return String(stage?.label || "").trim();
-}
-
-function getPrCycleTeamColor(teamKey) {
-  const normalizedKey = String(teamKey || "")
-    .trim()
-    .toLowerCase();
-  const baseMap = buildTeamColorMap([normalizedKey]);
-  return baseMap[normalizedKey] || "#4f8fcb";
-}
-
-function renderPrCycleExperimentCard(containerId, team, snapshot) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const compactViewport = isCompactViewport();
-  const stages = Array.isArray(team?.stages) ? team.stages : [];
-  const teamColor = getPrCycleTeamColor(team?.key);
-  const maxDays =
-    stages.reduce((highest, stage) => Math.max(highest, toNumber(stage?.days)), 0) || 1;
-  const rowsMarkup = stages
-    .map((stage) => {
-      const width = Math.max(12, Math.round((toNumber(stage?.days) / maxDays) * 100));
-      const sampleCount = toCount(stage?.sampleCount);
-      return `
-        <div class="pr-cycle-stage-row" data-stage="${escapeHtml(String(stage?.key || ""))}">
-          <div class="pr-cycle-stage-row__label">
-            <span class="pr-cycle-stage-row__label-text">${escapeHtml(getPrCycleStageDisplayLabel(stage))}</span>
-            <span class="pr-cycle-stage-row__sample">${sampleCount > 0 ? `n=${sampleCount}` : "n=0"}</span>
-          </div>
-          <div class="pr-cycle-stage-row__track" aria-hidden="true">
-            <div class="pr-cycle-stage-row__fill" style="width:${width}%"></div>
-          </div>
-          <div class="pr-cycle-stage-row__value">${formatStageValueFrame(formatStackedStageDurationValueMarkup(stage?.days))}</div>
-        </div>
-      `;
-    })
-    .join("");
-  const issueCount = toNumber(team?.issueCount || team?.pullRequestCount);
-  const footerPrimary =
-    issueCount > 0
-      ? compactViewport
-        ? `${issueCount} sampled`
-        : `${issueCount} issues sampled`
-      : compactViewport
-        ? "No samples"
-        : "No sampled issues";
-  const footerSecondary = String(snapshot?.windowLabel || "").trim();
-  const footerLabel = compactViewport ? "Blocker" : "Bottleneck";
-
-  container.innerHTML = `
-    <article class="pr-cycle-stage-card workflow-breakdown-card" data-team="${escapeHtml(String(team?.key || ""))}" style="--pr-cycle-accent:${escapeHtml(teamColor)};">
-        <div class="pr-cycle-stage-card__header">
-          <div class="pr-cycle-stage-card__meta">
-            <div class="pr-cycle-stage-card__team">${escapeHtml(team?.label || "")}</div>
-          <div class="pr-cycle-stage-card__total metric-duration">${formatStageDurationValueMarkup(team?.totalCycleDays)}</div>
-          </div>
-        </div>
-        <div class="pr-cycle-stage-list">${rowsMarkup}</div>
-        <div class="pr-cycle-stage-card__footer">
-        <span><strong>${escapeHtml(footerPrimary)}</strong>${footerSecondary ? ` • ${escapeHtml(footerSecondary)}` : ""}</span>
-        <span>${footerLabel}: <strong>${escapeHtml(team?.bottleneckLabel || "")}</strong></span>
-      </div>
-    </article>
-  `;
-}
-
 function renderPrCycleExperiment() {
-  withChart("pr-cycle-experiment", ({ status, context, config }) => {
+  withChart("pr-cycle-experiment", getConfig, ({ status, context, config }) => {
     const windows =
       state.prCycle?.windows && typeof state.prCycle.windows === "object"
         ? state.prCycle.windows
@@ -2842,9 +2274,8 @@ function renderPrCycleExperiment() {
 
     state.prCycleTeam = selectedKey;
     state.prCycleWindow = selectedWindowKey;
-    syncRadioValue("pr-cycle-team", selectedKey);
-    syncRadioValue("pr-cycle-window", selectedWindowKey);
-    status.hidden = true;
+    syncControlValue("pr-cycle-team", selectedKey);
+    syncControlValue("pr-cycle-window", selectedWindowKey);
     setPanelContext(
       context,
       formatContextWithFreshness(
@@ -2852,23 +2283,29 @@ function renderPrCycleExperiment() {
         state.prCycle?.updatedAt
       )
     );
-    renderPrCycleExperimentCard(config.containerId, selectedTeam, selectedWindowSnapshot);
+    window.DashboardCharts?.renderPrCycleExperimentCard?.(
+      config.containerId,
+      selectedTeam,
+      selectedWindowSnapshot
+    );
   });
 }
 
 function renderLifecycleTimeSpentPerStageChart() {
-  renderChartWithState("lifecycle-days", () => {
+  renderDashboardChartState("lifecycle-days", getConfig, () => {
     const chartData = state.productCycle?.chartData;
     const chartSnapshotData =
       chartData && typeof chartData === "object" ? chartData.currentStageSnapshot : null;
-    if (renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData)) return null;
-    const config = getConfig("lifecycle-days");
-    return {
-      error:
-        config?.missingMessage ||
-        "No current lifecycle chart data found in product-cycle-snapshot.json.",
-      clearContainer: true
-    };
+    if (!chartSnapshotData) {
+      const config = getConfig("lifecycle-days");
+      return {
+        error:
+          config?.missingMessage ||
+          "No current lifecycle chart data found in product-cycle-snapshot.json.",
+        clearContainer: true
+      };
+    }
+    renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData);
   });
 }
 
@@ -2911,15 +2348,16 @@ function getAlignedBusinessUnitRows(scope) {
 }
 
 function renderDevelopmentVsUatByFacilityChart() {
-  renderChartWithState("management-facility", () => {
+  renderDashboardChartState("management-facility", getConfig, ({ config }) => {
     const scope = normalizeOption(state.managementFlowScope, MANAGEMENT_FLOW_SCOPES, "ongoing");
     const scopeLabel = getManagementFlowScopeLabel(scope);
     const titleNode = document.getElementById("management-facility-title");
-    syncRadioValue("management-facility-flow-scope", scope);
+    syncControlValue("management-facility-flow-scope", scope);
     const rows = getAlignedBusinessUnitRows(scope);
     if (rows.length === 0) {
       return {
-        error: `No ${scopeLabel.toLowerCase()} Business Unit chart data found in backlog-snapshot.json.`
+        error: `No ${scopeLabel.toLowerCase()} Business Unit chart data found in backlog-snapshot.json.`,
+        clearContainer: true
       };
     }
 
@@ -2927,85 +2365,29 @@ function renderDevelopmentVsUatByFacilityChart() {
     return {
       contextText: formatContextWithFreshness(
         `${getBroadcastScopeLabel()} • ${scopeLabel.toLowerCase()} • ${rows.reduce((sum, row) => sum + row.sampleCount, 0)} issues sampled`,
-        getSnapshotContextTimestamp({ preferChartData: true }),
+        getSnapshotContextTimestamp(state, { preferChartData: true }),
         "chart data updated"
       ),
-      props: {
-        rows,
-        groupingLabel: "Business Unit",
-        jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
-        scope
+      render: () => {
+        renderNamedChart(
+          config,
+          {
+            containerId: config.containerId,
+            rows,
+            groupingLabel: "Business Unit",
+            jiraBrowseBase: "https://nepgroup.atlassian.net/browse/",
+            scope,
+            colors: getThemeColors()
+          },
+          { missingMessage: "Development vs UAT chart unavailable: Recharts renderer missing." }
+        );
       }
     };
   });
 }
 
-function summarizeContributorRows(rows) {
-  const safeRows = Array.isArray(rows) ? rows : [];
-  return safeRows.reduce(
-    (summary, row) => ({
-      totalIssues: summary.totalIssues + toNumber(row?.totalIssues),
-      doneIssues: summary.doneIssues + toNumber(row?.doneIssues),
-      activeIssues: summary.activeIssues + toNumber(row?.activeIssues),
-      totalContributors: summary.totalContributors + 1
-    }),
-    { totalIssues: 0, doneIssues: 0, activeIssues: 0, totalContributors: 0 }
-  );
-}
-
-function renderTopContributorsCard(containerId, rows, summary) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const compactViewport = isCompactViewport();
-  const safeRows = Array.isArray(rows) ? rows : [];
-  const maxTotal = Math.max(1, ...safeRows.map((row) => toNumber(row?.totalIssues)));
-  const totalIssues = toNumber(summary?.totalIssues);
-  const totalContributors = Math.max(toNumber(summary?.totalContributors), safeRows.length);
-
-  const rowsMarkup = safeRows
-    .map((row) => {
-      const contributor = String(row?.contributor || "").trim();
-      const total = toNumber(row?.totalIssues);
-      const done = toNumber(row?.doneIssues);
-      const active = toNumber(row?.activeIssues);
-      const totalWidth = total > 0 ? Math.max(10, Math.round((total / maxTotal) * 100)) : 0;
-      return `
-        <div class="pr-cycle-stage-row contributors-card__row">
-          <div class="pr-cycle-stage-row__label">
-            <span class="pr-cycle-stage-row__label-text">${escapeHtml(contributor)}</span>
-            <span class="pr-cycle-stage-row__sample">done ${done}${active > 0 ? ` • active ${active}` : ""}</span>
-          </div>
-          <div class="pr-cycle-stage-row__track contributors-card__track" aria-hidden="true">
-            <div class="pr-cycle-stage-row__fill contributors-card__fill" style="width:${totalWidth}%"></div>
-          </div>
-          <div class="pr-cycle-stage-row__value">${total}</div>
-        </div>
-      `;
-    })
-    .join("");
-
-  container.innerHTML = `
-    <div class="product-cycle-team-card-wrap">
-      <article class="pr-cycle-stage-card contributors-card">
-        <div class="pr-cycle-stage-card__header">
-          <div class="pr-cycle-stage-card__meta">
-            <div class="pr-cycle-stage-card__team">Community contributors</div>
-            <div class="pr-cycle-stage-card__total">${totalIssues}</div>
-          </div>
-        </div>
-        <div class="pr-cycle-stage-list">${rowsMarkup}</div>
-        <div class="pr-cycle-stage-card__footer">
-          <span><strong>${totalContributors} contributors ranked</strong>${
-            compactViewport ? ` • ${totalIssues} issues` : ` • ${totalIssues} included issues`
-          }</span>
-        </div>
-      </article>
-    </div>
-  `;
-}
-
 function renderTopContributorsChart() {
-  withChart("contributors", ({ status, context, config }) => {
+  withChart("contributors", getConfig, ({ status, context, config }) => {
     const contributorsSnapshot = state.contributors;
     const rows = Array.isArray(contributorsSnapshot?.chartData?.rows)
       ? contributorsSnapshot.chartData.rows.slice().sort((left, right) => {
@@ -3025,49 +2407,34 @@ function renderTopContributorsChart() {
       return;
     }
 
-    const displaySummary = summarizeContributorRows(rows);
-    status.hidden = true;
+    const displaySummary = window.DashboardCharts?.summarizeContributorRows?.(rows);
     setPanelContext(
       context,
       formatContextWithFreshness(
-        `${displaySummary.totalIssues} total • ${displaySummary.doneIssues} done • ${displaySummary.activeIssues} active`,
+        `${displaySummary?.totalIssues || 0} total • ${displaySummary?.doneIssues || 0} done • ${displaySummary?.activeIssues || 0} active`,
         contributorsSnapshot?.updatedAt
       )
     );
-    renderTopContributorsCard(config.containerId, rows, displaySummary);
+    window.DashboardCharts?.renderTopContributorsCard?.(config.containerId, rows, displaySummary);
   });
 }
 
-function bindDashboardControls() {
-  CONTROL_BINDINGS.forEach(
-    ({ name, stateKey, normalizeValue, normalizeChecked, onChangeRender, controlType }) => {
-      if (controlType === "checkbox") {
-        bindCheckboxState(name, stateKey, normalizeChecked, onChangeRender);
-        return;
-      }
-      bindRadioState(name, stateKey, normalizeValue, onChangeRender);
-    }
-  );
+function queueRenderableCharts(entries, shouldQueue) {
+  entries.forEach(([mode, payload]) => {
+    if (!shouldQueue(mode, payload)) return;
+    queueChartRender(mode, typeof payload === "function" ? payload : CHART_RENDERERS[mode]);
+  });
 }
 
 function renderVisibleCharts() {
-  Object.entries(CHART_RENDERERS).forEach(([mode, run]) => {
-    if (!isChartActive(mode) || !isChartReady(mode)) return;
-    queueChartRender(mode, run);
-  });
+  queueRenderableCharts(Object.entries(CHART_RENDERERS), (mode) => isChartActive(mode) && isChartReady(mode));
 }
 
 function queueReadyChartsForSource(sourceKey) {
-  Object.entries(CHART_DATA_SOURCES).forEach(([mode, requiredSources]) => {
-    if (!requiredSources.includes(sourceKey)) return;
-    if (!isChartActive(mode) || !isChartReady(mode)) return;
-    queueChartRender(mode, CHART_RENDERERS[mode]);
+  queueRenderableCharts(Object.entries(CHART_DATA_SOURCES), (mode, requiredSources) => {
+    if (!requiredSources.includes(sourceKey)) return false;
+    return isChartActive(mode) && isChartReady(mode);
   });
-}
-
-function getRequiredSourceKeys(mode) {
-  if (mode === "all") return Object.keys(DATA_SOURCE_CONFIG);
-  return CHART_DATA_SOURCES[mode] || ["snapshot"];
 }
 
 function isChartActive(mode) {
@@ -3094,16 +2461,18 @@ function flushChartRenderQueue() {
     if (typeof renderChart === "function") renderChart();
   }
 
-  if (queuedChartModes.size > 0) {
-    chartRenderFrame = window.requestAnimationFrame(flushChartRenderQueue);
-  }
+  if (queuedChartModes.size > 0) scheduleChartRenderFlush();
+}
+
+function scheduleChartRenderFlush() {
+  if (chartRenderFrame !== 0) return;
+  chartRenderFrame = window.requestAnimationFrame(flushChartRenderQueue);
 }
 
 function queueChartRender(mode, renderChart) {
   if (!mode || typeof renderChart !== "function") return;
   queuedChartModes.add(mode);
-  if (chartRenderFrame !== 0) return;
-  chartRenderFrame = window.requestAnimationFrame(flushChartRenderQueue);
+  scheduleChartRenderFlush();
 }
 
 function scheduleResizeRender() {
@@ -3136,7 +2505,7 @@ async function loadDataSource(sourceKey) {
     state[source.stateKey] = sourceData;
     state.loadedSources[sourceKey] = true;
     delete state.loadErrors[sourceKey];
-    renderDashboardRefreshStrip();
+    renderDashboardRefreshStrip(state);
     renderActionsRequiredFrame();
     queueReadyChartsForSource(sourceKey);
   } catch (error) {
@@ -3146,7 +2515,7 @@ async function loadDataSource(sourceKey) {
     state.loadedSources[sourceKey] = true;
     setStatusMessageForIds(source.statusIds || [], message);
     (source.clearContainers || []).forEach(clearChartContainer);
-    renderDashboardRefreshStrip();
+    renderDashboardRefreshStrip(state);
     renderActionsRequiredFrame();
   }
 }
@@ -3160,26 +2529,26 @@ async function loadSnapshot() {
   state.loadedSources = {};
   state.loadErrors = {};
   state.mode = getModeFromUrl();
-  readDashboardControlStateFromUrl();
-  renderDashboardRefreshStrip();
+  readDashboardControlStateFromUrl(CONTROL_BINDINGS, state);
+  renderDashboardRefreshStrip(state);
   renderActionsRequiredFrame();
   applyDashboardPanelOrder();
   applyModeVisibility();
-  syncDashboardControlsFromState();
-  bindDashboardControls();
+  syncDashboardControlsFromState(CONTROL_BINDINGS, state);
+  bindDashboardControlState(CONTROL_BINDINGS, state);
   bindWindowResizeRerender();
 
   try {
-    const requiredSourceKeys = getRequiredSourceKeys(state.mode);
+    const requiredSourceKeys = getRequiredSourceKeys(state.mode, Object.keys(DATA_SOURCE_CONFIG));
     await Promise.allSettled(requiredSourceKeys.map((sourceKey) => loadDataSource(sourceKey)));
-    renderDashboardRefreshStrip();
+    renderDashboardRefreshStrip(state);
     renderActionsRequiredFrame();
   } catch (error) {
     const message = `Failed to load backlog-snapshot.json: ${
       error instanceof Error ? error.message : String(error)
     }`;
     setStatusMessageForIds(CHART_STATUS_IDS, message);
-    renderDashboardRefreshStrip();
+    renderDashboardRefreshStrip(state);
     renderActionsRequiredFrame();
   }
 }

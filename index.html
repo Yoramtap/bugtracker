@@ -17,17 +17,12 @@
     <link rel="stylesheet" href="./node_modules/@fontsource/ibm-plex-serif/latin-600.css" />
     <link rel="stylesheet" href="./node_modules/@fontsource/ibm-plex-serif/latin-700.css" />
     <link rel="stylesheet" href="./dashboard-styles.css" />
-    <script src="./dashboard-preload.js"></script>
+    <script src="./dashboard-view-utils.js"></script>
     <script defer src="./vendor/react.production.min.js"></script>
     <script defer src="./vendor/react-dom.production.min.js"></script>
     <script defer src="./vendor/prop-types.min.js"></script>
     <script defer src="./vendor/recharts.umd.js"></script>
-    <script defer src="./dashboard-view-utils.js"></script>
-    <script defer src="./dashboard-data-utils.js"></script>
     <script defer src="./dashboard-chart-core.js"></script>
-    <script defer src="./dashboard-svg-core.js"></script>
-    <script defer src="./dashboard-charts-backlog.js"></script>
-    <script defer src="./dashboard-charts-delivery.js"></script>
     <script defer src="./dashboard-charts-product.js"></script>
     <script defer src="./dashboard-app.js?v=local2"></script>
     <script defer src="./agentation-local-loader.js?v=local2"></script>
@@ -192,7 +187,7 @@
 
       <section id="pr-activity-legacy-panel" class="panel" aria-label="PR activity over time">
         <div class="panel-title-row">
-          <h2>Legacy PR trend view (comparison)</h2>
+          <h2>PR trend view (comparison)</h2>
           <details class="help-wrap">
             <summary class="help-tip" aria-label="PR activity over time chart explainer">i</summary>
             <div class="help-popover" role="tooltip">
@@ -441,11 +436,11 @@
         <p id="composition-status" class="panel-status" aria-live="polite" role="status" hidden></p>
       </section>
 
-      <section id="pr-activity-panel" class="panel" aria-label="PR review &amp; QA time by team">
+      <section id="pr-activity-panel" class="panel" aria-label="PR inflow vs review + QA time">
         <div class="panel-title-row">
-          <h2>PR review &amp; QA time by team</h2>
+          <h2>PR inflow vs review + QA time</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="PR review &amp; QA time by team chart explainer">
+            <summary class="help-tip" aria-label="PR inflow vs review + QA time chart explainer">
               i
             </summary>
             <div class="help-popover" role="tooltip">
@@ -469,7 +464,7 @@
             </div>
           </details>
         </div>
-        <div class="radio-control-groups" aria-label="PR quality checks time range">
+        <div class="radio-control-groups" aria-label="PR inflow vs review + QA time range">
           <fieldset class="radio-group-card radio-group-card--primary">
             <legend>Time range</legend>
             <label
