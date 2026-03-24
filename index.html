@@ -126,14 +126,24 @@
           </details>
         </div>
         <div class="radio-control-groups" aria-label="Workflow breakdown time range">
-          <fieldset class="radio-group-card radio-group-card--primary">
+          <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
             <legend>Time range</legend>
             <label
-              ><input type="radio" name="pr-cycle-window" value="30d" checked /> Last 30 days</label
+              ><input type="radio" name="pr-cycle-window" value="30d" checked />
+              <span aria-hidden="true">30d</span><span class="sr-only">Last 30 days</span></label
             >
-            <label><input type="radio" name="pr-cycle-window" value="90d" /> Last 90 days</label>
-            <label><input type="radio" name="pr-cycle-window" value="6m" /> Last 6 months</label>
-            <label><input type="radio" name="pr-cycle-window" value="1y" /> Last year</label>
+            <label
+              ><input type="radio" name="pr-cycle-window" value="90d" />
+              <span aria-hidden="true">90d</span><span class="sr-only">Last 90 days</span></label
+            >
+            <label
+              ><input type="radio" name="pr-cycle-window" value="6m" />
+              <span aria-hidden="true">6m</span><span class="sr-only">Last 6 months</span></label
+            >
+            <label
+              ><input type="radio" name="pr-cycle-window" value="1y" />
+              <span aria-hidden="true">1y</span><span class="sr-only">Last year</span></label
+            >
           </fieldset>
         </div>
         <div class="pr-cycle-team-switch" role="radiogroup" aria-label="Workflow breakdown team">
@@ -198,22 +208,15 @@
           </details>
         </div>
         <div class="radio-control-groups" aria-label="PR activity over time controls">
-          <fieldset class="radio-group-card">
+          <fieldset class="radio-group-card radio-group-card--segmented">
             <legend>Metric</legend>
             <label
-              ><input type="radio" name="pr-activity-legacy-metric" value="offered" checked /> PR
-              inflow</label
+              ><input type="radio" name="pr-activity-legacy-metric" value="offered" checked />
+              <span>PR inflow</span></label
             >
             <label
-              ><input type="radio" name="pr-activity-legacy-metric" value="merged" /> Merged
-              PRs</label
-            >
-          </fieldset>
-          <fieldset class="radio-group-card">
-            <legend>Events</legend>
-            <label
-              ><input type="checkbox" name="pr-activity-legacy-show-markers" checked /> Show event
-              lines</label
+              ><input type="radio" name="pr-activity-legacy-metric" value="merged" />
+              <span>Merged PRs</span></label
             >
           </fieldset>
         </div>
@@ -458,15 +461,24 @@
           </details>
         </div>
         <div class="radio-control-groups" aria-label="PR inflow vs review + QA time range">
-          <fieldset class="radio-group-card radio-group-card--primary">
+          <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
             <legend>Time range</legend>
             <label
-              ><input type="radio" name="pr-activity-window" value="30d" checked /> Last 30
-              days</label
+              ><input type="radio" name="pr-activity-window" value="30d" checked />
+              <span aria-hidden="true">30d</span><span class="sr-only">Last 30 days</span></label
             >
-            <label><input type="radio" name="pr-activity-window" value="90d" /> Last 90 days</label>
-            <label><input type="radio" name="pr-activity-window" value="6m" /> Last 6 months</label>
-            <label><input type="radio" name="pr-activity-window" value="1y" /> Last year</label>
+            <label
+              ><input type="radio" name="pr-activity-window" value="90d" />
+              <span aria-hidden="true">90d</span><span class="sr-only">Last 90 days</span></label
+            >
+            <label
+              ><input type="radio" name="pr-activity-window" value="6m" />
+              <span aria-hidden="true">6m</span><span class="sr-only">Last 6 months</span></label
+            >
+            <label
+              ><input type="radio" name="pr-activity-window" value="1y" />
+              <span aria-hidden="true">1y</span><span class="sr-only">Last year</span></label
+            >
           </fieldset>
         </div>
         <div class="chart-stack">

@@ -204,14 +204,6 @@ const CONTROL_BINDINGS = [
     onChangeRender: renderLegacyPrActivityCharts
   },
   {
-    name: "pr-activity-legacy-show-markers",
-    stateKey: "showLegacyPrActivityMarkers",
-    defaultValue: true,
-    normalizeChecked: (checked) => checked !== false,
-    onChangeRender: renderLegacyPrActivityCharts,
-    controlType: "checkbox"
-  },
-  {
     name: "product-cycle-team",
     stateKey: "productCycleTeam",
     defaultValue: PRODUCT_CYCLE_TEAM_DEFAULT,
@@ -243,7 +235,6 @@ const state = {
   prActivityLegacyHiddenKeys: [],
   prActivityWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityLegacyMetric: "offered",
-  showLegacyPrActivityMarkers: true,
   productCycleTeam: PRODUCT_CYCLE_TEAM_DEFAULT,
   managementFlowScope: "ongoing",
   prCycleTeam: "bc",
@@ -1278,7 +1269,7 @@ function LegacyPrActivitySvgChart({
   const yTicks = buildLegacyPrActivityTicks(yUpper);
   const visibleDefs = lineDefs.filter((lineDef) => !hiddenKeys.has(lineDef.dataKey));
   const visibleReferenceMarkers =
-    state.showLegacyPrActivityMarkers && xTicks.length > 0
+    xTicks.length > 0
       ? PR_ACTIVITY_REFERENCE_MARKERS.filter((marker) => {
           const markerValue = toChartDateValue(marker.date);
           return markerValue >= xTicks[0] && markerValue <= xTicks[xTicks.length - 1];
@@ -1700,7 +1691,6 @@ function renderLegacyPrActivityCharts() {
     const since = String(points[0]?.date || prActivity?.monthlySince || prActivity?.since || "");
     const metricKey = state.prActivityLegacyMetric === "merged" ? "merged" : "offered";
     syncControlValue("pr-activity-legacy-metric", metricKey);
-    syncControlValue("pr-activity-legacy-show-markers", state.showLegacyPrActivityMarkers, "checkbox");
     setPanelContext(
       context,
       formatContextWithFreshness(
