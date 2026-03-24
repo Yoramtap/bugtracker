@@ -28,6 +28,7 @@ const PR_ACTIVITY_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const MANAGEMENT_FLOW_SCOPES = ["ongoing", "done"];
 const LIFECYCLE_TEAM_SCOPE_DEFAULT = "all";
 const PRODUCT_CYCLE_TEAM_DEFAULT = "all";
+const DEVELOPMENT_WORKFLOW_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const CHART_CONFIG = {
   trend: {
     panelId: "bug-trends-plot-panel",
@@ -169,6 +170,12 @@ const CHART_RENDERERS = {
   "pr-cycle-experiment": renderPrCycleExperiment,
   "lifecycle-days": renderLifecycleTimeSpentPerStageChart
 };
+
+function renderDevelopmentWorkflowPanels() {
+  renderPrCycleExperiment();
+  renderPrActivityCharts();
+}
+
 const CONTROL_BINDINGS = [
   {
     name: "composition-team-scope",
@@ -196,17 +203,19 @@ const CONTROL_BINDINGS = [
   },
   {
     name: "pr-cycle-window",
-    stateKey: "prCycleWindow",
+    stateKey: "developmentWorkflowWindow",
     defaultValue: THIRTY_DAY_WINDOW_KEY,
-    normalizeValue: (value) => normalizeOption(value, PR_CYCLE_WINDOWS, THIRTY_DAY_WINDOW_KEY),
-    onChangeRender: renderPrCycleExperiment
+    normalizeValue: (value) =>
+      normalizeOption(value, DEVELOPMENT_WORKFLOW_WINDOWS, THIRTY_DAY_WINDOW_KEY),
+    onChangeRender: renderDevelopmentWorkflowPanels
   },
   {
     name: "pr-activity-window",
-    stateKey: "prActivityWindow",
+    stateKey: "developmentWorkflowWindow",
     defaultValue: THIRTY_DAY_WINDOW_KEY,
-    normalizeValue: (value) => normalizeOption(value, PR_ACTIVITY_WINDOWS, THIRTY_DAY_WINDOW_KEY),
-    onChangeRender: renderPrActivityCharts
+    normalizeValue: (value) =>
+      normalizeOption(value, DEVELOPMENT_WORKFLOW_WINDOWS, THIRTY_DAY_WINDOW_KEY),
+    onChangeRender: renderDevelopmentWorkflowPanels
   },
   {
     name: "pr-activity-legacy-metric",
@@ -214,14 +223,6 @@ const CONTROL_BINDINGS = [
     defaultValue: "offered",
     normalizeValue: (value) => (value === "merged" ? "merged" : "offered"),
     onChangeRender: renderLegacyPrActivityCharts
-  },
-  {
-    name: "pr-activity-legacy-show-markers",
-    stateKey: "showLegacyPrActivityMarkers",
-    defaultValue: true,
-    normalizeChecked: (checked) => checked !== false,
-    onChangeRender: renderLegacyPrActivityCharts,
-    controlType: "checkbox"
   },
   {
     name: "product-cycle-team",
@@ -253,9 +254,9 @@ const state = {
   compositionTeamScope: "bc",
   prActivityHiddenKeys: [],
   prActivityLegacyHiddenKeys: [],
+  developmentWorkflowWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityLegacyMetric: "offered",
-  showLegacyPrActivityMarkers: true,
   productCycleTeam: PRODUCT_CYCLE_TEAM_DEFAULT,
   managementFlowScope: "ongoing",
   prCycleTeam: "bc",
@@ -1107,7 +1108,7 @@ function LegacyPrActivitySvgChart({
   const yTicks = buildLegacyPrActivityTicks(yUpper);
   const visibleDefs = lineDefs.filter((lineDef) => !hiddenKeys.has(lineDef.dataKey));
   const visibleReferenceMarkers =
-    state.showLegacyPrActivityMarkers && xTicks.length > 0
+    xTicks.length > 0
       ? PR_ACTIVITY_REFERENCE_MARKERS.filter((marker) => {
           const markerValue = toChartDateValue(marker.date);
           return markerValue >= xTicks[0] && markerValue <= xTicks[xTicks.length - 1];
@@ -1458,8 +1459,8 @@ function renderPrActivityCharts() {
     const caveat = String(prActivity?.caveat || "").trim();
     const compactViewport = isCompactViewport();
     const selectedWindowKey = normalizeOption(
-      state.prActivityWindow,
-      PR_ACTIVITY_WINDOWS,
+      state.developmentWorkflowWindow || state.prActivityWindow,
+      DEVELOPMENT_WORKFLOW_WINDOWS,
       THIRTY_DAY_WINDOW_KEY
     );
     const { points, windowLabel } = getPrActivityWindowedPoints(allPoints, selectedWindowKey);
@@ -1467,7 +1468,10 @@ function renderPrActivityCharts() {
       points.length > 0 ? getPrActivityDisplayDate(points[0]?.date || since) : since;
     const latestPoint = points.length > 0 ? points[points.length - 1] : null;
     const latestPointDate = getPrActivityDisplayDate(latestPoint?.date || "");
+    state.developmentWorkflowWindow = selectedWindowKey;
     state.prActivityWindow = selectedWindowKey;
+    state.prCycleWindow = selectedWindowKey;
+    syncControlValue("pr-cycle-window", selectedWindowKey);
     syncControlValue("pr-activity-window", selectedWindowKey);
     return {
       contextText: formatContextWithFreshness(
@@ -1529,7 +1533,6 @@ function renderLegacyPrActivityCharts() {
     const since = String(points[0]?.date || prActivity?.monthlySince || prActivity?.since || "");
     const metricKey = state.prActivityLegacyMetric === "merged" ? "merged" : "offered";
     syncControlValue("pr-activity-legacy-metric", metricKey);
-    syncControlValue("pr-activity-legacy-show-markers", state.showLegacyPrActivityMarkers, "checkbox");
     setPanelContext(
       context,
       formatContextWithFreshness(
@@ -2044,8 +2047,13 @@ function renderPrCycleExperiment() {
       String(state.prCycle?.defaultWindow || "")
         .trim()
         .toLowerCase() || THIRTY_DAY_WINDOW_KEY;
-    const selectedWindowKey = effectiveWindowKeys.includes(state.prCycleWindow)
-      ? state.prCycleWindow
+    const desiredWindowKey = normalizeOption(
+      state.developmentWorkflowWindow || state.prCycleWindow,
+      DEVELOPMENT_WORKFLOW_WINDOWS,
+      THIRTY_DAY_WINDOW_KEY
+    );
+    const selectedWindowKey = effectiveWindowKeys.includes(desiredWindowKey)
+      ? desiredWindowKey
       : effectiveWindowKeys.includes(fallbackWindowKey)
         ? fallbackWindowKey
         : THIRTY_DAY_WINDOW_KEY;
@@ -2086,9 +2094,12 @@ function renderPrCycleExperiment() {
       ) || teams[0];
 
     state.prCycleTeam = selectedKey;
+    state.developmentWorkflowWindow = selectedWindowKey;
     state.prCycleWindow = selectedWindowKey;
+    state.prActivityWindow = selectedWindowKey;
     syncControlValue("pr-cycle-team", selectedKey);
     syncControlValue("pr-cycle-window", selectedWindowKey);
+    syncControlValue("pr-activity-window", selectedWindowKey);
     setPanelContext(
       context,
       formatContextWithFreshness(
