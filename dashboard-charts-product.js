@@ -43,6 +43,16 @@
     return `<span class="stacked-duration"><span class="stacked-duration__value">${rounded}</span><span class="stacked-duration__unit">${unit}</span></span>`;
   }
 
+  function formatTrendTickLabel(dateText) {
+    const timestamp = new Date(`${String(dateText || "")}T00:00:00Z`).getTime();
+    if (!Number.isFinite(timestamp) || timestamp <= 0) return "";
+    return new Date(timestamp).toLocaleDateString("en-US", {
+      month: "short",
+      year: "2-digit",
+      timeZone: "UTC"
+    });
+  }
+
   function formatStackedCycleDaysValueMarkup(valueInDays) {
     const days = Math.max(0, toNumber(valueInDays));
     const rounded = days === 0 ? "0" : days.toFixed(1);
@@ -280,9 +290,60 @@
 
   function buildTrendPath(points) {
     if (!Array.isArray(points) || points.length === 0) return "";
-    return points
-      .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
-      .join(" ");
+    if (points.length === 1) return `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
+    if (points.length === 2) {
+      return points
+        .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+        .join(" ");
+    }
+
+    const deltas = [];
+    for (let index = 0; index < points.length - 1; index += 1) {
+      const dx = points[index + 1].x - points[index].x;
+      const dy = points[index + 1].y - points[index].y;
+      deltas.push(dx > 0 ? dy / dx : 0);
+    }
+
+    const tangents = new Array(points.length).fill(0);
+    tangents[0] = deltas[0];
+    tangents[tangents.length - 1] = deltas[deltas.length - 1];
+    for (let index = 1; index < points.length - 1; index += 1) {
+      const previousDelta = deltas[index - 1];
+      const nextDelta = deltas[index];
+      tangents[index] =
+        previousDelta === 0 || nextDelta === 0 || previousDelta * nextDelta < 0
+          ? 0
+          : (previousDelta + nextDelta) / 2;
+    }
+
+    for (let index = 0; index < deltas.length; index += 1) {
+      const delta = deltas[index];
+      if (delta === 0) {
+        tangents[index] = 0;
+        tangents[index + 1] = 0;
+        continue;
+      }
+      const leftRatio = tangents[index] / delta;
+      const rightRatio = tangents[index + 1] / delta;
+      const magnitude = Math.hypot(leftRatio, rightRatio);
+      if (magnitude <= 3) continue;
+      const scale = 3 / magnitude;
+      tangents[index] = scale * leftRatio * delta;
+      tangents[index + 1] = scale * rightRatio * delta;
+    }
+
+    let path = `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
+    for (let index = 0; index < points.length - 1; index += 1) {
+      const current = points[index];
+      const next = points[index + 1];
+      const dx = next.x - current.x;
+      const control1X = current.x + dx / 3;
+      const control1Y = current.y + (tangents[index] * dx) / 3;
+      const control2X = next.x - dx / 3;
+      const control2Y = next.y - (tangents[index + 1] * dx) / 3;
+      path += ` C ${control1X.toFixed(2)} ${control1Y.toFixed(2)} ${control2X.toFixed(2)} ${control2Y.toFixed(2)} ${next.x.toFixed(2)} ${next.y.toFixed(2)}`;
+    }
+    return path;
   }
 
   function TrendSvgChart({ rows, colors, yUpper }) {
@@ -429,7 +490,7 @@
                 fontWeight: 600,
                 textAnchor: "middle"
               },
-              row.dateShort || ""
+              formatTrendTickLabel(row.date) || row.dateShort || ""
             );
           }),
           ...seriesRows.flatMap((series) => [
@@ -495,7 +556,7 @@
               fontWeight: 700,
               textAnchor: "middle"
             },
-            "Sprint bucket"
+            "Sprint"
           )
         )
       )

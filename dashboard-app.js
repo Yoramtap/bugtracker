@@ -30,7 +30,7 @@ const LIFECYCLE_TEAM_SCOPE_DEFAULT = "all";
 const PRODUCT_CYCLE_TEAM_DEFAULT = "all";
 const CHART_CONFIG = {
   trend: {
-    panelId: "trend-panel",
+    panelId: "bug-trends-plot-panel",
     statusId: "trend-status",
     contextId: "trend-context",
     containerId: "bug-trend-chart",
@@ -38,7 +38,7 @@ const CHART_CONFIG = {
     missingMessage: "Trend chart unavailable: Recharts did not load. Check local script paths."
   },
   composition: {
-    panelId: "composition-panel",
+    panelId: "bug-trends-table-panel",
     statusId: "composition-status",
     contextId: "composition-context",
     containerId: "bug-composition-chart",
@@ -47,7 +47,7 @@ const CHART_CONFIG = {
       "Composition chart unavailable: Recharts did not load. Check local script paths."
   },
   "management-facility": {
-    panelId: "management-facility-panel",
+    panelId: "uat-acceptance-time-panel",
     statusId: "management-facility-status",
     contextId: "management-facility-context",
     containerId: "development-vs-uat-by-facility-chart",
@@ -55,42 +55,42 @@ const CHART_CONFIG = {
     missingMessage: "Development vs UAT chart unavailable: Recharts renderer missing."
   },
   "pr-activity": {
-    panelId: "pr-activity-panel",
+    panelId: "development-workflow-overview-panel",
     statusId: "pr-activity-status",
     contextId: "pr-activity-context",
     containerId: "pr-position-chart",
     missingMessage: "No Jira-linked PR activity found in backlog-snapshot.json."
   },
   "pr-activity-legacy": {
-    panelId: "pr-activity-legacy-panel",
+    panelId: "development-workflow-trends-panel",
     statusId: "pr-activity-legacy-status",
     contextId: "pr-activity-legacy-context",
     containerId: "pr-activity-legacy-count-chart",
     missingMessage: "No Jira-linked PR activity found in backlog-snapshot.json."
   },
   contributors: {
-    panelId: "contributors-panel",
+    panelId: "community-contributors-panel",
     statusId: "contributors-status",
     contextId: "contributors-context",
     containerId: "top-contributors-chart",
     missingMessage: "Contributors chart unavailable: Recharts renderer missing."
   },
   "product-cycle": {
-    panelId: "product-cycle-panel",
+    panelId: "cycle-time-to-ship-panel",
     statusId: "product-cycle-status",
     contextId: "product-cycle-context",
     containerId: "cycle-time-parking-lot-to-done-chart",
     missingMessage: "No product cycle aggregates found in product-cycle-snapshot.json."
   },
   "pr-cycle-experiment": {
-    panelId: "pr-cycle-experiment-panel",
+    panelId: "development-workflow-breakdown-panel",
     statusId: "pr-cycle-experiment-status",
     contextId: "pr-cycle-experiment-context",
     containerId: "pr-cycle-experiment-card",
     missingMessage: "No PR cycle experiment data found in pr-cycle-snapshot.json."
   },
   "lifecycle-days": {
-    panelId: "lifecycle-days-panel",
+    panelId: "time-per-stage-panel",
     statusId: "lifecycle-days-status",
     contextId: "lifecycle-days-context",
     containerId: "lifecycle-time-spent-per-phase-chart",
@@ -101,15 +101,15 @@ const CHART_CONFIG = {
 const CHART_STATUS_IDS = [...new Set(Object.values(CHART_CONFIG).map((config) => config.statusId))];
 const PANEL_DISPLAY_ORDER = [
   "actions-required-panel",
-  "composition-panel",
-  "trend-panel",
-  "management-facility-panel",
-  "pr-cycle-experiment-panel",
-  "pr-activity-panel",
-  "product-cycle-panel",
-  "lifecycle-days-panel",
-  "contributors-panel",
-  "pr-activity-legacy-panel"
+  "community-contributors-panel",
+  "uat-acceptance-time-panel",
+  "cycle-time-to-ship-panel",
+  "time-per-stage-panel",
+  "development-workflow-breakdown-panel",
+  "development-workflow-trends-panel",
+  "development-workflow-overview-panel",
+  "bug-trends-plot-panel",
+  "bug-trends-table-panel"
 ];
 const DATA_SOURCE_CONFIG = {
   snapshot: {
@@ -536,150 +536,6 @@ function applyModeVisibility() {
   }
 }
 
-function buildBugActionItem() {
-  const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
-  if (points.length === 0) return null;
-  const latestPoint = points[points.length - 1];
-  const latestDate = getSnapshotDisplayDate(latestPoint?.date || "");
-  const latestMs = new Date(`${latestDate}T00:00:00Z`).getTime();
-  const previousPoint =
-    Number.isFinite(latestMs) && points.length > 1
-      ? points.find((point) => {
-          const pointMs = new Date(
-            `${getSnapshotDisplayDate(point?.date || "")}T00:00:00Z`
-          ).getTime();
-          return Number.isFinite(pointMs) && pointMs >= latestMs - 29 * 86400000;
-        }) || points[0] || null
-      : points.length > 1
-        ? points[points.length - 2]
-        : null;
-  const teamDefs = [
-    { key: "api", label: "API" },
-    { key: "legacy", label: "Legacy FE" },
-    { key: "react", label: "React FE" },
-    { key: "bc", label: "Broadcast" },
-    { key: "workers", label: "Workers" },
-    { key: "titanium", label: "Titanium" }
-  ];
-
-  const rankedTeams = teamDefs
-    .map((team) => {
-      const latest = latestPoint?.[team.key] && typeof latestPoint[team.key] === "object" ? latestPoint[team.key] : {};
-      const previous =
-        previousPoint?.[team.key] && typeof previousPoint[team.key] === "object"
-          ? previousPoint[team.key]
-          : {};
-      const highest = toNumber(latest.highest);
-      const high = toNumber(latest.high);
-      const medium = toNumber(latest.medium);
-      const low = toNumber(latest.low);
-      const lowest = toNumber(latest.lowest);
-      const total = highest + high + medium + low + lowest;
-      const previousTotal =
-        toNumber(previous.highest) +
-        toNumber(previous.high) +
-        toNumber(previous.medium) +
-        toNumber(previous.low) +
-        toNumber(previous.lowest);
-      const delta = total - previousTotal;
-      const aged30 = toNumber(latest.longstanding_30d_plus);
-      const aged60 = toNumber(latest.longstanding_60d_plus);
-      const highestHigh = highest + high;
-      const score =
-        highest * 20 +
-        high * 2 +
-        aged60 * 0.45 +
-        aged30 * 0.2 +
-        Math.max(delta, 0) * 3;
-      return {
-        ...team,
-        total,
-        highestHigh,
-        delta,
-        aged30,
-        aged60,
-        score
-      };
-    })
-    .filter((team) => team.total > 0)
-    .sort((left, right) => right.score - left.score);
-
-  const leadTeam = rankedTeams[0];
-  if (!leadTeam || (leadTeam.highestHigh === 0 && leadTeam.aged30 === 0 && leadTeam.delta <= 0)) {
-    return null;
-  }
-
-  return {
-    key: "bug-pressure",
-    score: leadTeam.score,
-    title: `${leadTeam.label} bug backlog`,
-    href: "#composition-panel",
-    linkLabel: "Open bug graph"
-  };
-}
-
-function buildUatActionItem() {
-  const rows = Array.isArray(state.snapshot?.chartData?.managementBusinessUnit?.byScope?.ongoing?.rows)
-    ? state.snapshot.chartData.managementBusinessUnit.byScope.ongoing.rows
-    : [];
-  const rankedRows = rows
-    .map((row) => ({
-      label: String(row?.label || "").trim(),
-      sampleCount: toNumber(row?.sampleCount),
-      uatAvg: toNumber(row?.uatAvg),
-      score: toNumber(row?.sampleCount) * 8 + toNumber(row?.uatAvg)
-    }))
-    .filter((row) => row.label && row.sampleCount > 0 && row.uatAvg > 1)
-    .sort((left, right) => right.score - left.score);
-  const leadRow = rankedRows[0];
-  if (!leadRow) return null;
-
-  return {
-    key: "uat-pressure",
-    score: leadRow.score,
-    title: `${leadRow.label} UAT aging`,
-    href: "#management-facility-panel",
-    linkLabel: "Open UAT graph"
-  };
-}
-
-function buildFlowActionItem() {
-  const teams = Array.isArray(state.prCycle?.windows?.[THIRTY_DAY_WINDOW_KEY]?.teams)
-    ? state.prCycle.windows[THIRTY_DAY_WINDOW_KEY].teams
-    : [];
-  const rankedTeams = teams
-    .map((team) => ({
-      key: String(team?.key || "").trim().toLowerCase(),
-      label: String(team?.label || "").trim(),
-      issueCount: toNumber(team?.issueCount),
-      totalCycleDays: toNumber(team?.totalCycleDays),
-      bottleneckLabel: String(team?.bottleneckLabel || "").trim(),
-      score: toNumber(team?.totalCycleDays) * Math.max(1, toNumber(team?.issueCount) / 10)
-    }))
-    .filter((team) => team.label && team.issueCount > 0 && team.totalCycleDays > 7)
-    .sort((left, right) => right.score - left.score);
-  const leadTeam = rankedTeams[0];
-  if (!leadTeam) return null;
-
-  return {
-    key: "flow-pressure",
-    score: leadTeam.score,
-    title:
-      leadTeam.key === "workers"
-        ? "Workflow bottleneck in Workers"
-        : `Workflow bottleneck in ${leadTeam.label}`,
-    href: "#pr-cycle-experiment-panel",
-    linkLabel: "Open workflow graph"
-  };
-}
-
-function buildActionsRequiredItems() {
-  return [buildUatActionItem(), buildFlowActionItem(), buildBugActionItem()]
-    .filter(Boolean)
-    .sort((left, right) => right.score - left.score)
-    .slice(0, 3);
-}
-
 function renderActionsRequiredFrame() {
   const panel = document.getElementById("actions-required-panel");
   const listNode = document.getElementById("actions-required-list");
@@ -693,32 +549,29 @@ function renderActionsRequiredFrame() {
   }
 
   panel.hidden = false;
-  const actionItems = buildActionsRequiredItems();
   setPanelContext(
     contextNode,
     formatContextWithFreshness("", getSnapshotContextTimestamp(state))
   );
 
-  if (actionItems.length === 0) {
-    statusNode.hidden = true;
-    listNode.innerHTML =
-      '<p class="action-card__empty">No urgent action card is firing from the current snapshot.</p>';
-    return;
-  }
-
   statusNode.hidden = true;
   listNode.innerHTML = `
-    <ul class="action-link-list">
-      ${actionItems
-        .map(
-          (item) => `
-            <li class="action-link-list__item">
-              <a class="action-link-list__link" href="${escapeHtml(item.href || "#")}">${escapeHtml(item.title || "")}</a>
-            </li>
-          `
-        )
-        .join("")}
-    </ul>
+    <div class="report-intro">
+        <div class="report-intro__grid">
+          <div class="report-intro__card report-intro__card--product">
+            <span class="report-intro__eyebrow">Product</span>
+            <p class="report-intro__text">Contributors, acceptance, delivery, and workflow.</p>
+          </div>
+        <div class="report-intro__card report-intro__card--development">
+          <span class="report-intro__eyebrow">Development</span>
+          <p class="report-intro__text">Breakdown, trends, and overview.</p>
+        </div>
+        <div class="report-intro__card report-intro__card--bug">
+          <span class="report-intro__eyebrow">Bug</span>
+          <p class="report-intro__text">Trends and current pressure by team.</p>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -734,7 +587,7 @@ function renderBugCompositionByPriorityChart() {
   setConfigContext(
     config,
     formatContextWithFreshness(
-      latestDisplayDate ? `Latest backlog bucket • ${latestDisplayDate}` : "",
+      latestDisplayDate ? `Latest backlog snapshot • ${latestDisplayDate}` : "",
       getSnapshotContextTimestamp(state)
     )
   );
@@ -751,8 +604,8 @@ function renderTrendChart() {
   const lastDisplayDate = getSnapshotDisplayDate(lastPoint?.date || "");
   const contextText =
     firstDisplayDate && lastDisplayDate
-      ? `Last ${trendPoints.length} sprint buckets • ${firstDisplayDate} to ${lastDisplayDate}`
-      : "Last 10 sprint buckets";
+      ? `Last ${trendPoints.length} sprints • ${firstDisplayDate} to ${lastDisplayDate}`
+      : "Last 10 sprints";
   setConfigContext(
     config,
     formatContextWithFreshness(contextText, getSnapshotContextTimestamp(state))
@@ -766,8 +619,7 @@ function setPrActivityHelpDetails({ since = "", until = "", caveat = "", interva
   const safeSince = String(since || "").trim();
   const safeUntil = String(until || "").trim();
   const safeCaveat = String(caveat || "").trim();
-  const unitLabel =
-    normalizePrActivityInterval(interval) === "sprint" ? "sprint buckets" : "month buckets";
+  const unitLabel = normalizePrActivityInterval(interval) === "sprint" ? "sprints" : "months";
 
   if (metaNode) {
     const rangeText =
@@ -1748,7 +1600,7 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData) {
   const titleNode = document.getElementById("product-cycle-title");
   if (!chartScopeData || typeof chartScopeData !== "object") return;
   renderDashboardChartState("product-cycle", getConfig, ({ config }) => {
-    if (titleNode) titleNode.textContent = "How long product ideas take to ship once in development";
+    if (titleNode) titleNode.textContent = "Product delivery time by team";
 
     const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
       .map((row) => ({
@@ -2322,7 +2174,7 @@ function renderDevelopmentVsUatByFacilityChart() {
       };
     }
 
-    if (titleNode) titleNode.textContent = `${getBroadcastScopeLabel()} UAT time by Business Unit`;
+    if (titleNode) titleNode.textContent = "Product acceptance time by business unit";
     return {
       contextText: formatContextWithFreshness(
         `${getBroadcastScopeLabel()} • ${scopeLabel.toLowerCase()} • ${rows.reduce((sum, row) => sum + row.sampleCount, 0)} issues sampled`,

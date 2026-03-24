@@ -35,10 +35,10 @@
       <section
         id="actions-required-panel"
         class="panel actions-required-panel"
-        aria-label="Actions required"
+        aria-label="How to read this report"
       >
         <div class="panel-title-row">
-          <h2>Actions required</h2>
+          <h2>How to read this report</h2>
         </div>
         <div id="actions-required-list" class="actions-required-grid"></div>
         <p id="actions-required-context" class="panel-summary panel-summary--meta" hidden></p>
@@ -52,18 +52,23 @@
       </section>
 
       <section
-        id="management-facility-panel"
+        id="uat-acceptance-time-panel"
         class="panel panel--frame-fill"
-        aria-label="UAT time by Business Unit"
+        aria-label="Product acceptance time by business unit"
       >
         <div class="panel-title-row">
-          <h2 id="management-facility-title">UAT time by Business Unit</h2>
+          <h2 id="management-facility-title">Product acceptance time by business unit</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="UAT time by Business Unit explainer">i</summary>
+            <summary
+              class="help-tip"
+              aria-label="Product acceptance time by business unit explainer"
+            >
+              i
+            </summary>
             <div class="help-popover" role="tooltip">
               <p>
-                <strong>UAT time by Business Unit</strong> compares average UAT time across Business
-                Units.
+                <strong>Product acceptance time by business unit</strong>
+                compares average UAT time across Business Units.
               </p>
               <ul>
                 <li>
@@ -108,14 +113,18 @@
         ></p>
       </section>
 
-      <section id="pr-cycle-experiment-panel" class="panel" aria-label="Workflow breakdown by team">
+      <section
+        id="development-workflow-breakdown-panel"
+        class="panel"
+        aria-label="Development workflow breakdown"
+      >
         <div class="panel-title-row">
-          <h2>Workflow breakdown by team</h2>
+          <h2>Development workflow breakdown</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="Workflow breakdown by team explainer">i</summary>
+            <summary class="help-tip" aria-label="Development workflow breakdown explainer">i</summary>
             <div class="help-popover" role="tooltip">
               <p>
-                <strong>Workflow breakdown by team</strong> shows average time spent in the tracked
+                <strong>Development workflow breakdown</strong> shows average time spent in the tracked
                 Jira workflow stages for each team across the selected rolling window.
               </p>
               <ul>
@@ -185,15 +194,21 @@
         ></p>
       </section>
 
-      <section id="pr-activity-legacy-panel" class="panel" aria-label="PR activity over time">
+      <section
+        id="development-workflow-trends-panel"
+        class="panel"
+        aria-label="Development workflow trends"
+      >
         <div class="panel-title-row">
-          <h2>PR trend view (comparison)</h2>
+          <h2>Development workflow trends</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="PR activity over time chart explainer">i</summary>
+            <summary class="help-tip" aria-label="Development workflow trends explainer">
+              i
+            </summary>
             <div class="help-popover" role="tooltip">
               <p>
-                <strong>PR activity over time</strong> restores the older team-by-team timeline view
-                so we can review whether it is still useful.
+                <strong>Development workflow trends</strong> restores the older team-by-team
+                timeline view so we can review whether it is still useful.
               </p>
               <ul>
                 <li>Each line is one team.</li>
@@ -255,16 +270,16 @@
       </section>
 
       <section
-        id="product-cycle-panel"
+        id="cycle-time-to-ship-panel"
         class="panel panel--frame-fill"
-        aria-label="How long product ideas take to ship once in development"
+        aria-label="Product delivery time by team"
       >
         <div class="panel-title-row">
-          <h2 id="product-cycle-title">How long product ideas take to ship once in development</h2>
+          <h2 id="product-cycle-title">Product delivery time by team</h2>
           <details class="help-wrap">
             <summary
               class="help-tip"
-              aria-label="How long product ideas take to ship once in development explainer"
+              aria-label="Product delivery time by team explainer"
             >
               i
             </summary>
@@ -307,16 +322,16 @@
       </section>
 
       <section
-        id="lifecycle-days-panel"
+        id="time-per-stage-panel"
         class="panel panel--frame-fill"
-        aria-label="How long product ideas spend per stage of the product development cycle"
+        aria-label="Product workflow breakdown"
       >
         <div class="panel-title-row">
-          <h2>How long product ideas spend per stage of the product development cycle</h2>
+          <h2>Product workflow breakdown</h2>
           <details class="help-wrap">
             <summary
               class="help-tip"
-              aria-label="How long product ideas spend per stage of the product development cycle explainer"
+              aria-label="Product workflow breakdown explainer"
             >
               i
             </summary>
@@ -356,7 +371,7 @@
       </section>
 
       <section
-        id="contributors-panel"
+        id="community-contributors-panel"
         class="panel"
         aria-label="Top community contributors by ticket status"
       >
@@ -393,11 +408,11 @@
         ></p>
       </section>
 
-      <section id="trend-panel" class="panel" aria-label="Bug backlog trend by team">
+      <section id="bug-trends-plot-panel" class="panel" aria-label="Bug trends plot">
         <div class="panel-title-row">
-          <h2>Bug backlog trend by team</h2>
+          <h2>Bug trends plot</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="Bug backlog trend chart explainer">i</summary>
+            <summary class="help-tip" aria-label="Bug trends plot explainer">i</summary>
             <div class="help-popover" role="tooltip">
               <p><strong>Bug backlog trend</strong> tracks open backlog over time by team.</p>
               <ul>
@@ -414,11 +429,11 @@
         <p id="trend-status" class="panel-status" aria-live="polite" role="status" hidden></p>
       </section>
 
-      <section id="composition-panel" class="panel" aria-label="Bugs across teams">
+      <section id="bug-trends-table-panel" class="panel" aria-label="Bug trends table">
         <div class="panel-title-row">
-          <h2>Bugs across teams</h2>
+          <h2>Bug trends table</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="Bugs across teams explainer">i</summary>
+            <summary class="help-tip" aria-label="Bug trends table explainer">i</summary>
             <div class="help-popover" role="tooltip">
               <p>
                 <strong>Current bug backlog summary</strong> shows the latest open-bug total,
@@ -439,11 +454,15 @@
         <p id="composition-status" class="panel-status" aria-live="polite" role="status" hidden></p>
       </section>
 
-      <section id="pr-activity-panel" class="panel" aria-label="PR inflow vs review + QA time">
+      <section
+        id="development-workflow-overview-panel"
+        class="panel"
+        aria-label="Development workflow overview"
+      >
         <div class="panel-title-row">
-          <h2>PR inflow vs review + QA time</h2>
+          <h2>Development workflow overview</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="PR inflow vs review + QA time chart explainer">
+            <summary class="help-tip" aria-label="Development workflow overview chart explainer">
               i
             </summary>
             <div class="help-popover" role="tooltip">
@@ -455,10 +474,10 @@
               <ul>
                 <li>Each color is one team.</li>
                 <li>Each point shows the team average within the selected lookback window.</li>
-                <li>`PR inflow` reflects linked PR work volume in each sprint bucket.</li>
+                <li>`PR inflow` reflects linked PR work volume in each sprint.</li>
                 <li>
                   `Avg review + QA stage time (days)` uses the workflow breakdown snapshot for the
-                  same window, while PR inflow comes from Jira-linked PR activity buckets.
+                  same window, while PR inflow comes from Jira-linked PR activity over time.
                 </li>
                 <li>UAT work is tracked separately elsewhere on the dashboard.</li>
               </ul>
@@ -467,7 +486,7 @@
             </div>
           </details>
         </div>
-        <div class="radio-control-groups" aria-label="PR inflow vs review + QA time range">
+        <div class="radio-control-groups" aria-label="Development workflow overview range">
           <fieldset class="radio-group-card radio-group-card--primary">
             <legend>Time range</legend>
             <label
