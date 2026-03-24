@@ -16,6 +16,7 @@ const PR_ACTIVITY_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const MANAGEMENT_FLOW_SCOPES = ["ongoing", "done"];
 const LIFECYCLE_TEAM_SCOPE_DEFAULT = "all";
 const PRODUCT_CYCLE_TEAM_DEFAULT = "all";
+const DEVELOPMENT_WORKFLOW_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const CHART_CONFIG = {
   trend: {
     panelId: "trend-panel",
@@ -157,6 +158,12 @@ const CHART_RENDERERS = {
   "pr-cycle-experiment": renderPrCycleExperiment,
   "lifecycle-days": renderLifecycleTimeSpentPerStageChart
 };
+
+function renderDevelopmentWorkflowPanels() {
+  renderPrCycleExperiment();
+  renderPrActivityCharts();
+}
+
 const CONTROL_BINDINGS = [
   {
     name: "composition-team-scope",
@@ -184,17 +191,19 @@ const CONTROL_BINDINGS = [
   },
   {
     name: "pr-cycle-window",
-    stateKey: "prCycleWindow",
+    stateKey: "developmentWorkflowWindow",
     defaultValue: THIRTY_DAY_WINDOW_KEY,
-    normalizeValue: (value) => normalizeOption(value, PR_CYCLE_WINDOWS, THIRTY_DAY_WINDOW_KEY),
-    onChangeRender: renderPrCycleExperiment
+    normalizeValue: (value) =>
+      normalizeOption(value, DEVELOPMENT_WORKFLOW_WINDOWS, THIRTY_DAY_WINDOW_KEY),
+    onChangeRender: renderDevelopmentWorkflowPanels
   },
   {
     name: "pr-activity-window",
-    stateKey: "prActivityWindow",
+    stateKey: "developmentWorkflowWindow",
     defaultValue: THIRTY_DAY_WINDOW_KEY,
-    normalizeValue: (value) => normalizeOption(value, PR_ACTIVITY_WINDOWS, THIRTY_DAY_WINDOW_KEY),
-    onChangeRender: renderPrActivityCharts
+    normalizeValue: (value) =>
+      normalizeOption(value, DEVELOPMENT_WORKFLOW_WINDOWS, THIRTY_DAY_WINDOW_KEY),
+    onChangeRender: renderDevelopmentWorkflowPanels
   },
   {
     name: "pr-activity-legacy-metric",
@@ -233,6 +242,7 @@ const state = {
   compositionTeamScope: "bc",
   prActivityHiddenKeys: [],
   prActivityLegacyHiddenKeys: [],
+  developmentWorkflowWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityLegacyMetric: "offered",
   productCycleTeam: PRODUCT_CYCLE_TEAM_DEFAULT,
@@ -1620,8 +1630,8 @@ function renderPrActivityCharts() {
     const caveat = String(prActivity?.caveat || "").trim();
     const compactViewport = isCompactViewport();
     const selectedWindowKey = normalizeOption(
-      state.prActivityWindow,
-      PR_ACTIVITY_WINDOWS,
+      state.developmentWorkflowWindow || state.prActivityWindow,
+      DEVELOPMENT_WORKFLOW_WINDOWS,
       THIRTY_DAY_WINDOW_KEY
     );
     const { points, windowLabel } = getPrActivityWindowedPoints(allPoints, selectedWindowKey);
@@ -1629,7 +1639,10 @@ function renderPrActivityCharts() {
       points.length > 0 ? getPrActivityDisplayDate(points[0]?.date || since) : since;
     const latestPoint = points.length > 0 ? points[points.length - 1] : null;
     const latestPointDate = getPrActivityDisplayDate(latestPoint?.date || "");
+    state.developmentWorkflowWindow = selectedWindowKey;
     state.prActivityWindow = selectedWindowKey;
+    state.prCycleWindow = selectedWindowKey;
+    syncControlValue("pr-cycle-window", selectedWindowKey);
     syncControlValue("pr-activity-window", selectedWindowKey);
     return {
       contextText: formatContextWithFreshness(
@@ -2221,8 +2234,13 @@ function renderPrCycleExperiment() {
       String(state.prCycle?.defaultWindow || "")
         .trim()
         .toLowerCase() || THIRTY_DAY_WINDOW_KEY;
-    const selectedWindowKey = effectiveWindowKeys.includes(state.prCycleWindow)
-      ? state.prCycleWindow
+    const desiredWindowKey = normalizeOption(
+      state.developmentWorkflowWindow || state.prCycleWindow,
+      DEVELOPMENT_WORKFLOW_WINDOWS,
+      THIRTY_DAY_WINDOW_KEY
+    );
+    const selectedWindowKey = effectiveWindowKeys.includes(desiredWindowKey)
+      ? desiredWindowKey
       : effectiveWindowKeys.includes(fallbackWindowKey)
         ? fallbackWindowKey
         : THIRTY_DAY_WINDOW_KEY;
@@ -2263,9 +2281,12 @@ function renderPrCycleExperiment() {
       ) || teams[0];
 
     state.prCycleTeam = selectedKey;
+    state.developmentWorkflowWindow = selectedWindowKey;
     state.prCycleWindow = selectedWindowKey;
+    state.prActivityWindow = selectedWindowKey;
     syncControlValue("pr-cycle-team", selectedKey);
     syncControlValue("pr-cycle-window", selectedWindowKey);
+    syncControlValue("pr-activity-window", selectedWindowKey);
     setPanelContext(
       context,
       formatContextWithFreshness(
