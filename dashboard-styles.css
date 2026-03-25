@@ -2222,6 +2222,10 @@ a.shipped-team-list__idea-key:focus-visible {
   color: rgba(31, 51, 71, 0.94);
 }
 
+.radio-group-card label.is-selected {
+  color: rgba(31, 51, 71, 0.94);
+}
+
 .radio-group-card label:has(input:focus-visible) {
   text-decoration: underline;
   text-decoration-color: rgba(72, 114, 167, 0.34);
@@ -2301,12 +2305,20 @@ a.shipped-team-list__idea-key:focus-visible {
   background: var(--segmented-active);
 }
 
+.radio-group-card--segmented label.is-selected {
+  background: var(--segmented-active);
+}
+
 .radio-group-card--segmented label:has(input:focus-visible) {
   text-decoration: none;
   background: var(--segmented-hover);
 }
 
 .radio-group-card--segmented label:has(input:checked):has(input:focus-visible) {
+  background: var(--segmented-active);
+}
+
+.radio-group-card--segmented label.is-selected:has(input:focus-visible) {
   background: var(--segmented-active);
 }
 
