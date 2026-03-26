@@ -24,6 +24,11 @@ const PR_ACTIVITY_REVIEW_AXIS_UPPER = 30;
 const PR_ACTIVITY_REVIEW_AXIS_STEP = 5;
 const THIRTY_DAY_WINDOW_KEY = "30d";
 const ALL_TEAM_SCOPE_KEY = "all";
+const ALL_TEAMS_LABEL = "All teams";
+const BUG_TRENDS_VIEW_DEFAULT = "graph";
+const BUG_TRENDS_VIEW_MODES = [BUG_TRENDS_VIEW_DEFAULT, "table"];
+const PRODUCT_DELIVERY_WORKFLOW_VIEW_DEFAULT = "delivery";
+const PRODUCT_DELIVERY_WORKFLOW_VIEW_MODES = [PRODUCT_DELIVERY_WORKFLOW_VIEW_DEFAULT, "workflow"];
 const PR_CYCLE_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const PR_ACTIVITY_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const MANAGEMENT_FLOW_SCOPES = ["ongoing", "done"];
@@ -32,21 +37,11 @@ const PRODUCT_CYCLE_TEAM_DEFAULT = "all";
 const DEVELOPMENT_WORKFLOW_WINDOWS = [THIRTY_DAY_WINDOW_KEY, "90d", "6m", "1y"];
 const CHART_CONFIG = {
   trend: {
-    panelId: "bug-trends-plot-panel",
-    statusId: "trend-status",
-    contextId: "trend-context",
-    containerId: "bug-trend-chart",
-    rendererName: "renderBugBacklogTrendByTeamChart",
-    missingMessage: "Trend chart unavailable: Recharts did not load. Check local script paths."
-  },
-  composition: {
-    panelId: "bug-trends-table-panel",
-    statusId: "composition-status",
-    contextId: "composition-context",
-    containerId: "bug-composition-chart",
-    rendererName: "renderBugCompositionByPriorityChart",
-    missingMessage:
-      "Composition chart unavailable: Recharts did not load. Check local script paths."
+    panelId: "bug-trends-panel",
+    statusId: "bug-trends-status",
+    contextId: "bug-trends-context",
+    containerId: "bug-trends-chart",
+    missingMessage: "Bug trends view unavailable: Recharts did not load. Check local script paths."
   },
   "management-facility": {
     panelId: "uat-acceptance-time-panel",
@@ -97,14 +92,6 @@ const CHART_CONFIG = {
     contextId: "pr-cycle-experiment-context",
     containerId: "pr-cycle-experiment-card",
     missingMessage: "No PR cycle experiment data found in pr-cycle-snapshot.json."
-  },
-  "lifecycle-days": {
-    panelId: "time-per-stage-panel",
-    statusId: "lifecycle-days-status",
-    contextId: "lifecycle-days-context",
-    containerId: "lifecycle-time-spent-per-phase-chart",
-    rendererName: "renderLifecycleTimeSpentPerStageChart",
-    missingMessage: "No lifecycle aggregates found in product-cycle-snapshot.json."
   }
 };
 const CHART_STATUS_IDS = [...new Set(Object.values(CHART_CONFIG).map((config) => config.statusId))];
@@ -114,12 +101,10 @@ const PANEL_DISPLAY_ORDER = [
   "community-contributors-panel",
   "uat-acceptance-time-panel",
   "cycle-time-to-ship-panel",
-  "time-per-stage-panel",
   "development-workflow-breakdown-panel",
   "development-workflow-overview-panel",
   "development-workflow-trends-panel",
-  "bug-trends-plot-panel",
-  "bug-trends-table-panel"
+  "bug-trends-panel"
 ];
 const DATA_SOURCE_CONFIG = {
   snapshot: {
@@ -127,8 +112,7 @@ const DATA_SOURCE_CONFIG = {
     url: "./backlog-snapshot.json",
     errorMessage: "Failed to load backlog-snapshot.json",
     statusIds: [
-      "trend-status",
-      "composition-status",
+      "bug-trends-status",
       "management-facility-status",
       "pr-activity-status",
       "pr-activity-legacy-status"
@@ -138,7 +122,7 @@ const DATA_SOURCE_CONFIG = {
     stateKey: "productCycle",
     url: "./product-cycle-snapshot.json",
     errorMessage: "Failed to load product-cycle-snapshot.json",
-    statusIds: ["product-cycle-status", "lifecycle-days-status"]
+    statusIds: ["product-cycle-status"]
   },
   productCycleShipments: {
     stateKey: "productCycleShipments",
@@ -166,27 +150,23 @@ const PRELOADED_DATA_SOURCE_PROMISES =
   window.__dashboardDataSourcePromiseCache || Object.create(null);
 const CHART_DATA_SOURCES = {
   trend: ["snapshot"],
-  composition: ["snapshot"],
   "management-facility": ["snapshot"],
   "pr-activity": ["snapshot", "prCycle"],
   "pr-activity-legacy": ["snapshot"],
   contributors: ["contributors"],
   "product-cycle-shipments": ["productCycleShipments"],
   "product-cycle": ["productCycle"],
-  "pr-cycle-experiment": ["prCycle"],
-  "lifecycle-days": ["productCycle"]
+  "pr-cycle-experiment": ["prCycle"]
 };
 const CHART_RENDERERS = {
-  trend: renderTrendChart,
-  composition: renderBugCompositionByPriorityChart,
+  trend: renderBugTrendsPanel,
   "management-facility": renderDevelopmentVsUatByFacilityChart,
   "pr-activity": renderPrActivityCharts,
   "pr-activity-legacy": renderLegacyPrActivityCharts,
   contributors: renderTopContributorsChart,
   "product-cycle-shipments": renderProductCycleShipmentsTimeline,
   "product-cycle": renderLeadAndCycleTimeByTeamChart,
-  "pr-cycle-experiment": renderPrCycleExperiment,
-  "lifecycle-days": renderLifecycleTimeSpentPerStageChart
+  "pr-cycle-experiment": renderPrCycleExperiment
 };
 
 function renderDevelopmentWorkflowPanels() {
@@ -194,13 +174,33 @@ function renderDevelopmentWorkflowPanels() {
   renderPrActivityCharts();
 }
 
+function productDeliveryWorkflowViewKey(value) {
+  return normalizeOption(
+    value,
+    PRODUCT_DELIVERY_WORKFLOW_VIEW_MODES,
+    PRODUCT_DELIVERY_WORKFLOW_VIEW_DEFAULT
+  );
+}
+
+function bugTrendsViewKey(value) {
+  return normalizeOption(value, BUG_TRENDS_VIEW_MODES, BUG_TRENDS_VIEW_DEFAULT);
+}
+
+function normalizeDashboardMode(mode) {
+  return mode === "composition" ? "trend" : mode;
+}
+
+function defaultBugTrendsViewForMode(mode) {
+  return mode === "composition" ? "table" : BUG_TRENDS_VIEW_DEFAULT;
+}
+
 const CONTROL_BINDINGS = [
   {
-    name: "composition-team-scope",
-    stateKey: "compositionTeamScope",
-    defaultValue: "bc",
-    normalizeValue: (value) => value || "bc",
-    onChangeRender: renderBugCompositionByPriorityChart
+    name: "bug-trends-view",
+    stateKey: "bugTrendsView",
+    defaultValue: BUG_TRENDS_VIEW_DEFAULT,
+    normalizeValue: bugTrendsViewKey,
+    onChangeRender: renderBugTrendsPanel
   },
   {
     name: "management-facility-flow-scope",
@@ -243,21 +243,18 @@ const CONTROL_BINDINGS = [
     onChangeRender: renderLegacyPrActivityCharts
   },
   {
+    name: "product-delivery-workflow-view",
+    stateKey: "productDeliveryWorkflowView",
+    defaultValue: PRODUCT_DELIVERY_WORKFLOW_VIEW_DEFAULT,
+    normalizeValue: productDeliveryWorkflowViewKey,
+    onChangeRender: renderLeadAndCycleTimeByTeamChart
+  },
+  {
     name: "product-cycle-team",
     stateKey: "productCycleTeam",
     defaultValue: PRODUCT_CYCLE_TEAM_DEFAULT,
     normalizeValue: productCycleTeamKey,
     onChangeRender: renderLeadAndCycleTimeByTeamChart
-  },
-  {
-    name: "lifecycle-team",
-    stateKey: "lifecycleTeamScope",
-    defaultValue: LIFECYCLE_TEAM_SCOPE_DEFAULT,
-    normalizeValue: (value) =>
-      String(value || "")
-        .trim()
-        .toLowerCase() || LIFECYCLE_TEAM_SCOPE_DEFAULT,
-    onChangeRender: renderLifecycleTimeSpentPerStageChart
   }
 ];
 
@@ -270,19 +267,19 @@ const state = {
   loadedSources: {},
   loadErrors: {},
   mode: "all",
-  compositionTeamScope: "bc",
+  bugTrendsView: BUG_TRENDS_VIEW_DEFAULT,
   prActivityHiddenKeys: [],
   prActivityLegacyHiddenKeys: [],
   developmentWorkflowWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityWindow: THIRTY_DAY_WINDOW_KEY,
   prActivityLegacyMetric: "offered",
+  productDeliveryWorkflowView: PRODUCT_DELIVERY_WORKFLOW_VIEW_DEFAULT,
   productCycleTeam: PRODUCT_CYCLE_TEAM_DEFAULT,
   productCycleShipmentsYear: "",
   productCycleShipmentsMonthKey: "",
   managementFlowScope: "ongoing",
   prCycleTeam: ALL_TEAM_SCOPE_KEY,
-  prCycleWindow: THIRTY_DAY_WINDOW_KEY,
-  lifecycleTeamScope: LIFECYCLE_TEAM_SCOPE_DEFAULT
+  prCycleWindow: THIRTY_DAY_WINDOW_KEY
 };
 
 const queuedChartModes = new Set();
@@ -325,7 +322,6 @@ if (!dashboardSvgCore) {
   syncDashboardControlsFromState,
   bindDashboardControlState,
   setPanelContext,
-  setConfigContext,
   formatContextWithFreshness,
   getSnapshotContextTimestamp,
   renderDashboardRefreshStrip,
@@ -530,17 +526,6 @@ function renderNamedChart(config, props, options = {}) {
   return true;
 }
 
-function renderSnapshotChart(config, extra = {}) {
-  setStatusMessage(config.statusId);
-  if (!state.snapshot || !Array.isArray(state.snapshot.combinedPoints)) return;
-  renderNamedChart(config, {
-    containerId: config.containerId,
-    snapshot: state.snapshot,
-    colors: getThemeColors(),
-    ...extra
-  });
-}
-
 function applyModeVisibility() {
   const validModes = new Set(Object.keys(CHART_CONFIG));
   const selectedMode = validModes.has(state.mode) ? state.mode : "all";
@@ -605,38 +590,57 @@ function getBroadcastScopeLabel() {
   );
 }
 
-function renderBugCompositionByPriorityChart() {
-  const config = getConfig("composition");
-  const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
-  const latestPoint = points.length > 0 ? points[points.length - 1] : null;
-  const latestDisplayDate = getSnapshotDisplayDate(latestPoint?.date || "");
-  setConfigContext(
-    config,
-    formatContextWithFreshness(
-      latestDisplayDate ? `Latest backlog snapshot • ${latestDisplayDate}` : "",
-      getSnapshotContextTimestamp(state)
-    )
-  );
-  renderSnapshotChart(config);
+function setBugTrendsContainerView(viewKey, containerId = "bug-trends-chart") {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.className =
+    viewKey === "table"
+      ? "chart-canvas composition-table-wrap"
+      : "chart-canvas chart-canvas--standard";
 }
 
-function renderTrendChart() {
+function renderBugTrendsPanel() {
   const config = getConfig("trend");
+  const viewKey = bugTrendsViewKey(state.bugTrendsView);
+  state.bugTrendsView = viewKey;
+  syncControlValue("bug-trends-view", viewKey);
   const points = Array.isArray(state.snapshot?.combinedPoints) ? state.snapshot.combinedPoints : [];
   const trendPoints = points.slice(-10);
   const firstPoint = trendPoints[0] || null;
   const lastPoint = trendPoints[trendPoints.length - 1] || null;
   const firstDisplayDate = getSnapshotDisplayDate(firstPoint?.date || "");
   const lastDisplayDate = getSnapshotDisplayDate(lastPoint?.date || "");
-  const contextText =
-    firstDisplayDate && lastDisplayDate
-      ? `Last ${trendPoints.length} sprints • ${firstDisplayDate} to ${lastDisplayDate}`
-      : "Last 10 sprints";
-  setConfigContext(
-    config,
-    formatContextWithFreshness(contextText, getSnapshotContextTimestamp(state))
-  );
-  renderSnapshotChart(config);
+  const latestPoint = points.length > 0 ? points[points.length - 1] : null;
+  const latestDisplayDate = getSnapshotDisplayDate(latestPoint?.date || "");
+  renderDashboardChartState("trend", getConfig, () => ({
+    contextText: formatContextWithFreshness(
+      viewKey === "table"
+        ? latestDisplayDate
+          ? `Latest backlog snapshot • ${latestDisplayDate}`
+          : ""
+        : firstDisplayDate && lastDisplayDate
+          ? `Last ${trendPoints.length} sprints • ${firstDisplayDate} to ${lastDisplayDate}`
+          : "Last 10 sprints",
+      getSnapshotContextTimestamp(state)
+    ),
+    render: () => {
+      setBugTrendsContainerView(viewKey, config?.containerId);
+      renderNamedChart(
+        config,
+        {
+          containerId: config.containerId,
+          snapshot: state.snapshot,
+          colors: getThemeColors()
+        },
+        {
+          rendererName:
+            viewKey === "table"
+              ? "renderBugCompositionByPriorityChart"
+              : "renderBugBacklogTrendByTeamChart"
+        }
+      );
+    }
+  }));
 }
 
 function setPrActivityHelpDetails({ since = "", until = "", caveat = "", interval = "" } = {}) {
@@ -1660,12 +1664,15 @@ function renderLegacyPrActivityCharts() {
   });
 }
 
-function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData) {
-  const titleNode = document.getElementById("product-cycle-title");
+function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, {
+  configKey = "product-cycle",
+  teamSwitchContainerId = "product-cycle-team-switch",
+  teamControlName = "product-cycle-team",
+  teamStateKey = "productCycleTeam",
+  onChangeRender = renderLeadAndCycleTimeByTeamChart
+} = {}) {
   if (!chartScopeData || typeof chartScopeData !== "object") return;
-  renderDashboardChartState("product-cycle", getConfig, ({ config }) => {
-    if (titleNode) titleNode.textContent = "Product delivery time by team";
-
+  renderDashboardChartState(configKey, getConfig, ({ config }) => {
     const rows = (Array.isArray(chartScopeData.rows) ? chartScopeData.rows.slice() : [])
       .map((row) => ({
         ...row,
@@ -1708,27 +1715,27 @@ function renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData) {
     }
 
     const allowedTeamKeys = ["all", ...teams.map(productCycleTeamKey)];
-    const selectedTeamKey = allowedTeamKeys.includes(productCycleTeamKey(state.productCycleTeam))
-      ? productCycleTeamKey(state.productCycleTeam)
+    const selectedTeamKey = allowedTeamKeys.includes(productCycleTeamKey(state[teamStateKey]))
+      ? productCycleTeamKey(state[teamStateKey])
       : productCycleTeamKey(teams[0]);
-    state.productCycleTeam = selectedTeamKey;
+    state[teamStateKey] = selectedTeamKey;
     const selectedRow = rows.find((row) => productCycleTeamKey(row?.team) === selectedTeamKey) || rows[0];
     const selectedSampleCount = toCount(selectedRow?.meta_cycle?.n);
 
     return buildRadioChartStateResult({
-      containerId: "product-cycle-team-switch",
-      name: "product-cycle-team",
+      containerId: teamSwitchContainerId,
+      name: teamControlName,
       options: ["all", ...teams.map(productCycleTeamKey)].map((key) => ({
         value: key,
         label:
           key === "all"
-            ? "All teams"
+            ? ALL_TEAMS_LABEL
             : normalizeDisplayTeamName(teams.find((team) => productCycleTeamKey(team) === key) || key)
       })),
       selectedValue: selectedTeamKey,
-      stateKey: "productCycleTeam",
+      stateKey: teamStateKey,
       normalizeValue: productCycleTeamKey,
-      onChangeRender: renderLeadAndCycleTimeByTeamChart,
+      onChangeRender,
       state,
       contextText: formatContextWithFreshness(
         selectedTeamKey === "all"
@@ -1864,7 +1871,7 @@ function getLifecycleTeamOptions(normalizedChartData) {
       const team = String(teamDef?.team || "");
       const key = lifecycleTeamScopeKey(team);
       const sampleCount = totalLifecycleSampleCount(teamDef, rows);
-      if (!team || key === "unmapped" || sampleCount <= 0) return null;
+      if (!team || key === "unmapped") return null;
       return {
         key,
         label: normalizeDisplayTeamName(team),
@@ -1873,7 +1880,7 @@ function getLifecycleTeamOptions(normalizedChartData) {
       };
     })
     .filter(Boolean);
-  return [{ key: LIFECYCLE_TEAM_SCOPE_DEFAULT, label: "All teams avg", sampleCount: 0 }, ...options];
+  return [{ key: LIFECYCLE_TEAM_SCOPE_DEFAULT, label: ALL_TEAMS_LABEL, sampleCount: 0 }, ...options];
 }
 
 function buildLifecycleFilteredView(normalizedChartData, selectedTeamKey) {
@@ -1905,7 +1912,7 @@ function buildLifecycleFilteredView(normalizedChartData, selectedTeamKey) {
         phaseKey: row?.phaseKey,
         slot_0: average,
         meta_slot_0: {
-          team: "All teams avg",
+          team: ALL_TEAMS_LABEL,
           n: totals.sampleCount,
           average
         }
@@ -1913,11 +1920,11 @@ function buildLifecycleFilteredView(normalizedChartData, selectedTeamKey) {
     });
     return {
       rows: aggregateRows,
-      teamDefs: [{ slot: "slot_0", name: "All teams avg", team: "All teams avg" }],
+      teamDefs: [{ slot: "slot_0", name: ALL_TEAMS_LABEL, team: ALL_TEAMS_LABEL }],
       categorySecondaryLabels: Object.fromEntries(
         aggregateRows.map((row) => [String(row?.phaseLabel || ""), `n=${toCount(row?.meta_slot_0?.n)}`])
       ),
-      selectionLabel: "All teams avg",
+      selectionLabel: ALL_TEAMS_LABEL,
       sampleSize: aggregateRows.reduce((sum, row) => sum + toCount(row?.meta_slot_0?.n), 0)
     };
   }
@@ -1958,16 +1965,23 @@ function buildLifecycleFilteredView(normalizedChartData, selectedTeamKey) {
   };
 }
 
-function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
+function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData, {
+  configKey = "product-cycle",
+  teamSwitchContainerId = "product-cycle-team-switch",
+  teamControlName = "product-cycle-team",
+  teamStateKey = "productCycleTeam",
+  normalizeTeamValue = productCycleTeamKey,
+  onChangeRender = renderLeadAndCycleTimeByTeamChart
+} = {}) {
   const normalizedChartData = normalizeCurrentStageChartData(chartSnapshotData);
   if (!normalizedChartData) return;
-  renderDashboardChartState("lifecycle-days", getConfig, ({ config }) => {
+  renderDashboardChartState(configKey, getConfig, ({ config }) => {
     const lifecycleTeamOptions = getLifecycleTeamOptions(normalizedChartData);
     const validTeamKeys = new Set(lifecycleTeamOptions.map((option) => option.key));
-    const selectedTeamKey = validTeamKeys.has(lifecycleTeamScopeKey(state.lifecycleTeamScope))
-      ? lifecycleTeamScopeKey(state.lifecycleTeamScope)
+    const selectedTeamKey = validTeamKeys.has(lifecycleTeamScopeKey(state[teamStateKey]))
+      ? lifecycleTeamScopeKey(state[teamStateKey])
       : LIFECYCLE_TEAM_SCOPE_DEFAULT;
-    state.lifecycleTeamScope = selectedTeamKey;
+    state[teamStateKey] = selectedTeamKey;
 
     const filteredView = buildLifecycleFilteredView(normalizedChartData, selectedTeamKey);
     if (!filteredView) {
@@ -1985,7 +1999,7 @@ function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
     const themeColors = getThemeColors();
     const lifecycleTeamColorMap =
       selectedTeamKey === LIFECYCLE_TEAM_SCOPE_DEFAULT
-        ? { "All teams avg": themeColors.teams.all }
+        ? { [ALL_TEAMS_LABEL]: themeColors.teams.all }
         : buildTeamColorMap(teams);
     const lifecycleTintByTeam = buildTintMap(lifecycleTeamColorMap, 0.02);
     const teamDefs = teamDefsBase.map((teamDef, index) => ({
@@ -1998,9 +2012,6 @@ function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
       showSeriesLabel: false,
       metaTeamColorMap: lifecycleTintByTeam
     }));
-    const plottedValues = teamDefs
-      .flatMap((teamDef) => rows.map((row) => row[teamDef.key]))
-      .filter((value) => Number.isFinite(value) && value > 0);
     const categorySecondaryLabels =
       filteredView.categorySecondaryLabels &&
       typeof filteredView.categorySecondaryLabels === "object"
@@ -2008,21 +2019,17 @@ function renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData) {
         : Object.fromEntries(rows.map((row) => [String(row.phaseLabel || ""), ""]));
     const sampleSize = toCount(filteredView.sampleSize);
 
-    if (plottedValues.length === 0) {
-      return { error: "No current lifecycle stage counts found.", clearContainer: true };
-    }
-
     return buildRadioChartStateResult({
-      containerId: "lifecycle-team-switch",
-      name: "lifecycle-team",
+      containerId: teamSwitchContainerId,
+      name: teamControlName,
       options: lifecycleTeamOptions.map((option) => ({
         value: option.key,
         label: option.label
       })),
       selectedValue: selectedTeamKey,
-      stateKey: "lifecycleTeamScope",
-      normalizeValue: lifecycleTeamScopeKey,
-      onChangeRender: renderLifecycleTimeSpentPerStageChart,
+      stateKey: teamStateKey,
+      normalizeValue: normalizeTeamValue,
+      onChangeRender,
       state,
       contextText: formatContextWithFreshness(
         `${filteredView.selectionLabel} • ${sampleSize} open ideas sampled`,
@@ -2136,24 +2143,55 @@ function renderProductCycleShipmentsTimeline() {
 }
 
 function renderLeadAndCycleTimeByTeamChart() {
-  renderDashboardChartState("product-cycle", getConfig, ({ config }) => {
-    const chartDataValue = state.productCycle?.chartData;
-    const chartData = chartDataValue && typeof chartDataValue === "object" ? chartDataValue : null;
-    if (!chartData) {
-      return {
-        error: config.missingMessage,
-        clearContainer: true
-      };
-    }
+  const viewKey = productDeliveryWorkflowViewKey(state.productDeliveryWorkflowView);
+  state.productDeliveryWorkflowView = viewKey;
+  syncControlValue("product-delivery-workflow-view", viewKey);
 
-    const chartScopeData = chartData.leadCycleByScope?.[PRODUCT_CYCLE_SCOPE];
-    if (!chartScopeData) {
-      return {
-        error: `No product cycle chart data found for ${PRODUCT_CYCLE_SCOPE_LABEL}.`,
+  const chartDataValue = state.productCycle?.chartData;
+  const chartData = chartDataValue && typeof chartDataValue === "object" ? chartDataValue : null;
+  if (!chartData) {
+    renderDashboardChartState("product-cycle", getConfig, ({ config }) => ({
+      error: config.missingMessage,
+      clearContainer: true
+    }));
+    return;
+  }
+
+  if (viewKey === "workflow") {
+    const chartSnapshotData = chartData.currentStageSnapshot;
+    if (!chartSnapshotData) {
+      renderDashboardChartState("product-cycle", getConfig, () => ({
+        error: "No current lifecycle chart data found in product-cycle-snapshot.json.",
         clearContainer: true
-      };
+      }));
+      return;
     }
-    renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData);
+    renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData, {
+      configKey: "product-cycle",
+      teamSwitchContainerId: "product-cycle-team-switch",
+      teamControlName: "product-cycle-team",
+      teamStateKey: "productCycleTeam",
+      normalizeTeamValue: productCycleTeamKey,
+      onChangeRender: renderLeadAndCycleTimeByTeamChart
+    });
+    return;
+  }
+
+  const chartScopeData = chartData.leadCycleByScope?.[PRODUCT_CYCLE_SCOPE];
+  if (!chartScopeData) {
+    renderDashboardChartState("product-cycle", getConfig, () => ({
+      error: `No product cycle chart data found for ${PRODUCT_CYCLE_SCOPE_LABEL}.`,
+      clearContainer: true
+    }));
+    return;
+  }
+
+  renderLeadAndCycleTimeByTeamChartFromChartData(chartScopeData, {
+    configKey: "product-cycle",
+    teamSwitchContainerId: "product-cycle-team-switch",
+    teamControlName: "product-cycle-team",
+    teamStateKey: "productCycleTeam",
+    onChangeRender: renderLeadAndCycleTimeByTeamChart
   });
 }
 
@@ -2265,24 +2303,6 @@ function renderPrCycleExperiment() {
       selectedTeam,
       selectedWindowSnapshot
     );
-  });
-}
-
-function renderLifecycleTimeSpentPerStageChart() {
-  renderDashboardChartState("lifecycle-days", getConfig, () => {
-    const chartData = state.productCycle?.chartData;
-    const chartSnapshotData =
-      chartData && typeof chartData === "object" ? chartData.currentStageSnapshot : null;
-    if (!chartSnapshotData) {
-      const config = getConfig("lifecycle-days");
-      return {
-        error:
-          config?.missingMessage ||
-          "No current lifecycle chart data found in product-cycle-snapshot.json.",
-        clearContainer: true
-      };
-    }
-    renderLifecycleTimeSpentPerStageChartFromChartData(chartSnapshotData);
   });
 }
 
@@ -2506,8 +2526,12 @@ async function loadSnapshot() {
   state.prCycle = null;
   state.loadedSources = {};
   state.loadErrors = {};
-  state.mode = getModeFromUrl();
+  const rawMode = getModeFromUrl();
+  state.mode = normalizeDashboardMode(rawMode);
   readDashboardControlStateFromUrl(CONTROL_BINDINGS, state);
+  if (!new URLSearchParams(window.location.search).has("bug-trends-view")) {
+    state.bugTrendsView = defaultBugTrendsViewForMode(rawMode);
+  }
   renderDashboardRefreshStrip(state);
   renderActionsRequiredFrame();
   applyDashboardPanelOrder();

@@ -318,38 +318,59 @@
       <section
         id="cycle-time-to-ship-panel"
         class="panel panel--frame-fill"
-        aria-label="Product delivery time by team"
+        aria-label="Product delivery and workflow"
       >
         <div class="panel-title-row">
-          <h2 id="product-cycle-title">Product delivery time by team</h2>
+          <h2 id="product-cycle-title">Product delivery and workflow</h2>
           <details class="help-wrap">
-            <summary
-              class="help-tip"
-              aria-label="Product delivery time by team explainer"
-            >
-              i
-            </summary>
+            <summary class="help-tip" aria-label="Product delivery and workflow explainer">i</summary>
             <div class="help-popover" role="tooltip">
-              <p><strong>Cycle time per team</strong> is computed from lifecycle timestamps.</p>
+              <p>
+                <strong>Product delivery and workflow</strong> combines shipped delivery timing with
+                the current-state workflow view for the same team set.
+              </p>
               <ul>
-                <li>Cycle time = time spent in In Development + UAT, including ongoing work.</li>
+                <li>Use the toggle to switch between Delivery cycle and Ideas workflow.</li>
+                <li>Delivery cycle = time spent in In Development + UAT, including ongoing work.</li>
                 <li>
-                  Shipped counts include only ideas that reached Done through recorded
-                  Development/UAT time and not adminned to Done.
+                  Ideas workflow shows how long open ideas have spent in the stage they are
+                  currently sitting in.
                 </li>
-                <li>
-                  Use the team toggles for detail, or stay on All teams for the fastest compare
-                  view.
-                </li>
+                <li>Use the shared team toggles for detail, or stay on All teams for the compare view.</li>
               </ul>
             </div>
           </details>
         </div>
         <div
+          class="radio-control-groups"
+          aria-label="Product delivery and workflow view"
+        >
+          <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
+            <legend>View</legend>
+            <label
+              ><input
+                type="radio"
+                name="product-delivery-workflow-view"
+                value="delivery"
+                checked
+              />
+              <span>Delivery cycle</span></label
+            >
+            <label
+              ><input
+                type="radio"
+                name="product-delivery-workflow-view"
+                value="workflow"
+              />
+              <span>Ideas workflow</span></label
+            >
+          </fieldset>
+        </div>
+        <div
           id="product-cycle-team-switch"
           class="pr-cycle-team-switch"
           role="radiogroup"
-          aria-label="Cycle time team"
+          aria-label="Product delivery and workflow team"
         ></div>
         <div class="chart">
           <div
@@ -360,55 +381,6 @@
         <p id="product-cycle-context" class="panel-summary panel-summary--meta" hidden></p>
         <p
           id="product-cycle-status"
-          class="panel-status"
-          aria-live="polite"
-          role="status"
-          hidden
-        ></p>
-      </section>
-
-      <section
-        id="time-per-stage-panel"
-        class="panel panel--frame-fill"
-        aria-label="Product workflow breakdown"
-      >
-        <div class="panel-title-row">
-          <h2>Product workflow breakdown</h2>
-          <details class="help-wrap">
-            <summary
-              class="help-tip"
-              aria-label="Product workflow breakdown explainer"
-            >
-              i
-            </summary>
-            <div class="help-popover" role="tooltip">
-              <p>
-                <strong>Current lifecycle stage time</strong> shows how long open ideas have spent
-                in the stage they are currently sitting in.
-              </p>
-              <ul>
-                <li>Use the team toggles to switch between one team and the all-team average.</li>
-                <li>Each stage label includes the current sample count for that stage.</li>
-                <li>This is a current-state view, not a shipped-cycle trend.</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-        <div
-          id="lifecycle-team-switch"
-          class="pr-cycle-team-switch"
-          role="radiogroup"
-          aria-label="Current lifecycle team"
-        ></div>
-        <div class="chart">
-          <div
-            id="lifecycle-time-spent-per-phase-chart"
-            class="chart-canvas chart-canvas--dense"
-          ></div>
-        </div>
-        <p id="lifecycle-days-context" class="panel-summary panel-summary--meta" hidden></p>
-        <p
-          id="lifecycle-days-status"
           class="panel-status"
           aria-live="polite"
           role="status"
@@ -454,50 +426,43 @@
         ></p>
       </section>
 
-      <section id="bug-trends-plot-panel" class="panel" aria-label="Bug trends plot">
+      <section id="bug-trends-panel" class="panel" aria-label="Bug trends">
         <div class="panel-title-row">
-          <h2>Bug trends plot</h2>
+          <h2>Bug trends</h2>
           <details class="help-wrap">
-            <summary class="help-tip" aria-label="Bug trends plot explainer">i</summary>
-            <div class="help-popover" role="tooltip">
-              <p><strong>Bug backlog trend</strong> tracks open backlog over time by team.</p>
-              <ul>
-                <li>Each line is one team.</li>
-                <li>Dashed BC lines show long-standing backlog overlays.</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-        <div class="chart">
-          <div id="bug-trend-chart" class="chart-canvas chart-canvas--standard"></div>
-        </div>
-        <p id="trend-context" class="panel-summary panel-summary--meta" hidden></p>
-        <p id="trend-status" class="panel-status" aria-live="polite" role="status" hidden></p>
-      </section>
-
-      <section id="bug-trends-table-panel" class="panel" aria-label="Bug trends table">
-        <div class="panel-title-row">
-          <h2>Bug trends table</h2>
-          <details class="help-wrap">
-            <summary class="help-tip" aria-label="Bug trends table explainer">i</summary>
+            <summary class="help-tip" aria-label="Bug trends explainer">i</summary>
             <div class="help-popover" role="tooltip">
               <p>
-                <strong>Current bug backlog summary</strong> shows the latest open-bug total,
-                highest/high pressure, and recent backlog change for each tracked team.
+                <strong>Bug trends</strong> combines the sprint trend graph with the current
+                backlog pressure table in one shared panel.
               </p>
               <ul>
-                <li>Percentages are calculated within each team row.</li>
-                <li>Change stacks 30d, 90d, and 6m movement in one place.</li>
-                <li>Use it as the main bug-pressure summary across teams.</li>
+                <li>Use the toggle to switch between Graph and Table.</li>
+                <li>Graph tracks open backlog over time by team.</li>
+                <li>Table summarizes the latest total, pressure mix, and recent change by team.</li>
+                <li>Dashed BC lines in the graph show long-standing backlog overlays.</li>
               </ul>
             </div>
           </details>
         </div>
-        <div class="chart">
-          <div id="bug-composition-chart" class="chart-canvas composition-table-wrap"></div>
+        <div class="radio-control-groups" aria-label="Bug trends view">
+          <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
+            <legend>View</legend>
+            <label
+              ><input type="radio" name="bug-trends-view" value="graph" checked />
+              <span>Graph</span></label
+            >
+            <label
+              ><input type="radio" name="bug-trends-view" value="table" />
+              <span>Table</span></label
+            >
+          </fieldset>
         </div>
-        <p id="composition-context" class="panel-summary panel-summary--meta" hidden></p>
-        <p id="composition-status" class="panel-status" aria-live="polite" role="status" hidden></p>
+        <div class="chart">
+          <div id="bug-trends-chart" class="chart-canvas chart-canvas--standard"></div>
+        </div>
+        <p id="bug-trends-context" class="panel-summary panel-summary--meta" hidden></p>
+        <p id="bug-trends-status" class="panel-status" aria-live="polite" role="status" hidden></p>
       </section>
 
       <section

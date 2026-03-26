@@ -1168,7 +1168,7 @@
       1,
       ...chartRows.map((row) => toNumber(row?.[primarySeries.key || primarySeries.dataKey]))
     );
-    const teamLabel = normalizeDisplayTeamName(primarySeries.team || primarySeries.name || "All teams avg");
+    const teamLabel = normalizeDisplayTeamName(primarySeries.team || primarySeries.name || "All teams");
     const rowsMarkup = chartRows
       .map((row) => {
         const value = toNumber(row?.[primarySeries.key || primarySeries.dataKey]);
