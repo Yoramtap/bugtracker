@@ -1007,6 +1007,12 @@
     `;
   }
 
+  function formatDoneTotalSampleMarkup(doneCount, totalCount) {
+    const done = toCount(doneCount);
+    const total = toCount(totalCount);
+    return `${done}/${total} done`;
+  }
+
   function FacilityUatListCard({ rows, groupingLabel, jiraBrowseBase }) {
     const displayRows = (Array.isArray(rows) ? rows : []).map((row) => ({
       ...row,
@@ -1279,11 +1285,11 @@
 
   function renderProductCycleComparisonCard(containerId, rows, scopeLabel) {
     if (!Array.isArray(rows) || rows.length === 0) return;
-    const compactViewport = isCompactViewport();
     const maxCycleDays = 5 * 30.4375;
     const rowsMarkup = rows
       .map((row) => {
         const cycleSample = toCount(row?.meta_cycle?.n);
+        const shippedCount = toCount(row?.cycleDoneCount);
         const teamColor = getPrCycleTeamColor(row?.team);
         const cycleWidth = cycleSample > 0 ? getCycleFillWidth(row?.cycle, maxCycleDays) : 0;
         const cycleAlertLevel = toNumber(row?.cycle) / 30.4375 >= 2 ? "critical" : "";
@@ -1291,7 +1297,7 @@
           rowClassName: "product-cycle-compare-row",
           stage: "cycle",
           label: normalizeDisplayTeamName(row?.team || ""),
-          sampleMarkup: cycleSample > 0 ? `n=${cycleSample}` : "n=0",
+          sampleMarkup: formatDoneTotalSampleMarkup(shippedCount, cycleSample),
           width: cycleWidth,
           fillStyle: `background:${escapeHtml(teamColor)};`,
           valueMarkup: formatStackedCycleMonthsValueMarkup(row?.cycle),
@@ -1306,7 +1312,7 @@
         <div class="pr-cycle-stage-card__team">All teams</div>
         <div class="pr-cycle-stage-card__submeta">${
           scopeLabel ? `${escapeHtml(scopeLabel)} • ` : ""
-        }${compactViewport ? "Target: 1 mo" : "Target: 1 month"}</div>
+        }${isCompactViewport() ? "Target: 1 mo" : "Target: 1 month"}</div>
       `,
       rowsMarkup
     });
