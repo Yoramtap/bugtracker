@@ -240,15 +240,17 @@ function renderSectionFilteredPanels() {
 
 function renderSectionFilterIcon(value) {
   const icons = {
-    community: "./assets/icons/community-2190176.png",
-    shipped: "./assets/icons/done-1397588.png",
+    community: "./assets/icons/share-3735079.png",
+    shipped: "./assets/icons/bookmark-3735089.png",
     product: "./assets/icons/chart-3735080.png",
     development: "./assets/icons/chart-3735080.png",
-    bug: "./assets/icons/bug-8291257.png"
+    bug: "./assets/icons/search-3735055.png"
   };
   const src = icons[String(value || "").trim()];
-  if (!src) return "";
-  return `<span class="report-intro__icon" aria-hidden="true"><img class="report-intro__icon-image" src="${escapeHtml(src)}" alt="" /></span>`;
+  if (!src) {
+    return '<span class="report-intro__icon report-intro__icon--empty" aria-hidden="true"></span>';
+  }
+  return `<span class="report-intro__icon" aria-hidden="true"><img class="report-intro__icon-image" src="${escapeHtml(src)}" alt="" width="16" height="16" /></span>`;
 }
 
 function renderSectionFilterRadios(name = "report-section", selectedValue = state.sectionFilter) {
