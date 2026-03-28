@@ -19,7 +19,7 @@
     "./vendor/react.production.min.js",
     "./vendor/react-dom.production.min.js",
     "./dashboard-chart-core.js",
-    "./dashboard-app.js?v=local20"
+    "./dashboard-app.js?v=local21"
   ];
   const SHIPPED_CHART_SCRIPT_SOURCE = "./dashboard-charts-shipped.js?v=local1";
   const PRODUCT_CHART_SCRIPT_SOURCE = "./dashboard-charts-product.js?v=local10";

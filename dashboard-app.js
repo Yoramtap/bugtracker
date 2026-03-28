@@ -1986,7 +1986,7 @@ function renderPrCycleExperimentCard(containerId, team, snapshot) {
         return buildRowMarkup({
           stage: String(row?.key || ""),
           label: normalizeDisplayTeamName(row?.label || ""),
-          sampleMarkup: sampleCount > 0 ? `n=${sampleCount}` : "n=0",
+          sampleMarkup: sampleCount > 0 ? `n = ${sampleCount}` : "n = 0",
           width,
           wrapValueFrame: false,
           valueMarkup: formatWorkflowBreakdownValueMarkup(row?.totalCycleDays, row?.avgPrInflow),
@@ -2030,7 +2030,7 @@ function renderPrCycleExperimentCard(containerId, team, snapshot) {
       return buildRowMarkup({
         stage: String(stage?.key || ""),
         label: getPrCycleStageDisplayLabel(stage),
-        sampleMarkup: sampleCount > 0 ? `n=${sampleCount}` : "n=0",
+        sampleMarkup: sampleCount > 0 ? `n = ${sampleCount}` : "n = 0",
         width,
         valueMarkup: formatStackedCycleDaysValueMarkup(stage?.days)
       });
