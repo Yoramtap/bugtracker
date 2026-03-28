@@ -1,6 +1,13 @@
 "use strict";
 
 (function initDashboardBootstrap() {
+  if (typeof window.getSharedPrActivityHiddenKeys !== "function") {
+    window.getSharedPrActivityHiddenKeys = () => new Set();
+  }
+  if (typeof window.setSharedPrActivityHiddenKeys !== "function") {
+    window.setSharedPrActivityHiddenKeys = () => {};
+  }
+
   const DEFAULT_SECTION = "community";
   const SECTION_FILTER_ITEMS = [
     { value: "community", label: "Community", icon: "./assets/icons/share-3735079.png" },
@@ -15,24 +22,23 @@
     "community-contributors-panel"
   ]);
   const BASE_HEAVY_SCRIPT_SOURCES = [
-    "./dashboard-view-utils.js",
+    "./dashboard-view-utils.js?v=local2",
     "./vendor/react.production.min.js",
     "./vendor/react-dom.production.min.js",
     "./dashboard-chart-core.js",
-    "./dashboard-app.js?v=local21"
+    "./dashboard-pretext-layout.js?v=local8"
   ];
-  const SHIPPED_CHART_SCRIPT_SOURCE = "./dashboard-charts-shipped.js?v=local1";
+  const DASHBOARD_APP_SCRIPT_SOURCE = "./dashboard-app.js?v=local47";
+  const SHIPPED_CHART_SCRIPT_SOURCE = "./dashboard-charts-shipped.js?v=local2";
   const PRODUCT_CHART_SCRIPT_SOURCE = "./dashboard-charts-product.js?v=local10";
-  const FULL_HEAVY_PANEL_SHELL_SRC = "./dashboard-heavy-panels.html?v=local5";
+  const FULL_HEAVY_PANEL_SHELL_SRC = "./dashboard-heavy-panels.html?v=local17";
   const SECTION_HEAVY_PANEL_SOURCES = Object.freeze({
-    shipped: "./dashboard-heavy-panels-shipped.html?v=local4",
-    product: "./dashboard-heavy-panels-product.html?v=local4",
-    development: "./dashboard-heavy-panels-development.html?v=local5",
-    bug: "./dashboard-heavy-panels-bug.html?v=local4"
+    shipped: "./dashboard-heavy-panels-shipped.html?v=local8",
+    product: "./dashboard-heavy-panels-product.html?v=local9",
+    development: "./dashboard-heavy-panels-development.html?v=local14",
+    bug: "./dashboard-heavy-panels-bug.html?v=local10"
   });
-  const ALL_SECTION_HEAVY_PANEL_SOURCES = Object.freeze(
-    Object.values(SECTION_HEAVY_PANEL_SOURCES)
-  );
+  const ALL_SECTION_HEAVY_PANEL_SOURCES = Object.freeze(Object.values(SECTION_HEAVY_PANEL_SOURCES));
   const LOCAL_AGENTATION_LOADER_SRC = "./agentation-local-loader.js?v=local2";
   const dashboardRuntimeContract =
     window.DashboardRuntimeContract ||
@@ -118,10 +124,19 @@
       ) {
         return "management-facility";
       }
-      if (chart === "pr" || chart === "prs" || chart === "pr-activity") {
-        return "pr-cycle-experiment";
+      if (chart === "pr" || chart === "prs") {
+        return "workflow-breakdown";
       }
-      if (chart === "pr-cycle" || chart === "pr-cycle-experiment") return "pr-cycle-experiment";
+      if (chart === "pr-activity" || chart === "pr-activity-legacy") {
+        return "pr-activity-legacy";
+      }
+      if (
+        chart === "pr-cycle" ||
+        chart === "pr-cycle-experiment" ||
+        chart === "workflow-breakdown"
+      ) {
+        return "workflow-breakdown";
+      }
       if (chart === "contributors") return "contributors";
       if (chart === "product-cycle" || chart === "cycle-time") return "product-cycle";
       if (chart === "lifecycle-days") return "lifecycle-days";
@@ -166,7 +181,9 @@
   }
 
   function getSectionFilterFromUrl() {
-    return normalizeSectionFilter(new URLSearchParams(window.location.search).get("report-section"));
+    return normalizeSectionFilter(
+      new URLSearchParams(window.location.search).get("report-section")
+    );
   }
 
   function getRequiredSourceKeys(mode, availableSourceKeys = [], sectionKey = DEFAULT_SECTION) {
@@ -186,7 +203,8 @@
     }
     if (mode === "contributors") return ["contributors"];
     if (mode === "management-facility") return ["managementFacility"];
-    if (mode === "pr-cycle-experiment") return ["prCycle"];
+    if (mode === "pr-activity-legacy") return ["prActivity"];
+    if (mode === "workflow-breakdown" || mode === "pr-cycle-experiment") return ["prCycle"];
     if (mode === "product-cycle" || mode === "lifecycle-days") return ["productCycle"];
     return ["snapshot"];
   }
@@ -207,7 +225,11 @@
     mode = getModeFromUrl(window.location.search),
     sectionKey = bootstrapState.sectionFilter
   ) {
-    switch (String(mode || "").trim().toLowerCase()) {
+    switch (
+      String(mode || "")
+        .trim()
+        .toLowerCase()
+    ) {
       case "trend":
       case "composition":
       case "management-facility":
@@ -227,7 +249,8 @@
   ) {
     return [
       ...BASE_HEAVY_SCRIPT_SOURCES,
-      ...getOptionalChartScriptSources(mode, sectionKey)
+      ...getOptionalChartScriptSources(mode, sectionKey),
+      DASHBOARD_APP_SCRIPT_SOURCE
     ];
   }
 
@@ -238,7 +261,11 @@
   }
 
   function getModeHeavyPanelSources(mode) {
-    switch (String(mode || "").trim().toLowerCase()) {
+    switch (
+      String(mode || "")
+        .trim()
+        .toLowerCase()
+    ) {
       case "contributors":
         return [];
       case "trend":
@@ -249,7 +276,9 @@
       case "lifecycle-days":
         return [SECTION_HEAVY_PANEL_SOURCES.product];
       case "pr-activity":
+      case "pr-activity-legacy":
       case "pr-cycle-experiment":
+      case "workflow-breakdown":
         return [SECTION_HEAVY_PANEL_SOURCES.development];
       default:
         return [FULL_HEAVY_PANEL_SHELL_SRC];
@@ -333,17 +362,37 @@
     if (!listNode || !contextNode || !statusNode) return;
 
     listNode.innerHTML = `
-      <div class="report-intro">
-        <fieldset class="report-intro__grid" aria-label="Report section filter">
-          <legend class="sr-only">Report section filter</legend>
-          ${renderSectionFilterMarkup(bootstrapState.sectionFilter)}
-        </fieldset>
+      <div class="dashboard-overview">
+        <div class="dashboard-overview__top">
+          <div class="dashboard-overview__main">
+            <p class="dashboard-overview__eyebrow">Local operations report</p>
+            <h2 class="dashboard-overview__title">Backlog Trends</h2>
+            <p class="dashboard-overview__summary">
+              Follow the queue from community demand to shipped work, product flow, development
+              bottlenecks, and bug pressure in one place.
+            </p>
+          </div>
+          <div class="dashboard-overview__aside">
+            <span class="dashboard-overview__aside-label">How to read this</span>
+            <strong>Pick a lane, then scan the live context line beneath each section title.</strong>
+            <span>Each panel is framed to answer one operational question before you drill into the chart.</span>
+          </div>
+        </div>
+        <div class="report-intro">
+          <fieldset class="report-intro__grid" aria-label="Report section filter">
+            <legend class="sr-only">Report section filter</legend>
+            ${renderSectionFilterMarkup(bootstrapState.sectionFilter)}
+          </fieldset>
+        </div>
       </div>
     `;
     syncControlValue("report-section", bootstrapState.sectionFilter);
     setPanelContext(
       contextNode,
-      formatContextWithFreshness("", bootstrapState.contributorsSnapshot?.updatedAt || "")
+      formatContextWithFreshness(
+        "Oldest panel data",
+        bootstrapState.contributorsSnapshot?.updatedAt || ""
+      )
     );
     statusNode.hidden = true;
   }
@@ -366,7 +415,10 @@
       if (control.dataset.bound === "1") return;
       control.dataset.bound = "1";
       control.addEventListener("change", () => {
-        const nextSection = String(control.value || "").trim().toLowerCase() || DEFAULT_SECTION;
+        const nextSection =
+          String(control.value || "")
+            .trim()
+            .toLowerCase() || DEFAULT_SECTION;
         bootstrapState.sectionFilter = nextSection;
         syncControlValue("report-section", nextSection);
         updateUrlSection(nextSection);
@@ -471,7 +523,10 @@
       : [];
     const contextNode = document.getElementById("contributors-context");
     if (rows.length === 0) {
-      setStatusMessage("contributors-status", "No contributor chart data found in contributors-snapshot.json.");
+      setStatusMessage(
+        "contributors-status",
+        "No contributor chart data found in contributors-snapshot.json."
+      );
       const chart = document.getElementById("top-contributors-chart");
       if (chart) chart.innerHTML = "";
       if (contextNode) contextNode.hidden = true;
@@ -491,7 +546,8 @@
   }
 
   async function loadContributorsSnapshot() {
-    const cache = window.__dashboardDataSourcePromiseCache || (window.__dashboardDataSourcePromiseCache = {});
+    const cache =
+      window.__dashboardDataSourcePromiseCache || (window.__dashboardDataSourcePromiseCache = {});
     const cachedPromise = cache.contributors;
     if (cachedPromise && typeof cachedPromise.then === "function") {
       return cachedPromise;
@@ -570,20 +626,18 @@
     mode = getModeFromUrl(window.location.search),
     sectionKey = bootstrapState.sectionFilter
   ) {
-    const pending =
-      (bootstrapState.heavyShellPromise || Promise.resolve()).then(async () => {
-        const mountNode = document.getElementById("dashboard-heavy-panels");
-        if (!mountNode) return;
-        const sourceUrls = resolveHeavyPanelSources(mode, sectionKey);
-        for (const src of sourceUrls) {
-          if (bootstrapState.loadedHeavyPanelSources.has(src)) continue;
-          mountNode.insertAdjacentHTML("beforebegin", await loadPanelShellFragment(src));
-          markHeavyPanelSourceLoaded(src);
-        }
-        mountNode.dataset.loaded =
-          bootstrapState.loadedHeavyPanelSources.size > 0 ? "true" : "";
-        mountNode.hidden = bootstrapState.loadedHeavyPanelSources.size > 0;
-      });
+    const pending = (bootstrapState.heavyShellPromise || Promise.resolve()).then(async () => {
+      const mountNode = document.getElementById("dashboard-heavy-panels");
+      if (!mountNode) return;
+      const sourceUrls = resolveHeavyPanelSources(mode, sectionKey);
+      for (const src of sourceUrls) {
+        if (bootstrapState.loadedHeavyPanelSources.has(src)) continue;
+        mountNode.insertAdjacentHTML("beforebegin", await loadPanelShellFragment(src));
+        markHeavyPanelSourceLoaded(src);
+      }
+      mountNode.dataset.loaded = bootstrapState.loadedHeavyPanelSources.size > 0 ? "true" : "";
+      mountNode.hidden = bootstrapState.loadedHeavyPanelSources.size > 0;
+    });
     bootstrapState.heavyShellPromise = pending.catch((error) => {
       bootstrapState.heavyShellPromise = null;
       throw error;
@@ -595,7 +649,10 @@
     mode = getModeFromUrl(window.location.search),
     sectionKey = bootstrapState.sectionFilter
   ) {
-    return Promise.all(getHeavyScriptSources(mode, sectionKey).map((src) => loadScript(src)));
+    return getHeavyScriptSources(mode, sectionKey).reduce(
+      (promise, src) => promise.then(() => loadScript(src)),
+      Promise.resolve()
+    );
   }
 
   async function loadHeavyDashboard(
@@ -603,22 +660,26 @@
     sectionKey = bootstrapState.sectionFilter
   ) {
     const previousPending = bootstrapState.heavyStackPromise || Promise.resolve();
-    bootstrapState.heavyStackPromise = previousPending.then(async () => {
-      await ensureHeavyPanelShell(mode, sectionKey);
-      await ensureHeavyScripts(mode, sectionKey);
-    }).catch((error) => {
-      bootstrapState.heavyStackPromise = null;
-      setStatusMessage(
-        "actions-required-status",
-        `Failed to load full dashboard: ${error instanceof Error ? error.message : String(error)}`
-      );
-      throw error;
-    });
+    bootstrapState.heavyStackPromise = previousPending
+      .then(async () => {
+        await ensureHeavyPanelShell(mode, sectionKey);
+        await ensureHeavyScripts(mode, sectionKey);
+      })
+      .catch((error) => {
+        bootstrapState.heavyStackPromise = null;
+        setStatusMessage(
+          "actions-required-status",
+          `Failed to load full dashboard: ${error instanceof Error ? error.message : String(error)}`
+        );
+        throw error;
+      });
     return bootstrapState.heavyStackPromise;
   }
 
   function scheduleLocalAgentationSupport() {
-    const host = String(window.location.hostname || "").trim().toLowerCase();
+    const host = String(window.location.hostname || "")
+      .trim()
+      .toLowerCase();
     if (host !== "localhost" && host !== "127.0.0.1" && host !== "::1") return;
 
     const loadSupport = () => {

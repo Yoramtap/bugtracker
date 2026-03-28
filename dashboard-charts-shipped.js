@@ -231,7 +231,8 @@
                 )}</h3>
               </div>
               <div class="shipped-timeline__detail-callout">
-                <strong>${toCount(selectedMonth?.totalShipped)} shipped</strong> this month
+                <strong>${toCount(selectedMonth?.totalShipped)} shipped</strong>
+                <span>This month</span>
               </div>
             </div>
             <div class="shipped-team-list" aria-label="Teams with shipped ideas">

@@ -9,9 +9,9 @@
       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
     />
     <title>Backlog Trends</title>
-    <link rel="stylesheet" href="./dashboard-styles.css?v=local14" />
-    <link rel="stylesheet" href="./dashboard-fonts.css?v=local1" />
-    <script defer src="./dashboard-bootstrap.js?v=local25"></script>
+    <link rel="stylesheet" href="./dashboard-styles.css?v=local42" />
+    <link rel="stylesheet" href="./dashboard-fonts.css?v=local2" />
+    <script defer src="./dashboard-bootstrap.js?v=local55"></script>
   </head>
   <body>
     <a class="skip-link" href="#dashboard-main">Skip to main content</a>
@@ -20,7 +20,7 @@
 
       <section
         id="actions-required-panel"
-        class="panel actions-required-panel"
+        class="panel panel--width-wide actions-required-panel"
         aria-label="Report navigation"
       >
         <div id="actions-required-list" class="actions-required-grid"></div>
@@ -38,11 +38,14 @@
 
       <section
         id="community-contributors-panel"
-        class="panel"
+        class="panel panel--editorial panel--width-compact"
         aria-label="Top community contributors by ticket status"
       >
         <div class="panel-title-row">
-          <h2>Top community contributors</h2>
+          <div class="panel-title-copy">
+            <p class="panel-kicker">Community</p>
+            <h2>Top community contributors</h2>
+          </div>
           <details class="help-wrap">
             <summary class="help-tip" aria-label="Top community contributors chart explainer">
               i
@@ -61,10 +64,10 @@
             </div>
           </details>
         </div>
+        <p id="contributors-context" class="panel-summary panel-summary--meta" hidden></p>
         <div class="chart">
           <div id="top-contributors-chart" class="chart-canvas chart-canvas--dense"></div>
         </div>
-        <p id="contributors-context" class="panel-summary panel-summary--meta" hidden></p>
         <p
           id="contributors-status"
           class="panel-status"
@@ -73,14 +76,13 @@
           hidden
         ></p>
       </section>
-
     </main>
     <footer class="noun-project-attribution">
       Section icons:
       <a href="https://thenounproject.com/icon/share-3735079/">Share icon by BlackActurus</a>,
       <a href="https://thenounproject.com/icon/bookmark-3735089/">Bookmark icon by BlackActurus</a>,
-      <a href="https://thenounproject.com/icon/chart-3735080/">Chart icon by BlackActurus</a>,
-      and <a href="https://thenounproject.com/icon/search-3735055/">Search icon by BlackActurus</a>
+      <a href="https://thenounproject.com/icon/chart-3735080/">Chart icon by BlackActurus</a>, and
+      <a href="https://thenounproject.com/icon/search-3735055/">Search icon by BlackActurus</a>
       from The Noun Project.
     </footer>
   </body>

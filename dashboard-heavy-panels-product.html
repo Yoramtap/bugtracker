@@ -1,11 +1,14 @@
 <section
   id="uat-acceptance-time-panel"
-  class="panel panel--frame-fill"
+  class="panel panel--frame-fill panel--editorial panel--width-compact"
   aria-label="Product acceptance time by business unit"
   hidden
 >
   <div class="panel-title-row">
-    <h2 id="management-facility-title">Product acceptance time by business unit</h2>
+    <div class="panel-title-copy">
+      <p class="panel-kicker">Product</p>
+      <h2 id="management-facility-title">User acceptance time by business unit</h2>
+    </div>
     <details class="help-wrap">
       <summary class="help-tip" aria-label="Product acceptance time by business unit explainer">
         i
@@ -27,6 +30,7 @@
       </div>
     </details>
   </div>
+  <p id="management-facility-context" class="panel-summary panel-summary--meta" hidden></p>
   <div class="radio-control-groups" aria-label="Development vs UAT controls">
     <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
       <legend>Scope</legend>
@@ -46,7 +50,6 @@
       class="chart-canvas chart-canvas--standard"
     ></div>
   </div>
-  <p id="management-facility-context" class="panel-summary panel-summary--meta" hidden></p>
   <p
     id="management-facility-status"
     class="panel-status"
@@ -58,12 +61,15 @@
 
 <section
   id="cycle-time-to-ship-panel"
-  class="panel panel--frame-fill"
+  class="panel panel--frame-fill panel--editorial panel--width-standard"
   aria-label="Product delivery and workflow"
   hidden
 >
   <div class="panel-title-row">
-    <h2 id="product-cycle-title">Product delivery and workflow</h2>
+    <div class="panel-title-copy">
+      <p class="panel-kicker">Product</p>
+      <h2 id="product-cycle-title">Product delivery and workflow</h2>
+    </div>
     <details class="help-wrap">
       <summary class="help-tip" aria-label="Product delivery and workflow explainer">i</summary>
       <div class="help-popover" role="tooltip">
@@ -83,6 +89,7 @@
       </div>
     </details>
   </div>
+  <p id="product-cycle-context" class="panel-summary panel-summary--meta" hidden></p>
   <div class="radio-control-groups" aria-label="Product delivery and workflow view">
     <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
       <legend>View</legend>
@@ -108,7 +115,6 @@
       class="chart-canvas chart-canvas--dense"
     ></div>
   </div>
-  <p id="product-cycle-context" class="panel-summary panel-summary--meta" hidden></p>
   <p
     id="product-cycle-status"
     class="panel-status"

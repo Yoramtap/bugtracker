@@ -1,11 +1,14 @@
 <section
   id="development-workflow-breakdown-panel"
-  class="panel"
+  class="panel panel--editorial panel--width-standard"
   aria-label="Development workflow breakdown"
   hidden
 >
   <div class="panel-title-row">
-    <h2>Development workflow breakdown</h2>
+    <div class="panel-title-copy">
+      <p class="panel-kicker">Development</p>
+      <h2>Development workflow breakdown</h2>
+    </div>
     <details class="help-wrap">
       <summary class="help-tip" aria-label="Development workflow breakdown explainer">i</summary>
       <div class="help-popover" role="tooltip">
@@ -27,6 +30,7 @@
       </div>
     </details>
   </div>
+  <p id="workflow-breakdown-context" class="panel-summary panel-summary--meta" hidden></p>
   <div class="radio-control-groups" aria-label="Workflow breakdown time range">
     <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
       <legend>Time range</legend>
@@ -80,13 +84,12 @@
   </div>
   <div class="chart">
     <div
-      id="pr-cycle-experiment-card"
-      class="chart-canvas chart-canvas--dense pr-cycle-experiment-canvas"
+      id="workflow-breakdown-card"
+      class="chart-canvas chart-canvas--dense workflow-breakdown-canvas"
     ></div>
   </div>
-  <p id="pr-cycle-experiment-context" class="panel-summary panel-summary--meta" hidden></p>
   <p
-    id="pr-cycle-experiment-status"
+    id="workflow-breakdown-status"
     class="panel-status"
     aria-live="polite"
     role="status"
@@ -96,12 +99,15 @@
 
 <section
   id="development-workflow-trends-panel"
-  class="panel"
+  class="panel panel--editorial panel--width-wide"
   aria-label="Development workflow trends"
   hidden
 >
   <div class="panel-title-row">
-    <h2>Development workflow trends</h2>
+    <div class="panel-title-copy">
+      <p class="panel-kicker">Development</p>
+      <h2>Development workflow trends</h2>
+    </div>
     <details class="help-wrap">
       <summary class="help-tip" aria-label="Development workflow trends explainer">i</summary>
       <div class="help-popover" role="tooltip">
@@ -111,29 +117,31 @@
         </p>
         <ul>
           <li>Each line is one team.</li>
-          <li>The first chart toggles between PR inflow and merged PR counts.</li>
+          <li>The first chart toggles between PRs opened and PRs merged.</li>
           <li>The second chart shows the old review-to-merge Jira proxy metric.</li>
           <li>Vertical event lines mark NAB, IBC, and Codex.</li>
         </ul>
       </div>
     </details>
   </div>
+  <p id="pr-activity-legacy-context" class="panel-summary panel-summary--meta" hidden></p>
   <div class="radio-control-groups" aria-label="PR activity over time controls">
     <fieldset class="radio-group-card radio-group-card--segmented">
       <legend>Metric</legend>
       <label
         ><input type="radio" name="pr-activity-legacy-metric" value="offered" checked />
-        <span>PR inflow</span></label
+        <span>PRs opened</span></label
       >
       <label
         ><input type="radio" name="pr-activity-legacy-metric" value="merged" />
-        <span>Merged PRs</span></label
+        <span>PRs merged</span></label
       >
     </fieldset>
   </div>
+  <div id="pr-activity-legacy-summary" class="dashboard-chart-summary-slot" hidden></div>
   <div class="chart-stack">
     <div class="chart-block">
-      <p class="chart-section-title">PR inflow / merged PRs</p>
+      <p class="chart-section-title">PRs opened / PRs merged</p>
       <div class="chart">
         <div id="pr-activity-legacy-count-chart" class="chart-canvas chart-canvas--standard"></div>
       </div>
@@ -148,7 +156,6 @@
       </div>
     </div>
   </div>
-  <p id="pr-activity-legacy-context" class="panel-summary panel-summary--meta" hidden></p>
   <p
     id="pr-activity-legacy-status"
     class="panel-status"

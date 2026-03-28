@@ -116,6 +116,10 @@
     return Array.from(globalObject.document.querySelectorAll(`input[name="${name}"]`));
   }
 
+  function isVisibleDashboardControl(control) {
+    return Boolean(control && control.isConnected && !control.closest("[hidden]"));
+  }
+
   function syncControlSelectionClasses(name, controlType = "radio") {
     const controls = getDashboardControlElements(name, controlType);
     controls.forEach((control) => {
@@ -129,12 +133,20 @@
     const controls = getDashboardControlElements(name, controlType);
     if (controls.length === 0) return;
     if (controlType === "checkbox") {
-      controls[0].checked = Boolean(value);
+      const target = controls.find(isVisibleDashboardControl) || controls[0];
+      controls.forEach((control) => {
+        control.checked = false;
+      });
+      target.checked = Boolean(value);
       syncControlSelectionClasses(name, controlType);
       return;
     }
+    const visibleControls = controls.filter(isVisibleDashboardControl);
+    const activeControls = visibleControls.length > 0 ? visibleControls : controls;
+    const target =
+      activeControls.find((control) => String(control.value || "") === String(value || "")) || null;
     controls.forEach((control) => {
-      control.checked = control.value === value;
+      control.checked = Boolean(target) && control === target;
     });
     syncControlSelectionClasses(name, controlType);
   }

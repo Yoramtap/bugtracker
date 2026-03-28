@@ -1,6 +1,14 @@
-<section id="bug-trends-panel" class="panel" aria-label="Bug trends" hidden>
+<section
+  id="bug-trends-panel"
+  class="panel panel--editorial panel--width-wide"
+  aria-label="Bug trends"
+  hidden
+>
   <div class="panel-title-row">
-    <h2>Bug trends</h2>
+    <div class="panel-title-copy">
+      <p class="panel-kicker">Quality</p>
+      <h2>Bug trends</h2>
+    </div>
     <details class="help-wrap">
       <summary class="help-tip" aria-label="Bug trends explainer">i</summary>
       <div class="help-popover" role="tooltip">
@@ -18,6 +26,7 @@
       </div>
     </details>
   </div>
+  <p id="bug-trends-context" class="panel-summary panel-summary--meta" hidden></p>
   <div class="radio-control-groups" aria-label="Bug trends view">
     <fieldset class="radio-group-card radio-group-card--primary radio-group-card--segmented">
       <legend>View</legend>
@@ -31,9 +40,10 @@
       >
     </fieldset>
   </div>
+  <div id="bug-trends-summary" class="dashboard-chart-summary-slot" hidden></div>
   <div class="chart">
     <div id="bug-trends-chart" class="chart-canvas chart-canvas--standard"></div>
+    <div id="bug-trends-table" class="chart-canvas chart-canvas--dense" hidden></div>
   </div>
-  <p id="bug-trends-context" class="panel-summary panel-summary--meta" hidden></p>
   <p id="bug-trends-status" class="panel-status" aria-live="polite" role="status" hidden></p>
 </section>

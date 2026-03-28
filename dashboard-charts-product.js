@@ -1107,7 +1107,7 @@
       teamColor: colors?.teams?.all || "#9aa8ba",
       headerMarkup: `
         <div class="pr-cycle-stage-card__team">${escapeHtml(teamLabel)}</div>
-        <div class="pr-cycle-stage-card__submeta">${compactViewport ? "Target: 1 mo" : "Target: 1 month"}</div>
+        <div class="pr-cycle-stage-card__submeta">Target: 1 month</div>
       `,
       rowsMarkup
     });
@@ -1214,7 +1214,7 @@
         <div class="pr-cycle-stage-card__team">All teams</div>
         <div class="pr-cycle-stage-card__submeta">${
           scopeLabel ? `${escapeHtml(scopeLabel)} • ` : ""
-        }${isCompactViewport() ? "Target: 1 mo" : "Target: 1 month"}</div>
+        }Target: 1 month</div>
       `,
       rowsMarkup
     });
