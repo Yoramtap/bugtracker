@@ -1153,7 +1153,7 @@
         buildRowMarkup({
           rowClassName: "product-cycle-team-card__row",
           stage: "cycle",
-          label: compactViewport ? "Cycle" : "Cycle time",
+          label: compactViewport ? "Delivery" : "Delivery time",
           sampleMarkup: cycleSample > 0 ? `n=${cycleSample}` : "n=0",
           width: cycleWidth,
           valueMarkup: formatStackedCycleMonthsValueMarkup(row?.cycle)

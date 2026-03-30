@@ -1957,11 +1957,11 @@
           : formatContextWithFreshness(
               selectedTeamKey === "all"
                 ? fetchedCount > 0
-                  ? `${cycleSampleCount} ideas with cycle data from ${fetchedCount} fetched ideas`
-                  : `${cycleSampleCount} ideas with cycle data`
+                  ? `${cycleSampleCount} ideas with delivery data from ${fetchedCount} fetched ideas`
+                  : `${cycleSampleCount} ideas with delivery data`
                 : fetchedCount > 0
-                  ? `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${selectedSampleCount} ideas with cycle data from ${fetchedCount} fetched ideas`
-                  : `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${selectedSampleCount} ideas with cycle data`,
+                  ? `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${selectedSampleCount} ideas with delivery data from ${fetchedCount} fetched ideas`
+                  : `${normalizeDisplayTeamName(selectedRow?.team || "")} • ${selectedSampleCount} ideas with delivery data`,
               getSnapshotContextTimestamp(state),
               "generated"
             ),
@@ -2987,7 +2987,7 @@
       teamColor: getPrCycleTeamColor(ALL_TEAM_SCOPE_KEY),
       accentColor: "var(--product-cycle-cycle)",
       stats: [
-        { label: "Avg cycle", value: formatCycleMonthsText(weightedCycleDays, { short: true }) },
+        { label: "Avg delivery", value: formatCycleMonthsText(weightedCycleDays, { short: true }) },
         {
           label: "Fastest team",
           value: normalizeDisplayTeamName(fastestRow?.team || "") || "N/A"
@@ -2996,7 +2996,7 @@
         { label: "Sample", value: `${toCount(cycleSampleCount)} ideas` }
       ],
       columnStartLabel: "Team",
-      columnEndLabel: "Avg cycle",
+      columnEndLabel: "Avg delivery",
       footerBits: [
         String(scopeLabel || PRODUCT_CYCLE_SCOPE_LABEL).trim(),
         fetchedCount > 0 ? `${toCount(fetchedCount)} fetched ideas` : ""
@@ -3040,7 +3040,7 @@
       teamColor,
       accentColor: teamColor,
       stats: [
-        { label: "Cycle time", value: formatCycleMonthsText(row?.cycle, { short: true }) },
+        { label: "Delivery time", value: formatCycleMonthsText(row?.cycle, { short: true }) },
         { label: "Sample", value: `${cycleSample} ideas` },
         { label: "Shipped", value: `${shippedCount}` },
         { label: "Ongoing", value: `${ongoingCount}` }
@@ -3050,7 +3050,7 @@
       footerBits: [String(scopeLabel || PRODUCT_CYCLE_SCOPE_LABEL).trim()].filter(Boolean),
       rows: [
         {
-          label: "Cycle time",
+          label: "Delivery time",
           metaBits: [`${cycleSample} ideas`],
           valueText: formatCycleMonthsText(row?.cycle, { short: true }),
           width: getPretextFillWidth(row?.cycle, maxCycleDays),

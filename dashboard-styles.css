@@ -1381,7 +1381,7 @@ main {
 .dashboard-chart-summary-slot {
   justify-self: center;
   width: min(100%, var(--dashboard-panel-max));
-  margin: 2px auto 14px;
+  margin: 0 auto 6px;
 }
 
 .dashboard-chart-summary-slot[hidden] {
@@ -2086,12 +2086,12 @@ main {
 
 .shipped-timeline {
   display: grid;
-  gap: 20px;
+  gap: 10px;
 }
 
 .shipped-timeline__controls {
   display: grid;
-  gap: 10px;
+  gap: 6px;
   justify-items: center;
 }
 
