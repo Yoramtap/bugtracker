@@ -609,6 +609,47 @@
     });
   }
 
+  function getDashboardTopReturnTarget() {
+    return document.getElementById("actions-required-panel") || document.getElementById("dashboard-main");
+  }
+
+  function scrollDashboardToTop() {
+    const target = getDashboardTopReturnTarget();
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function ensurePanelBackToTopControl(panel) {
+    if (
+      !(panel instanceof HTMLElement) ||
+      !panel.id ||
+      panel.id === "actions-required-panel"
+    ) {
+      return;
+    }
+
+    let mount = panel.querySelector(".panel-return");
+    if (!mount) {
+      mount = document.createElement("div");
+      mount.className = "panel-return";
+      mount.innerHTML = `
+        <button type="button" class="panel-return__button" aria-label="Back to top of dashboard">
+          <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 12.5V3.5"></path>
+            <path d="M4.5 7L8 3.5 11.5 7"></path>
+          </svg>
+        </button>
+      `;
+      const button = mount.querySelector(".panel-return__button");
+      button?.addEventListener("click", scrollDashboardToTop);
+      panel.appendChild(mount);
+    }
+  }
+
+  function ensurePanelBackToTopControls() {
+    document.querySelectorAll(".panel").forEach((panel) => ensurePanelBackToTopControl(panel));
+  }
+
   function getConfig(configKey) {
     return CHART_CONFIG[configKey] || null;
   }
@@ -3722,6 +3763,7 @@
     renderActionsRequiredFrame();
     applyDashboardPanelOrder();
     applyModeVisibility();
+    ensurePanelBackToTopControls();
     syncDashboardControlsFromState(CONTROL_BINDINGS, state);
     bindDashboardControlState(CONTROL_BINDINGS, state);
     bindWindowResizeRerender();

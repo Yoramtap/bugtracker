@@ -1093,6 +1093,48 @@ body.embed-mode.single-chart-mode .chart-canvas--dense {
   letter-spacing: 0.01em;
 }
 
+.panel-return {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.panel-return__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(31, 51, 71, 0.34);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.panel-return__button:hover {
+  color: rgba(31, 51, 71, 0.58);
+  transform: translateY(-1px);
+}
+
+.panel-return__button:focus-visible {
+  outline: none;
+  color: rgba(31, 51, 71, 0.68);
+  box-shadow: 0 0 0 3px rgba(72, 114, 167, 0.1);
+}
+
+.panel-return__button svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
 .management-toggle-row {
   display: flex;
   align-items: center;
@@ -1574,6 +1616,13 @@ main {
   background: color-mix(in srgb, var(--team-api) 16%, white);
 }
 
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multi"]:checked),
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multi team"]:checked),
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multi-team"]:checked),
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multiteam"]:checked) {
+  background: color-mix(in srgb, var(--team-multi-team) 16%, white);
+}
+
 .panel-inline-controls .pr-cycle-team-pill:has(input[value="legacy"]:checked),
 .panel-inline-controls .pr-cycle-team-pill:has(input[value="frontend"]:checked) {
   background: color-mix(in srgb, var(--team-legacy) 16%, white);
@@ -1602,6 +1651,13 @@ main {
 
 .panel-inline-controls .pr-cycle-team-pill:has(input[value="api"]:checked) span {
   color: color-mix(in srgb, var(--team-api) 78%, black);
+}
+
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multi"]:checked) span,
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multi team"]:checked) span,
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multi-team"]:checked) span,
+.panel-inline-controls .pr-cycle-team-pill:has(input[value="multiteam"]:checked) span {
+  color: color-mix(in srgb, var(--team-multi-team) 78%, black);
 }
 
 .panel-inline-controls .pr-cycle-team-pill:has(input[value="legacy"]:checked) span,
