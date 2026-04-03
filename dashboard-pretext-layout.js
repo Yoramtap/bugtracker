@@ -31,6 +31,14 @@
   const isWorkflowEnabled = isLayoutEnabled;
 
   function getPretext() {
+    const bundledPretext = window.DashboardPretextModule;
+    if (
+      bundledPretext &&
+      typeof bundledPretext.prepareWithSegments === "function" &&
+      typeof bundledPretext.layoutNextLine === "function"
+    ) {
+      return Promise.resolve(bundledPretext);
+    }
     if (!pretextPromise) {
       pretextPromise = import(PRETEXT_MODULE_URL);
     }

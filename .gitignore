@@ -1,1 +1,14 @@
 .DS_Store
+node_modules/
+.cache/
+dist/
+.env
+.env.*
+!.env.example
+.codex/
+.codex-artifacts/
+snapshot.json.tmp
+snapshot-history/
+snapshots/
+business-unit-uat-done-cache.json
+pr-activity-issue-cache.json

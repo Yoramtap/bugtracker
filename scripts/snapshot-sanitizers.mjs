@@ -235,10 +235,17 @@ export function sanitizeBacklogSnapshot(snapshot) {
         }
       : {}),
     ...(snapshot?.prActivity && typeof snapshot.prActivity === "object"
-      ? {
+        ? {
           prActivity: {
             since: sanitizeText(snapshot?.prActivity?.since),
             interval: sanitizeText(snapshot?.prActivity?.interval),
+            ...(sanitizeText(snapshot?.prActivity?.latestClosedSprintDate)
+              ? {
+                  latestClosedSprintDate: sanitizeText(
+                    snapshot?.prActivity?.latestClosedSprintDate
+                  )
+                }
+              : {}),
             monthlySince: sanitizeText(snapshot?.prActivity?.monthlySince),
             monthlyInterval: sanitizeText(snapshot?.prActivity?.monthlyInterval),
             caveat: sanitizeText(snapshot?.prActivity?.caveat),
@@ -254,6 +261,61 @@ export function sanitizeBacklogSnapshot(snapshot) {
     combinedPoints: Array.isArray(snapshot?.combinedPoints)
       ? snapshot.combinedPoints.map(sanitizeBacklogCombinedPoint)
       : []
+  };
+}
+
+export function sanitizePrActivitySnapshot(snapshot) {
+  return {
+    updatedAt: sanitizeText(snapshot?.updatedAt),
+    ...(snapshot?.prActivity && typeof snapshot.prActivity === "object"
+      ? {
+          prActivity: {
+            since: sanitizeText(snapshot?.prActivity?.since),
+            interval: sanitizeText(snapshot?.prActivity?.interval),
+            ...(sanitizeText(snapshot?.prActivity?.latestClosedSprintDate)
+              ? {
+                  latestClosedSprintDate: sanitizeText(
+                    snapshot?.prActivity?.latestClosedSprintDate
+                  )
+                }
+              : {}),
+            monthlySince: sanitizeText(snapshot?.prActivity?.monthlySince),
+            monthlyInterval: sanitizeText(snapshot?.prActivity?.monthlyInterval),
+            caveat: sanitizeText(snapshot?.prActivity?.caveat),
+            points: Array.isArray(snapshot?.prActivity?.points)
+              ? snapshot.prActivity.points.map(sanitizePrActivityPoint)
+              : [],
+            monthlyPoints: Array.isArray(snapshot?.prActivity?.monthlyPoints)
+              ? snapshot.prActivity.monthlyPoints.map(sanitizePrActivityPoint)
+              : []
+          }
+        }
+      : {})
+  };
+}
+
+export function sanitizeManagementFacilitySnapshot(snapshot) {
+  const managementBusinessUnit = snapshot?.chartData?.managementBusinessUnit;
+  const byScope = managementBusinessUnit?.byScope;
+  const chartData =
+    byScope && typeof byScope === "object"
+      ? {
+          managementBusinessUnit: {
+            scopeLabel: sanitizeText(managementBusinessUnit?.scopeLabel),
+            byScope: {
+              ongoing: sanitizeBusinessUnitScope(byScope.ongoing),
+              done: sanitizeBusinessUnitScope(byScope.done)
+            }
+          }
+        }
+      : undefined;
+
+  return {
+    updatedAt: sanitizeText(snapshot?.updatedAt),
+    ...(sanitizeText(snapshot?.chartDataUpdatedAt)
+      ? { chartDataUpdatedAt: sanitizeText(snapshot?.chartDataUpdatedAt) }
+      : {}),
+    ...(chartData ? { chartData } : {})
   };
 }
 
@@ -357,6 +419,8 @@ export function sanitizeContributorsSnapshot(snapshot) {
 
 export const SNAPSHOT_SANITIZERS = {
   "backlog-snapshot.json": sanitizeBacklogSnapshot,
+  "pr-activity-snapshot.json": sanitizePrActivitySnapshot,
+  "management-facility-snapshot.json": sanitizeManagementFacilitySnapshot,
   "product-cycle-snapshot.json": sanitizeProductCycleSnapshot,
   "product-cycle-shipments-snapshot.json": sanitizeProductCycleShipmentsSnapshot,
   "contributors-snapshot.json": sanitizeContributorsSnapshot,
