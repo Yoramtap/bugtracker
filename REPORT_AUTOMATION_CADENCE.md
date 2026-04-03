@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Run refresh, analysis, commit, and Pages deploy from this single repo.
+Define when the recurring refresh/publish workflow should run from this single repo.
 
 Only the Jira API token stays private.
 
@@ -11,14 +11,11 @@ Only the Jira API token stays private.
 - Trigger moment: Friday at 09:00 local time
 - Recurrence: every week
 
-## End-to-End Flow
+## Workflow Reference
 
-1. Run `npm run refresh:full`
-2. Run `npm run analyze:brief`
-3. Optionally run `npm run build:site` for local validation
-4. Commit and push this repo
-5. Verify the latest Pages deploy succeeded
-6. Verify [the live dashboard](https://yoramtap.github.io/tracker/) returns HTTP 200
+The actual command sequence lives in [RELEASE.md](/Users/yoramtap/Documents/AI/tracker/RELEASE.md).
+
+Automation should mirror that release flow rather than maintain its own separate checklist.
 
 ## Security Rationale
 

@@ -2,6 +2,12 @@
 
 This repo is now the single source of truth for the dashboard, the refresh scripts, and the GitHub Pages deployment.
 
+## Which doc to use
+
+- Use this file for setup, security, and the main commands.
+- Use `RELEASE.md` for manual refresh + live publish steps.
+- Use `REPORT_AUTOMATION_CADENCE.md` for the Friday 09:00 automation schedule.
+
 ## Security
 
 - The repo can be public.
@@ -49,6 +55,8 @@ Useful variants:
 - `npm run refresh:uat-flow`
 - `npm run publish:site -- --refresh yes --message "Refresh dashboard data" --push`
 
+Use `publish:site` only as a convenience helper when the repo is already clean. The canonical release instructions live in `RELEASE.md`.
+
 ## Local Preview
 
 ```bash
@@ -62,14 +70,8 @@ Then open [http://127.0.0.1:4173](http://127.0.0.1:4173).
 
 Read [RELEASE.md](/Users/yoramtap/Documents/AI/tracker/RELEASE.md) before shipping.
 
-The standard flow is:
-
-1. Run `npm run refresh:full`
-2. Run `npm run analyze:brief`
-3. Optionally run `npm run build:site` for local artifact validation
-4. Commit and push this repo
-5. Let GitHub Pages build and deploy from this same repo
-6. Verify [the live dashboard](https://yoramtap.github.io/tracker/)
+- Manual release steps are in [RELEASE.md](/Users/yoramtap/Documents/AI/tracker/RELEASE.md).
+- Weekly timing and automation expectations are in [REPORT_AUTOMATION_CADENCE.md](/Users/yoramtap/Documents/AI/tracker/REPORT_AUTOMATION_CADENCE.md).
 
 ## GitHub Pages
 
@@ -81,4 +83,4 @@ The standard flow is:
 
 - `index.html` in the repo is the source entrypoint.
 - The public Pages artifact is built from source; `dist/` is not committed.
-- Historical snapshots and reports remain in-repo for comparison unless you choose to trim them later.
+- Current published snapshots and analysis reports remain in-repo. Local snapshot-history folders stay ignored unless you intentionally track them.
