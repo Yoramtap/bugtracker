@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-04-25T21:44:50.556Z",
+  "updatedAt": "2026-04-28T09:25:40.221Z",
   "prActivity": {
     "since": "2025-03-31",
     "interval": "sprint",
-    "latestClosedSprintDate": "2026-04-13",
+    "latestClosedSprintDate": "2026-04-27",
     "monthlySince": "2025-04-01",
     "monthlyInterval": "month",
     "caveat": "Counts are sourced from GitHub pull requests and attributed by committed repo-to-team mapping. Opened counts use non-draft PR createdAt, merged counts use mergedAt, sprint trend points render only closed sprints, and review-to-merge time uses the latest submitted GitHub review to mergedAt.",
@@ -1099,6 +1099,45 @@
           "avgReviewToMergeDays": 1,
           "avgReviewToMergeSampleCount": 7
         }
+      },
+      {
+        "date": "2026-04-27",
+        "api": {
+          "offered": 55,
+          "merged": 47,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 37
+        },
+        "legacy": {
+          "offered": 4,
+          "merged": 3,
+          "avgReviewToMergeDays": 1,
+          "avgReviewToMergeSampleCount": 3
+        },
+        "react": {
+          "offered": 12,
+          "merged": 9,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 7
+        },
+        "bc": {
+          "offered": 30,
+          "merged": 25,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 25
+        },
+        "workers": {
+          "offered": 20,
+          "merged": 21,
+          "avgReviewToMergeDays": 1,
+          "avgReviewToMergeSampleCount": 21
+        },
+        "titanium": {
+          "offered": 4,
+          "merged": 5,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 5
+        }
       }
     ],
     "monthlyPoints": [
@@ -1573,34 +1612,34 @@
       {
         "date": "2026-04-01",
         "api": {
-          "offered": 67,
+          "offered": 70,
           "merged": 65,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 55
         },
         "legacy": {
-          "offered": 5,
+          "offered": 6,
           "merged": 5,
           "avgReviewToMergeDays": 0,
           "avgReviewToMergeSampleCount": 5
         },
         "react": {
-          "offered": 41,
+          "offered": 47,
           "merged": 32,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 29
         },
         "bc": {
-          "offered": 42,
-          "merged": 36,
+          "offered": 50,
+          "merged": 47,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 36
+          "avgReviewToMergeSampleCount": 47
         },
         "workers": {
-          "offered": 39,
-          "merged": 35,
+          "offered": 45,
+          "merged": 40,
           "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 35
+          "avgReviewToMergeSampleCount": 40
         },
         "titanium": {
           "offered": 11,

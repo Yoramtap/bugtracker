@@ -1,9 +1,9 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-04-28T09:13:29.437Z",
+  "updatedAt": "2026-04-28T09:25:40.221Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-04-25T21:44:50.556Z",
+    "syncedAt": "2026-04-28T09:25:40.221Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). Business Unit UAT flow is generated from Jira issue changelogs. PR activity is sourced from GitHub pull requests and attributed by committed repo-to-team mapping."
   },
   "prActivity": {
@@ -12,7 +12,7 @@
     "monthlyInterval": "month",
     "source": "github_pull_requests",
     "candidateIssueCount": 117,
-    "uniquePrCount": 598,
+    "uniquePrCount": 622,
     "conflictCount": 0,
     "caveat": "Counts are sourced from GitHub pull requests and attributed by committed repo-to-team mapping. Opened counts use non-draft PR createdAt, merged counts use mergedAt, sprint trend points render only closed sprints, and review-to-merge time uses the latest submitted GitHub review to mergedAt.",
     "points": [
@@ -1107,6 +1107,45 @@
           "avgReviewToMergeDays": 1,
           "avgReviewToMergeSampleCount": 7
         }
+      },
+      {
+        "date": "2026-04-27",
+        "api": {
+          "offered": 55,
+          "merged": 47,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 37
+        },
+        "legacy": {
+          "offered": 4,
+          "merged": 3,
+          "avgReviewToMergeDays": 1,
+          "avgReviewToMergeSampleCount": 3
+        },
+        "react": {
+          "offered": 12,
+          "merged": 9,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 7
+        },
+        "bc": {
+          "offered": 30,
+          "merged": 25,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 25
+        },
+        "workers": {
+          "offered": 20,
+          "merged": 21,
+          "avgReviewToMergeDays": 1,
+          "avgReviewToMergeSampleCount": 21
+        },
+        "titanium": {
+          "offered": 4,
+          "merged": 5,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 5
+        }
       }
     ],
     "monthlySince": "2025-04-01",
@@ -1582,34 +1621,34 @@
       {
         "date": "2026-04-01",
         "api": {
-          "offered": 67,
+          "offered": 70,
           "merged": 65,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 55
         },
         "legacy": {
-          "offered": 5,
+          "offered": 6,
           "merged": 5,
           "avgReviewToMergeDays": 0,
           "avgReviewToMergeSampleCount": 5
         },
         "react": {
-          "offered": 41,
+          "offered": 47,
           "merged": 32,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 29
         },
         "bc": {
-          "offered": 42,
-          "merged": 36,
+          "offered": 50,
+          "merged": 47,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 36
+          "avgReviewToMergeSampleCount": 47
         },
         "workers": {
-          "offered": 39,
-          "merged": 35,
+          "offered": 45,
+          "merged": 40,
           "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 35
+          "avgReviewToMergeSampleCount": 40
         },
         "titanium": {
           "offered": 11,
@@ -1619,7 +1658,7 @@
         }
       }
     ],
-    "latestClosedSprintDate": "2026-04-13"
+    "latestClosedSprintDate": "2026-04-27"
   },
   "chartData": {
     "managementBusinessUnit": {
@@ -1630,7 +1669,7 @@
             {
               "label": "ANZJ",
               "devAvg": 7.01,
-              "uatAvg": 30.76,
+              "uatAvg": 33.24,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -1647,7 +1686,7 @@
                 {
                   "label": "AU AHS",
                   "devAvg": 7.01,
-                  "uatAvg": 30.76,
+                  "uatAvg": 33.24,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -1660,7 +1699,7 @@
             {
               "label": "EU",
               "devAvg": 0.04,
-              "uatAvg": 100.88,
+              "uatAvg": 103.36,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -1677,7 +1716,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 0.04,
-                  "uatAvg": 100.88,
+                  "uatAvg": 103.36,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -1690,7 +1729,7 @@
             {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 79.55,
+              "uatAvg": 82.03,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -1707,7 +1746,7 @@
                 {
                   "label": "ME MEIP1",
                   "devAvg": 1.1,
-                  "uatAvg": 79.55,
+                  "uatAvg": 82.03,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -1720,7 +1759,7 @@
             {
               "label": "US",
               "devAvg": 0.68,
-              "uatAvg": 74.12,
+              "uatAvg": 76.61,
               "devCount": 4,
               "uatCount": 4,
               "sampleCount": 4,
@@ -1752,7 +1791,7 @@
                 {
                   "label": "US EN1",
                   "devAvg": 0.88,
-                  "uatAvg": 129.79,
+                  "uatAvg": 132.27,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -1763,7 +1802,7 @@
                 {
                   "label": "US USCP",
                   "devAvg": 0.98,
-                  "uatAvg": 80.96,
+                  "uatAvg": 83.45,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -1774,7 +1813,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 0.43,
-                  "uatAvg": 42.87,
+                  "uatAvg": 45.35,
                   "devCount": 2,
                   "uatCount": 2,
                   "sampleCount": 2,
@@ -1788,7 +1827,7 @@
             {
               "label": "Tech Debt",
               "devAvg": 28.75,
-              "uatAvg": 134.71,
+              "uatAvg": 137.2,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -1805,7 +1844,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 28.75,
-                  "uatAvg": 134.71,
+                  "uatAvg": 137.2,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -1821,11 +1860,11 @@
           "rows": [
             {
               "label": "ANZJ",
-              "devAvg": 29.75,
-              "uatAvg": 29.44,
-              "devCount": 21,
-              "uatCount": 21,
-              "sampleCount": 21,
+              "devAvg": 28.41,
+              "uatAvg": 28.16,
+              "devCount": 22,
+              "uatCount": 22,
+              "sampleCount": 22,
               "issueIds": [
                 "TFC-12976",
                 "TFC-13109",
@@ -1847,7 +1886,8 @@
                 "TFC-16151",
                 "TFC-16205",
                 "TFC-16216",
-                "TFC-16291"
+                "TFC-16291",
+                "TFC-16349"
               ],
               "issueItems": [
                 {
@@ -1932,6 +1972,10 @@
                 },
                 {
                   "issueId": "TFC-16090",
+                  "facilityLabel": "Facility unmapped"
+                },
+                {
+                  "issueId": "TFC-16349",
                   "facilityLabel": "Facility unmapped"
                 }
               ],
@@ -2020,11 +2064,11 @@
                 },
                 {
                   "label": "Unspecified",
-                  "devAvg": 46.69,
-                  "uatAvg": 40.79,
-                  "devCount": 9,
-                  "uatCount": 9,
-                  "sampleCount": 9,
+                  "devAvg": 42.05,
+                  "uatAvg": 36.84,
+                  "devCount": 10,
+                  "uatCount": 10,
+                  "sampleCount": 10,
                   "issueIds": [
                     "TFC-13259",
                     "TFC-13842",
@@ -2034,23 +2078,26 @@
                     "TFC-15120",
                     "TFC-15977",
                     "TFC-16088",
-                    "TFC-16090"
+                    "TFC-16090",
+                    "TFC-16349"
                   ]
                 }
               ]
             },
             {
               "label": "Business unit unmapped",
-              "devAvg": 28.76,
-              "uatAvg": 14.01,
-              "devCount": 4,
-              "uatCount": 4,
-              "sampleCount": 4,
+              "devAvg": 20.23,
+              "uatAvg": 9.55,
+              "devCount": 6,
+              "uatCount": 6,
+              "sampleCount": 6,
               "issueIds": [
                 "TFC-14244",
                 "TFC-15597",
                 "TFC-15758",
-                "TFC-16159"
+                "TFC-16159",
+                "TFC-16408",
+                "TFC-16488"
               ],
               "issueItems": [
                 {
@@ -2068,6 +2115,14 @@
                 {
                   "issueId": "TFC-15758",
                   "facilityLabel": "Facility unmapped"
+                },
+                {
+                  "issueId": "TFC-16408",
+                  "facilityLabel": "Facility unmapped"
+                },
+                {
+                  "issueId": "TFC-16488",
+                  "facilityLabel": "Facility unmapped"
                 }
               ],
               "facilities": [
@@ -2084,15 +2139,17 @@
                 },
                 {
                   "label": "Unspecified",
-                  "devAvg": 37.33,
-                  "uatAvg": 14.73,
-                  "devCount": 3,
-                  "uatCount": 3,
-                  "sampleCount": 3,
+                  "devAvg": 23.67,
+                  "uatAvg": 9.09,
+                  "devCount": 5,
+                  "uatCount": 5,
+                  "sampleCount": 5,
                   "issueIds": [
                     "TFC-14244",
                     "TFC-15597",
-                    "TFC-15758"
+                    "TFC-15758",
+                    "TFC-16408",
+                    "TFC-16488"
                   ]
                 }
               ]
@@ -2458,58 +2515,6 @@
   },
   "combinedPoints": [
     {
-      "date": "2025-10-27",
-      "api": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 2,
-        "medium": 4,
-        "low": 2,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 1,
-        "medium": 12,
-        "low": 45,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 0,
-        "medium": 4,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "highest": 1,
-        "high": 57,
-        "medium": 100,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 148,
-        "longstanding_60d_plus": 141
-      },
-      "workers": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 0,
-        "medium": 0,
-        "low": 0,
-        "lowest": 0
-      },
-      "titanium": {
-        "date": "2025-10-27",
-        "highest": 0,
-        "high": 0,
-        "medium": 0,
-        "low": 0,
-        "lowest": 0
-      }
-    },
-    {
       "date": "2025-11-10",
       "api": {
         "date": "2025-11-10",
@@ -2536,6 +2541,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2025-11-10",
         "highest": 5,
         "high": 60,
         "medium": 103,
@@ -2588,6 +2594,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2025-11-24",
         "highest": 5,
         "high": 63,
         "medium": 105,
@@ -2640,6 +2647,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2025-12-08",
         "highest": 7,
         "high": 63,
         "medium": 112,
@@ -2692,6 +2700,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2025-12-22",
         "highest": 5,
         "high": 66,
         "medium": 107,
@@ -2744,6 +2753,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-01-05",
         "highest": 5,
         "high": 68,
         "medium": 109,
@@ -2796,6 +2806,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-01-19",
         "highest": 4,
         "high": 63,
         "medium": 106,
@@ -2848,6 +2859,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-02-02",
         "highest": 4,
         "high": 63,
         "medium": 105,
@@ -2900,6 +2912,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-02-16",
         "highest": 6,
         "high": 63,
         "medium": 106,
@@ -2952,6 +2965,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-03-02",
         "highest": 3,
         "high": 70,
         "medium": 108,
@@ -3004,6 +3018,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-03-16",
         "highest": 6,
         "high": 70,
         "medium": 113,
@@ -3056,6 +3071,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-03-30",
         "highest": 8,
         "high": 72,
         "medium": 114,
@@ -3093,8 +3109,8 @@
       },
       "legacy": {
         "date": "2026-04-13",
-        "highest": 0,
-        "high": 2,
+        "highest": 1,
+        "high": 1,
         "medium": 8,
         "low": 21,
         "lowest": 0
@@ -3108,6 +3124,7 @@
         "lowest": 0
       },
       "bc": {
+        "date": "2026-04-13",
         "highest": 3,
         "high": 70,
         "medium": 120,
@@ -3134,25 +3151,25 @@
       }
     },
     {
-      "date": "2026-04-25",
+      "date": "2026-04-27",
       "api": {
-        "date": "2026-04-25",
+        "date": "2026-04-27",
         "highest": 0,
-        "high": 1,
+        "high": 2,
         "medium": 11,
         "low": 5,
         "lowest": 2
       },
       "legacy": {
-        "date": "2026-04-25",
-        "highest": 0,
-        "high": 2,
+        "date": "2026-04-27",
+        "highest": 1,
+        "high": 1,
         "medium": 7,
         "low": 21,
         "lowest": 0
       },
       "react": {
-        "date": "2026-04-25",
+        "date": "2026-04-27",
         "highest": 0,
         "high": 0,
         "medium": 2,
@@ -3160,16 +3177,17 @@
         "lowest": 0
       },
       "bc": {
-        "highest": 8,
+        "date": "2026-04-27",
+        "highest": 4,
         "high": 70,
-        "medium": 123,
+        "medium": 119,
         "low": 7,
         "lowest": 0,
-        "longstanding_30d_plus": 186,
+        "longstanding_30d_plus": 183,
         "longstanding_60d_plus": 169
       },
       "workers": {
-        "date": "2026-04-25",
+        "date": "2026-04-27",
         "highest": 0,
         "high": 1,
         "medium": 1,
@@ -3177,7 +3195,7 @@
         "lowest": 0
       },
       "titanium": {
-        "date": "2026-04-25",
+        "date": "2026-04-27",
         "highest": 1,
         "high": 1,
         "medium": 0,
@@ -3188,45 +3206,51 @@
     {
       "date": "2026-04-28",
       "api": {
+        "date": "2026-04-28",
         "highest": 0,
-        "high": 0,
-        "medium": 0,
-        "low": 0,
-        "lowest": 0
+        "high": 2,
+        "medium": 11,
+        "low": 5,
+        "lowest": 2
       },
       "legacy": {
-        "highest": 0,
-        "high": 0,
-        "medium": 0,
-        "low": 0,
+        "date": "2026-04-28",
+        "highest": 1,
+        "high": 1,
+        "medium": 7,
+        "low": 21,
         "lowest": 0
       },
       "react": {
+        "date": "2026-04-28",
         "highest": 0,
         "high": 0,
-        "medium": 0,
+        "medium": 2,
         "low": 0,
         "lowest": 0
       },
       "bc": {
+        "date": "2026-04-28",
         "highest": 3,
-        "high": 68,
-        "medium": 113,
+        "high": 69,
+        "medium": 114,
         "low": 7,
         "lowest": 0,
-        "longstanding_30d_plus": 177,
-        "longstanding_60d_plus": 164
+        "longstanding_30d_plus": 179,
+        "longstanding_60d_plus": 166
       },
       "workers": {
+        "date": "2026-04-28",
         "highest": 0,
-        "high": 0,
-        "medium": 0,
+        "high": 1,
+        "medium": 1,
         "low": 0,
         "lowest": 0
       },
       "titanium": {
-        "highest": 0,
-        "high": 0,
+        "date": "2026-04-28",
+        "highest": 1,
+        "high": 1,
         "medium": 0,
         "low": 0,
         "lowest": 0
