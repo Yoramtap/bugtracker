@@ -1,18 +1,18 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-05-19T11:17:39.454Z",
+  "updatedAt": "2026-05-20T07:27:54.232Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-05-19T11:17:39.454Z",
+    "syncedAt": "2026-05-20T07:27:54.231Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). Business Unit UAT flow is generated from Jira issue changelogs. PR activity is sourced from GitHub pull requests and attributed by committed repo-to-team mapping."
   },
   "prActivity": {
-    "since": "2024-01-01",
+    "since": "2024-01-08",
     "interval": "sprint",
     "monthlyInterval": "month",
     "source": "github_pull_requests",
     "candidateIssueCount": 117,
-    "uniquePrCount": 5450,
+    "uniquePrCount": 529,
     "conflictCount": 0,
     "caveat": "Counts are sourced from GitHub pull requests and attributed by committed repo-to-team mapping. Opened counts use non-draft PR createdAt, merged counts use mergedAt, sprint trend points render only closed sprints, and review-to-merge time uses the first submitted non-author GitHub review to mergedAt.",
     "points": [
@@ -2398,13 +2398,13 @@
       {
         "date": "2026-04-13",
         "api": {
-          "offered": 18,
-          "merged": 19,
-          "avgReviewToMergeDays": 6,
-          "avgReviewToMergeSampleCount": 19
+          "offered": 15,
+          "merged": 18,
+          "avgReviewToMergeDays": 5,
+          "avgReviewToMergeSampleCount": 18
         },
         "legacy": {
-          "offered": 3,
+          "offered": 2,
           "merged": 2,
           "avgReviewToMergeDays": 0,
           "avgReviewToMergeSampleCount": 2
@@ -2417,21 +2417,21 @@
         },
         "bc": {
           "offered": 16,
-          "merged": 18,
-          "avgReviewToMergeDays": 34,
-          "avgReviewToMergeSampleCount": 18
+          "merged": 17,
+          "avgReviewToMergeDays": 35,
+          "avgReviewToMergeSampleCount": 17
         },
         "workers": {
-          "offered": 24,
-          "merged": 23,
+          "offered": 23,
+          "merged": 19,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 23
+          "avgReviewToMergeSampleCount": 19
         },
         "titanium": {
           "offered": 7,
-          "merged": 7,
+          "merged": 6,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 7
+          "avgReviewToMergeSampleCount": 6
         }
       },
       {
@@ -3611,34 +3611,34 @@
       {
         "date": "2026-05-01",
         "api": {
-          "offered": 56,
-          "merged": 59,
+          "offered": 58,
+          "merged": 60,
           "avgReviewToMergeDays": 5,
-          "avgReviewToMergeSampleCount": 54
+          "avgReviewToMergeSampleCount": 55
         },
         "legacy": {
-          "offered": 5,
-          "merged": 5,
+          "offered": 6,
+          "merged": 7,
           "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 5
+          "avgReviewToMergeSampleCount": 7
         },
         "react": {
-          "offered": 40,
-          "merged": 28,
+          "offered": 41,
+          "merged": 29,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 26
+          "avgReviewToMergeSampleCount": 27
         },
         "bc": {
-          "offered": 78,
-          "merged": 77,
-          "avgReviewToMergeDays": 5,
-          "avgReviewToMergeSampleCount": 74
+          "offered": 84,
+          "merged": 84,
+          "avgReviewToMergeDays": 4,
+          "avgReviewToMergeSampleCount": 80
         },
         "workers": {
           "offered": 25,
-          "merged": 20,
+          "merged": 23,
           "avgReviewToMergeDays": 3,
-          "avgReviewToMergeSampleCount": 20
+          "avgReviewToMergeSampleCount": 23
         },
         "titanium": {
           "offered": 2,
@@ -3656,9 +3656,39 @@
         "ongoing": {
           "rows": [
             {
+              "label": "Business unit unmapped",
+              "devAvg": 1.04,
+              "uatAvg": 1.06,
+              "devCount": 1,
+              "uatCount": 1,
+              "sampleCount": 1,
+              "issueIds": [
+                "TFC-14376"
+              ],
+              "issueItems": [
+                {
+                  "issueId": "TFC-14376",
+                  "facilityLabel": "Facility unmapped"
+                }
+              ],
+              "facilities": [
+                {
+                  "label": "Unspecified",
+                  "devAvg": 1.04,
+                  "uatAvg": 1.06,
+                  "devCount": 1,
+                  "uatCount": 1,
+                  "sampleCount": 1,
+                  "issueIds": [
+                    "TFC-14376"
+                  ]
+                }
+              ]
+            },
+            {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 97.39,
+              "uatAvg": 103.95,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3675,7 +3705,7 @@
                 {
                   "label": "ME MEIP1",
                   "devAvg": 1.1,
-                  "uatAvg": 97.39,
+                  "uatAvg": 103.95,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3687,21 +3717,26 @@
             },
             {
               "label": "US",
-              "devAvg": 0.68,
-              "uatAvg": 91.97,
-              "devCount": 4,
-              "uatCount": 4,
-              "sampleCount": 4,
+              "devAvg": 0.57,
+              "uatAvg": 78.85,
+              "devCount": 5,
+              "uatCount": 5,
+              "sampleCount": 5,
               "issueIds": [
                 "TFC-13224",
                 "TFC-14425",
                 "TFC-15958",
-                "TFC-16073"
+                "TFC-16073",
+                "TFC-16737"
               ],
               "issueItems": [
                 {
                   "issueId": "TFC-14425",
                   "facilityLabel": "Facility US EN1"
+                },
+                {
+                  "issueId": "TFC-16737",
+                  "facilityLabel": "Facility US PGA TOUR STUDIOS"
                 },
                 {
                   "issueId": "TFC-13224",
@@ -3720,7 +3755,7 @@
                 {
                   "label": "US EN1",
                   "devAvg": 0.88,
-                  "uatAvg": 147.63,
+                  "uatAvg": 154.19,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3729,9 +3764,20 @@
                   ]
                 },
                 {
+                  "label": "US PGA TOUR STUDIOS",
+                  "devAvg": 0.1,
+                  "uatAvg": 0.16,
+                  "devCount": 1,
+                  "uatCount": 1,
+                  "sampleCount": 1,
+                  "issueIds": [
+                    "TFC-16737"
+                  ]
+                },
+                {
                   "label": "US USCP",
                   "devAvg": 0.98,
-                  "uatAvg": 98.81,
+                  "uatAvg": 105.37,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3742,7 +3788,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 0.43,
-                  "uatAvg": 60.71,
+                  "uatAvg": 67.27,
                   "devCount": 2,
                   "uatCount": 2,
                   "sampleCount": 2,
@@ -3756,7 +3802,7 @@
             {
               "label": "Tech Debt",
               "devAvg": 28.75,
-              "uatAvg": 152.56,
+              "uatAvg": 159.12,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3773,7 +3819,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 28.75,
-                  "uatAvg": 152.56,
+                  "uatAvg": 159.12,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -4015,11 +4061,11 @@
             },
             {
               "label": "Business unit unmapped",
-              "devAvg": 12.77,
-              "uatAvg": 6.12,
-              "devCount": 10,
-              "uatCount": 10,
-              "sampleCount": 10,
+              "devAvg": 11.71,
+              "uatAvg": 5.83,
+              "devCount": 11,
+              "uatCount": 11,
+              "sampleCount": 11,
               "issueIds": [
                 "TFC-14244",
                 "TFC-15597",
@@ -4030,6 +4076,7 @@
                 "TFC-16488",
                 "TFC-16498",
                 "TFC-16563",
+                "TFC-16590",
                 "TFC-16627"
               ],
               "issueItems": [
@@ -4070,6 +4117,10 @@
                   "facilityLabel": "Facility unmapped"
                 },
                 {
+                  "issueId": "TFC-16590",
+                  "facilityLabel": "Facility unmapped"
+                },
+                {
                   "issueId": "TFC-16627",
                   "facilityLabel": "Facility unmapped"
                 }
@@ -4099,11 +4150,11 @@
                 },
                 {
                   "label": "Unspecified",
-                  "devAvg": 15.45,
-                  "uatAvg": 6.04,
-                  "devCount": 8,
-                  "uatCount": 8,
-                  "sampleCount": 8,
+                  "devAvg": 13.86,
+                  "uatAvg": 5.69,
+                  "devCount": 9,
+                  "uatCount": 9,
+                  "sampleCount": 9,
                   "issueIds": [
                     "TFC-14244",
                     "TFC-15597",
@@ -4112,6 +4163,7 @@
                     "TFC-16488",
                     "TFC-16498",
                     "TFC-16563",
+                    "TFC-16590",
                     "TFC-16627"
                   ]
                 }
@@ -5201,9 +5253,9 @@
       },
       "bc": {
         "date": "2026-04-27",
-        "highest": 5,
+        "highest": 6,
         "high": 69,
-        "medium": 119,
+        "medium": 118,
         "low": 7,
         "lowest": 0,
         "longstanding_30d_plus": 181,
@@ -5254,9 +5306,9 @@
       },
       "bc": {
         "date": "2026-05-11",
-        "highest": 2,
+        "highest": 3,
         "high": 66,
-        "medium": 109,
+        "medium": 108,
         "low": 7,
         "lowest": 0,
         "longstanding_30d_plus": 173,
