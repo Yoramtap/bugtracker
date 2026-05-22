@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-21T07:26:44.879Z",
+  "updatedAt": "2026-05-22T07:28:24.499Z",
   "prActivity": {
     "since": "2024-01-08",
     "interval": "sprint",
@@ -3601,28 +3601,28 @@
       {
         "date": "2026-05-01",
         "api": {
-          "offered": 61,
-          "merged": 64,
-          "avgReviewToMergeDays": 5,
-          "avgReviewToMergeSampleCount": 59
+          "offered": 65,
+          "merged": 66,
+          "avgReviewToMergeDays": 4,
+          "avgReviewToMergeSampleCount": 61
         },
         "legacy": {
-          "offered": 7,
-          "merged": 7,
+          "offered": 14,
+          "merged": 8,
           "avgReviewToMergeDays": 1,
-          "avgReviewToMergeSampleCount": 7
+          "avgReviewToMergeSampleCount": 8
         },
         "react": {
-          "offered": 44,
-          "merged": 31,
+          "offered": 47,
+          "merged": 34,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 29
+          "avgReviewToMergeSampleCount": 32
         },
         "bc": {
-          "offered": 90,
-          "merged": 88,
+          "offered": 92,
+          "merged": 90,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 83
+          "avgReviewToMergeSampleCount": 85
         },
         "workers": {
           "offered": 27,
@@ -3631,7 +3631,7 @@
           "avgReviewToMergeSampleCount": 24
         },
         "titanium": {
-          "offered": 2,
+          "offered": 4,
           "merged": 2,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 2
