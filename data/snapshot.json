@@ -1,9 +1,9 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-05-24T07:27:19.085Z",
+  "updatedAt": "2026-05-25T07:26:39.580Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-05-24T07:27:19.085Z",
+    "syncedAt": "2026-05-25T07:26:39.580Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). Business Unit UAT flow is generated from Jira issue changelogs. PR activity is sourced from GitHub pull requests and attributed by committed repo-to-team mapping."
   },
   "prActivity": {
@@ -12,7 +12,7 @@
     "monthlyInterval": "month",
     "source": "github_pull_requests",
     "candidateIssueCount": 117,
-    "uniquePrCount": 563,
+    "uniquePrCount": 565,
     "conflictCount": 0,
     "caveat": "Counts are sourced from GitHub pull requests and attributed by committed repo-to-team mapping. Opened counts use non-draft PR createdAt, merged counts use mergedAt, sprint trend points render only closed sprints, and review-to-merge time uses the first submitted non-author GitHub review to mergedAt.",
     "points": [
@@ -2511,9 +2511,48 @@
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 2
         }
+      },
+      {
+        "date": "2026-05-25",
+        "api": {
+          "offered": 24,
+          "merged": 17,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 16
+        },
+        "legacy": {
+          "offered": 10,
+          "merged": 5,
+          "avgReviewToMergeDays": 1,
+          "avgReviewToMergeSampleCount": 5
+        },
+        "react": {
+          "offered": 25,
+          "merged": 29,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 28
+        },
+        "bc": {
+          "offered": 38,
+          "merged": 34,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 30
+        },
+        "workers": {
+          "offered": 11,
+          "merged": 12,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 12
+        },
+        "titanium": {
+          "offered": 2,
+          "merged": 0,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 0
+        }
       }
     ],
-    "latestClosedSprintDate": "2026-05-11",
+    "latestClosedSprintDate": "2026-05-25",
     "monthlySince": "2024-01-01",
     "monthlyPoints": [
       {
@@ -3624,21 +3663,21 @@
         },
         "react": {
           "offered": 48,
-          "merged": 42,
+          "merged": 43,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 40
+          "avgReviewToMergeSampleCount": 41
         },
         "bc": {
-          "offered": 92,
-          "merged": 90,
+          "offered": 93,
+          "merged": 92,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 85
+          "avgReviewToMergeSampleCount": 87
         },
         "workers": {
-          "offered": 27,
-          "merged": 24,
-          "avgReviewToMergeDays": 3,
-          "avgReviewToMergeSampleCount": 24
+          "offered": 28,
+          "merged": 26,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 26
         },
         "titanium": {
           "offered": 4,
@@ -3658,7 +3697,7 @@
             {
               "label": "Business unit unmapped",
               "devAvg": 1.04,
-              "uatAvg": 5.06,
+              "uatAvg": 6.06,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3675,7 +3714,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 1.04,
-                  "uatAvg": 5.06,
+                  "uatAvg": 6.06,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3686,39 +3725,9 @@
               ]
             },
             {
-              "label": "EU",
-              "devAvg": 0.02,
-              "uatAvg": 2.16,
-              "devCount": 1,
-              "uatCount": 1,
-              "sampleCount": 1,
-              "issueIds": [
-                "TFC-16752"
-              ],
-              "issueItems": [
-                {
-                  "issueId": "TFC-16752",
-                  "facilityLabel": "Facility NL NLCP"
-                }
-              ],
-              "facilities": [
-                {
-                  "label": "NL NLCP",
-                  "devAvg": 0.02,
-                  "uatAvg": 2.16,
-                  "devCount": 1,
-                  "uatCount": 1,
-                  "sampleCount": 1,
-                  "issueIds": [
-                    "TFC-16752"
-                  ]
-                }
-              ]
-            },
-            {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 107.95,
+              "uatAvg": 108.95,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3735,7 +3744,7 @@
                 {
                   "label": "ME MEIP1",
                   "devAvg": 1.1,
-                  "uatAvg": 107.95,
+                  "uatAvg": 108.95,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3747,16 +3756,17 @@
             },
             {
               "label": "US",
-              "devAvg": 0.68,
-              "uatAvg": 102.53,
-              "devCount": 4,
-              "uatCount": 4,
-              "sampleCount": 4,
+              "devAvg": 0.55,
+              "uatAvg": 82.96,
+              "devCount": 5,
+              "uatCount": 5,
+              "sampleCount": 5,
               "issueIds": [
                 "TFC-13224",
                 "TFC-14425",
                 "TFC-15958",
-                "TFC-16073"
+                "TFC-16073",
+                "TFC-16760"
               ],
               "issueItems": [
                 {
@@ -3774,13 +3784,17 @@
                 {
                   "issueId": "TFC-16073",
                   "facilityLabel": "Facility unmapped"
+                },
+                {
+                  "issueId": "TFC-16760",
+                  "facilityLabel": "Facility unmapped"
                 }
               ],
               "facilities": [
                 {
                   "label": "US EN1",
                   "devAvg": 0.88,
-                  "uatAvg": 158.19,
+                  "uatAvg": 159.19,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3791,7 +3805,7 @@
                 {
                   "label": "US USCP",
                   "devAvg": 0.98,
-                  "uatAvg": 109.37,
+                  "uatAvg": 110.37,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3801,14 +3815,15 @@
                 },
                 {
                   "label": "Unspecified",
-                  "devAvg": 0.43,
-                  "uatAvg": 71.27,
-                  "devCount": 2,
-                  "uatCount": 2,
-                  "sampleCount": 2,
+                  "devAvg": 0.29,
+                  "uatAvg": 48.42,
+                  "devCount": 3,
+                  "uatCount": 3,
+                  "sampleCount": 3,
                   "issueIds": [
                     "TFC-15958",
-                    "TFC-16073"
+                    "TFC-16073",
+                    "TFC-16760"
                   ]
                 }
               ]
@@ -3816,7 +3831,7 @@
             {
               "label": "Tech Debt",
               "devAvg": 28.75,
-              "uatAvg": 163.12,
+              "uatAvg": 164.12,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3833,7 +3848,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 28.75,
-                  "uatAvg": 163.12,
+                  "uatAvg": 164.12,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -4185,11 +4200,11 @@
             },
             {
               "label": "EU",
-              "devAvg": 7.13,
-              "uatAvg": 20.61,
-              "devCount": 19,
-              "uatCount": 19,
-              "sampleCount": 19,
+              "devAvg": 6.77,
+              "uatAvg": 19.7,
+              "devCount": 20,
+              "uatCount": 20,
+              "sampleCount": 20,
               "issueIds": [
                 "TFC-11526",
                 "TFC-12720",
@@ -4209,7 +4224,8 @@
                 "TFC-16185",
                 "TFC-16258",
                 "TFC-16378",
-                "TFC-16519"
+                "TFC-16519",
+                "TFC-16752"
               ],
               "issueItems": [
                 {
@@ -4242,6 +4258,10 @@
                 },
                 {
                   "issueId": "TFC-16108",
+                  "facilityLabel": "Facility NL NLCP"
+                },
+                {
+                  "issueId": "TFC-16752",
                   "facilityLabel": "Facility NL NLCP"
                 },
                 {
@@ -4303,11 +4323,11 @@
                 },
                 {
                   "label": "NL NLCP",
-                  "devAvg": 1.73,
-                  "uatAvg": 23.07,
-                  "devCount": 7,
-                  "uatCount": 7,
-                  "sampleCount": 7,
+                  "devAvg": 1.52,
+                  "uatAvg": 20.48,
+                  "devCount": 8,
+                  "uatCount": 8,
+                  "sampleCount": 8,
                   "issueIds": [
                     "TFC-15123",
                     "TFC-15388",
@@ -4315,7 +4335,8 @@
                     "TFC-15471",
                     "TFC-15539",
                     "TFC-16029",
-                    "TFC-16108"
+                    "TFC-16108",
+                    "TFC-16752"
                   ]
                 },
                 {
@@ -4609,59 +4630,6 @@
     }
   },
   "combinedPoints": [
-    {
-      "date": "2025-11-10",
-      "api": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 2,
-        "medium": 4,
-        "low": 5,
-        "lowest": 0
-      },
-      "legacy": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 1,
-        "medium": 12,
-        "low": 45,
-        "lowest": 2
-      },
-      "react": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 1,
-        "medium": 6,
-        "low": 0,
-        "lowest": 0
-      },
-      "bc": {
-        "date": "2025-11-10",
-        "highest": 6,
-        "high": 58,
-        "medium": 103,
-        "low": 9,
-        "lowest": 0,
-        "longstanding_30d_plus": 153,
-        "longstanding_60d_plus": 140
-      },
-      "workers": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 0,
-        "medium": 0,
-        "low": 0,
-        "lowest": 0
-      },
-      "titanium": {
-        "date": "2025-11-10",
-        "highest": 0,
-        "high": 0,
-        "medium": 0,
-        "low": 0,
-        "lowest": 0
-      }
-    },
     {
       "date": "2025-11-24",
       "api": {
@@ -5328,7 +5296,7 @@
         "date": "2026-05-11",
         "highest": 3,
         "high": 66,
-        "medium": 107,
+        "medium": 108,
         "low": 7,
         "lowest": 0,
         "longstanding_30d_plus": 172,
@@ -5346,6 +5314,59 @@
         "date": "2026-05-11",
         "highest": 0,
         "high": 2,
+        "medium": 0,
+        "low": 0,
+        "lowest": 0
+      }
+    },
+    {
+      "date": "2026-05-25",
+      "api": {
+        "date": "2026-05-25",
+        "highest": 0,
+        "high": 3,
+        "medium": 12,
+        "low": 5,
+        "lowest": 2
+      },
+      "legacy": {
+        "date": "2026-05-25",
+        "highest": 0,
+        "high": 1,
+        "medium": 6,
+        "low": 21,
+        "lowest": 0
+      },
+      "react": {
+        "date": "2026-05-25",
+        "highest": 0,
+        "high": 0,
+        "medium": 3,
+        "low": 0,
+        "lowest": 0
+      },
+      "bc": {
+        "date": "2026-05-25",
+        "highest": 5,
+        "high": 64,
+        "medium": 110,
+        "low": 7,
+        "lowest": 0,
+        "longstanding_30d_plus": 174,
+        "longstanding_60d_plus": 166
+      },
+      "workers": {
+        "date": "2026-05-25",
+        "highest": 0,
+        "high": 2,
+        "medium": 6,
+        "low": 0,
+        "lowest": 0
+      },
+      "titanium": {
+        "date": "2026-05-25",
+        "highest": 1,
+        "high": 1,
         "medium": 0,
         "low": 0,
         "lowest": 0
