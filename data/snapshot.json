@@ -1,9 +1,9 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-05-25T07:26:39.580Z",
+  "updatedAt": "2026-05-26T07:27:21.819Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-05-25T07:26:39.580Z",
+    "syncedAt": "2026-05-26T07:27:21.818Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). Business Unit UAT flow is generated from Jira issue changelogs. PR activity is sourced from GitHub pull requests and attributed by committed repo-to-team mapping."
   },
   "prActivity": {
@@ -12,7 +12,7 @@
     "monthlyInterval": "month",
     "source": "github_pull_requests",
     "candidateIssueCount": 117,
-    "uniquePrCount": 565,
+    "uniquePrCount": 578,
     "conflictCount": 0,
     "caveat": "Counts are sourced from GitHub pull requests and attributed by committed repo-to-team mapping. Opened counts use non-draft PR createdAt, merged counts use mergedAt, sprint trend points render only closed sprints, and review-to-merge time uses the first submitted non-author GitHub review to mergedAt.",
     "points": [
@@ -2515,10 +2515,10 @@
       {
         "date": "2026-05-25",
         "api": {
-          "offered": 24,
-          "merged": 17,
+          "offered": 27,
+          "merged": 18,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 16
+          "avgReviewToMergeSampleCount": 17
         },
         "legacy": {
           "offered": 10,
@@ -2527,16 +2527,16 @@
           "avgReviewToMergeSampleCount": 5
         },
         "react": {
-          "offered": 25,
+          "offered": 27,
           "merged": 29,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 28
         },
         "bc": {
-          "offered": 38,
-          "merged": 34,
+          "offered": 40,
+          "merged": 36,
           "avgReviewToMergeDays": 2,
-          "avgReviewToMergeSampleCount": 30
+          "avgReviewToMergeSampleCount": 31
         },
         "workers": {
           "offered": 11,
@@ -3650,10 +3650,10 @@
       {
         "date": "2026-05-01",
         "api": {
-          "offered": 65,
-          "merged": 67,
+          "offered": 70,
+          "merged": 68,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 62
+          "avgReviewToMergeSampleCount": 63
         },
         "legacy": {
           "offered": 14,
@@ -3662,16 +3662,16 @@
           "avgReviewToMergeSampleCount": 8
         },
         "react": {
-          "offered": 48,
+          "offered": 50,
           "merged": 43,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 41
         },
         "bc": {
-          "offered": 93,
-          "merged": 92,
+          "offered": 98,
+          "merged": 97,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 87
+          "avgReviewToMergeSampleCount": 91
         },
         "workers": {
           "offered": 28,
@@ -3680,7 +3680,7 @@
           "avgReviewToMergeSampleCount": 26
         },
         "titanium": {
-          "offered": 4,
+          "offered": 5,
           "merged": 2,
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 2
@@ -3697,7 +3697,7 @@
             {
               "label": "Business unit unmapped",
               "devAvg": 1.04,
-              "uatAvg": 6.06,
+              "uatAvg": 7.06,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3714,7 +3714,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 1.04,
-                  "uatAvg": 6.06,
+                  "uatAvg": 7.06,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3727,7 +3727,7 @@
             {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 108.95,
+              "uatAvg": 109.95,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3744,7 +3744,7 @@
                 {
                   "label": "ME MEIP1",
                   "devAvg": 1.1,
-                  "uatAvg": 108.95,
+                  "uatAvg": 109.95,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3757,7 +3757,7 @@
             {
               "label": "US",
               "devAvg": 0.55,
-              "uatAvg": 82.96,
+              "uatAvg": 83.96,
               "devCount": 5,
               "uatCount": 5,
               "sampleCount": 5,
@@ -3794,7 +3794,7 @@
                 {
                   "label": "US EN1",
                   "devAvg": 0.88,
-                  "uatAvg": 159.19,
+                  "uatAvg": 160.19,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3805,7 +3805,7 @@
                 {
                   "label": "US USCP",
                   "devAvg": 0.98,
-                  "uatAvg": 110.37,
+                  "uatAvg": 111.37,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3816,7 +3816,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 0.29,
-                  "uatAvg": 48.42,
+                  "uatAvg": 49.42,
                   "devCount": 3,
                   "uatCount": 3,
                   "sampleCount": 3,
@@ -3831,7 +3831,7 @@
             {
               "label": "Tech Debt",
               "devAvg": 28.75,
-              "uatAvg": 164.12,
+              "uatAvg": 165.12,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3848,7 +3848,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 28.75,
-                  "uatAvg": 164.12,
+                  "uatAvg": 165.12,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -5347,9 +5347,9 @@
       },
       "bc": {
         "date": "2026-05-25",
-        "highest": 5,
+        "highest": 7,
         "high": 64,
-        "medium": 110,
+        "medium": 109,
         "low": 7,
         "lowest": 0,
         "longstanding_30d_plus": 174,
