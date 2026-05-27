@@ -90,7 +90,10 @@
     "nepgpe/tfc-switch-usvc": "api",
     "nepgpe/tfc-tag-usvc": "api",
     "nepgpe/tfc-tally-usvc": "bc",
+    "nepgpe/tfc-titanium-component-sample": "titanium",
+    "nepgpe/tfc-titanium-datamodel": "titanium",
     "nepgpe/tfc-titanium": "titanium",
+    "nepgpe/tfc_titanium_component_sample": "titanium",
     "nepgpe/tfc-ttl-cache": "api",
     "nepgpe/tfc-ui": "react",
     "nepgpe/tfc-ui-pr-controller": "react",
@@ -118,6 +121,14 @@
     "nepgpe/tfo-worker-sony-m2l-x": "workers",
     "nepgpe/tfo-worker-sony-m2x-l": "workers",
     "nepgpe/tfo-worker-tfc": "workers",
-    "nepgpe/tfo-workflow-usvc": "api"
+    "nepgpe/tfo-workflow-usvc": "api",
+    "nepgpe/titanium": "titanium",
+    "nepgpe/ttnm-module-clipplayer-drastic": "titanium",
+    "nepgpe/ttnm-module-encoder-drastic": "titanium",
+    "nepgpe/ttnm-module-rx2110-rivermax": "titanium",
+    "nepgpe/ttnm-module-tx2110-rivermax": "titanium",
+    "nepgpe/ttnm-protobuf": "titanium",
+    "nepgpe/ttnm-sample-app-utils": "titanium",
+    "nepgpe/ttnm-sdk": "titanium"
   }
 }
