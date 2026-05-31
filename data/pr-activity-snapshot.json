@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-30T07:27:41.023Z",
+  "updatedAt": "2026-05-31T07:27:30.681Z",
   "prActivity": {
     "since": "2024-01-08",
     "interval": "sprint",
@@ -3646,7 +3646,7 @@
           "avgReviewToMergeSampleCount": 81
         },
         "legacy": {
-          "offered": 19,
+          "offered": 20,
           "merged": 8,
           "avgReviewToMergeDays": 1,
           "avgReviewToMergeSampleCount": 8
@@ -3658,7 +3658,7 @@
           "avgReviewToMergeSampleCount": 53
         },
         "bc": {
-          "offered": 137,
+          "offered": 140,
           "merged": 138,
           "avgReviewToMergeDays": 8,
           "avgReviewToMergeSampleCount": 127
