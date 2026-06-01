@@ -1,9 +1,9 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-05-31T07:27:30.681Z",
+  "updatedAt": "2026-06-01T07:27:26.056Z",
   "source": {
     "mode": "mcp_snapshot",
-    "syncedAt": "2026-05-31T07:27:30.681Z",
+    "syncedAt": "2026-06-01T07:27:26.056Z",
     "note": "Backlog trends are generated from Jira historical JQL snapshots (status and priority as-of each date). Business Unit UAT flow is generated from Jira issue changelogs. PR activity is sourced from GitHub pull requests and attributed by committed repo-to-team mapping."
   },
   "prActivity": {
@@ -12,7 +12,7 @@
     "monthlyInterval": "month",
     "source": "github_pull_requests",
     "candidateIssueCount": 219,
-    "uniquePrCount": 461,
+    "uniquePrCount": 476,
     "conflictCount": 0,
     "caveat": "Counts are sourced from GitHub pull requests and attributed by committed repo-to-team mapping. Opened counts use non-draft PR createdAt, merged counts use mergedAt, sprint trend points render only closed sprints, and review-to-merge time uses the first submitted non-author GitHub review to mergedAt.",
     "points": [
@@ -3651,9 +3651,9 @@
         "date": "2026-05-01",
         "api": {
           "offered": 113,
-          "merged": 87,
+          "merged": 88,
           "avgReviewToMergeDays": 4,
-          "avgReviewToMergeSampleCount": 81
+          "avgReviewToMergeSampleCount": 82
         },
         "legacy": {
           "offered": 20,
@@ -3668,10 +3668,10 @@
           "avgReviewToMergeSampleCount": 53
         },
         "bc": {
-          "offered": 140,
-          "merged": 138,
+          "offered": 148,
+          "merged": 143,
           "avgReviewToMergeDays": 8,
-          "avgReviewToMergeSampleCount": 127
+          "avgReviewToMergeSampleCount": 128
         },
         "workers": {
           "offered": 27,
@@ -3685,6 +3685,45 @@
           "avgReviewToMergeDays": 2,
           "avgReviewToMergeSampleCount": 31
         }
+      },
+      {
+        "date": "2026-06-01",
+        "api": {
+          "offered": 0,
+          "merged": 0,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 0
+        },
+        "legacy": {
+          "offered": 0,
+          "merged": 0,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 0
+        },
+        "react": {
+          "offered": 2,
+          "merged": 1,
+          "avgReviewToMergeDays": 3,
+          "avgReviewToMergeSampleCount": 1
+        },
+        "bc": {
+          "offered": 3,
+          "merged": 3,
+          "avgReviewToMergeDays": 2,
+          "avgReviewToMergeSampleCount": 3
+        },
+        "workers": {
+          "offered": 0,
+          "merged": 1,
+          "avgReviewToMergeDays": 3,
+          "avgReviewToMergeSampleCount": 1
+        },
+        "titanium": {
+          "offered": 1,
+          "merged": 1,
+          "avgReviewToMergeDays": 0,
+          "avgReviewToMergeSampleCount": 1
+        }
       }
     ]
   },
@@ -3697,7 +3736,7 @@
             {
               "label": "ANZJ",
               "devAvg": 7.01,
-              "uatAvg": 49.63,
+              "uatAvg": 50.63,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3714,7 +3753,7 @@
                 {
                   "label": "AU AHS",
                   "devAvg": 7.01,
-                  "uatAvg": 49.63,
+                  "uatAvg": 50.63,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3727,7 +3766,7 @@
             {
               "label": "Business unit unmapped",
               "devAvg": 1.04,
-              "uatAvg": 12.06,
+              "uatAvg": 13.06,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3744,7 +3783,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 1.04,
-                  "uatAvg": 12.06,
+                  "uatAvg": 13.06,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3757,7 +3796,7 @@
             {
               "label": "MEA",
               "devAvg": 1.1,
-              "uatAvg": 114.95,
+              "uatAvg": 115.95,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3774,7 +3813,7 @@
                 {
                   "label": "ME MEIP1",
                   "devAvg": 1.1,
-                  "uatAvg": 114.95,
+                  "uatAvg": 115.95,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3786,16 +3825,17 @@
             },
             {
               "label": "US",
-              "devAvg": 0.68,
-              "uatAvg": 109.53,
-              "devCount": 4,
-              "uatCount": 4,
-              "sampleCount": 4,
+              "devAvg": 0.55,
+              "uatAvg": 88.55,
+              "devCount": 5,
+              "uatCount": 5,
+              "sampleCount": 5,
               "issueIds": [
                 "TFC-13224",
                 "TFC-14425",
                 "TFC-15958",
-                "TFC-16073"
+                "TFC-16073",
+                "TFC-16806"
               ],
               "issueItems": [
                 {
@@ -3813,13 +3853,17 @@
                 {
                   "issueId": "TFC-16073",
                   "facilityLabel": "Facility unmapped"
+                },
+                {
+                  "issueId": "TFC-16806",
+                  "facilityLabel": "Facility unmapped"
                 }
               ],
               "facilities": [
                 {
                   "label": "US EN1",
                   "devAvg": 0.88,
-                  "uatAvg": 165.19,
+                  "uatAvg": 166.19,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3830,7 +3874,7 @@
                 {
                   "label": "US USCP",
                   "devAvg": 0.98,
-                  "uatAvg": 116.37,
+                  "uatAvg": 117.37,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -3840,14 +3884,15 @@
                 },
                 {
                   "label": "Unspecified",
-                  "devAvg": 0.43,
-                  "uatAvg": 78.27,
-                  "devCount": 2,
-                  "uatCount": 2,
-                  "sampleCount": 2,
+                  "devAvg": 0.29,
+                  "uatAvg": 53.06,
+                  "devCount": 3,
+                  "uatCount": 3,
+                  "sampleCount": 3,
                   "issueIds": [
                     "TFC-15958",
-                    "TFC-16073"
+                    "TFC-16073",
+                    "TFC-16806"
                   ]
                 }
               ]
@@ -3855,7 +3900,7 @@
             {
               "label": "Tech Debt",
               "devAvg": 28.75,
-              "uatAvg": 170.12,
+              "uatAvg": 171.12,
               "devCount": 1,
               "uatCount": 1,
               "sampleCount": 1,
@@ -3872,7 +3917,7 @@
                 {
                   "label": "Unspecified",
                   "devAvg": 28.75,
-                  "uatAvg": 170.12,
+                  "uatAvg": 171.12,
                   "devCount": 1,
                   "uatCount": 1,
                   "sampleCount": 1,
@@ -4114,11 +4159,11 @@
             },
             {
               "label": "Business unit unmapped",
-              "devAvg": 11.71,
-              "uatAvg": 5.83,
-              "devCount": 11,
-              "uatCount": 11,
-              "sampleCount": 11,
+              "devAvg": 10.73,
+              "uatAvg": 5.37,
+              "devCount": 12,
+              "uatCount": 12,
+              "sampleCount": 12,
               "issueIds": [
                 "TFC-14244",
                 "TFC-15597",
@@ -4130,7 +4175,8 @@
                 "TFC-16498",
                 "TFC-16563",
                 "TFC-16590",
-                "TFC-16627"
+                "TFC-16627",
+                "TFC-16815"
               ],
               "issueItems": [
                 {
@@ -4176,6 +4222,10 @@
                 {
                   "issueId": "TFC-16627",
                   "facilityLabel": "Facility unmapped"
+                },
+                {
+                  "issueId": "TFC-16815",
+                  "facilityLabel": "Facility unmapped"
                 }
               ],
               "facilities": [
@@ -4203,11 +4253,11 @@
                 },
                 {
                   "label": "Unspecified",
-                  "devAvg": 13.86,
-                  "uatAvg": 5.69,
-                  "devCount": 9,
-                  "uatCount": 9,
-                  "sampleCount": 9,
+                  "devAvg": 12.47,
+                  "uatAvg": 5.16,
+                  "devCount": 10,
+                  "uatCount": 10,
+                  "sampleCount": 10,
                   "issueIds": [
                     "TFC-14244",
                     "TFC-15597",
@@ -4217,7 +4267,8 @@
                     "TFC-16498",
                     "TFC-16563",
                     "TFC-16590",
-                    "TFC-16627"
+                    "TFC-16627",
+                    "TFC-16815"
                   ]
                 }
               ]
@@ -5377,9 +5428,9 @@
       },
       "bc": {
         "date": "2026-05-25",
-        "highest": 7,
+        "highest": 6,
         "high": 64,
-        "medium": 109,
+        "medium": 110,
         "low": 7,
         "lowest": 0,
         "longstanding_30d_plus": 174,
